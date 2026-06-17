@@ -5651,8 +5651,8 @@ p {
 }
 
 .page-app .app-preview-stage .section-header h2 {
-  max-width: 7ch;
-  font-size: clamp(2.8rem, 4.3vw, 4.7rem);
+  max-width: 14ch;
+  font-size: clamp(2.5rem, 3.8vw, 4.3rem);
 }
 
 .page-app .app-function-stage .section-header h2 {
@@ -13905,5 +13905,147 @@ body.consent-modal-open {
     min-width: 60px;
     height: 60px;
     padding: 15px;
+  }
+}
+
+@media (min-width: 980px) {
+  .page-home-reboot .nav-shell,
+  .page-premium .nav-shell {
+    min-height: 78px;
+    gap: clamp(16px, 1.8vw, 28px);
+    padding: 10px clamp(16px, 1.9vw, 24px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 22px;
+    background:
+      linear-gradient(180deg, rgba(20, 20, 24, 0.88), rgba(10, 10, 14, 0.74)),
+      rgba(10, 10, 14, 0.72);
+    box-shadow:
+      0 22px 70px rgba(0, 0, 0, 0.28),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(24px);
+  }
+
+  .page-home-reboot .site-header.is-scrolled .nav-shell,
+  .page-premium .site-header.is-scrolled .nav-shell {
+    border-color: rgba(255, 255, 255, 0.16);
+    background:
+      linear-gradient(180deg, rgba(16, 16, 20, 0.95), rgba(8, 8, 12, 0.9)),
+      rgba(8, 8, 12, 0.88);
+    box-shadow:
+      0 26px 80px rgba(0, 0, 0, 0.34),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  .page-home-reboot .brand strong,
+  .page-premium .brand strong {
+    color: #fff;
+  }
+
+  .page-home-reboot .brand small,
+  .page-premium .brand small {
+    color: rgba(255, 255, 255, 0.68);
+  }
+
+  .page-home-reboot .site-nav,
+  .page-premium .site-nav {
+    flex: 1 1 auto;
+    justify-content: stretch;
+    max-width: 1080px;
+    margin-inline: 0;
+    padding: 6px clamp(14px, 1.8vw, 24px);
+    gap: clamp(8px, 0.9vw, 14px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .page-home-reboot .site-nav__overlay,
+  .page-premium .site-nav__overlay,
+  .page-home-reboot .site-nav__list,
+  .page-premium .site-nav__list {
+    flex: 1 1 auto;
+    justify-content: space-between;
+    gap: clamp(8px, 0.9vw, 14px);
+  }
+
+  .page-home-reboot .site-nav a,
+  .page-premium .site-nav a {
+    min-height: 44px;
+    padding: 0 clamp(12px, 1vw, 18px);
+    border-radius: 999px;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 0.93rem;
+    font-weight: 760;
+    text-align: center;
+    background: transparent !important;
+  }
+
+  .page-home-reboot .site-nav a::after,
+  .page-premium .site-nav a::after {
+    display: none;
+  }
+
+  .page-home-reboot .site-nav a:hover,
+  .page-home-reboot .site-nav a:focus-visible,
+  .page-home-reboot .site-nav a[aria-current="page"],
+  .page-premium .site-nav a:hover,
+  .page-premium .site-nav a:focus-visible,
+  .page-premium .site-nav a[aria-current="page"] {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1) !important;
+    box-shadow: inset 0 0 0 1px rgba(230, 180, 67, 0.18);
+  }
+
+  .page-home-reboot .nav-extras,
+  .page-premium .nav-extras {
+    gap: 12px;
+    margin-left: 0;
+    padding-left: clamp(8px, 1vw, 14px);
+    border-left: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .page-home-reboot .social-link--nav,
+  .page-premium .social-link--nav {
+    border-color: rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 14px 28px rgba(0, 0, 0, 0.18);
+  }
+
+  .page-home-reboot .social-link--nav:hover,
+  .page-home-reboot .social-link--nav:focus-visible,
+  .page-premium .social-link--nav:hover,
+  .page-premium .social-link--nav:focus-visible {
+    border-color: rgba(230, 180, 67, 0.42);
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .page-home-reboot .nav-cta,
+  .page-premium .nav-cta {
+    min-height: 48px;
+    padding: 6px 8px 6px 16px;
+    color: #100f0c;
+    border: 1px solid rgba(255, 233, 172, 0.16);
+    background: linear-gradient(180deg, #f0d477, #d2a941);
+    box-shadow:
+      0 16px 32px rgba(230, 180, 67, 0.24),
+      inset 0 1px 0 rgba(255, 255, 255, 0.24);
+  }
+
+  .page-home-reboot .nav-cta span:first-child,
+  .page-premium .nav-cta span:first-child {
+    border-bottom: 0;
+    color: #100f0c;
+  }
+
+  .page-home-reboot .nav-cta span:last-child,
+  .page-premium .nav-cta span:last-child {
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    color: #fffaf0;
+    background: rgba(16, 15, 12, 0.18);
   }
 }

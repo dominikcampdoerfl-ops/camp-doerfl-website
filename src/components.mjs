@@ -971,11 +971,14 @@ export function layout({ title, description, path, keywords = [], content, bodyC
     <meta property="og:locale" content="de_DE">
     <meta property="og:type" content="website">
     <meta property="og:url" content="${canonical}">
-    <meta property="og:image" content="${site.url}/assets/images/camp-doerfl-hero.png">
+    <meta property="og:image" content="${site.url}/assets/images/home-hero-stadium-wide.png">
+    <meta property="og:image:width" content="1774">
+    <meta property="og:image:height" content="887">
+    <meta property="og:image:alt" content="Dominik Dörfl als Ironman-Finisher im Stadion">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${title}">
     <meta name="twitter:description" content="${description}">
-    <meta name="twitter:image" content="${site.url}/assets/images/camp-doerfl-hero.png">
+    <meta name="twitter:image" content="${site.url}/assets/images/home-hero-stadium-wide.png">
 	    <meta name="theme-color" content="#fbf7ef">
 	    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/camp-doerfl-logo.png">
 	    <link rel="stylesheet" href="/assets/styles.css">

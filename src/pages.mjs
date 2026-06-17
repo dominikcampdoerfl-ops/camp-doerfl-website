@@ -207,7 +207,7 @@ const appFaq = [
   {
     question: "Welche Funktionen sind für den Alltag besonders relevant?",
     answer:
-      "Vor allem der Member Bereich, die Trainings- und Ernährungsplanung, Mahlzeiten- und Speisekarten-Scans, GPS-Routen, Clubs und das Score System."
+      "Vor allem der Member Bereich, die Trainings- und Ernährungsplanung, der Lebensmittel Truth Score, Barcode- und Live-Scans, GPS-Routen, Clubs und das Score System."
   }
 ];
 
@@ -1496,6 +1496,41 @@ function eventsPage() {
             alt: "Dominik Dörfl als Moderator mit Mikrofon auf einer Bühne",
             headline: "Events im Einsatz.",
             actionLabel: "Video laden",
+            short: true
+          })}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="section-shell editorial-stage editorial-stage--event-video">
+        <div class="editorial-stage__copy" data-reveal>
+          ${sectionHeader({
+            eyebrow: "Interview-Beispiel",
+            title: "Interviews ruhig, präsent und professionell führen.",
+            text:
+              "Gerade im Gespräch zeigt sich, ob ein Moderator nur Fragen stellt oder einen Gast wirklich sicher durch den Moment führt. So entsteht eine Bühne, auf der Menschen kompetent wirken und Ihre Veranstaltung hochwertig getragen wird."
+          })}
+          <div class="summary-rows summary-rows--compact">
+            <article class="summary-row">
+              <h3>Gespräche mit Haltung</h3>
+              <p>Fragen, Übergänge und Reaktionen bleiben klar, nahbar und souverän, ohne künstlich oder überladen zu wirken.</p>
+            </article>
+            <article class="summary-row">
+              <h3>Stark für Gäste und Publikum</h3>
+              <p>Ideal für Bühneninterviews, Talk-Momente und Einbindungen, bei denen Präsenz, Sicherheit und Vertrauen direkt sichtbar werden sollen.</p>
+            </article>
+          </div>
+        </div>
+        <div class="editorial-stage__media editorial-stage__media--video editorial-stage__media--short" data-reveal>
+          ${deferredVideoEmbed({
+            embedUrl: "https://www.youtube-nocookie.com/embed/yhV7cyw2Pgg?autoplay=1&rel=0&modestbranding=1&playsinline=1",
+            watchUrl: "https://youtu.be/yhV7cyw2Pgg",
+            title: "Camp Dörfl Interview Beispiel",
+            image: "/assets/images/event-stage-interview.jpg",
+            alt: "Dominik Dörfl fuehrt ein Interview auf einer Event-Buehne",
+            headline: "Interview live erleben.",
+            actionLabel: "Interview laden",
             short: true
           })}
         </div>

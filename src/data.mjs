@@ -189,12 +189,12 @@ export const appFunctionRows = [
     text: "Der Member Bereich bündelt Trainingsplanung und Ernährungsplanung, damit du nicht zwischen Tools und Notizen springen musst."
   },
   {
-    title: "Mahlzeiten- und Speisekarten-Scan",
-    text: "Ob Restaurant oder Alltag: Essen wird schneller erfassbar, ohne dass du jedes Detail händisch eingeben musst."
+    title: "Lebensmittel Truth Score",
+    text: "Der Lebensmittel Truth Score deckt Marketing-Fallen auf: Du fotografierst ein Produkt und bekommst eine ehrliche Einordnung, wie viel Marketing wirklich drinsteckt, was das Produkt tatsächlich ist und welche sinnvollere Alternative infrage kommt."
   },
   {
-    title: "Barcode-Scan",
-    text: "Lebensmittel können direkt gescannt und einfacher in die Ernährungslogik eingebunden werden."
+    title: "Barcode, Speisekarten & Live Scan",
+    text: "Barcode, Speisekarten und Live-Scans holen Ernährung schneller in den Alltag und machen Erfassung deutlich einfacher."
   },
   {
     title: "Clubs und GPS-Routen",
