@@ -1,0 +1,5 @@
+{
+  "project_id": "appgprj_6a32346ddfa48191803714843267c710",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist"
+}

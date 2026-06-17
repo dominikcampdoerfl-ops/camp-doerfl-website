@@ -1,0 +1,11 @@
+{
+  "name": "camp-doerfl-website",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node src/build.mjs",
+    "dev": "node src/dev.mjs",
+    "preview": "node src/server.mjs"
+  }
+}
