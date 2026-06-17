@@ -997,9 +997,14 @@ function appPage() {
             <a class="button button--secondary-light" href="#app-vorschau"><span>App ansehen</span><span aria-hidden="true">&rarr;</span></a>
           </div>
           <dl class="ff-hero__facts" data-reveal aria-label="Leistungsbausteine der Camp Dörfl App">
-            <div><dt>360°</dt><dd>Alle Tools</dd></div>
-            <div><dt>Scan</dt><dd>Essen live</dd></div>
-            <div><dt>Club</dt><dd>Community & GPS</dd></div>
+            <div><dt>Kostenlos</dt><dd>downloaden</dd></div>
+            <div><dt>Ernährungspläne</dt><dd>individuell</dd></div>
+            <div><dt>Trainingspläne</dt><dd>fürs eigene Ziel</dd></div>
+            <div><dt>Live Scan</dt><dd>und Truth Score</dd></div>
+            <div><dt>Sprachtracking</dt><dd>und Speisekarten Scan</dd></div>
+            <div><dt>Performance Club</dt><dd>mit Running & Cycling Club</dd></div>
+            <div><dt>GPS Routen</dt><dd>planen, ausführen und tracken</dd></div>
+            <div><dt>Longevity</dt><dd>und Erholung</dd></div>
           </dl>
       </div>
     </section>

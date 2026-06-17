@@ -11433,6 +11433,40 @@ html { background: #0a0a0c; }
 
 .page-app .ff-hero__facts {
   margin-top: 42px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px 22px;
+  align-items: start;
+}
+
+.page-app .ff-hero__facts div {
+  min-width: 0;
+}
+
+.page-app .ff-hero__facts dt {
+  font-size: clamp(1.24rem, 1.65vw, 1.6rem);
+}
+
+.page-app .ff-hero__facts dd {
+  max-width: none;
+  line-height: 1.45;
+}
+
+@media (max-width: 900px) {
+  .page-app .ff-hero__facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 18px;
+  }
+
+  .page-app .ff-hero__facts dt {
+    font-size: clamp(1.12rem, 4.4vw, 1.38rem);
+  }
+}
+
+@media (max-width: 520px) {
+  .page-app .ff-hero__facts {
+    grid-template-columns: 1fr;
+  }
 }
 
 .coaching-start-stage {
