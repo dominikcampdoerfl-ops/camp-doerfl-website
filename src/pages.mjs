@@ -420,48 +420,48 @@ const coachingOutcomeRows = [
 
 const homeEntryCards = [
   {
-    detail: "Events",
-    title: "Events",
+    detail: "01 / LIVE MODERATION",
+    titleHtml: "PRÄSENZ. ENERGIE. <span>EVENTS.</span>",
     text:
-      "Moderation für Eröffnungen, Interviews und starke Bühnenpräsenz.",
+      "INTERVIEWS, OPENINGS UND BÜHNENFÜHRUNG MIT KLARER WIRKUNG.",
     image: "/assets/images/dominik-stage-suit.jpg",
     alt: "Dominik Dörfl als Moderator bei einem Firmenevent",
     theme: "accent",
     href: "/events/",
-    buttonLabel: "Events ansehen"
+    buttonLabel: "EVENTS ANSEHEN"
   },
   {
-    detail: "Firmenfitness",
-    title: "Firmenfitness",
+    detail: "02 / CORPORATE HEALTH",
+    titleHtml: "GESUNDHEIT. ANALYSE. <span>WIRKUNG.</span>",
     text:
-      "2D-Analyse, InBody und Beratung für starke Gesundheitstage.",
+      "2D-SCAN, INBODY UND BERATUNG FÜR STARKE GESUNDHEITSTAGE.",
     image: "/assets/images/dominik-coaching-bikeerg.jpg",
     alt: "Firmenfitness mit InBody Messung und persönlicher Beratung",
     theme: "light",
     href: "/firmenfitness/",
-    buttonLabel: "Firmenfitness entdecken"
+    buttonLabel: "FIRMENFITNESS ANSEHEN"
   },
   {
-    detail: "Premium Training",
-    title: "Premium Personal Training",
+    detail: "03 / PREMIUM COACHING",
+    titleHtml: "ANALYSE. FÜHRUNG. <span>RESULTAT.</span>",
     text:
-      "Analyse, Training und Ernährung in persönlicher Führung.",
+      "TRAINING UND ERNÄHRUNG IN PERSÖNLICHER PREMIUM-BEGLEITUNG.",
     image: "/assets/images/dominik-personal-coaching-client.webp",
     alt: "Dominik Dörfl mit einem Klienten im Personal Training im Studio",
     theme: "coaching",
     href: "/personal-coaching/",
-    buttonLabel: "Premium Training ansehen"
+    buttonLabel: "TRAINING ANSEHEN"
   },
   {
-    detail: "Camp Dörfl App",
-    title: "Camp Dörfl App",
+    detail: "04 / DIGITAL SYSTEM",
+    titleHtml: "TRACKING. STRUKTUR. <span>FORTSCHRITT.</span>",
     text:
-      "Tracking, Member Area und Clubs in einer klaren App.",
+      "MEMBER AREA, CLUBS UND PERFORMANCE IN EINER APP.",
     image: "/assets/images/home-app-preview.png",
     alt: "Camp Dörfl App Visual mit Dashboard, Food Truth Score, Scan-Funktionen und Clubs",
     theme: "app",
     href: "/app/",
-    buttonLabel: "App entdecken"
+    buttonLabel: "APP ANSEHEN"
   }
 ];
 
@@ -896,13 +896,13 @@ function homePage() {
           <div class="ed-entry-grid" aria-label="Vier Einstiege ins Performance System">
             ${homeEntryCards
               .map(
-                ({ title, text, image, alt, href, buttonLabel, theme }) => `
+                ({ titleHtml, text, image, alt, href, buttonLabel, theme }) => `
                   <a class="ed-entry ed-entry--${theme}" href="${href}" data-reveal>
                   <div class="ed-entry__media">
                     <img src="${image}" alt="${alt}">
                   </div>
                   <div class="ed-entry__body">
-                    <h3>${title}</h3>
+                    <h3>${titleHtml}</h3>
                     <p>${text}</p>
                     <span class="ed-entry__cta"><span class="ed-entry__cta-label">${buttonLabel}</span><span aria-hidden="true">&rarr;</span></span>
                   </div>
