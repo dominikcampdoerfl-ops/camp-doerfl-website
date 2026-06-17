@@ -90,6 +90,13 @@ export function contactHref(topicSlug = "") {
 
 function uiIcon(name) {
   const icons = {
+    home: `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4.5 10.5 12 4l7.5 6.5"></path>
+        <path d="M7.5 9.5V19h9V9.5"></path>
+        <path d="M10 19v-5h4v5"></path>
+      </svg>
+    `,
     app: `
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <rect x="6" y="3.5" width="12" height="17" rx="3"></rect>
@@ -125,13 +132,37 @@ function uiIcon(name) {
         <path d="M15 14.5h2"></path>
       </svg>
     `,
+    team: `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"></path>
+        <path d="M16 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"></path>
+        <path d="M3.5 19a5.2 5.2 0 0 1 9 0"></path>
+        <path d="M11.5 19a5.2 5.2 0 0 1 9 0"></path>
+      </svg>
+    `,
     events: `
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M6 18V8.5a6 6 0 0 1 12 0V18"></path>
-        <path d="M4 18h16"></path>
-        <path d="M12 18v2.5"></path>
-        <path d="M9 20.5h6"></path>
-        <path d="M9.5 6.5h5"></path>
+        <rect x="4.5" y="6.5" width="15" height="13" rx="2.5"></rect>
+        <path d="M8 4v4"></path>
+        <path d="M16 4v4"></path>
+        <path d="M4.5 10h15"></path>
+        <path d="M8.5 13.5h2"></path>
+        <path d="M13.5 13.5h2"></path>
+      </svg>
+    `,
+    partner: `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M8.5 12.5 5 9a2.8 2.8 0 0 1 4-4l3.5 3.5"></path>
+        <path d="M15.5 11.5 19 15a2.8 2.8 0 1 1-4 4l-3.5-3.5"></path>
+        <path d="m10 14 4-4"></path>
+        <path d="m8.5 15.5 2 2"></path>
+        <path d="m13.5 8.5 2 2"></path>
+      </svg>
+    `,
+    contact: `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3.5" y="5.5" width="17" height="13" rx="2.5"></rect>
+        <path d="m5 7 7 5 7-5"></path>
       </svg>
     `,
     member: `
@@ -171,6 +202,17 @@ function uiIcon(name) {
   };
 
   return `<span class="program-icon">${icons[name] || icons.app}</span>`;
+}
+
+function navIconForHref(href) {
+  if (href === "/") return "home";
+  if (href === "/events/") return "events";
+  if (href === "/firmenfitness/") return "team";
+  if (href === "/personal-coaching/") return "trainer";
+  if (href === "/partner/") return "partner";
+  if (href === "/app/") return "app";
+  if (href === "/kontakt/") return "contact";
+  return "app";
 }
 
 export function sectionHeader({ eyebrow, title, text, align = "left", headingLevel = 2 }) {
@@ -691,7 +733,18 @@ function navbar(activePath) {
   const appItem = navItems.find((item) => item.href === "/app/");
   const contactItem = navItems.find((item) => item.href === "/kontakt/");
   const navSocials = socialProfileUrls();
-  const socialMarkup = navSocials.length ? socialIconLinks(navSocials, { className: "social-link--chip social-link--nav" }) : "";
+  const desktopSocialMarkup = navSocials.length ? socialIconLinks(navSocials, { className: "social-link--chip social-link--nav" }) : "";
+  const mobileSocialMarkup = navSocials.length ? socialIconLinks(navSocials, { className: "social-link--chip social-link--nav-menu" }) : "";
+  const mobileNavItems = [...primaryNavItems, ...(appItem ? [appItem] : []), ...(contactItem ? [contactItem] : [])];
+  const renderMobileNavItem = (item) => `
+    <a class="site-nav__entry${activePath === item.href ? " is-active" : ""}" href="${item.href}" ${activePath === item.href ? 'aria-current="page"' : ""}>
+      <span class="site-nav__entry-main">
+        <span class="site-nav__entry-icon">${uiIcon(navIconForHref(item.href))}</span>
+        <span class="site-nav__entry-label">${item.label}</span>
+      </span>
+      <span class="site-nav__entry-arrow" aria-hidden="true">&rsaquo;</span>
+    </a>
+  `;
 
   return `
     <header class="site-header" data-site-header>
@@ -706,27 +759,26 @@ function navbar(activePath) {
           <b>Menü</b>
         </button>
         <nav class="site-nav" id="site-nav" data-site-nav>
-          ${primaryNavItems
-            .map(
-              (item) => `
-                <a href="${item.href}" ${activePath === item.href ? 'aria-current="page"' : ""}>${item.label}</a>
-              `
-            )
-            .join("")}
-          ${
-            appItem
-              ? `<a class="site-nav__contact" href="${appItem.href}" ${activePath === appItem.href ? 'aria-current="page"' : ""}>${appItem.label}</a>`
-              : ""
-          }
-          ${
-            contactItem
-              ? `<a class="site-nav__contact" href="${contactItem.href}" ${activePath === contactItem.href ? 'aria-current="page"' : ""}>${contactItem.label}</a>`
-              : ""
-          }
-          ${socialMarkup ? `<div class="site-nav__socials" role="group" aria-label="Social Media">${socialMarkup}</div>` : ""}
+          <div class="site-nav__overlay">
+            <div class="site-nav__brand-block" aria-hidden="true">
+              <span class="site-nav__brand-mark">${brandLogo()}</span>
+              <span class="site-nav__brand-copy"><strong>Camp Dörfl</strong><small>Performance System</small></span>
+            </div>
+            <div class="site-nav__list">
+              ${mobileNavItems.map((item) => renderMobileNavItem(item)).join("")}
+            </div>
+            ${
+              mobileSocialMarkup
+                ? `<div class="site-nav__footer">
+                     <p class="site-nav__social-title">Folge uns</p>
+                     <div class="site-nav__socials" role="group" aria-label="Social Media">${mobileSocialMarkup}</div>
+                   </div>`
+                : ""
+            }
+          </div>
         </nav>
         <div class="nav-extras">
-          ${socialMarkup ? `<div class="nav-socials" role="group" aria-label="Social Media">${socialMarkup}</div>` : ""}
+          ${desktopSocialMarkup ? `<div class="nav-socials" role="group" aria-label="Social Media">${desktopSocialMarkup}</div>` : ""}
           ${
             appItem
               ? `<a class="nav-cta${activePath === appItem.href ? " is-active" : ""}" href="${appItem.href}"><span>${appItem.label}</span><span aria-hidden="true">&rarr;</span></a>`
@@ -919,11 +971,11 @@ export function layout({ title, description, path, keywords = [], content, bodyC
     <meta name="twitter:title" content="${title}">
     <meta name="twitter:description" content="${description}">
     <meta name="twitter:image" content="${site.url}/assets/images/camp-doerfl-hero.png">
-    <meta name="theme-color" content="#fbf7ef">
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/camp-doerfl-logo.png">
-    <link rel="stylesheet" href="/assets/styles.css">
-    <link rel="stylesheet" href="/assets/mobile-overrides.css">
-    <script type="application/ld+json">${JSON.stringify(structuredData)}</script>
+	    <meta name="theme-color" content="#fbf7ef">
+	    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/camp-doerfl-logo.png">
+	    <link rel="stylesheet" href="/assets/styles.css">
+	    <link rel="stylesheet" href="/assets/mobile-overrides.css">
+	    <script type="application/ld+json">${JSON.stringify(structuredData)}</script>
   </head>
   <body${bodyClass ? ` class="${bodyClass}"` : ""}>
     ${navbar(path)}

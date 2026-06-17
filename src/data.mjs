@@ -5,6 +5,8 @@ export const site = {
   url: "https://www.campdoerfl.de",
   email: "dominik@campdoerfl.de",
   instagram: "https://www.instagram.com/dominik.doerfl/",
+  facebook: "https://www.facebook.com/dominik.dorfl/?locale=de_DE",
+  linkedin: "https://de.linkedin.com/in/dominik-dörfl-328445211",
   location: "Nürnberg",
   streetAddress: "Kraftshofer Hauptstraße 154",
   postalCode: "90427",

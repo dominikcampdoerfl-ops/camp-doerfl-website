@@ -546,55 +546,64 @@ const corporateReferenceLogos = [
     name: "Mathias-von-Flurl-Schule",
     image: "/assets/images/reference-mathias-von-flurl-schule.png",
     alt: "Mathias-von-Flurl-Schule Logo",
-    url: "https://www.bs2-straubing.de/"
+    url: "https://www.bs2-straubing.de/",
+    text: "Berufliche Bildung mit einem Setting, in dem Gesundheit verständlich, nahbar und professionell vermittelt werden soll."
   },
   {
     name: "LWL",
     image: "/assets/images/reference-lwl.png",
     alt: "LWL Logo",
-    url: "https://www.lwl.org/"
+    url: "https://www.lwl.org/",
+    text: "Öffentliche Institution mit Fokus auf hochwertige Gesundheitsimpulse für Menschen, Teams und moderne Arbeitswelten."
   },
   {
     name: "Clever Fit",
     image: "/assets/images/reference-clever-fit.png",
     alt: "Clever Fit Logo",
-    url: "https://www.clever-fit.com/de/"
+    url: "https://www.clever-fit.com/de/",
+    text: "Fitnessnahes Umfeld, in dem Analyse, Beratung und Aktivierung direkt im Trainingskontext wirksam werden."
   },
   {
     name: "NAF",
     image: "/assets/images/reference-naf.png",
     alt: "NAF Logo",
-    url: "https://www.nafaxles.com/de/"
+    url: "https://www.nafaxles.com/de/",
+    text: "Industrie- und Unternehmensumfeld, in dem Gesundheitstage klar, effizient und mit echter Alltagstauglichkeit umgesetzt werden."
   },
   {
     name: "Heidelberg Materials",
     image: "/assets/images/reference-heidelberg-materials.png",
     alt: "Heidelberg Materials Logo",
-    url: "https://www.heidelbergmaterials.de/de"
+    url: "https://www.heidelbergmaterials.de/de",
+    text: "Großes Unternehmensumfeld mit Anspruch an professionelle Kommunikation, gute Struktur und spürbaren Mehrwert vor Ort."
   },
   {
     name: "VLB",
     image: "/assets/images/reference-vlb.png",
     alt: "VLB Logo",
-    url: "https://www.vlbbayern.de/"
+    url: "https://www.vlbbayern.de/",
+    text: "Verbandsnahes Umfeld, in dem Inhalte verständlich, hochwertig und mit klarer Praxisnähe transportiert werden müssen."
   },
   {
     name: "Stadt Nürnberg",
     image: "/assets/images/reference-stadt-nuernberg.png",
     alt: "Stadt Nürnberg Logo",
-    url: "https://www.nuernberg.de/internet/stadtportal/index.html"
+    url: "https://www.nuernberg.de/internet/stadtportal/index.html",
+    text: "Kommunales Umfeld, in dem Gesundheitskommunikation professionell, zugänglich und für unterschiedliche Zielgruppen anschlussfähig sein muss."
   },
   {
     name: "CCC Erlangen-EMN",
     image: "/assets/images/reference-ccc-erlangen-emn.png",
     alt: "CCC Erlangen-EMN Logo",
-    url: "https://ccc-emn.de/"
+    url: "https://ccc-emn.de/",
+    text: "Medizinisches und wissenschaftliches Umfeld mit Anspruch an Sorgfalt, Qualität und eine sensible, klare Ansprache."
   },
   {
     name: "alfafood GmbH",
     image: "/assets/images/reference-alfafood.png",
     alt: "alfafood GmbH Logo",
-    url: "https://alfafood.eu"
+    url: "https://alfafood.eu",
+    text: "Ernährungsnaher Kontext, in dem Produktbezug, Beratung und glaubwürdige Umsetzung sinnvoll zusammengeführt werden."
   }
 ];
 
@@ -636,37 +645,43 @@ const eventReferenceLogos = [
     name: "NRW BBKV e.V.",
     image: "/assets/images/event-reference-nrw-bbkv.jpg",
     alt: "NRW BBKV e.V. Logo",
-    url: "https://www.instagram.com/nrw_bbkv/"
+    url: "https://www.instagram.com/nrw_bbkv/",
+    text: "Landesverband für Bodybuilding und Fitness in Nordrhein-Westfalen mit starkem Bühnen- und Wettkampfbezug."
   },
   {
     name: "BLV BFK e.V.",
     image: "/assets/images/event-reference-blv-bfk.png",
     alt: "Logo des Bayerischen Landesverbands für Bodybuilding, Fitness und Kraftsport im DBFV e.V.",
-    url: "https://blv-bfk.de/"
+    url: "https://blv-bfk.de/",
+    text: "Bayerischer Landesverband für Bodybuilding, Fitness und Kraftsport mit professioneller Event- und Bühnenstruktur."
   },
   {
     name: "DBFV e.V.",
     image: "/assets/images/event-reference-dbfv.png",
     alt: "DBFV e.V. Logo",
-    url: "https://www.dbfv.de/"
+    url: "https://www.dbfv.de/",
+    text: "Deutscher Bodybuilding und Fitness Verband e.V. mit offiziellen Meisterschaften, Wertungen und Bühnenformaten."
   },
   {
     name: "VBB e.V.",
     image: "/assets/images/event-reference-vbb.jpg",
     alt: "VBB e.V. Logo",
-    url: "https://www.instagram.com/vbb_ev/"
+    url: "https://www.instagram.com/vbb_ev/",
+    text: "Verband mit sportnahen Live-Formaten, bei denen Präsenz, Timing und saubere Moderation direkt zählen."
   },
   {
     name: "Segmüller",
     image: "/assets/images/event-reference-segmueller.png",
     alt: "Segmüller Logo",
-    url: "https://www.segmueller.de/"
+    url: "https://www.segmueller.de/",
+    text: "Große Marken- und Veranstaltungsumgebung mit Anspruch an Auftreten, Ablauf und einen professionellen Gastgeberrahmen."
   },
   {
     name: "BZKF",
     image: "/assets/images/event-reference-bzkf.png",
     alt: "BZKF Logo",
-    url: "https://bzkf.de/"
+    url: "https://bzkf.de/",
+    text: "Formate mit Verbandshintergrund, in denen Vertrauen, klare Führung und ein würdiger Bühnenrahmen wichtig sind."
   }
 ];
 
@@ -1286,10 +1301,17 @@ function firmenfitnessPage() {
         <div class="corporate-reference-band__logos" aria-label="Referenzen Firmenfitness">
           ${corporateReferenceLogos
             .map(
-              ({ name, image, alt, url }) => `
+              ({ name, image, alt, url, text }) => `
                 <a class="corporate-reference-card" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="Website von ${name} öffnen">
-                  <img src="${image}" alt="${alt}">
-                  <span>${name}</span>
+                  <span class="corporate-reference-card__logo">
+                    <img src="${image}" alt="${alt}">
+                  </span>
+                  <span class="corporate-reference-card__divider" aria-hidden="true"></span>
+                  <span class="corporate-reference-card__body">
+                    <strong>${name}</strong>
+                    <span>${text}</span>
+                  </span>
+                  <span class="corporate-reference-card__arrow" aria-hidden="true">&rsaquo;</span>
                 </a>
               `
             )
@@ -1441,6 +1463,41 @@ function eventsPage() {
     </section>
 
     <section class="section section--tight">
+      <div class="section-shell editorial-stage">
+        <div class="editorial-stage__copy" data-reveal>
+          ${sectionHeader({
+            eyebrow: "Praxisblick",
+            title: "So wirken Events im echten Einsatz.",
+            text:
+              "Präsenz, Timing und sichere Führung kommen hier zusammen. Genau so wird aus einer Moderation ein hochwertiges Format mit echter Wirkung, die im Raum sofort spürbar ist."
+          })}
+          <div class="summary-rows summary-rows--compact">
+            <article class="summary-row">
+              <h3>Direkt spürbar</h3>
+              <p>Publikum, Gäste und Veranstalter merken sofort, wenn Energie, Sprache und Präsenz professionell getragen werden.</p>
+            </article>
+            <article class="summary-row">
+              <h3>Sauber führbar</h3>
+              <p>Ideal für Eröffnungen, Interviews und Bühnenmomente, die nahbar wirken und trotzdem komplett kontrolliert bleiben.</p>
+            </article>
+          </div>
+        </div>
+        <div class="editorial-stage__media editorial-stage__media--video editorial-stage__media--short" data-reveal>
+          ${deferredVideoEmbed({
+            embedUrl: "https://www.youtube-nocookie.com/embed/oTRIacnkFPc?autoplay=1&rel=0&modestbranding=1&playsinline=1",
+            watchUrl: "https://www.youtube.com/watch?v=oTRIacnkFPc",
+            title: "Camp Dörfl Events",
+            image: "/assets/images/dominik-moderator-mic.jpg",
+            alt: "Dominik Dörfl als Moderator mit Mikrofon auf einer Bühne",
+            headline: "Events im Einsatz.",
+            actionLabel: "Video laden",
+            short: true
+          })}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight">
       <div class="section-shell section-shell--wide event-reference-band" data-reveal>
         <div class="event-reference-band__intro">
           <p class="eyebrow">Referenzen</p>
@@ -1450,10 +1507,17 @@ function eventsPage() {
         <div class="event-reference-band__logos" aria-label="Event Referenzen">
           ${eventReferenceLogos
             .map(
-              ({ name, image, alt, url }) => `
+              ({ name, image, alt, url, text }) => `
                 <a class="event-reference-card" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="Website von ${name} öffnen">
-                  <img src="${image}" alt="${alt}">
-                  <span>${name}</span>
+                  <span class="event-reference-card__logo">
+                    <img src="${image}" alt="${alt}">
+                  </span>
+                  <span class="event-reference-card__divider" aria-hidden="true"></span>
+                  <span class="event-reference-card__body">
+                    <strong>${name}</strong>
+                    <span>${text}</span>
+                  </span>
+                  <span class="event-reference-card__arrow" aria-hidden="true">&rsaquo;</span>
                 </a>
               `
             )
@@ -1461,41 +1525,6 @@ function eventsPage() {
         </div>
       </div>
     </section>
-
-	    <section class="section section--tight">
-	      <div class="section-shell editorial-stage">
-	        <div class="editorial-stage__copy" data-reveal>
-	          ${sectionHeader({
-	            eyebrow: "Praxisblick",
-	            title: "So wirken Events im echten Einsatz.",
-	            text:
-	              "Präsenz, Timing und sichere Führung kommen hier zusammen. Genau so wird aus einer Moderation ein hochwertiges Format mit echter Wirkung, die im Raum sofort spürbar ist."
-	          })}
-	          <div class="summary-rows summary-rows--compact">
-	            <article class="summary-row">
-	              <h3>Direkt spürbar</h3>
-	              <p>Publikum, Gäste und Veranstalter merken sofort, wenn Energie, Sprache und Präsenz professionell getragen werden.</p>
-	            </article>
-	            <article class="summary-row">
-	              <h3>Sauber führbar</h3>
-	              <p>Ideal für Eröffnungen, Interviews und Bühnenmomente, die nahbar wirken und trotzdem komplett kontrolliert bleiben.</p>
-	            </article>
-	          </div>
-	        </div>
-	        <div class="editorial-stage__media editorial-stage__media--video editorial-stage__media--short" data-reveal>
-	          ${deferredVideoEmbed({
-	            embedUrl: "https://www.youtube-nocookie.com/embed/oTRIacnkFPc?autoplay=1&rel=0&modestbranding=1&playsinline=1",
-	            watchUrl: "https://www.youtube.com/watch?v=oTRIacnkFPc",
-	            title: "Camp Dörfl Events",
-	            image: "/assets/images/dominik-moderator-mic.jpg",
-	            alt: "Dominik Dörfl als Moderator mit Mikrofon auf einer Bühne",
-	            headline: "Events im Einsatz.",
-	            actionLabel: "Video laden",
-	            short: true
-	          })}
-	        </div>
-	      </div>
-	    </section>
 
     <section class="section">
       <div class="section-shell section-shell--wide">

@@ -7,8 +7,10 @@ if (navToggle && nav) {
 
   const setNavState = (isOpen) => {
     navToggle.setAttribute("aria-expanded", String(isOpen));
+    navToggle.setAttribute("aria-label", isOpen ? "Navigation schließen" : "Navigation öffnen");
     navToggle.classList.toggle("is-open", isOpen);
     nav.classList.toggle("is-open", isOpen);
+    nav.setAttribute("aria-hidden", String(!isOpen));
 
     if (header instanceof HTMLElement) {
       header.classList.toggle("is-nav-open", isOpen);
@@ -21,13 +23,15 @@ if (navToggle && nav) {
     document.body.classList.toggle("nav-open", isOpen);
   };
 
+  setNavState(false);
+
   navToggle.addEventListener("click", () => {
     const isOpen = navToggle.getAttribute("aria-expanded") === "true";
     setNavState(!isOpen);
   });
 
   nav.addEventListener("click", (event) => {
-    if (event.target instanceof HTMLAnchorElement) {
+    if (event.target instanceof Element && event.target.closest("a")) {
       setNavState(false);
     }
   });
