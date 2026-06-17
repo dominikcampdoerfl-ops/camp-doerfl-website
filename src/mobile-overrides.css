@@ -2,6 +2,204 @@
    MOBILE OVERRIDES LAYER — keep desktop heroes untouched while
    we fine-tune small-screen image crops page by page.
    ============================================================ */
+.nav-socials .social-link-row,
+.site-nav__socials .social-link-row {
+  gap: 10px;
+}
+
+.page-home-reboot .social-link--nav,
+.page-premium .social-link--nav {
+  min-width: 42px;
+  width: 42px;
+  height: 42px;
+  padding: 6px;
+  border-radius: 14px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 14px 28px rgba(17, 16, 12, 0.18);
+}
+
+.page-home-reboot .social-link--nav .social-link__icon,
+.page-premium .social-link--nav .social-link__icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.page-home-reboot .social-link--nav:hover,
+.page-home-reboot .social-link--nav:focus-visible,
+.page-premium .social-link--nav:hover,
+.page-premium .social-link--nav:focus-visible {
+  transform: translateY(-1px);
+}
+
+/* ============================================================
+   HOME ENTRY CARD POLISH — premium glass cards and refined CTA
+   without changing the Home layout or section structure.
+   ============================================================ */
+.page-home-reboot .ed-entry {
+  transition:
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s ease,
+    border-color 0.35s ease;
+}
+
+.page-home-reboot .ed-entry::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: 29px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 22%);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.page-home-reboot .ed-entry__media img {
+  filter: saturate(0.92) brightness(0.83) contrast(1.05) !important;
+  will-change: transform;
+}
+
+.page-home-reboot .ed-entry__media::after {
+  background:
+    linear-gradient(180deg, rgba(5, 5, 6, 0.02) 0%, rgba(5, 5, 6, 0.11) 26%, rgba(5, 5, 6, 0.56) 69%, rgba(5, 5, 6, 0.9) 100%),
+    linear-gradient(104deg, rgba(5, 5, 6, 0.05) 0%, rgba(5, 5, 6, 0) 44%, rgba(5, 5, 6, 0.22) 100%) !important;
+}
+
+.page-home-reboot .ed-entry__body {
+  position: relative;
+  z-index: 3;
+  width: calc(100% - 24px) !important;
+  margin: auto 12px 12px !important;
+  padding: 14px 16px 15px !important;
+  gap: 4px !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 18px !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.035)),
+    linear-gradient(180deg, rgba(22, 22, 28, 0.38), rgba(8, 8, 11, 0.58)) !important;
+  box-shadow:
+    0 22px 46px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(18px) saturate(145%);
+  -webkit-backdrop-filter: blur(18px) saturate(145%);
+  overflow: hidden;
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease,
+    background 0.35s ease;
+}
+
+.page-home-reboot .ed-entry__body::before {
+  content: "";
+  position: absolute;
+  inset: 1px 1px auto;
+  height: 44%;
+  border-radius: 17px 17px 12px 12px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+
+.page-home-reboot .ed-entry__body > * {
+  position: relative;
+  z-index: 1;
+}
+
+.page-home-reboot .ed-entry__body h3 {
+  max-width: 17ch !important;
+  font-size: clamp(1.16rem, 1.42vw, 1.5rem) !important;
+  line-height: 0.94 !important;
+  letter-spacing: 0.015em !important;
+  text-shadow: 0 10px 24px rgba(0, 0, 0, 0.34);
+}
+
+.page-home-reboot .ed-entry__body p {
+  max-width: 33ch !important;
+  margin-top: 4px !important;
+  font-size: 0.82rem !important;
+  line-height: 1.48 !important;
+  color: rgba(255, 255, 255, 0.82) !important;
+  -webkit-line-clamp: 2;
+}
+
+.page-home-reboot .ed-entry__cta,
+.page-home-reboot .ed-entry-grid .ed-entry:nth-child(1) .ed-entry__cta,
+.page-home-reboot .ed-entry-grid .ed-entry:nth-child(2) .ed-entry__cta,
+.page-home-reboot .ed-entry-grid .ed-entry:nth-child(3) .ed-entry__cta,
+.page-home-reboot .ed-entry-grid .ed-entry:nth-child(4) .ed-entry__cta {
+  gap: 10px !important;
+  margin-top: 12px !important;
+  padding: 7px 8px 7px 16px !important;
+  min-height: 36px !important;
+  font-size: 0.74rem !important;
+  letter-spacing: 0.045em !important;
+  background: linear-gradient(135deg, var(--entry-accent) 0%, var(--entry-accent-2) 115%) !important;
+  box-shadow:
+    0 18px 32px -18px var(--entry-accent-shadow),
+    0 0 18px -13px rgba(232, 170, 67, 0.46),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease,
+    gap 0.35s ease !important;
+}
+
+.page-home-reboot .ed-entry__cta-label {
+  line-height: 1.05;
+}
+
+.page-home-reboot .ed-entry__cta span:last-child {
+  width: 22px !important;
+  height: 22px !important;
+  flex-basis: 22px !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 6px 12px rgba(0, 0, 0, 0.12) !important;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.35s ease,
+    box-shadow 0.35s ease !important;
+}
+
+.page-home-reboot .ed-entry:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 46px 80px -34px rgba(0, 0, 0, 0.88) !important;
+}
+
+.page-home-reboot .ed-entry:hover .ed-entry__media img {
+  transform: scale(1.055);
+  filter: saturate(0.98) brightness(0.9) contrast(1.05) !important;
+}
+
+.page-home-reboot .ed-entry:hover .ed-entry__body {
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.045)),
+    linear-gradient(180deg, rgba(22, 22, 28, 0.4), rgba(8, 8, 11, 0.62)) !important;
+  box-shadow:
+    0 28px 54px rgba(0, 0, 0, 0.36),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  transform: translateY(-1px);
+}
+
+.page-home-reboot .ed-entry:hover .ed-entry__cta {
+  transform: translateY(-2px);
+  gap: 11px !important;
+  box-shadow:
+    0 22px 36px -18px var(--entry-accent-shadow),
+    0 0 22px -12px rgba(232, 170, 67, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24) !important;
+}
+
+.page-home-reboot .ed-entry:hover .ed-entry__cta span:last-child {
+  transform: translateX(2px);
+  background: rgba(255, 255, 255, 0.26) !important;
+}
+
 @media (max-width: 900px) {
   .ff-hero--home-photo {
     --ff-hero-mobile-image-position: 76% center;
