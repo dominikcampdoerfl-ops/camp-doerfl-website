@@ -922,6 +922,7 @@ export function layout({ title, description, path, keywords = [], content, bodyC
     <meta name="theme-color" content="#fbf7ef">
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/camp-doerfl-logo.png">
     <link rel="stylesheet" href="/assets/styles.css">
+    <link rel="stylesheet" href="/assets/mobile-overrides.css">
     <script type="application/ld+json">${JSON.stringify(structuredData)}</script>
   </head>
   <body${bodyClass ? ` class="${bodyClass}"` : ""}>
