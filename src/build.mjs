@@ -12,6 +12,7 @@ export async function buildSite() {
   await mkdir(dist, { recursive: true });
   await cp(join(root, "assets"), join(dist, "assets"), { recursive: true });
   await copyFile(join(root, "src", "styles.css"), join(dist, "assets", "styles.css"));
+  await copyFile(join(root, "src", "mobile-overrides.css"), join(dist, "assets", "mobile-overrides.css"));
   await copyFile(join(root, "src", "main.js"), join(dist, "assets", "main.js"));
 
   for (const page of pages) {
