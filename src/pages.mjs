@@ -2327,18 +2327,6 @@ function partnerPage() {
       </div>
     </section>
 
-    <section class="section">
-      <div class="section-shell section-shell--wide coaching-start-stage partner-value-stage">
-        ${sectionHeader({
-          eyebrow: "Warum Partner",
-          title: "Wieso Camp Dörfl für Partnerschaften funktioniert.",
-          text:
-            "Kooperationen wirken hier nicht aufgesetzt, sondern eingebettet in Training, Bühne, Unternehmen und Alltag."
-        })}
-        ${featureGrid(partnerValueCards, "feature-grid--partner")}
-      </div>
-    </section>
-
     <section class="section section--tight">
       <div class="section-shell section-shell--wide editorial-stage editorial-stage--partner-videos">
         <div class="editorial-stage__copy" data-reveal>
@@ -2399,6 +2387,18 @@ function partnerPage() {
               .join("")}
           </div>
         </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-shell section-shell--wide coaching-start-stage partner-value-stage">
+        ${sectionHeader({
+          eyebrow: "Warum Partner",
+          title: "Wieso Camp Dörfl für Partnerschaften funktioniert.",
+          text:
+            "Kooperationen wirken hier nicht aufgesetzt, sondern eingebettet in Training, Bühne, Unternehmen und Alltag."
+        })}
+        ${featureGrid(partnerValueCards, "feature-grid--partner")}
       </div>
     </section>
 
