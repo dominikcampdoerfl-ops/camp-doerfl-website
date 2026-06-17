@@ -13024,6 +13024,21 @@ body.consent-modal-open {
   }
 }
 
+@media (max-width: 900px) {
+  .page-partner .ff-hero__title {
+    font-size: clamp(2.5rem, 10.8vw, 3.12rem);
+    line-height: 0.9;
+    letter-spacing: -0.018em;
+  }
+
+  .page-partner .section-shell--partner-activation .section-header h2 {
+    max-width: 12ch;
+    font-size: clamp(2.08rem, 8.9vw, 2.7rem);
+    line-height: 0.96;
+    text-wrap: pretty;
+  }
+}
+
 /* ============================================================
    APP PAGE — modernise "Vier Funktionswelten" cards (big gold
    index, hover lift) + cleaner, more legible header.

@@ -2264,7 +2264,7 @@ function partnerPage() {
       <div class="section-shell ff-hero__shell">
         <div class="ff-hero__inner">
           <p class="ff-hero__eyebrow" data-reveal>Partner</p>
-          <h1 class="ff-hero__title" data-reveal>Partnerschaften.<br>Mit Wirkung.<br><span>Und Haltung.</span></h1>
+          <h1 class="ff-hero__title" data-reveal>Partner<wbr>schaften.<br>Mit Wirkung.<br><span>Und Haltung.</span></h1>
           <p class="ff-hero__lead" data-reveal>
             Camp Dörfl verbindet Performance, Bühne, Unternehmen und Community zu einer glaubwürdigen Markenwelt.
           </p>
@@ -2373,10 +2373,10 @@ function partnerPage() {
     </section>
 
     <section class="section section--muted">
-      <div class="section-shell">
+      <div class="section-shell section-shell--partner-activation">
         ${sectionHeader({
           eyebrow: "Kooperationsfelder",
-          title: "So kann Zusammenarbeit konkret aussehen.",
+          title: "So kann Zusammen<wbr>arbeit konkret aussehen.",
           text:
             "Je nach Marke, Ziel und Format kann die Zusammenarbeit live, digital oder in einer Verbindung aus beidem aufgebaut werden."
         })}
