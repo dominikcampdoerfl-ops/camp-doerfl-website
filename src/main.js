@@ -3,16 +3,51 @@ const navToggle = document.querySelector("[data-nav-toggle]");
 const nav = document.querySelector("[data-site-nav]");
 
 if (navToggle && nav) {
+  const navToggleLabel = navToggle.querySelector("b");
+
+  const setNavState = (isOpen) => {
+    navToggle.setAttribute("aria-expanded", String(isOpen));
+    navToggle.classList.toggle("is-open", isOpen);
+    nav.classList.toggle("is-open", isOpen);
+
+    if (header instanceof HTMLElement) {
+      header.classList.toggle("is-nav-open", isOpen);
+    }
+
+    if (navToggleLabel instanceof HTMLElement) {
+      navToggleLabel.textContent = isOpen ? "Schließen" : "Menü";
+    }
+
+    document.body.classList.toggle("nav-open", isOpen);
+  };
+
   navToggle.addEventListener("click", () => {
     const isOpen = navToggle.getAttribute("aria-expanded") === "true";
-    navToggle.setAttribute("aria-expanded", String(!isOpen));
-    nav.classList.toggle("is-open", !isOpen);
+    setNavState(!isOpen);
   });
 
   nav.addEventListener("click", (event) => {
     if (event.target instanceof HTMLAnchorElement) {
-      navToggle.setAttribute("aria-expanded", "false");
-      nav.classList.remove("is-open");
+      setNavState(false);
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      setNavState(false);
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!(event.target instanceof Node) || !(header instanceof HTMLElement)) return;
+    if (!header.contains(event.target)) {
+      setNavState(false);
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth >= 880) {
+      setNavState(false);
     }
   });
 }
