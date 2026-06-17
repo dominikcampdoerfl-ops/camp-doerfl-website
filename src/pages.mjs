@@ -988,7 +988,7 @@ function appPage() {
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
           <p class="ff-hero__eyebrow" data-reveal>Camp Dörfl App</p>
-          <h1 class="ff-hero__title" data-reveal>Eine App.<br>Vier Welten.<br><span>Ein System.</span></h1>
+          <h1 class="ff-hero__title" data-reveal>Eine App.<br>Zwei Welten.<br><span>Ein System.</span></h1>
           <p class="ff-hero__lead" data-reveal>
             Member Bereich, Trainings- und Ernährungsplanung, Scan-Funktionen, Clubs, GPS-Routen und Fortschritt greifen hier in einer klaren Oberfläche zusammen.
           </p>
