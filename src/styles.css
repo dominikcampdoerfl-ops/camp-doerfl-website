@@ -10438,6 +10438,23 @@ h1, h2, h3 {
 /* ============================ DARK SECTIONS ============================ */
 .page-home-reboot .ed-section,
 .page-home-reboot .ed-proof { background: transparent; }
+.page-home-reboot .ff-hero__facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, auto));
+  gap: 18px 32px;
+  align-items: start;
+  justify-content: flex-start;
+}
+.page-home-reboot .ff-hero__facts div {
+  min-width: 0;
+}
+.page-home-reboot .ff-hero__facts dt {
+  font-size: clamp(1.6rem, 2.2vw, 2.1rem);
+}
+.page-home-reboot .ff-hero__facts dd {
+  max-width: 16ch;
+  line-height: 1.45;
+}
 .page-home-reboot .ed-section__title,
 .page-home-reboot .ed-proof .ed-section__title {
   font-family: var(--font-cond);
@@ -12836,6 +12853,16 @@ body.consent-modal-open {
   }
   .ff-hero--split .ff-hero__facts {
     margin-top: 40px;
+  }
+  .page-home-reboot .ff-hero__facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 22px;
+  }
+  .page-home-reboot .ff-hero__facts dt {
+    font-size: clamp(1.34rem, 5.8vw, 1.72rem);
+  }
+  .page-home-reboot .ff-hero__facts dd {
+    max-width: none;
   }
   .partner-hero__actions {
     align-items: flex-start;

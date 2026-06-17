@@ -879,6 +879,7 @@ function homePage() {
           <div><dt>2×</dt><dd>Deutscher Meister</dd></div>
           <div><dt>Profi Athlet</dt><dd>Fitness</dd></div>
           <div><dt>Ironman</dt><dd>Finisher</dd></div>
+          <div><dt>Fitness Trainer</dt><dd>ausgebildet & zertifiziert</dd></div>
         </dl>
       </div>
     </section>
