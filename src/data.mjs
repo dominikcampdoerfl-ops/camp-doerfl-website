@@ -7,6 +7,7 @@ export const site = {
   instagram: "https://www.instagram.com/dominik.doerfl/",
   facebook: "https://www.facebook.com/dominik.dorfl/?locale=de_DE",
   linkedin: "https://de.linkedin.com/in/dominik-dörfl-328445211",
+  spotify: "https://open.spotify.com/show/4J0iYTYCdGDuhwkLsXxNo8",
   location: "Nürnberg",
   streetAddress: "Kraftshofer Hauptstraße 154",
   postalCode: "90427",
