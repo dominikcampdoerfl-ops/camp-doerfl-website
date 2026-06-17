@@ -1,6 +1,5 @@
 import {
   achievements,
-  appFeatureGroups,
   appFunctionRows,
   corporateSteps,
   landingProofCards,
@@ -8,7 +7,6 @@ import {
 } from "./data.mjs";
 import {
   achievementGrid,
-  appSystemGrid,
   contactHref,
   contactForm,
   ctaSection,
@@ -384,21 +382,21 @@ const coachingAudienceCards = [
 const coachingIncludedCards = [
   {
     detail: "Personal Training",
-    title: "Einzelstunde ohne langfristige Bindung",
+    title: "Einzelstunde",
     text:
-      "Für Menschen, die Technik, Struktur und direkten Trainingsreiz wollen. Einzeltermine sowie 5er- und 10er-Karten sind möglich."
+      "Technik, Struktur und direkter Trainingsreiz — als Einzeltermin oder 5er-/10er-Karte, ganz ohne Bindung."
   },
   {
     detail: "Premium Coaching",
-    title: "Gemeinsames Training mit Analyse und Fortschrittskontrolle",
+    title: "Premium Betreuung",
     text:
-      "Gemeinsame Trainings, 2D-Analyse, Fortschrittskontrolle sowie Ernährungs- und Trainingsplanung greifen hier in einem eng geführten System zusammen."
+      "Eng geführtes System aus gemeinsamen Trainings, 2D-Analyse, Fortschrittskontrolle sowie Trainings- und Ernährungsplanung."
   },
   {
-    detail: "Camp Dörfl App",
-    title: "Individuelle Betreuung durch ein starkes System",
+    detail: "Digitaler Zugang",
+    title: "Camp Dörfl App",
     text:
-      "Die App ist der digitale Einstieg für Menschen, die individuell betreut werden wollen und dafür ein starkes System aus Planung, Struktur und Fortschrittslogik nutzen möchten."
+      "Der digitale Einstieg in individuelle Betreuung über Planung, Struktur und klare Fortschrittslogik."
   }
 ];
 
@@ -787,27 +785,6 @@ const partnerFaq = [
   }
 ];
 
-const appAudienceCards = [
-  {
-    detail: "Für Busy Performer",
-    title: "Wenn du Struktur statt Tool-Chaos willst",
-    text:
-      "Die App ist für Menschen gebaut, die Training, Ernährung und Fortschritt endlich in einem klaren Member Bereich bündeln wollen."
-  },
-  {
-    detail: "Für Community",
-    title: "Wenn Clubs und Dynamik dich besser machen",
-    text:
-      "Running Club, Cycling Club, Challenges und GPS-Routen sorgen dafür, dass Leistung nicht isoliert bleibt."
-  },
-  {
-    detail: "Für messbaren Fortschritt",
-    title: "Wenn du Entwicklung direkt sehen willst",
-    text:
-      "Aufzeichnung, Vergleiche und das Score System machen sichtbar, ob du im Alltag wirklich auf Kurs bist."
-  }
-];
-
 const teamSuccessCards = [
   {
     detail: "Athleten",
@@ -991,40 +968,17 @@ function homePage() {
 function appPage() {
   const content = `
     <section class="ff-hero ff-hero--app ff-hero--text-only">
-      <img class="ff-hero__img" src="/assets/images/app-screen-all-tools.jpg" alt="" aria-hidden="true">
+      <img class="ff-hero__img" src="/assets/images/home-app-preview.png" alt="" aria-hidden="true">
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
           <p class="ff-hero__eyebrow" data-reveal>Camp Dörfl App</p>
-          <h1 class="ff-hero__title" data-reveal>Digitales.<br>Performance-<br><span>System.</span></h1>
+          <h1 class="ff-hero__title" data-reveal>Eine App.<br>Vier Welten.<br><span>Ein System.</span></h1>
           <p class="ff-hero__lead" data-reveal>
-            Die Camp Dörfl App verbindet Member Bereich, Trainingsplanung, Ernährungsplanung, Scans, Clubs, GPS-Routen und Score System in einer klaren Oberfläche.
+            Member Bereich, Trainings- und Ernährungsplanung, Scan-Funktionen, Clubs, GPS-Routen und Fortschritt greifen hier in einer klaren Oberfläche zusammen.
           </p>
-          <p class="ff-hero__support" data-reveal>
-            Für Menschen, die nicht noch eine weitere Fitness-App suchen, sondern ein System, das ihren Alltag besser organisiert.
-          </p>
-          <div class="ff-hero__actions ff-hero__actions--stores" data-reveal>
-            <button class="button button--ghost button--store" type="button" aria-label="Android App Store Link folgt">
-              <span class="store-logo store-logo--android" aria-hidden="true">
-                <svg viewBox="0 0 24 24" focusable="false">
-                  <path d="M7.06 8.45A5.86 5.86 0 0 0 6 11.82v5.13a1.03 1.03 0 0 0 1.03 1.03h.72V21a1.1 1.1 0 1 0 2.2 0v-3.02h1.1V21a1.1 1.1 0 1 0 2.2 0v-3.02h1.1V21a1.1 1.1 0 1 0 2.2 0v-3.02h.72A1.03 1.03 0 0 0 18 16.95v-5.13a5.86 5.86 0 0 0-1.06-3.37l.76-.76a.48.48 0 1 0-.68-.68l-.83.83A5.73 5.73 0 0 0 12 6.9a5.73 5.73 0 0 0-4.19.94l-.83-.83a.48.48 0 1 0-.68.68zm1.8-1.1A4.71 4.71 0 0 1 12 6.39a4.71 4.71 0 0 1 3.14.96 4.89 4.89 0 0 1 1.53 3.62H7.33a4.89 4.89 0 0 1 1.53-3.62Zm.43 1.67a.44.44 0 1 1-.44.44.44.44 0 0 1 .44-.44Zm5.42 0a.44.44 0 1 1-.44.44.44.44 0 0 1 .44-.44Z"/>
-                </svg>
-              </span>
-            </button>
-            <button class="button button--ghost button--store" type="button" aria-label="Apple App Store Link folgt">
-              <span class="store-logo store-logo--apple" aria-hidden="true">
-                <svg viewBox="0 0 24 24" focusable="false">
-                  <path d="M15.18 12.28c.03 2.37 2.08 3.16 2.1 3.17-.02.06-.32 1.1-1.05 2.18-.64.93-1.3 1.86-2.35 1.88-1.03.02-1.36-.61-2.54-.61-1.17 0-1.55.59-2.51.63-1 .04-1.76-1-2.4-1.92-1.3-1.88-2.3-5.31-.96-7.63.66-1.15 1.85-1.87 3.15-1.89.98-.02 1.9.66 2.54.66.64 0 1.84-.82 3.1-.7.53.02 2.03.21 3 1.63-.08.05-1.79 1.04-1.78 3.1Zm-2.09-4.9c.54-.66.9-1.58.8-2.49-.78.03-1.72.52-2.28 1.18-.5.58-.94 1.52-.82 2.42.87.07 1.76-.44 2.3-1.1Z"/>
-                </svg>
-              </span>
-            </button>
-          </div>
-          <div class="premium-proof-pills ff-hero__pills" data-reveal>
-            <span>Mahlzeiten-Livescan</span>
-            <span>Barcode-Scan</span>
-            <span>Sprachtracking</span>
-            <span>Food Truth Score</span>
-            <span>Performance Club</span>
-            <span>Gratis Goodies</span>
+          <div class="ff-hero__actions" data-reveal>
+            <a class="button button--primary" href="${contactHref("app")}"><span>App-Zugang anfragen</span><span aria-hidden="true">&rarr;</span></a>
+            <a class="button button--secondary-light" href="#app-vorschau"><span>App ansehen</span><span aria-hidden="true">&rarr;</span></a>
           </div>
           <dl class="ff-hero__facts" data-reveal aria-label="Leistungsbausteine der Camp Dörfl App">
             <div><dt>360°</dt><dd>Alle Tools</dd></div>
@@ -1035,53 +989,7 @@ function appPage() {
     </section>
 
     <section class="section section--tight">
-      <div class="section-shell section-shell--wide app-system-stage">
-        ${sectionHeader({
-          eyebrow: "Vier Funktionswelten",
-          title: "Die App ist in vier klare Funktionswelten gegliedert.",
-          text:
-            "Jeder Bereich hat eine klare Aufgabe: planen, erfassen, verbinden und Fortschritt sichtbar machen."
-        })}
-        ${appSystemGrid(appFeatureGroups)}
-      </div>
-    </section>
-
-    <section class="section section--tight">
-      <div class="section-shell section-shell--wide editorial-stage editorial-stage--app-product">
-        <div class="editorial-stage__copy" data-reveal>
-          ${sectionHeader({
-            eyebrow: "Produktbild",
-            title: "Das System in einer starken Darstellung.",
-            text:
-              "Das Key Visual aus dem Header wird hier bewusst groß inszeniert: klar, hochwertig und mit allen Kernfunktionen auf einen Blick."
-          })}
-          <div class="summary-rows summary-rows--compact">
-            <article class="summary-row">
-              <h3>Alle Tools auf einen Blick</h3>
-              <p>Food Truth Score, Mahlzeiten-Livescan, Speisekarten-Scan, Barcode-Scan und Performance Club greifen sichtbar zusammen.</p>
-            </article>
-            <article class="summary-row">
-              <h3>Mehr Produkt als Fitness-App</h3>
-              <p>Die Darstellung zeigt bewusst keine austauschbare Tracking-App, sondern ein digitales System mit klarer Handschrift und hochwertiger Oberfläche.</p>
-            </article>
-          </div>
-        </div>
-        <div class="editorial-stage__media editorial-stage__media--app-poster" data-reveal>
-          <div class="app-premium-stage">
-            <figure class="app-hero-poster">
-              <img src="/assets/images/app-screen-all-tools.jpg" alt="Camp Dörfl App Visual mit Food Truth Score, Mahlzeiten-Livescan und allen zentralen Tools">
-            </figure>
-            <article class="app-premium-stage__note">
-              <h3>Ein System. Kein Sammelsurium.</h3>
-              <p>Planung, Scan-Funktionen, Club, Member Bereich und Fortschritt stehen nicht nebeneinander, sondern greifen als Produkt logisch ineinander.</p>
-            </article>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--tight">
-      <div class="section-shell section-shell--wide app-preview-stage">
+      <div id="app-vorschau" class="section-shell section-shell--wide app-preview-stage">
         ${sectionHeader({
           eyebrow: "App-Vorschau",
           title: "So wirkt die Camp Dörfl App im echten Einsatz.",
@@ -1101,23 +1009,6 @@ function appPage() {
             "Die wichtigsten Funktionen noch einmal kompakt und klar herausgearbeitet."
         })}
         ${summaryRows(appFunctionRows)}
-      </div>
-    </section>
-
-    <section class="section section--tight">
-      <div class="section-shell section-shell--wide editorial-stage editorial-stage--reverse app-audience-stage">
-        <div class="editorial-stage__copy" data-reveal>
-          ${sectionHeader({
-            eyebrow: "Für wen die App passt",
-            title: "Für alle, die Fortschritt nicht dem Zufall überlassen wollen.",
-            text:
-              "Die App funktioniert besonders gut für ambitionierte Menschen mit wenig Zeit, die Training, Ernährung und Community endlich in einer klaren Logik verbinden möchten."
-          })}
-          ${featureGrid(appAudienceCards, "feature-grid--app-audience")}
-        </div>
-        <div class="editorial-stage__media editorial-stage__media--app-screen" data-reveal>
-          <img src="/assets/images/app-screen-health.jpg" alt="Camp Dörfl App Vorschau mit Recovery-, Blutbild- und Health-Daten">
-        </div>
       </div>
     </section>
 
@@ -1236,7 +1127,8 @@ function personalCoachingPage() {
           eyebrow: "Premium Personal Training",
           title: "Analyse, Planung, App und regelmäßige Anpassung.",
           text:
-            "Zum Start entsteht ein messbarer Status. Danach werden Training und Ernährung individuell geplant, wöchentlich angepasst und alle vier Wochen überprüft."
+            "Zum Start entsteht ein messbarer Status. Danach werden Training und Ernährung individuell geplant, wöchentlich angepasst und alle vier Wochen überprüft.",
+          align: "center"
         })}
         ${featureGrid(coachingAudienceCards, "feature-grid--coaching-flow")}
       </div>
@@ -1249,9 +1141,53 @@ function personalCoachingPage() {
             eyebrow: "Ergebnis",
             title: "Was am Ende <span>spürbar anders</span> ist.",
             text:
-              "Ziel des Trainings ist nicht nur mehr Wissen, sondern ein Zustand, den du in deinem Alltag wirklich merkst."
+              "Ziel des Trainings ist nicht nur mehr Wissen, sondern ein Zustand, den du in deinem Alltag wirklich merkst.",
+            align: "center"
           })}
           ${summaryRows(coachingOutcomeRows)}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight section--coaching-reference">
+      <div class="section-shell section-shell--wide">
+        <div class="coaching-reference-stage">
+          <div class="coaching-reference-stage__copy" data-reveal>
+            ${sectionHeader({
+              eyebrow: "Video-Referenz",
+              title: "Eine zusätzliche Referenz aus dem <span>echten Coaching-Alltag.</span>",
+              text:
+                "Nicht gestellt, nicht überladen: Der Short zeigt genau die Dynamik, Präsenz und persönliche Führung, für die Premium Personal Training bei Camp Dörfl steht."
+            })}
+            <div class="premium-proof-pills coaching-reference-stage__pills" aria-label="Qualitäten dieser Referenz">
+              <span>1:1 Atmosphäre</span>
+              <span>Klare Führung</span>
+              <span>Premium Anspruch</span>
+            </div>
+            <div class="summary-rows summary-rows--compact">
+              <article class="summary-row">
+                <h3>Präsenz statt Show</h3>
+                <p>Man sieht sofort, wie eng Training, Ausstrahlung und persönliche Begleitung hier zusammengehören.</p>
+              </article>
+              <article class="summary-row">
+                <h3>Kurzer Clip, klares Gefühl</h3>
+                <p>Gerade im kompakten Format wird sichtbar, wie direkt, hochwertig und nahbar das Coaching aufgebaut ist.</p>
+              </article>
+            </div>
+          </div>
+          <div class="coaching-reference-stage__media editorial-stage__media editorial-stage__media--video editorial-stage__media--short" data-reveal>
+            ${deferredVideoEmbed({
+              embedUrl: "https://www.youtube-nocookie.com/embed/bP7DKqZu5xc?autoplay=1&rel=0&modestbranding=1&playsinline=1",
+              watchUrl: "https://youtube.com/shorts/bP7DKqZu5xc?si=VaGdauquMqCuWNyE",
+              title: "Camp Dörfl Premium Personal Training",
+              image: "/assets/images/premium-training-short-reference.jpg",
+              alt: "YouTube Short als Referenz fuer Camp Doerfl Premium Personal Training",
+              headline: "Premium Personal Training als Short-Referenz.",
+              actionLabel: "Short laden",
+              eyebrow: "YouTube Short",
+              short: true
+            })}
+          </div>
         </div>
       </div>
     </section>
@@ -1844,7 +1780,7 @@ function impressumPage() {
             <h3>Kontakt</h3>
             <p><strong>E-Mail:</strong> <a href="mailto:${site.email}">${site.email}</a></p>
             <p><strong>Instagram:</strong> ${socialIconLink(site.instagram, { className: "social-link--chip social-link--inline" })}</p>
-            <p>Eine unmittelbare elektronische Kontaktaufnahme ist per E-Mail möglich. Das Kontaktformular auf dieser Website versendet keine Daten serverseitig, sondern bereitet eine E-Mail in Ihrem E-Mail-Programm vor oder stellt den Anfrage-Text zum Kopieren bereit.</p>
+            <p>Eine unmittelbare elektronische Kontaktaufnahme ist per E-Mail möglich. Das Kontaktformular dieser Website übermittelt eingegebene Daten über den Formular-Dienst FormSubmit an ${site.email}.</p>
           </article>
           <article class="legal-card" data-reveal>
             <h3>Rechtliche Schnellnavigation</h3>
@@ -1924,7 +1860,7 @@ function privacyPage() {
               <li>Die auf der Website verwendeten Schriftarten werden lokal bereitgestellt.</li>
               <li>Ihre Einwilligungsauswahl wird lokal im Browser unter <code>campdoerfl-consent</code> gespeichert.</li>
               <li>YouTube-Inhalte werden erst nach Ihrer Freigabe geladen und können danach im sichtbaren Bereich automatisch und stumm starten.</li>
-              <li>Das Kontaktformular dieser Website überträgt keine Daten serverseitig, sondern erzeugt einen E-Mail-Entwurf oder eine Kopiervorlage auf Ihrem Gerät.</li>
+              <li>Das Kontaktformular dieser Website übermittelt Ihre Angaben an den Formular-Dienst FormSubmit, der die Nachricht an ${site.email} weiterleitet.</li>
             </ul>
           </article>
         </div>
@@ -1943,8 +1879,9 @@ function privacyPage() {
 
         <article class="legal-card" data-reveal>
           <h3>2. Kontakt per E-Mail und Kontaktformular</h3>
-          <p>Wenn Sie mir direkt per E-Mail schreiben oder den über diese Website vorbereiteten E-Mail-Entwurf nutzen, verarbeite ich die von Ihnen übermittelten Angaben zur Bearbeitung Ihrer Anfrage. Das können insbesondere Name, E-Mail-Adresse, Telefonnummer, Thema und Nachricht sein.</p>
-          <p>Besonderheit des Formulars auf dieser Website: Die eingegebenen Daten werden nicht serverseitig über diese Website übertragen. Beim Klick auf „Anfrage senden“ wird lediglich eine E-Mail in Ihrem E-Mail-Programm vorbereitet. Falls der Entwurf zu lang ist, kann der Inhalt lokal in die Zwischenablage kopiert werden.</p>
+          <p>Wenn Sie mir direkt per E-Mail schreiben oder das Kontaktformular auf dieser Website nutzen, verarbeite ich die von Ihnen übermittelten Angaben zur Bearbeitung Ihrer Anfrage. Das können insbesondere Name, E-Mail-Adresse, Telefonnummer, Unternehmen, Thema und Nachricht sein.</p>
+          <p>Beim Absenden des Formulars werden die eingegebenen Daten an den externen Formular-Dienst FormSubmit unter <code>formsubmit.co</code> übertragen und von dort an ${site.email} weitergeleitet. Dabei können zusätzlich technische Verbindungsdaten wie IP-Adresse, Zeitstempel und Browserinformationen verarbeitet werden.</p>
+          <p><strong>Empfänger:</strong> ich selbst sowie der eingesetzte Formular-Dienst FormSubmit / Devro LABS.</p>
           <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO, soweit es um vorvertragliche Kommunikation geht, im Übrigen Art. 6 Abs. 1 lit. f DSGVO.</p>
         </article>
 
@@ -2011,7 +1948,7 @@ function privacyPage() {
   return layout({
     path: "/datenschutz/",
     title: "Datenschutz | Camp Dörfl",
-    description: "Datenschutzerklärung von Camp Dörfl für die Website camp-doerfl.de.",
+    description: "Datenschutzerklärung von Camp Dörfl für die Website campdoerfl.de.",
     keywords: ["Datenschutz", "Camp Dörfl", "DSGVO"],
     bodyClass: "page-premium page-legal",
     content
@@ -2088,7 +2025,7 @@ function cookiesPage() {
   return layout({
     path: "/cookies/",
     title: "Cookies & lokale Speicherungen | Camp Dörfl",
-    description: "Cookie-, Einwilligungs- und Speicherungsinformationen von Camp Dörfl für die Website camp-doerfl.de.",
+    description: "Cookie-, Einwilligungs- und Speicherungsinformationen von Camp Dörfl für die Website campdoerfl.de.",
     keywords: ["Cookies", "Cookie-Einstellungen", "lokale Speicherungen", "Camp Dörfl"],
     bodyClass: "page-premium page-legal",
     content
@@ -2361,30 +2298,14 @@ function partnerPage() {
     </section>
 
     <section class="section">
-      <div class="section-shell">
+      <div class="section-shell section-shell--wide coaching-start-stage partner-value-stage">
         ${sectionHeader({
           eyebrow: "Warum Partner",
           title: "Wieso Camp Dörfl für Partnerschaften funktioniert.",
           text:
             "Kooperationen wirken hier nicht aufgesetzt, sondern eingebettet in Training, Bühne, Unternehmen und Alltag."
         })}
-        ${featureGrid(partnerValueCards)}
-      </div>
-    </section>
-
-    <section class="section section--tight">
-      <div class="section-shell section-shell--wide partner-brand-band" data-reveal>
-        <div class="partner-brand-band__copy">
-          <p class="eyebrow">Aktuelle Partner</p>
-          <h2>Zwei Partner, die direkt zur Performance-Welt passen.</h2>
-          <p>
-            XXL Nutrition deckt die Ernährungsseite ab, AEKE bringt smartes Training ins System. Beide Partner stehen für Produkte, die im Alltag wirklich nutzbar sind.
-          </p>
-          <p class="legal-note">Hinweis zu Werbung, Rabattcodes und direkten Partnerlinks: Details auf <a href="/werbung-partnerlinks/">Partnerlinks & Werbung</a>.</p>
-        </div>
-        <div class="partner-brand-band__grid" aria-label="Partner von Camp Dörfl">
-          ${partnerBrandCards.map(renderPartnerBrandCard).join("")}
-        </div>
+        ${featureGrid(partnerValueCards, "feature-grid--partner")}
       </div>
     </section>
 
@@ -2499,20 +2420,17 @@ function partnerPage() {
 function contactPage() {
   const content = `
     <section class="ff-hero ff-hero--split ff-hero--contact">
+      <img class="ff-hero__img" src="/assets/images/dominik-gym-grey.jpg" alt="" aria-hidden="true">
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__shell">
         <div class="ff-hero__inner">
-          <div class="premium-badge">
-            <span>DIREKTER EINSTIEG</span>
-            <small>Persönlich, klar und ohne Umwege ins Camp-Dörfl-System.</small>
-          </div>
           <p class="ff-hero__eyebrow" data-reveal>Kontakt</p>
           <h1 class="ff-hero__title" data-reveal>Klar.<br>Persönlich.<br><span>Direkt.</span></h1>
           <p class="ff-hero__lead" data-reveal>
             Ob Premium Personal Training, Firmenfitness, Events, App oder Kooperation: hier startet der direkte Kontakt für alle Anfragearten auf der Seite.
           </p>
           <p class="ff-hero__support" data-reveal>
-            Eine kurze, ehrliche Anfrage reicht. Das Formular führt passend durch den jeweiligen Einstieg, damit schnell klar wird, was für dein Ziel oder dein Vorhaben wirklich sinnvoll ist.
+            Trag einfach deine Kontaktdaten und dein Anliegen ein. Die Nachricht wird direkt an dominik@campdoerfl.de gesendet.
           </p>
           <div class="ff-hero__actions" data-reveal>
             <a class="button button--primary" href="#kontaktformular"><span>Formular öffnen</span><span aria-hidden="true">&rarr;</span></a>
@@ -2524,66 +2442,22 @@ function contactPage() {
             <div><dt>1 Step</dt><dd>Anfrage starten</dd></div>
           </dl>
         </div>
-        <div class="ff-hero__showcase ff-hero__showcase--contact" data-reveal>
-          <article class="contact-intro-card ff-hero__aside ff-hero__aside--contact">
-            <span class="card-tag">Direkter Draht</span>
-            <h2>Von persönlichem Einstieg bis Firmenanfrage.</h2>
-            <div class="premium-chip-list">
-              <span>Premium Personal Training</span>
-              <span>Firmenfitness</span>
-              <span>Events</span>
-              <span>Camp Dörfl App</span>
-              <span>Kooperationen</span>
-            </div>
-            <div class="contact-details contact-details--hero">
-              <a href="mailto:${site.email}">${site.email}</a>
-              ${socialIconLinks([site.instagram, site.facebook, site.linkedin], { className: "social-link--chip social-link--contact" })}
-              <span>Nürnberg</span>
-            </div>
-          </article>
-        </div>
       </div>
     </section>
 
-    <section class="section" id="kontaktformular">
-      <div class="section-shell editorial-stage editorial-stage--contact">
-        <div class="editorial-stage__copy" data-reveal>
+    <section class="section section--tight" id="kontaktformular">
+      <div class="section-shell section-shell--wide">
+        <div class="contact-form-stage">
           ${sectionHeader({
             eyebrow: "Anfrage",
-            title: "Worum geht es genau?",
+            title: "Schreib mir direkt.",
             text:
-              "Das Formular passt sich an deine Anfrageart an. Je klarer Ziel, Ausgangslage und gewünschter Einstieg beschrieben sind, desto präziser kann Camp Dörfl antworten."
+              "Trag deine Daten und deine Nachricht ein. Der Versand läuft direkt aus der Website an dominik@campdoerfl.de.",
+            align: "center"
           })}
-          <div class="contact-quick-grid">
-            <article class="contact-quick-card" data-reveal>
-              <span class="contact-quick-card__eyebrow">1:1 Coaching</span>
-              <h3>Premium Personal Training</h3>
-              <p>Für Menschen mit Verantwortung, die persönlich geführt werden wollen.</p>
-            </article>
-            <article class="contact-quick-card" data-reveal>
-              <span class="contact-quick-card__eyebrow">Unternehmen</span>
-              <h3>Firmenfitness</h3>
-              <p>Für Gesundheitstage, Performance Checks, Vorträge und Team-Aktivierung im Unternehmen.</p>
-            </article>
-            <article class="contact-quick-card" data-reveal>
-              <span class="contact-quick-card__eyebrow">Bühne</span>
-              <h3>Events und Moderation</h3>
-              <p>Für Veranstalter, Marken und Formate, die Präsenz und professionelles Hosting suchen.</p>
-            </article>
-            <article class="contact-quick-card" data-reveal>
-              <span class="contact-quick-card__eyebrow">Digital</span>
-              <h3>Camp Dörfl App</h3>
-              <p>Für alle, die digital mit Struktur, Scans, Clubs und Score starten wollen.</p>
-            </article>
-            <article class="contact-quick-card" data-reveal>
-              <span class="contact-quick-card__eyebrow">Partner</span>
-              <h3>Kooperationen</h3>
-              <p>Für Marken, Partner und Menschen, die Camp Dörfl sinnvoll ergänzen möchten.</p>
-            </article>
+          <div class="contact-simple-wrap" data-reveal>
+            ${contactForm()}
           </div>
-        </div>
-        <div class="editorial-stage__form" data-reveal>
-          ${contactForm()}
         </div>
       </div>
     </section>

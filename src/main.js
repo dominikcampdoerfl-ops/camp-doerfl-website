@@ -44,8 +44,6 @@ if ("IntersectionObserver" in window) {
   revealItems.forEach((item) => item.classList.add("is-visible"));
 }
 
-const CONTACT_MAILTO_MAX_LENGTH = 1800;
-
 const normalizeContactTopicKey = (value = "") =>
   String(value)
     .toLowerCase()
@@ -62,207 +60,101 @@ const setContactFormStatus = (form, message = "", state = "") => {
   status.dataset.state = state;
 };
 
-const copyTextToClipboard = async (text) => {
-  try {
-    if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(text);
-      return true;
-    }
-  } catch {
-    // Fallback below.
+const buildContactSubject = (form) => {
+  const topicField = form.querySelector('[name="topic"]');
+  const nameField = form.querySelector('[name="name"]');
+  const companyField = form.querySelector('[name="company"]');
+  const topic = topicField instanceof HTMLSelectElement ? topicField.value.trim() : "";
+  const name = nameField instanceof HTMLInputElement ? nameField.value.trim() : "";
+  const company = companyField instanceof HTMLInputElement ? companyField.value.trim() : "";
+  const parts = ["Camp Dörfl Anfrage"];
+
+  if (topic) parts.push(topic);
+  if (company) {
+    parts.push(company);
+  } else if (name) {
+    parts.push(name);
   }
 
-  const helperField = document.createElement("textarea");
-  helperField.value = text;
-  helperField.setAttribute("readonly", "");
-  helperField.style.position = "fixed";
-  helperField.style.opacity = "0";
-  helperField.style.pointerEvents = "none";
-  document.body.append(helperField);
-  helperField.select();
-
-  let copied = false;
-  try {
-    copied = document.execCommand("copy");
-  } catch {
-    copied = false;
-  }
-
-  helperField.remove();
-  return copied;
+  return parts.join(" · ");
 };
 
-const getContactControlLabel = (control) => {
-  if (control.dataset.mailLabel) return control.dataset.mailLabel;
-
-  const label = control.closest("label");
-  const text = label?.querySelector("span")?.textContent?.trim();
-  return text || control.name;
-};
-
-const getContactControlValue = (control) => {
-  if (control instanceof HTMLSelectElement) {
-    return control.value ? control.options[control.selectedIndex]?.textContent?.trim() || "" : "";
-  }
-
-  if (control instanceof HTMLInputElement && (control.type === "radio" || control.type === "checkbox")) {
-    return control.checked ? control.value.trim() : "";
-  }
-
-  return control.value.trim();
-};
-
-const buildContactDraft = (form) => {
-  const email = form.getAttribute("data-contact-email") || "kontakt@camp-doerfl.de";
-  const fields = Array.from(form.querySelectorAll("input[name], select[name], textarea[name]")).filter(
-    (control) =>
-      control instanceof HTMLInputElement || control instanceof HTMLSelectElement || control instanceof HTMLTextAreaElement
-  );
-  const lines = [];
-
-  fields.forEach((control) => {
-    if (control.disabled || control.name === "website") return;
-
-    const value = getContactControlValue(control);
-    if (!value) return;
-
-    const label = getContactControlLabel(control);
-    if (control instanceof HTMLTextAreaElement) {
-      lines.push("");
-      lines.push(`${label}:`);
-      lines.push(value);
-      return;
-    }
-
-    lines.push(`${label}: ${value}`);
-  });
-
-  const selectedTopic = form.querySelector("[data-contact-topic]:checked");
-  const topic = selectedTopic instanceof HTMLInputElement ? selectedTopic.value : "Kontakt";
-  const name = form.querySelector('[name="name"]');
-  const company = form.querySelector('[name="company"]');
-  const nameValue = name instanceof HTMLInputElement ? name.value.trim() : "";
-  const companyValue = company instanceof HTMLInputElement ? company.value.trim() : "";
-  const subjectParts = ["Camp Dörfl Anfrage", topic];
-
-  if (companyValue) {
-    subjectParts.push(companyValue);
-  } else if (nameValue) {
-    subjectParts.push(nameValue);
-  }
-
-  const subject = subjectParts.join(" · ");
-  const body = ["Hallo Camp Dörfl,", "", "hier ist meine Anfrage:", "", ...lines, "", "Viele Grüße"].join("\n");
-  const mailto = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-  return { email, subject, body, mailto };
-};
-
-const syncContactForm = (form) => {
-  const activeTopic = form.querySelector("[data-contact-topic]:checked");
-  if (!(activeTopic instanceof HTMLInputElement)) return;
-
-  form.querySelectorAll("[data-contact-guide-panel]").forEach((panel) => {
-    if (!(panel instanceof HTMLElement)) return;
-    panel.hidden = panel.getAttribute("data-contact-guide-panel") !== activeTopic.value;
-  });
-
-  form.querySelectorAll("[data-contact-context]").forEach((section) => {
-    if (!(section instanceof HTMLElement)) return;
-
-    const isActive = section.getAttribute("data-contact-context") === activeTopic.value;
-    section.hidden = !isActive;
-
-    section.querySelectorAll("input, select, textarea").forEach((control) => {
-      if (
-        control instanceof HTMLInputElement ||
-        control instanceof HTMLSelectElement ||
-        control instanceof HTMLTextAreaElement
-      ) {
-        control.disabled = !isActive;
-      }
-    });
-  });
-
-  const messageLabel = form.querySelector("[data-contact-message-label]");
-  if (messageLabel instanceof HTMLElement) {
-    messageLabel.textContent = activeTopic.dataset.messageLabel || "Worum geht es in deiner Anfrage?";
-  }
-
-  const messageField = form.querySelector("[data-contact-message]");
-  if (messageField instanceof HTMLTextAreaElement) {
-    messageField.placeholder = activeTopic.dataset.messagePlaceholder || "Beschreibe kurz dein Anliegen.";
-  }
-};
-
-document.querySelectorAll("[data-contact-form]").forEach((form) => {
-  const topicRadios = Array.from(form.querySelectorAll("[data-contact-topic]")).filter(
-    (control) => control instanceof HTMLInputElement
-  );
+document.querySelectorAll("[data-contact-simple-form]").forEach((form) => {
+  const topicField = form.querySelector("[data-contact-topic-select]");
+  const subjectField = form.querySelector('[name="_subject"]');
+  const submitButton = form.querySelector('button[type="submit"]');
+  const fallbackEmail = "dominik@campdoerfl.de";
+  const fallbackEndpoint = `https://formsubmit.co/ajax/${fallbackEmail}`;
   const topicParam = new URLSearchParams(window.location.search).get("topic");
 
-  if (topicParam) {
+  if (topicField instanceof HTMLSelectElement && topicParam) {
     const normalizedTopicParam = normalizeContactTopicKey(topicParam);
-    const requestedTopic = topicRadios.find(
-      (radio) =>
-        normalizeContactTopicKey(radio.dataset.topicSlug || "") === normalizedTopicParam ||
-        normalizeContactTopicKey(radio.value) === normalizedTopicParam
+    const requestedTopic = Array.from(topicField.options).find(
+      (option) => normalizeContactTopicKey(option.value) === normalizedTopicParam
     );
 
     if (requestedTopic) {
-      requestedTopic.checked = true;
+      topicField.value = requestedTopic.value;
     }
   }
 
-  syncContactForm(form);
-
-  topicRadios.forEach((radio) => {
-    radio.addEventListener("change", () => {
-      syncContactForm(form);
-      setContactFormStatus(form);
-    });
-  });
-
-  const copyButton = form.querySelector("[data-contact-copy]");
-  if (copyButton instanceof HTMLButtonElement) {
-    copyButton.addEventListener("click", async () => {
-      const draft = buildContactDraft(form);
-      const copied = await copyTextToClipboard(`An: ${draft.email}\nBetreff: ${draft.subject}\n\n${draft.body}`);
-
-      setContactFormStatus(
-        form,
-        copied
-          ? `Der Anfrage-Entwurf wurde kopiert. Du kannst ihn direkt an ${draft.email} senden.`
-          : `Der Text konnte nicht automatisch kopiert werden. Sende deine Anfrage alternativ direkt an ${draft.email}.`,
-        copied ? "success" : "warn"
-      );
-    });
-  }
+  const defaultTopicValue = topicField instanceof HTMLSelectElement ? topicField.value : "";
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const honeypot = form.querySelector('[name="website"]');
+    const honeypot = form.querySelector('[name="_honey"]');
     if (honeypot instanceof HTMLInputElement && honeypot.value.trim()) return;
 
-    syncContactForm(form);
-    const draft = buildContactDraft(form);
-
-    if (draft.mailto.length > CONTACT_MAILTO_MAX_LENGTH) {
-      const copied = await copyTextToClipboard(`An: ${draft.email}\nBetreff: ${draft.subject}\n\n${draft.body}`);
-
-      setContactFormStatus(
-        form,
-        copied
-          ? `Die Anfrage ist für einen direkten Mail-Entwurf zu lang. Der komplette Text wurde kopiert und kann an ${draft.email} eingefügt werden.`
-          : `Die Anfrage ist für einen direkten Mail-Entwurf zu lang. Bitte sende sie direkt an ${draft.email}.`,
-        copied ? "info" : "warn"
-      );
-      return;
+    if (subjectField instanceof HTMLInputElement) {
+      subjectField.value = buildContactSubject(form);
     }
 
-    setContactFormStatus(form, "Dein E-Mail-Entwurf wird geöffnet.", "info");
-    window.location.href = draft.mailto;
+    const formData = new FormData(form);
+    const endpoint = form.getAttribute("data-contact-endpoint") || fallbackEndpoint;
+
+    if (submitButton instanceof HTMLButtonElement) {
+      submitButton.disabled = true;
+      submitButton.setAttribute("aria-busy", "true");
+    }
+
+    setContactFormStatus(form, "Deine Nachricht wird gesendet.", "info");
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: formData
+      });
+      const payload = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        throw new Error(payload?.message || "Senden fehlgeschlagen");
+      }
+
+      form.reset();
+
+      if (topicField instanceof HTMLSelectElement && defaultTopicValue) {
+        topicField.value = defaultTopicValue;
+      }
+
+      if (subjectField instanceof HTMLInputElement) {
+        subjectField.value = "Camp Dörfl Kontaktanfrage";
+      }
+
+      setContactFormStatus(form, "Deine Nachricht wurde erfolgreich gesendet.", "success");
+    } catch (error) {
+      setContactFormStatus(
+        form,
+        `Das Senden hat gerade nicht funktioniert. Schreib alternativ direkt an ${fallbackEmail}.`,
+        "warn"
+      );
+    } finally {
+      if (submitButton instanceof HTMLButtonElement) {
+        submitButton.disabled = false;
+        submitButton.removeAttribute("aria-busy");
+      }
+    }
   });
 });
 

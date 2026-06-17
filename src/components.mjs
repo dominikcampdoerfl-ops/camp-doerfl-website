@@ -1,4 +1,4 @@
-import { navItems, site, sponsors, contactTopicConfigs } from "./data.mjs";
+import { navItems, site, sponsors } from "./data.mjs";
 
 const brandLogoPath = "/assets/images/camp-doerfl-logo.png";
 const socialPlatformIcons = {
@@ -411,35 +411,6 @@ export function capabilityGrid(items) {
   `;
 }
 
-export function appSystemGrid(items) {
-  return `
-    <div class="app-system-grid">
-      ${items
-        .map(
-          (item, index) => `
-            <article class="app-system-card" data-reveal>
-              <header class="app-system-card__header">
-                <div class="app-system-card__meta">
-                  <span class="app-system-card__number">${String(index + 1).padStart(2, "0")}</span>
-                  ${item.detail ? `<span class="app-system-card__detail">${item.detail}</span>` : ""}
-                </div>
-                ${item.icon ? uiIcon(item.icon) : ""}
-              </header>
-              <div class="app-system-card__copy">
-                <h3>${item.title}</h3>
-                <p>${item.text}</p>
-              </div>
-              <div class="app-system-card__items" aria-label="${item.title}">
-                ${item.items.map((entry) => `<span>${entry}</span>`).join("")}
-              </div>
-            </article>
-          `
-        )
-        .join("")}
-    </div>
-  `;
-}
-
 export function achievementGrid(items) {
   return `
     <div class="achievement-grid">
@@ -647,177 +618,67 @@ export function faq(items) {
   `;
 }
 
-function renderContactField(field, enabled = true) {
-  const disabledAttr = enabled ? "" : " disabled";
-  const placeholderAttr = field.placeholder ? ` placeholder="${field.placeholder}"` : "";
-  const autocompleteAttr = field.autocomplete ? ` autocomplete="${field.autocomplete}"` : "";
-  const label = `<span>${field.label}</span>`;
-
-  if (field.type === "select") {
-    return `
-      <label>
-        ${label}
-        <select name="${field.name}" data-mail-label="${field.label}"${disabledAttr}>
-          <option value="">Bitte auswählen</option>
-          ${field.options.map((option) => `<option value="${option}">${option}</option>`).join("")}
-        </select>
-      </label>
-    `;
-  }
-
-  if (field.type === "textarea") {
-    return `
-      <label>
-        ${label}
-        <textarea name="${field.name}" rows="${field.rows || 4}" data-mail-label="${field.label}"${placeholderAttr}${disabledAttr}></textarea>
-      </label>
-    `;
-  }
-
+export function contactForm() {
   return `
-    <label>
-      ${label}
-      <input name="${field.name}" type="${field.type || "text"}" data-mail-label="${field.label}"${placeholderAttr}${autocompleteAttr}${disabledAttr}>
-    </label>
-  `;
-}
-
-export function contactForm(topic = "") {
-  const selectedTopic = contactTopicConfigs.find((option) => option.value === topic)?.value || contactTopicConfigs[0]?.value || "";
-  const activeConfig = contactTopicConfigs.find((option) => option.value === selectedTopic) || contactTopicConfigs[0];
-
-  return `
-    <form class="contact-form contact-form--guided" data-contact-form data-contact-email="${site.email}">
-      <input class="contact-form__trap" name="website" tabindex="-1" autocomplete="off">
-      <div class="contact-form__intro">
-        <p class="contact-form__eyebrow">Anfrageart</p>
-        <h3>Ein Formular für alle Einstiege.</h3>
-        <p>Wähle zuerst den passenden Bereich. Danach passt sich die Anfrage automatisch an und führt sinnvoll durch die wichtigsten Punkte.</p>
-      </div>
-
-      <fieldset class="contact-topic-grid">
-        <legend>Wähle den Bereich, um den es geht.</legend>
-        <div class="contact-topic-grid__options">
-          ${contactTopicConfigs
-            .map(
-              (option) => `
-                <label class="contact-topic-card">
-                  <input
-                    class="contact-topic-card__input"
-                    type="radio"
-                    name="topic"
-                    value="${option.value}"
-                    data-contact-topic
-                    data-topic-slug="${option.slug}"
-                    data-message-label="${option.messageLabel}"
-                    data-message-placeholder="${option.messagePlaceholder}"
-                    data-mail-label="Anfrageart"
-                    ${option.value === selectedTopic ? "checked" : ""}
-                  >
-                  <span class="contact-topic-card__surface">
-                    <span class="contact-topic-card__tag">${option.cardTag}</span>
-                    <h3>${option.cardTitle}</h3>
-                    <small>${option.cardText}</small>
-                  </span>
-                </label>
-              `
-            )
-            .join("")}
-        </div>
-      </fieldset>
-
-      <div class="contact-guide-stack">
-        ${contactTopicConfigs
-          .map(
-            (option) => `
-              <article class="contact-guide-card" data-contact-guide-panel="${option.value}" ${option.value === selectedTopic ? "" : "hidden"}>
-                <p class="contact-form__eyebrow">Das hilft für eine gute Antwort</p>
-                <h3>${option.guideTitle}</h3>
-                <p>${option.guideText}</p>
-                <div class="contact-guide-card__points" aria-label="Hilfreiche Punkte für ${option.cardTitle}">
-                  ${option.guidePoints.map((point) => `<span>${point}</span>`).join("")}
-                </div>
-              </article>
-            `
-          )
-          .join("")}
-      </div>
-
-      <div class="form-grid form-grid--contact-base">
+    <form
+      class="contact-form contact-form--simple"
+      data-contact-simple-form
+      action="https://formsubmit.co/${site.email}"
+      data-contact-endpoint="https://formsubmit.co/ajax/${site.email}"
+      method="POST"
+    >
+      <input class="contact-form__trap" type="text" name="_honey" tabindex="-1" autocomplete="off">
+      <input type="hidden" name="_subject" value="Camp Dörfl Kontaktanfrage">
+      <input type="hidden" name="_template" value="table">
+      <div class="form-grid form-grid--contact-simple">
         <label>
           <span>Name</span>
-          <input name="name" autocomplete="name" required data-mail-label="Name">
+          <input name="name" autocomplete="name" required>
         </label>
         <label>
           <span>E-Mail</span>
-          <input name="email" type="email" autocomplete="email" required data-mail-label="E-Mail">
+          <input name="email" type="email" autocomplete="email" required>
         </label>
         <label>
           <span>Telefon</span>
-          <input name="phone" autocomplete="tel" data-mail-label="Telefon">
+          <input name="phone" autocomplete="tel">
         </label>
         <label>
           <span>Unternehmen / Marke</span>
-          <input name="company" autocomplete="organization" data-mail-label="Unternehmen / Marke">
+          <input name="company" autocomplete="organization">
+        </label>
+        <label>
+          <span>Bereich</span>
+          <select name="topic" data-contact-topic-select>
+            <option value="">Bitte auswählen</option>
+            <option value="Premium Personal Training">Premium Personal Training</option>
+            <option value="Firmenfitness">Firmenfitness</option>
+            <option value="Events und Moderation">Events und Moderation</option>
+            <option value="Camp Dörfl App">Camp Dörfl App</option>
+            <option value="Kooperation und Sponsoring">Kooperation und Sponsoring</option>
+            <option value="Allgemeine Anfrage">Allgemeine Anfrage</option>
+          </select>
         </label>
         <label>
           <span>Bevorzugter Kontaktweg</span>
-          <select name="preferred_contact" data-mail-label="Bevorzugter Kontaktweg">
+          <select name="preferred_contact">
             <option value="">Bitte auswählen</option>
             <option value="E-Mail">E-Mail</option>
             <option value="Telefon">Telefon</option>
             <option value="Beides ist möglich">Beides ist möglich</option>
           </select>
         </label>
-        <label>
-          <span>Wann ist der richtige Zeitpunkt?</span>
-          <select name="timeline" data-mail-label="Zeitrahmen">
-            <option value="">Bitte auswählen</option>
-            <option value="So schnell wie möglich">So schnell wie möglich</option>
-            <option value="In den nächsten 2 bis 4 Wochen">In den nächsten 2 bis 4 Wochen</option>
-            <option value="Im nächsten Quartal">Im nächsten Quartal</option>
-            <option value="Erst Orientierung, dann Timing">Erst Orientierung, dann Timing</option>
-          </select>
-        </label>
       </div>
-
-      <div class="contact-form__context-stack">
-        ${contactTopicConfigs
-          .map(
-            (option) => `
-              <section class="contact-form__context" data-contact-context="${option.value}" ${option.value === selectedTopic ? "" : "hidden"}>
-                <div class="contact-form__context-head">
-                  <span>Passende Zusatzinfos</span>
-                  <h3>${option.cardTitle}</h3>
-                </div>
-                <div class="form-grid form-grid--contact-context">
-                  ${option.fields.map((field) => renderContactField(field, option.value === selectedTopic)).join("")}
-                </div>
-              </section>
-            `
-          )
-          .join("")}
-      </div>
-
-      <label class="contact-form__message">
-        <span data-contact-message-label>${activeConfig?.messageLabel || "Worum geht es in deiner Anfrage?"}</span>
-        <textarea
-          name="message"
-          rows="7"
-          required
-          data-mail-label="Kurzbeschreibung"
-          data-contact-message
-          placeholder="${activeConfig?.messagePlaceholder || "Beschreibe kurz dein Anliegen."}"
-        ></textarea>
+      <label class="contact-form__message contact-form__message--simple">
+        <span>Nachricht</span>
+        <textarea name="message" rows="8" required placeholder="Schreib hier kurz, worum es geht."></textarea>
       </label>
-
-      <div class="form-footer form-footer--contact">
+      <div class="form-footer form-footer--contact form-footer--contact-simple">
         <p class="contact-form__note">
-          Das Formular versendet nichts serverseitig. Es bereitet eine E-Mail an ${site.email} vor. Wenn auf deinem Gerät kein Mail-Programm eingerichtet ist, kannst du den Entwurf direkt kopieren.
+          Deine Nachricht wird direkt an ${site.email} gesendet.
         </p>
-        <div class="contact-form__actions">
-          <button class="button button--primary" type="submit"><span>E-Mail vorbereiten</span><span aria-hidden="true">&rarr;</span></button>
-          <button class="button button--secondary-light" type="button" data-contact-copy><span>Text kopieren</span><span aria-hidden="true">&rarr;</span></button>
+        <div class="contact-form__actions contact-form__actions--single">
+          <button class="button button--primary" type="submit"><span>Nachricht absenden</span><span aria-hidden="true">&rarr;</span></button>
         </div>
         <p class="contact-form__status" data-contact-status aria-live="polite"></p>
       </div>

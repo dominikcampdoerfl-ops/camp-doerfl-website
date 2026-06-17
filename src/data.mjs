@@ -1,8 +1,8 @@
 export const site = {
   name: "Camp Dörfl",
   ownerName: "Dominik Dörfl",
-  domain: "camp-doerfl.de",
-  url: "https://camp-doerfl.de",
+  domain: "campdoerfl.de",
+  url: "https://www.campdoerfl.de",
   email: "dominik@campdoerfl.de",
   instagram: "https://www.instagram.com/dominik.doerfl/",
   location: "Nürnberg",
@@ -177,41 +177,6 @@ export const homeFunctionPillars = [
     text:
       "Digitale Struktur trifft auf echte soziale Energie durch Challenges, GPS-Funktionen, Clubs und Puzzle Gym.",
     items: ["GPS und Routen", "Challenges", "Community-Gruppen", "Puzzle-Gym-Anbindung"]
-  }
-];
-
-export const appFeatureGroups = [
-  {
-    icon: "member",
-    title: "Member Bereich mit System",
-    detail: "Mitgliederbereich",
-    text:
-      "Trainings- und Ernährungsplanung laufen an einem Ort zusammen und machen Umsetzung im Alltag deutlich leichter.",
-    items: ["Trainingsplanung", "Ernährungsplanung", "Wochenüberblick", "Fortschritt an einem Ort"]
-  },
-  {
-    icon: "scan",
-    title: "Ernährung schnell erfassen",
-    detail: "Scan Funktionen",
-    text:
-      "Scans nehmen Reibung aus dem Thema Ernährung, gerade dann, wenn Alltag, Termine und Entscheidungen schnell laufen müssen.",
-    items: ["Mahlzeiten-Scan", "Speisekarten-Scan", "Barcode-Scan", "Schnelle Dokumentation"]
-  },
-  {
-    icon: "route",
-    title: "Clubs, GPS und Community",
-    detail: "Running + Cycling",
-    text:
-      "Digitale Struktur trifft auf echten Antrieb durch Clubs, Routen und gemeinsame Performance-Formate.",
-    items: ["Club Bereich", "Running Club", "Cycling Club", "GPS-Routen"]
-  },
-  {
-    icon: "score",
-    title: "Score, Vergleich und Goodies",
-    detail: "Fortschritt",
-    text:
-      "Fortschritt bleibt sichtbar, vergleichbar und belohnend, damit gute Umsetzung nicht im Alltag untergeht.",
-    items: ["Einheiten dokumentieren", "Leistungen vergleichen", "Camp Score", "Goodies freischalten"]
   }
 ];
 
