@@ -892,8 +892,10 @@ function homePage() {
         </div>
         <dl class="ff-hero__facts" data-reveal aria-label="Camp Dörfl in Zahlen">
           <div><dt>2×</dt><dd>Deutscher Meister</dd></div>
-          <div><dt>Profi Athlet</dt><dd>Fitness</dd></div>
+          <div><dt>Profi Athlet</dt><dd>Fitness &amp; Bodybuilding</dd></div>
           <div><dt>Ironman</dt><dd>Finisher</dd></div>
+          <div><dt>Moderator</dt><dd>knapp 100 Events</dd></div>
+          <div><dt>Firmenfitness</dt><dd>für gesunde Unternehmen</dd></div>
           <div><dt>Fitness Trainer</dt><dd>ausgebildet & zertifiziert</dd></div>
         </dl>
       </div>

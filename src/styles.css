@@ -10589,8 +10589,8 @@ h1, h2, h3 {
 .page-home-reboot .ed-proof { background: transparent; }
 .page-home-reboot .ff-hero__facts {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, auto));
-  gap: 18px 32px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px 28px;
   align-items: start;
   justify-content: flex-start;
 }
