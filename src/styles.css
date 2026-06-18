@@ -8804,6 +8804,14 @@ p {
     padding-inline: clamp(12px, 1vw, 18px);
     text-align: center;
   }
+
+  .page-home-reboot .nav-socials .social-link-row,
+  .page-premium .nav-socials .social-link-row {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 8px 10px;
+    align-items: center;
+  }
 }
 
 .button {
