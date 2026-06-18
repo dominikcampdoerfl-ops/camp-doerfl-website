@@ -6,6 +6,10 @@
   "scripts": {
     "build": "node src/build.mjs",
     "dev": "node src/dev.mjs",
-    "preview": "node src/server.mjs"
+    "preview": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.101.0"
   }
 }
