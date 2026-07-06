@@ -233,13 +233,15 @@ textarea {
   object-fit: contain;
 }
 
-.brand strong,
+.brand__name,
 .brand small {
   display: block;
 }
 
-.brand strong {
+.brand__name,
+.site-nav__brand-name {
   font-size: 1rem;
+  font-weight: 700;
   line-height: 1.1;
 }
 
@@ -282,8 +284,9 @@ textarea {
   margin-top: 4px;
 }
 
-.nav-toggle b {
+.nav-toggle__label {
   font-size: 0.86rem;
+  font-weight: 700;
 }
 
 .site-nav {
@@ -824,12 +827,12 @@ textarea {
   box-shadow: var(--shadow-soft);
 }
 
-.landing-stat strong,
+.landing-stat__value,
 .landing-stat span {
   display: block;
 }
 
-.landing-stat strong {
+.landing-stat__value {
   color: var(--color-ink);
   font-size: 1.26rem;
   line-height: 1.08;
@@ -933,7 +936,7 @@ textarea {
   line-height: 0.98;
 }
 
-.media-program-card__body strong {
+.media-program-card__meta {
   display: block;
   margin-top: 12px;
   color: var(--accent-strong);
@@ -1359,12 +1362,12 @@ p {
   border-color: var(--color-line);
 }
 
-.hero__stats strong,
+.hero__stat-value,
 .hero__stats span {
   display: block;
 }
 
-.hero__stats strong {
+.hero__stat-value {
   font-size: 1.1rem;
 }
 
@@ -1731,7 +1734,7 @@ p {
   color: rgba(255, 255, 255, 0.72);
 }
 
-.app-visual__topbar strong {
+.app-visual__score-value {
   color: var(--accent-green);
   font-size: 1.45rem;
 }
@@ -1763,7 +1766,7 @@ p {
   background: rgba(255, 255, 255, 0.06);
 }
 
-.metric-row strong {
+.metric-row__value {
   color: #ffffff;
 }
 
@@ -1826,7 +1829,7 @@ p {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.stat-card strong {
+.stat-card__value {
   display: block;
   color: var(--accent-gold);
   font-size: 1.5rem;
@@ -1907,7 +1910,7 @@ p {
   text-transform: uppercase;
 }
 
-.sponsor-strip strong {
+.sponsor-strip__name {
   color: var(--color-ink-2);
   font-size: 0.98rem;
 }
@@ -4119,7 +4122,7 @@ p {
   padding: 28px 24px;
 }
 
-.page-premium .stat-card strong {
+.page-premium .stat-card__value {
   font-size: 1.84rem;
 }
 
@@ -4257,7 +4260,7 @@ p {
   text-transform: uppercase;
 }
 
-.premium-video-launch__content strong {
+.premium-video-launch__headline {
   max-width: 13ch;
   font-family: var(--font-cond, var(--font-sans));
   font-style: italic;
@@ -4300,7 +4303,7 @@ p {
   inset: auto 18px 18px 18px;
 }
 
-.premium-video-launch--short .premium-video-launch__content strong {
+.premium-video-launch--short .premium-video-launch__headline {
   font-size: clamp(1.3rem, 4vw, 1.9rem);
   max-width: 9ch;
 }
@@ -5904,8 +5907,8 @@ p {
   min-width: 0;
 }
 
-.event-reference-card__body strong,
-.corporate-reference-card__body strong {
+.event-reference-card__body .reference-card__name,
+.corporate-reference-card__body .reference-card__name {
   color: #fff;
   font-family: var(--font-cond);
   font-size: clamp(1.5rem, 1.9vw, 2.1rem);
@@ -7839,6 +7842,7 @@ p {
 }
 
 .partner-brand-card__meta {
+  display: inline-block;
   color: var(--color-ink);
   font-size: 0.8rem;
   font-weight: 900;
@@ -9513,7 +9517,7 @@ p {
   box-shadow: 0 18px 48px rgba(17, 16, 12, 0.07);
 }
 
-.page-home-reboot .stat-card strong {
+.page-home-reboot .stat-card__value {
   color: var(--premium-olive);
 }
 
@@ -11010,7 +11014,7 @@ html { background: #0a0a0c; }
 .page-premium .feature-card__detail,
 .page-premium .app-system-card__detail,
 .page-premium .app-system-card__number { color: var(--cd-gold); }
-.page-premium .stat-card strong,
+.page-premium .stat-card__value,
 .page-premium .pricing-card__price,
 .page-premium .start-card__price {
   color: var(--cd-gold);
@@ -11050,8 +11054,8 @@ html { background: #0a0a0c; }
   border-radius: 28px;
   border: 1px solid rgba(230, 180, 67, 0.24);
 }
-.page-premium .corporate-reference-card__body strong,
-.page-premium .event-reference-card__body strong { color: #fff; }
+.page-premium .corporate-reference-card__body .reference-card__name,
+.page-premium .event-reference-card__body .reference-card__name { color: #fff; }
 .page-premium .corporate-reference-card__body span,
 .page-premium .event-reference-card__body span { color: rgba(255, 255, 255, 0.72); }
 .page-premium .corporate-reference-card__arrow,
@@ -11917,7 +11921,7 @@ html { background: #0a0a0c; }
   box-shadow: 0 30px 70px rgba(0, 0, 0, 0.32);
 }
 
-.coaching-reference-stage__media .premium-video-launch__content strong {
+.coaching-reference-stage__media .premium-video-launch__headline {
   max-width: 10ch;
 }
 
@@ -12669,8 +12673,10 @@ html { background: #0a0a0c; }
   box-shadow: 0 28px 60px -38px rgba(0, 0, 0, 0.72);
 }
 
-.legal-card h3 {
+.legal-card h2 {
   margin-bottom: 14px;
+  font-size: 1.18rem;
+  line-height: 1.18;
   color: #fff;
   font-size: clamp(1.32rem, 1.7vw, 1.7rem);
 }
@@ -12696,6 +12702,10 @@ html { background: #0a0a0c; }
   background: rgba(255, 255, 255, 0.08);
   color: #fff;
   font-size: 0.92em;
+}
+
+.legal-label {
+  font-weight: 800;
 }
 
 .legal-list {
@@ -14055,5 +14065,57 @@ body.consent-modal-open {
     flex: 0 0 32px;
     color: #fffaf0;
     background: rgba(16, 15, 12, 0.18);
+  }
+}
+
+/* Langes Einzelwort "Firmenfitness" braucht auf schmalen Screens ein kleineres H1-Minimum */
+.ff-hero--firmenfitness .ff-hero__title {
+  font-size: clamp(2.55rem, 9vw, 8.2rem);
+}
+
+/* SEO-safe replacements for decorative bold markup. */
+.nav-toggle .nav-toggle__label {
+  grid-column: 2;
+  grid-row: 1;
+  display: block;
+  width: auto;
+  height: auto;
+  margin-top: 0;
+  background: transparent;
+  transform: none;
+  transition:
+    opacity 180ms ease,
+    max-width 180ms ease,
+    margin 180ms ease;
+}
+
+.page-home-reboot .brand__name,
+.page-premium .brand__name,
+.page-home-reboot .site-nav__brand-name,
+.page-premium .site-nav__brand-name {
+  color: #fff;
+  font-size: 1.02rem;
+  font-weight: 820;
+}
+
+.page-home-reboot .nav-toggle__label,
+.page-premium .nav-toggle__label {
+  color: #fff;
+  font-size: 0.96rem;
+  font-weight: 780;
+}
+
+.page-home-reboot .nav-toggle.is-open .nav-toggle__label,
+.page-premium .nav-toggle.is-open .nav-toggle__label {
+  opacity: 0;
+  max-width: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 520px) {
+  .page-home-reboot .brand__name,
+  .page-premium .brand__name {
+    font-size: 0.98rem;
   }
 }

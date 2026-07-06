@@ -1,0 +1,9 @@
+name = "camp-doerfl-website"
+main = "dist/server/index.js"
+compatibility_date = "2026-07-01"
+workers_dev = true
+
+[assets]
+directory = "dist/server/public"
+binding = "ASSETS"
+run_worker_first = true

@@ -25,7 +25,7 @@ export function buttonLink(label, href, variant = "primary") {
 }
 
 function brandLogo() {
-  return `<span class="brand__mark"><img class="brand__logo" src="${brandLogoPath}" alt=""></span>`;
+  return `<span class="brand__mark"><img class="brand__logo" src="${brandLogoPath}" alt="Camp Dörfl Logo"></span>`;
 }
 
 function socialPlatformFromUrl(url = "") {
@@ -48,7 +48,7 @@ function socialIconImage(platform) {
 
   if (!icon) return "";
 
-  return `<img class="social-link__icon" src="${icon.src}" alt="" aria-hidden="true">`;
+  return `<img class="social-link__icon" src="${icon.src}" alt="${icon.label} Icon">`;
 }
 
 export function socialIconLink(url, { className = "", label, iconOnly = true } = {}) {
@@ -248,7 +248,7 @@ export function hero({ eyebrow, title, lead, primary, secondary, stats = [], ima
           ${
             stats.length
               ? `<div class="hero__stats">${stats
-                  .map((stat) => `<div><strong>${stat.value}</strong><span>${stat.label}</span></div>`)
+                  .map((stat) => `<div><span class="hero__stat-value">${stat.value}</span><span>${stat.label}</span></div>`)
                   .join("")}</div>`
               : ""
           }
@@ -259,25 +259,6 @@ export function hero({ eyebrow, title, lead, primary, secondary, stats = [], ima
   `;
 }
 
-export function offerCards(items) {
-  return `
-    <div class="card-grid card-grid--offers">
-      ${items
-        .map(
-          (item) => `
-            <a class="offer-card" href="${item.href}" data-reveal>
-              <span class="card-tag">${item.tag}</span>
-              <h3>${item.title}</h3>
-              <p>${item.text}</p>
-              <span class="card-meta">${item.meta}</span>
-            </a>
-          `
-        )
-        .join("")}
-    </div>
-  `;
-}
-
 export function statStrip(items) {
   return `
     <div class="landing-stat-strip">
@@ -285,7 +266,7 @@ export function statStrip(items) {
         .map(
           (item) => `
             <article class="landing-stat" data-reveal>
-              <strong>${item.value}</strong>
+              <span class="landing-stat__value">${item.value}</span>
               <span>${item.label}</span>
             </article>
           `
@@ -311,7 +292,7 @@ export function mediaProgramGrid(items) {
                   ${item.icon ? uiIcon(item.icon) : ""}
                 </div>
                 <h3>${item.title}</h3>
-                <strong>${item.meta}</strong>
+                <span class="media-program-card__meta">${item.meta}</span>
                 <p>${item.text}</p>
                 ${
                   item.highlights?.length
@@ -465,7 +446,7 @@ export function achievementGrid(items) {
         .map(
           (item) => `
             <div class="stat-card" data-reveal>
-              <strong>${item.value}</strong>
+              <span class="stat-card__value">${item.value}</span>
               <span>${item.label}</span>
             </div>
           `
@@ -589,7 +570,7 @@ export function sponsorStrip() {
       <div class="section-shell sponsor-strip__inner">
         <span>Ökosystem und Partner</span>
         <div>
-          ${sponsors.map((sponsor) => `<strong>${sponsor}</strong>`).join("")}
+          ${sponsors.map((sponsor) => `<span class="sponsor-strip__name">${sponsor}</span>`).join("")}
         </div>
       </div>
     </section>
@@ -602,12 +583,12 @@ export function appVisual() {
       <div class="app-visual__phone">
         <div class="app-visual__topbar">
           <span>Camp Score</span>
-          <strong>84</strong>
+          <span class="app-visual__score-value">84</span>
         </div>
         <div class="score-ring" aria-hidden="true"><span>84</span></div>
-        <div class="metric-row"><span>Training</span><strong>4/5</strong></div>
-        <div class="metric-row"><span>Ernährung</span><strong>91%</strong></div>
-        <div class="metric-row"><span>Schlaf</span><strong>7:22h</strong></div>
+        <div class="metric-row"><span>Training</span><span class="metric-row__value">4/5</span></div>
+        <div class="metric-row"><span>Ernährung</span><span class="metric-row__value">91%</span></div>
+        <div class="metric-row"><span>Schlaf</span><span class="metric-row__value">7:22h</span></div>
         <div class="route-line" aria-hidden="true"></div>
         <div class="app-visual__nav">
           <span></span><span></span><span></span><span></span>
@@ -757,17 +738,17 @@ function navbar(activePath) {
       <div class="nav-shell">
         <a class="brand" href="/" aria-label="Camp Dörfl Startseite">
           ${brandLogo()}
-          <span><strong>Camp Dörfl</strong><small>Performance System</small></span>
+          <span><span class="brand__name">Camp Dörfl</span><small>Performance System</small></span>
         </a>
         <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">
           <span></span><span></span><span></span>
-          <b>Menü</b>
+          <span class="nav-toggle__label">Menü</span>
         </button>
         <nav class="site-nav" id="site-nav" data-site-nav>
           <div class="site-nav__overlay">
             <div class="site-nav__brand-block" aria-hidden="true">
               <span class="site-nav__brand-mark">${brandLogo()}</span>
-              <span class="site-nav__brand-copy"><strong>Camp Dörfl</strong><small>Performance System</small></span>
+              <span class="site-nav__brand-copy"><span class="site-nav__brand-name">Camp Dörfl</span><small>Performance System</small></span>
             </div>
             <div class="site-nav__list">
               ${mobileNavItems.map((item) => renderMobileNavItem(item)).join("")}
@@ -802,7 +783,7 @@ function footer() {
         <div>
           <a class="brand brand--footer" href="/">
             ${brandLogo()}
-            <span><strong>Camp Dörfl</strong><small>Performance System</small></span>
+            <span><span class="brand__name">Camp Dörfl</span><small>Performance System</small></span>
           </a>
           <p>Performance System für Personal Training, Premium Personal Training, Firmenfitness, Events und die Camp Dörfl App.</p>
         </div>
@@ -825,6 +806,7 @@ function footer() {
           <a href="/cookies/">Cookies</a>
           <a href="/werbung-partnerlinks/">Partnerlinks & Werbung</a>
           <a href="/barrierefreiheit/">Barrierefreiheit</a>
+          <a href="/datenschutzformular-app/">Datenschutzformular App</a>
           <button class="footer-link-button" type="button" data-open-consent>Cookie-Einstellungen</button>
           <span>Performance für Training, Ernährung, Gesundheit und Community.</span>
         </div>
@@ -907,21 +889,43 @@ export function layout({ title, description, path, keywords = [], content, bodyC
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "ProfessionalService",
+        "@type": ["ProfessionalService", "SportsActivityLocation"],
+        "@id": `${site.url}/#business`,
         name: site.name,
+        alternateName: "Camp Dörfl – Personal Trainer Nürnberg",
         description,
-        url: canonical,
+        url: `${site.url}/`,
         email: site.email,
+        image: `${site.url}/assets/images/home-hero-stadium-wide.png`,
+        priceRange: "€€€",
+        currenciesAccepted: "EUR",
+        founder: { "@type": "Person", name: site.ownerName },
         sameAs,
-        areaServed: "Nürnberg",
+        areaServed: [
+          { "@type": "City", name: "Nürnberg" },
+          { "@type": "City", name: "Fürth" },
+          { "@type": "City", name: "Erlangen" }
+        ],
         address: {
           "@type": "PostalAddress",
           streetAddress: site.streetAddress,
           postalCode: site.postalCode,
           addressLocality: site.city,
+          addressRegion: "Bayern",
           addressCountry: "DE"
         },
-        serviceType: ["Personal Training", "Premium Personal Training", "Firmenfitness", "Event Moderation"],
+        geo: {
+          "@type": "GeoCoordinates",
+          latitude: 49.4884,
+          longitude: 11.0231
+        },
+        serviceType: [
+          "Personal Trainer Nürnberg",
+          "Personal Training",
+          "Premium Personal Training",
+          "Firmenfitness",
+          "Event Moderation"
+        ],
         knowsAbout: [
           "Personal Trainer Nürnberg",
           "Premium Personal Training Nürnberg",

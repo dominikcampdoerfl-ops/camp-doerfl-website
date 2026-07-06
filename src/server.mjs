@@ -4,6 +4,7 @@ import { stat } from "node:fs/promises";
 import { extname, join, normalize, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { dirname } from "node:path";
+import { securityHeaders } from "./security.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..", "dist");
 const port = Number(process.env.PORT || 4173);
@@ -39,8 +40,15 @@ async function resolveFile(urlPath) {
   return finalStat?.isFile() ? filePath : join(root, "index.html");
 }
 
+function applySecurityHeaders(res) {
+  for (const [name, value] of Object.entries(securityHeaders)) {
+    res.setHeader(name, value);
+  }
+}
+
 const server = createServer(async (req, res) => {
   const filePath = await resolveFile(req.url || "/");
+  applySecurityHeaders(res);
   res.setHeader("Content-Type", types[extname(filePath)] || "application/octet-stream");
   createReadStream(filePath)
     .on("error", () => {

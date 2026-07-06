@@ -45,41 +45,6 @@ export const navItems = [
   { label: "Kontakt", href: "/kontakt/" }
 ];
 
-export const offers = [
-  {
-    title: "Camp Dörfl App",
-    tag: "Digitales System",
-    text:
-      "Training, Ernährung, Health, Check-ins, Community und Fortschritt in einem Betriebssystem für echte Umsetzung.",
-    href: "/app/",
-    meta: "App · Score · Community"
-  },
-  {
-    title: "Executive Performance",
-    tag: "Premium Coaching",
-    text:
-      "12 Wochen für ambitionierte Menschen, die beruflich viel leisten und körperlich wieder klarer, fitter und leistungsfähiger werden wollen.",
-    href: "/executive-performance/",
-    meta: "12 Wochen · wenige Plätze"
-  },
-  {
-    title: "Firmen Performance Check",
-    tag: "B2B Gesundheitstag",
-    text:
-      "InBody-Messungen, Kurzvortrag, individuelle Auswertung und konkrete Handlungsempfehlungen für moderne Unternehmen.",
-    href: "/firmen-performance-check/",
-    meta: "Daten · Energie · Bindung"
-  },
-  {
-    title: "Puzzle Gym Community",
-    tag: "Nürnberg Hub",
-    text:
-      "Der physische Performance-Hub für Krafttraining, Bodybuilding, Hyrox, Kurse, Events und Community in Nürnberg.",
-    href: "/puzzle-gym/",
-    meta: "Gym · Events · Challenges"
-  }
-];
-
 export const appFeatures = [
   {
     title: "Training",

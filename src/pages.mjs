@@ -2,8 +2,11 @@ import {
   achievements,
   appFunctionRows,
   corporateSteps,
+  dominikFacts,
+  executiveSteps,
   landingProofCards,
-  site
+  site,
+  timeline
 } from "./data.mjs";
 import {
   achievementGrid,
@@ -21,6 +24,7 @@ import {
   socialIconLink,
   socialIconLinks,
   summaryRows,
+  timelineList,
   transformationGrid
 } from "./components.mjs";
 
@@ -42,7 +46,7 @@ function deferredVideoEmbed({
         <span class="premium-video-launch__scrim" aria-hidden="true"></span>
         <span class="premium-video-launch__content">
           <span class="premium-video-launch__eyebrow">${eyebrow}</span>
-          <strong>${headline}</strong>
+          <span class="premium-video-launch__headline">${headline}</span>
           <span class="premium-video-launch__action">${actionLabel}</span>
           <span class="premium-video-launch__hint">Freigabe nötig. Danach kann YouTube automatisch laden.</span>
         </span>
@@ -957,6 +961,32 @@ function homePage() {
       </div>
     </section>
 
+    <section class="section section--tight">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Performance System",
+          title: "Gesundheit, Leistung und Präsenz gehören zusammen.",
+          text:
+            "Camp Dörfl verbindet Personal Training, Firmenfitness, Event-Moderation und digitale App-Struktur zu einem System für Nürnberg und die Region."
+        })}
+        <div class="summary-rows summary-rows--compact">
+          <article class="summary-row" data-reveal>
+            <h3>Gesundheit wird messbar</h3>
+            <p>Analyse, Training, Ernährung und Check-ins machen sichtbar, was im Alltag wirklich wirkt. Aus einem diffusen Ziel entsteht ein klarer Status mit konkreten nächsten Schritten.</p>
+          </article>
+          <article class="summary-row" data-reveal>
+            <h3>Leistung bekommt Struktur</h3>
+            <p>Ob Führungskraft, Unternehmen, Athlet oder Team: die Umsetzung wird so geplant, dass sie zu Kalender, Verantwortung und Energie passt.</p>
+          </article>
+          <article class="summary-row" data-reveal>
+            <h3>Präsenz wird erlebbar</h3>
+            <p>Auf der Trainingsfläche, im Unternehmen und auf der Bühne bleibt der Anspruch gleich: klare Führung, echte Erfahrung und eine professionelle Wirkung, die hängen bleibt.</p>
+            <p><a href="/executive-performance/">Executive Performance ansehen</a></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
     ${ctaSection({
       eyebrow: "Nächster Schritt",
       title: "Starte mit dem Bereich, der gerade zu dir passt.",
@@ -969,9 +999,9 @@ function homePage() {
   return layout({
     path: "/",
     bodyClass: "page-premium page-home-reboot",
-    title: "Camp Dörfl | Premium Personal Training, Firmenfitness, Events & App in Nürnberg",
+    title: "Camp Dörfl | Performance & Personal Training Nürnberg",
     description:
-      "Camp Dörfl ist das Performance System aus Premium Personal Training, Firmenfitness, Events und App in Nürnberg.",
+      "Camp Dörfl in Nürnberg verbindet Premium Personal Training, Firmenfitness, Event-Moderation und App-Struktur zu einem Performance System.",
     keywords: [
       "Personal Trainer Nürnberg",
       "Premium Personal Training Nürnberg",
@@ -986,7 +1016,7 @@ function homePage() {
 function appPage() {
   const content = `
     <section class="ff-hero ff-hero--app ff-hero--text-only">
-      <img class="ff-hero__img" src="/assets/images/home-app-preview.png" alt="" aria-hidden="true">
+      <img class="ff-hero__img" src="/assets/images/home-app-preview.png" alt="Vorschau der Camp Dörfl App mit Training, Ernährung, Check-ins und Performance-Funktionen">
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
           <p class="ff-hero__eyebrow" data-reveal>Camp Dörfl App</p>
@@ -1071,11 +1101,11 @@ function appPage() {
 function personalCoachingPage() {
   const content = `
     <section class="ff-hero ff-hero--coaching ff-hero--coaching-photo">
-      <img class="ff-hero__img" src="/assets/images/premium-training-hero-wide.png" alt="Dominik Dörfl mit Personal-Training-Kunde im Studio">
+      <img class="ff-hero__img" src="/assets/images/premium-training-hero-wide.png" alt="Dominik Dörfl als Personal Trainer in Nürnberg beim Training mit einem Kunden im Studio">
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
-        <p class="ff-hero__eyebrow" data-reveal>Personal Trainer Nürnberg</p>
-        <h1 class="ff-hero__title" data-reveal>Premium.<br>Personal.<br><span>Training.</span></h1>
+        <p class="ff-hero__eyebrow" data-reveal>Premium Personal Training · Camp Dörfl</p>
+        <h1 class="ff-hero__title" data-reveal>Personal Trainer <br><span>in Nürnberg.</span></h1>
         <p class="ff-hero__lead" data-reveal>
           Der private Einstieg in das Performance System: Personal Training ohne Bindung oder Premium Personal Training mit Analyse, Planung, App und laufender Steuerung.
         </p>
@@ -1131,7 +1161,7 @@ function personalCoachingPage() {
           <div class="coaching-start-stage__head">
             ${sectionHeader({
               eyebrow: "Drei Wege",
-              title: "So kannst du ins Premium Personal Training <span>starten.</span>",
+              title: "So startest du mit deinem <span>Personal Trainer in Nürnberg.</span>",
               text:
                 "Du kannst über Einzelstunden, Premium Coaching oder die Camp Dörfl App in das System einsteigen."
             })}
@@ -1239,7 +1269,7 @@ function personalCoachingPage() {
 
   return layout({
     path: "/personal-coaching/",
-    title: "Personal Trainer Nürnberg & Premium Personal Training Nürnberg | Camp Dörfl",
+    title: "Personal Trainer Nürnberg – Premium Training | Camp Dörfl",
     description:
       "Personal Trainer Nürnberg und Premium Personal Training Nürnberg von Camp Dörfl: Training, Ernährung, Analysen, persönliche Führung und messbare Entwicklung.",
     keywords: ["Personal Trainer Nürnberg", "Premium Personal Training Nürnberg", "Personal Training Nürnberg"],
@@ -1251,13 +1281,13 @@ function personalCoachingPage() {
 function firmenfitnessPage() {
   const content = `
     <section class="ff-hero ff-hero--photo ff-hero--firmenfitness ff-hero--firmenfitness-photo ff-hero--text-only">
-      <img class="ff-hero__img" src="/assets/images/firmenfitness-hero-wide.png" alt="" aria-hidden="true">
+      <img class="ff-hero__img" src="/assets/images/firmenfitness-hero-wide.png" alt="Dominik Dörfl im Firmenfitness-Kontext mit Analyse und Beratung für Unternehmen">
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
-          <p class="ff-hero__eyebrow" data-reveal>Firmenfitness</p>
-          <h1 class="ff-hero__title" data-reveal>Firmenfitness.<br>Mit Analyse.<br><span>Und Beratung.</span></h1>
+          <p class="ff-hero__eyebrow" data-reveal>Gesundheitstage · Performance Checks</p>
+          <h1 class="ff-hero__title" data-reveal>Firmenfitness <br><span>in Nürnberg.</span></h1>
           <p class="ff-hero__lead" data-reveal>
-            Mitarbeitende werden präzise ausgewertet und anschließend verständlich beraten. Ernährung, Bewegung und Routinen werden passend zum Berufsmodell übersetzt.
+            Firmenfitness in Nürnberg und der Region: Mitarbeitende werden präzise ausgewertet und anschließend verständlich beraten. Ernährung, Bewegung und Routinen werden passend zum Berufsmodell übersetzt.
           </p>
           <p class="ff-hero__support" data-reveal>
             Die Kombination aus 2D-Technik, InBody und professioneller Einordnung macht das Format einfach, greifbar und stark verkaufbar.
@@ -1300,7 +1330,7 @@ function firmenfitnessPage() {
       <div class="section-shell section-shell--wide corporate-reference-band" data-reveal>
         <div class="corporate-reference-band__copy">
           <p class="eyebrow">Referenzen Firmenfitness</p>
-          <h2>Gesundheitstage und Firmenfitness professionell umgesetzt.</h2>
+          <h2>Firmenfitness in Nürnberg: Gesundheitstage professionell umgesetzt.</h2>
           <p>
             Von Unternehmen bis Bildungseinrichtung: Analyse, InBody und individuelle Beratung kommen dort zum Einsatz, wo Gesundheit hochwertig, verständlich und wirksam vermittelt werden soll.
           </p>
@@ -1315,7 +1345,7 @@ function firmenfitnessPage() {
                   </span>
                   <span class="corporate-reference-card__divider" aria-hidden="true"></span>
                   <span class="corporate-reference-card__body">
-                    <strong>${name}</strong>
+                    <span class="reference-card__name">${name}</span>
                     <span>${text}</span>
                   </span>
                   <span class="corporate-reference-card__arrow" aria-hidden="true">&rsaquo;</span>
@@ -1402,7 +1432,7 @@ function firmenfitnessPage() {
 
     ${ctaSection({
       eyebrow: "Firmenfitness",
-      title: "Wenn Sie Firmenfitness hochwertig aufsetzen wollen, lassen Sie uns sprechen.",
+      title: "Wenn Sie Firmenfitness in Nürnberg hochwertig aufsetzen wollen, lassen Sie uns sprechen.",
       text:
         "Camp Dörfl entwickelt Formate für Unternehmen, die Gesundheit, Performance und Teamkultur professionell verbinden wollen.",
       primary: { label: "Firmenfitness anfragen", href: contactHref("firmenfitness") },
@@ -1412,9 +1442,9 @@ function firmenfitnessPage() {
 
   return layout({
     path: "/firmenfitness/",
-    title: "Firmenfitness | Camp Dörfl",
+    title: "Firmenfitness Nürnberg – Gesundheitstage | Camp Dörfl",
     description:
-      "Firmenfitness von Camp Dörfl: Gesundheitstage, Performance Checks, Vorträge und Aktivierungen für moderne Unternehmen.",
+      "Firmenfitness in Nürnberg von Camp Dörfl: Gesundheitstage, Performance Checks, Vorträge und Aktivierungen für moderne Unternehmen.",
     keywords: ["Firmenfitness", "Firmenfitness Nürnberg", "Betriebliche Gesundheit", "Gesundheitstag Unternehmen"],
     bodyClass: "page-premium page-firmenfitness",
     content
@@ -1424,13 +1454,13 @@ function firmenfitnessPage() {
 function eventsPage() {
   const content = `
     <section class="ff-hero ff-hero--photo ff-hero--events ff-hero--events-photo ff-hero--text-only">
-      <img class="ff-hero__img" src="/assets/images/events-hero-wide.png" alt="" aria-hidden="true">
+      <img class="ff-hero__img" src="/assets/images/events-hero-wide.png" alt="Dominik Dörfl als Moderator auf einer Eventbühne mit Publikum">
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
-          <p class="ff-hero__eyebrow" data-reveal>Moderator in Nürnberg</p>
-          <h1 class="ff-hero__title" data-reveal>Moderation.<br>Mit Energie.<br><span>Und Präsenz.</span></h1>
+          <p class="ff-hero__eyebrow" data-reveal>Events · Moderation · Hosting</p>
+          <h1 class="ff-hero__title" data-reveal>Moderator <br><span>in Nürnberg.</span></h1>
           <p class="ff-hero__lead" data-reveal>
-            Interviews, Eröffnungen, Panels und Events mit klarer Führung, Energie und professioneller Präsenz.
+            Als Moderator in Nürnberg führt Dominik Dörfl Interviews, Eröffnungen, Panels und Events – mit klarer Führung, Energie und professioneller Präsenz.
           </p>
           <p class="ff-hero__support" data-reveal>
             Für Firmen, Sport, Gala und öffentliche Formate.
@@ -1556,7 +1586,7 @@ function eventsPage() {
                   </span>
                   <span class="event-reference-card__divider" aria-hidden="true"></span>
                   <span class="event-reference-card__body">
-                    <strong>${name}</strong>
+                    <span class="reference-card__name">${name}</span>
                     <span>${text}</span>
                   </span>
                   <span class="event-reference-card__arrow" aria-hidden="true">&rsaquo;</span>
@@ -1704,7 +1734,7 @@ function eventsPage() {
 function teamSuccessPage() {
   const content = `
     <section class="ff-hero ff-hero--split ff-hero--photo ff-hero--team">
-      <img class="ff-hero__img" src="/assets/images/dominik-moderator-mic.jpg" alt="" aria-hidden="true">
+      <img class="ff-hero__img" src="/assets/images/dominik-moderator-mic.jpg" alt="Dominik Dörfl mit Mikrofon bei einer Moderation auf der Bühne">
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__shell">
         <div class="ff-hero__inner">
@@ -1745,12 +1775,6 @@ function teamSuccessPage() {
             </ul>
           </article>
         </div>
-      </div>
-    </section>
-
-    <section class="section section--tight">
-      <div class="section-shell">
-        ${achievementGrid(achievements)}
       </div>
     </section>
 
@@ -1819,11 +1843,327 @@ function teamSuccessPage() {
 
   return layout({
     path: "/erfolge-im-team/",
-    title: "Erfolge im Team | Camp Dörfl",
+    title: "Erfolge im Team | Camp Dörfl Nürnberg",
     description:
-      "Erfolge im Team bei Camp Dörfl: Erfahrung aus Leistungssport, Coaching, Community, Bühne und Unternehmertum.",
+      "Erfolge im Team bei Camp Dörfl Nürnberg: Erfahrung aus Leistungssport, Coaching, Community, Bühne und Unternehmertum für sichtbare Entwicklung.",
     keywords: ["Erfolge im Team", "Dominik Dörfl", "Performance Coaching Nürnberg"],
     bodyClass: "page-premium page-team",
+    content
+  });
+}
+
+// Eigenständige Seite (früher Alias auf personalCoachingPage – wegen Duplicate-Content/SEO entkoppelt).
+function executivePerformancePage() {
+  const audienceCards = [
+    {
+      title: "Verantwortung statt Freizeit",
+      text:
+        "Geschäftsführer, Selbstständige und Führungskräfte mit vollem Kalender, die nicht mehr Zeit, sondern ein klares System brauchen.",
+      detail: "Für volle Kalender"
+    },
+    {
+      title: "Leistung im Alltag",
+      text:
+        "Menschen, die beruflich konstant performen müssen und körperlich wieder klarer, fitter und belastbarer werden wollen.",
+      detail: "Für echte Belastung"
+    },
+    {
+      title: "Anspruch statt Standard",
+      text:
+        "Wer keine Massenlösung will, sondern persönliche Führung, messbare Werte und einen Plan, der sich an reale Prioritäten anpasst.",
+      detail: "Für Premium-Anspruch"
+    }
+  ];
+
+  const outcomeRows = [
+    {
+      title: "Mehr Energie über den ganzen Tag",
+      text:
+        "Training, Ernährung und Routinen werden so gesteuert, dass Leistungsfähigkeit im Beruf und im Privaten spürbar steigt."
+    },
+    {
+      title: "Sichtbare, messbare Entwicklung",
+      text:
+        "InBody und 2D-Analyse machen Fortschritt in Zahlen sichtbar, statt ihn dem Gefühl oder dem Zufall zu überlassen."
+    },
+    {
+      title: "Ein System, das im Alltag hält",
+      text:
+        "Die Camp Dörfl App, wöchentliche Anpassungen und klare Führung sorgen dafür, dass der Plan auch in stressigen Wochen trägt."
+    }
+  ];
+
+  const executiveFaq = [
+    {
+      question: "Wie viel Zeit kostet mich das Programm pro Woche?",
+      answer:
+        "Das Programm ist für volle Kalender gebaut. Training, Ernährung und Check-ins werden so geplant, dass sie sich in deinen Alltag einfügen, statt ihn zu sprengen."
+    },
+    {
+      question: "Brauche ich Vorerfahrung im Training?",
+      answer:
+        "Nein. Wir starten mit einer ehrlichen Analyse deines Status und bauen den Plan exakt auf deine Ausgangslage, deine Ziele und deinen Beruf auf."
+    },
+    {
+      question: "Warum nur wenige Plätze?",
+      answer:
+        "Executive Performance ist persönlich geführt. Damit Qualität, Erreichbarkeit und Anpassung hoch bleiben, gibt es bewusst nur eine begrenzte Zahl an Plätzen."
+    }
+  ];
+
+  const content = `
+    <section class="ff-hero ff-hero--coaching ff-hero--coaching-photo ff-hero--executive">
+      <img class="ff-hero__img" src="/assets/images/dominik-gym-grey.jpg" alt="Dominik Dörfl beim Krafttraining im Studio" loading="eager">
+      <div class="ff-hero__scrim" aria-hidden="true"></div>
+      <div class="section-shell ff-hero__inner">
+        <div class="premium-badge">
+          <span>12 WOCHEN</span>
+          <small>Premium-Coaching für Leistungsträger – nur wenige Plätze.</small>
+        </div>
+        <p class="ff-hero__eyebrow" data-reveal>Executive Performance</p>
+        <h1 class="ff-hero__title" data-reveal>Executive.<br>Performance.<br><span>In 12 Wochen.</span></h1>
+        <p class="ff-hero__lead" data-reveal>
+          Das 12-Wochen-Premium-Programm für ambitionierte Menschen, die beruflich viel leisten und körperlich wieder klarer, fitter und leistungsfähiger werden wollen.
+        </p>
+        <p class="ff-hero__support" data-reveal>
+          Analyse, individuelle Planung, persönliche Führung und die Camp Dörfl App – abgestimmt auf einen vollen Kalender und einen echten Premium-Anspruch.
+        </p>
+        <div class="ff-hero__actions" data-reveal>
+          <a class="button button--primary" href="${contactHref("premium-training")}"><span>Platz anfragen</span><span aria-hidden="true">&rarr;</span></a>
+          <a class="button button--secondary-light" href="/personal-coaching/"><span>Personal Training ansehen</span><span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <dl class="ff-hero__facts" data-reveal aria-label="Eckdaten Executive Performance">
+          <div><dt>12</dt><dd>Wochen Programm</dd></div>
+          <div><dt>1:1</dt><dd>Persönliche Führung</dd></div>
+          <div><dt>App</dt><dd>Steuerung & Check-ins</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Für wen",
+          title: "Gebaut für Menschen mit echter Verantwortung.",
+          text:
+            "Executive Performance ist kein weiteres Fitnessangebot, sondern ein geführtes System für Leistungsträger, die ihren Körper wieder zu einem Vorteil machen wollen.",
+          align: "center"
+        })}
+        ${featureGrid(audienceCards, "feature-grid--coaching-flow")}
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section-shell editorial-stage">
+        <div class="editorial-stage__copy" data-reveal>
+          ${sectionHeader({
+            eyebrow: "Ablauf",
+            title: "So läuft dein 12-Wochen-Programm."
+          })}
+          ${processList(executiveSteps)}
+        </div>
+        <div class="editorial-stage__media" data-reveal>
+          <img src="/assets/images/dominik-athlete-nutrition.jpg" alt="Dominik Dörfl bei der Ernährungs- und Leistungsplanung">
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--coaching-outcome">
+      <div class="section-shell section-shell--wide">
+        <div class="coaching-outcome-stage">
+          ${sectionHeader({
+            eyebrow: "Ergebnis",
+            title: "Was nach 12 Wochen spürbar anders ist.",
+            text:
+              "Ziel ist nicht ein kurzes Strohfeuer, sondern ein Zustand, den du in deinem Alltag und in deiner Leistungsfähigkeit wirklich merkst.",
+            align: "center"
+          })}
+          ${summaryRows(outcomeRows)}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Warum Camp Dörfl",
+          title: "Geführt von echter Leistungserfahrung.",
+          text:
+            "Hinter dem Programm steht keine Theorie, sondern gelebte Praxis aus Leistungssport, Coaching und Unternehmertum – als Ex-Profi-Athlet, zweifacher Deutscher Meister und Coach von Top-Athleten."
+        })}
+        <div class="inline-actions" data-reveal>
+          <a class="button button--secondary-light" href="/ueber-dominik/"><span>Mehr über Dominik Dörfl</span><span aria-hidden="true">&rarr;</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "FAQ",
+          title: "Häufige Fragen zum Programm."
+        })}
+        ${faq(executiveFaq)}
+      </div>
+    </section>
+
+    ${ctaSection({
+      eyebrow: "Executive Performance",
+      title: "Sichere dir einen der wenigen Plätze.",
+      text:
+        "Wenn du beruflich viel leistest und körperlich wieder an deine echte Leistungsfähigkeit willst, ist eine kurze, ehrliche Anfrage der richtige Start.",
+      primary: { label: "Platz anfragen", href: contactHref("premium-training") },
+      secondary: { label: "Camp Dörfl App ansehen", href: "/app/" }
+    })}
+  `;
+
+  return layout({
+    path: "/executive-performance/",
+    title: "Executive Performance Coaching Nürnberg | Camp Dörfl",
+    description:
+      "Executive Performance von Camp Dörfl: 12-Wochen-Premium-Coaching in Nürnberg für Führungskräfte und Leistungsträger mit vollem Kalender – Analyse, Plan und App.",
+    keywords: ["Executive Performance", "Performance Coaching Nürnberg", "Coaching für Führungskräfte", "Premium Coaching Nürnberg"],
+    bodyClass: "page-premium page-executive",
+    content
+  });
+}
+
+function ueberDominikPage() {
+  const facts = dominikFacts;
+
+  const principleRows = [
+    {
+      title: "Klarheit vor Lautstärke",
+      text:
+        "Echte Entwicklung entsteht aus ehrlichen Werten, klaren Systemen und konsequenter Führung – nicht aus Motivationssprüchen oder Trends."
+    },
+    {
+      title: "Messen statt hoffen",
+      text:
+        "Vom Leistungssport bis ins Coaching gilt: Was man misst, kann man steuern. Deshalb steht hinter jedem Fortschritt ein nachvollziehbarer Status."
+    },
+    {
+      title: "Alltagstauglich statt extrem",
+      text:
+        "Extreme Leistungen sind möglich – aber der eigentliche Anspruch ist, dass Struktur im normalen Alltag von echten Menschen hält."
+    }
+  ];
+
+  const content = `
+    <section class="ff-hero ff-hero--split ff-hero--photo ff-hero--about">
+      <img class="ff-hero__img" src="/assets/images/dominik-stage-suit.jpg" alt="Dominik Dörfl im Anzug auf der Bühne als Moderator und Performance Coach">
+      <div class="ff-hero__scrim" aria-hidden="true"></div>
+      <div class="section-shell ff-hero__shell">
+        <div class="ff-hero__inner">
+          <div class="premium-badge">
+            <span>ÜBER DOMINIK</span>
+            <small>Unternehmer, Athlet, Coach und Gründer von Camp Dörfl.</small>
+          </div>
+          <p class="ff-hero__eyebrow" data-reveal>Die Person hinter Camp Dörfl</p>
+          <h1 class="ff-hero__title" data-reveal>Dominik.<br>Dörfl.<br><span>Performance gelebt.</span></h1>
+          <p class="ff-hero__lead" data-reveal>
+            Ex-Profi-Athlet, zweifacher Deutscher Meister, Ironman-Finisher, Coach von Top-Athleten und Unternehmer aus Nürnberg. Camp Dörfl ist die Summe dieser Erfahrung.
+          </p>
+          <p class="ff-hero__support" data-reveal>
+            Was hier vermittelt wird, ist nicht aus Büchern abgeleitet, sondern auf der Bühne, im Wettkampf und im Coaching-Alltag selbst durchlebt.
+          </p>
+          <div class="ff-hero__actions" data-reveal>
+            <a class="button button--primary" href="${contactHref("premium-training")}"><span>Mit Dominik arbeiten</span><span aria-hidden="true">&rarr;</span></a>
+            <a class="button button--secondary-light" href="/erfolge-im-team/"><span>Erfolge im Team</span><span aria-hidden="true">&rarr;</span></a>
+          </div>
+          <dl class="ff-hero__facts" data-reveal aria-label="Eckdaten zu Dominik Dörfl">
+            <div><dt>2×</dt><dd>Deutscher Meister</dd></div>
+            <div><dt>IFBB</dt><dd>Pro Bodybuilding</dd></div>
+            <div><dt>Ironman</dt><dd>70.3 Finisher</dd></div>
+          </dl>
+        </div>
+        <div class="ff-hero__showcase ff-hero__showcase--photo" data-reveal>
+          <figure class="ff-hero__photo-card">
+            <img src="/assets/images/dominik-stage-suit.jpg" alt="Dominik Dörfl im Anzug auf der Bühne">
+          </figure>
+          <article class="ff-hero__aside">
+            <span class="card-tag">Auf einen Blick</span>
+            <h2>Mehr als eine Rolle.</h2>
+            <ul class="premium-checklist">
+              <li>Unternehmer und Gründer von Camp Dörfl</li>
+              <li>Ex-Profi-Athlet auf Spitzenniveau</li>
+              <li>Coach von Olympia- und Spitzenathleten</li>
+              <li>Moderator und Gastgeber von Events</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Werdegang",
+          title: "Ein Weg durch mehrere Leistungswelten.",
+          text:
+            "Vom Mannschaftssport über Titel im Kraftsport und extreme Ausdauerleistungen bis zu Coaching und Unternehmertum: Jede Station prägt, wie Camp Dörfl heute denkt."
+        })}
+        ${timelineList(timeline)}
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Leistungsspur",
+          title: "Erfahrung, die sich in Zahlen zeigt.",
+          align: "center"
+        })}
+        ${achievementGrid(achievements)}
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-shell editorial-stage">
+        <div class="editorial-stage__copy" data-reveal>
+          ${sectionHeader({
+            eyebrow: "Kurzprofil",
+            title: "Dominik Dörfl in Stichpunkten."
+          })}
+          <ul class="premium-checklist premium-checklist--columns">
+            ${facts.map((fact) => `<li>${fact}</li>`).join("")}
+          </ul>
+        </div>
+        <div class="editorial-stage__media" data-reveal>
+          <img src="/assets/images/dominik-bodybuilding-desert.jpg" alt="Dominik Dörfl als Bodybuilder">
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Haltung",
+          title: "Woran Dominik Leistung misst.",
+          text:
+            "Über alle Sportarten und Rollen hinweg bleiben die Prinzipien gleich – und genau sie stecken im System von Camp Dörfl."
+        })}
+        ${summaryRows(principleRows)}
+      </div>
+    </section>
+
+    ${ctaSection({
+      eyebrow: "Über Dominik",
+      title: "Willst du mit Dominik arbeiten?",
+      text:
+        "Ob Premium Personal Training, Executive Performance oder die Camp Dörfl App – der sinnvollste erste Schritt ist eine klare Anfrage.",
+      primary: { label: "Beratung anfragen", href: contactHref("premium-training") },
+      secondary: { label: "Camp Dörfl App ansehen", href: "/app/" }
+    })}
+  `;
+
+  return layout({
+    path: "/ueber-dominik/",
+    title: "Über Dominik Dörfl | Camp Dörfl Nürnberg",
+    description:
+      "Über Dominik Dörfl: Unternehmer, Ex-Profi-Athlet, Deutscher Meister, Ironman-Finisher und Coach aus Nürnberg – die Person und Erfahrung hinter Camp Dörfl.",
+    keywords: ["Dominik Dörfl", "Über Dominik Dörfl", "Personal Trainer Nürnberg", "Camp Dörfl Gründer"],
+    bodyClass: "page-premium page-about",
     content
   });
 }
@@ -1840,7 +2180,7 @@ function impressumPage() {
         })}
         <div class="legal-grid legal-grid--intro">
           <article class="legal-card" data-reveal>
-            <h3>Anbieter</h3>
+            <h2>Anbieter</h2>
             <address>
               ${site.ownerName}<br>
               ${site.streetAddress}<br>
@@ -1849,15 +2189,16 @@ function impressumPage() {
             </address>
           </article>
           <article class="legal-card" data-reveal>
-            <h3>Kontakt</h3>
-            <p><strong>E-Mail:</strong> <a href="mailto:${site.email}">${site.email}</a></p>
-            <p><strong>Instagram:</strong> ${socialIconLink(site.instagram, { className: "social-link--chip social-link--inline" })}</p>
+            <h2>Kontakt</h2>
+            <p><span class="legal-label">E-Mail:</span> <a href="mailto:${site.email}">${site.email}</a></p>
+            <p><span class="legal-label">Instagram:</span> ${socialIconLink(site.instagram, { className: "social-link--chip social-link--inline" })}</p>
             <p>Eine unmittelbare elektronische Kontaktaufnahme ist per E-Mail möglich. Das Kontaktformular dieser Website übermittelt eingegebene Daten über den Formular-Dienst FormSubmit an ${site.email}.</p>
           </article>
           <article class="legal-card" data-reveal>
-            <h3>Rechtliche Schnellnavigation</h3>
+            <h2>Rechtliche Schnellnavigation</h2>
             <ul class="legal-list">
               <li><a href="/datenschutz/">Datenschutz</a></li>
+              <li><a href="/datenschutzformular-app/">Datenschutzformular App</a></li>
               <li><a href="/cookies/">Cookies & lokale Speicherungen</a></li>
               <li><a href="/werbung-partnerlinks/">Partnerlinks & Werbung</a></li>
               <li><a href="/barrierefreiheit/">Barrierefreiheit</a></li>
@@ -1870,7 +2211,7 @@ function impressumPage() {
     <section class="section section--muted">
       <div class="section-shell legal-stack">
         <article class="legal-card" data-reveal>
-          <h3>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h3>
+          <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
           <p>
             ${site.ownerName}<br>
             ${site.streetAddress}<br>
@@ -1878,17 +2219,32 @@ function impressumPage() {
           </p>
         </article>
         <article class="legal-card" data-reveal>
-          <h3>Verbraucherstreitbeilegung</h3>
+          <h2>Verbraucherstreitbeilegung</h2>
           <p>Ich bin nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
           <p class="legal-note">Hinweis: Die frühere EU-Online-Streitbeilegungsplattform wurde zum 20. Juli 2025 eingestellt.</p>
         </article>
         <article class="legal-card" data-reveal>
-          <h3>Hinweis zu Werbung, Partnerlinks und Kooperationen</h3>
+          <h2>Hinweis zu Werbung, Partnerlinks und Kooperationen</h2>
           <p>Auf dieser Website können Inhalte mit Markenbezug, Partnernennungen, Rabattcodes oder direkten Partnerlinks erscheinen. Hinweise zur Kennzeichnung und Transparenz finden Sie auf der Seite <a href="/werbung-partnerlinks/">Partnerlinks & Werbung</a>.</p>
         </article>
         <article class="legal-card" data-reveal>
-          <h3>Urheberrecht</h3>
+          <h2>Urheberrecht</h2>
           <p>Die auf dieser Website veröffentlichten Texte, Bilder, Grafiken und sonstigen Inhalte unterliegen dem Urheberrecht, soweit nicht anders gekennzeichnet. Eine Nutzung außerhalb der gesetzlichen Grenzen bedarf der vorherigen Zustimmung.</p>
+        </article>
+        <article class="legal-card" data-reveal>
+          <h2>Geltungsbereich des Impressums</h2>
+          <p>Dieses Impressum gilt für die Website von Camp Dörfl unter ${site.domain} und für die dort dargestellten Angebote rund um Premium Personal Training, Firmenfitness, Events, Kooperationen und die Camp Dörfl App.</p>
+          <p>Zusätzliche Profile auf externen Plattformen können eigene Anbieterinformationen, Nutzungsbedingungen und Datenschutzangaben enthalten.</p>
+        </article>
+        <article class="legal-card" data-reveal>
+          <h2>Kommunikation und Anfragen</h2>
+          <p>Für Fragen zu Inhalten, Kooperationen, rechtlichen Hinweisen oder einer Zusammenarbeit in Nürnberg ist die im Impressum genannte E-Mail-Adresse der direkte Kontaktweg.</p>
+          <p>Bei geschäftlichen Anfragen bitte den betroffenen Bereich nennen, damit Premium Personal Training, Firmenfitness, Events oder App-Themen schnell richtig zugeordnet werden können.</p>
+        </article>
+        <article class="legal-card" data-reveal>
+          <h2>Redaktionelle Verantwortung</h2>
+          <p>Die Inhalte der Website werden mit dem Anspruch gepflegt, Leistungen, Kontaktwege und rechtliche Hinweise verständlich und aktuell darzustellen. Änderungen an Angeboten, Partnern oder technischen Diensten können eine Anpassung einzelner Informationsseiten erforderlich machen.</p>
+          <p>Falls Ihnen eine unklare Angabe, ein fehlerhafter Link oder ein missverständlicher Hinweis auffällt, können Sie sich direkt über die genannte Kontaktadresse melden.</p>
         </article>
       </div>
     </section>
@@ -1896,8 +2252,8 @@ function impressumPage() {
 
   return layout({
     path: "/impressum/",
-    title: "Impressum | Camp Dörfl",
-    description: "Impressum von Camp Dörfl mit den Pflichtangaben nach dem Digitale-Dienste-Gesetz.",
+    title: "Impressum | Camp Dörfl Nürnberg",
+    description: "Impressum von Camp Dörfl Nürnberg mit Anbieterkennzeichnung, Kontakt, Verantwortlichkeit und rechtlichen Hinweisen zur Website.",
     keywords: ["Impressum", "Camp Dörfl", "Dominik Dörfl"],
     bodyClass: "page-premium page-legal",
     content
@@ -1916,17 +2272,17 @@ function privacyPage() {
         })}
         <div class="legal-grid legal-grid--intro">
           <article class="legal-card" data-reveal>
-            <h3>Verantwortlicher</h3>
+            <h2>Verantwortlicher</h2>
             <address>
               ${site.ownerName}<br>
               ${site.streetAddress}<br>
               ${site.postalCode} ${site.city}<br>
               ${site.country}
             </address>
-            <p><strong>E-Mail:</strong> <a href="mailto:${site.email}">${site.email}</a></p>
+            <p><span class="legal-label">E-Mail:</span> <a href="mailto:${site.email}">${site.email}</a></p>
           </article>
           <article class="legal-card" data-reveal>
-            <h3>Kurz zusammengefasst</h3>
+            <h2>Kurz zusammengefasst</h2>
             <ul class="legal-list">
               <li>Diese Website verwendet aktuell keine Analyse- oder Marketing-Tools, die ohne Einwilligung aktiviert werden.</li>
               <li>Die auf der Website verwendeten Schriftarten werden lokal bereitgestellt.</li>
@@ -1942,48 +2298,48 @@ function privacyPage() {
     <section class="section section--muted">
       <div class="section-shell legal-grid">
         <article class="legal-card" data-reveal>
-          <h3>1. Bereitstellung der Website</h3>
+          <h2>1. Bereitstellung der Website</h2>
           <p>Beim Aufruf der Website werden durch den technischen Betrieb unvermeidbar Verbindungsdaten verarbeitet. Dazu können insbesondere IP-Adresse, Datum und Uhrzeit des Abrufs, aufgerufene URL, Referrer, Browsertyp und Betriebssystem gehören.</p>
           <p>Die Verarbeitung erfolgt zur Auslieferung der Website, zur Gewährleistung von Stabilität und Sicherheit sowie zur Abwehr von Missbrauch.</p>
-          <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO.</p>
-          <p><strong>Empfänger:</strong> der für die Auslieferung der Website eingesetzte technische Hosting-Dienstleister.</p>
+          <p><span class="legal-label">Rechtsgrundlage:</span> Art. 6 Abs. 1 lit. f DSGVO.</p>
+          <p><span class="legal-label">Empfänger:</span> der für die Auslieferung der Website eingesetzte technische Hosting-Dienstleister.</p>
         </article>
 
         <article class="legal-card" data-reveal>
-          <h3>2. Kontakt per E-Mail und Kontaktformular</h3>
+          <h2>2. Kontakt per E-Mail und Kontaktformular</h2>
           <p>Wenn Sie mir direkt per E-Mail schreiben oder das Kontaktformular auf dieser Website nutzen, verarbeite ich die von Ihnen übermittelten Angaben zur Bearbeitung Ihrer Anfrage. Das können insbesondere Name, E-Mail-Adresse, Telefonnummer, Unternehmen, Thema und Nachricht sein.</p>
           <p>Beim Absenden des Formulars werden die eingegebenen Daten an den externen Formular-Dienst FormSubmit unter <code>formsubmit.co</code> übertragen und von dort an ${site.email} weitergeleitet. Dabei können zusätzlich technische Verbindungsdaten wie IP-Adresse, Zeitstempel und Browserinformationen verarbeitet werden.</p>
-          <p><strong>Empfänger:</strong> ich selbst sowie der eingesetzte Formular-Dienst FormSubmit / Devro LABS.</p>
-          <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO, soweit es um vorvertragliche Kommunikation geht, im Übrigen Art. 6 Abs. 1 lit. f DSGVO.</p>
+          <p><span class="legal-label">Empfänger:</span> ich selbst sowie der eingesetzte Formular-Dienst FormSubmit / Devro LABS.</p>
+          <p><span class="legal-label">Rechtsgrundlage:</span> Art. 6 Abs. 1 lit. b DSGVO, soweit es um vorvertragliche Kommunikation geht, im Übrigen Art. 6 Abs. 1 lit. f DSGVO.</p>
         </article>
 
         <article class="legal-card" data-reveal>
-          <h3>3. Einwilligungs-Management und lokale Speicherung</h3>
+          <h2>3. Einwilligungs-Management und lokale Speicherung</h2>
           <p>Diese Website speichert Ihre Auswahl zu erforderlichen Funktionen und externen Medien lokal in Ihrem Browser, damit die Entscheidung nicht bei jedem Seitenaufruf erneut abgefragt werden muss.</p>
           <p>Aktuell wird dazu insbesondere der Eintrag <code>campdoerfl-consent</code> verwendet. Die Einzelheiten sind auf der Seite <a href="/cookies/">Cookies & lokale Speicherungen</a> beschrieben.</p>
-          <p><strong>Rechtsgrundlage:</strong> § 25 Abs. 2 Nr. 2 TDDDG sowie Art. 6 Abs. 1 lit. f DSGVO.</p>
+          <p><span class="legal-label">Rechtsgrundlage:</span> § 25 Abs. 2 Nr. 2 TDDDG sowie Art. 6 Abs. 1 lit. f DSGVO.</p>
         </article>
 
         <article class="legal-card" data-reveal>
-          <h3>4. YouTube-Videos</h3>
+          <h2>4. YouTube-Videos</h2>
           <p>Auf mehreren Seiten dieser Website sind Videos von YouTube im erweiterten Datenschutzmodus über <code>youtube-nocookie.com</code> eingebunden. Diese Inhalte werden erst geladen, wenn Sie der Kategorie „Externe Medien“ zugestimmt haben.</p>
           <p>Nach Ihrer Freigabe kann im sichtbaren Bereich automatisch eine Verbindung zu YouTube beziehungsweise Google hergestellt werden. Dabei können insbesondere IP-Adresse, Geräte- und Browserinformationen sowie Nutzungsdaten verarbeitet werden. Auf die weitere Verarbeitung durch YouTube oder Google habe ich keinen Einfluss.</p>
-          <p><strong>Rechtsgrundlage:</strong> § 25 Abs. 1 TDDDG sowie Art. 6 Abs. 1 lit. a DSGVO.</p>
+          <p><span class="legal-label">Rechtsgrundlage:</span> § 25 Abs. 1 TDDDG sowie Art. 6 Abs. 1 lit. a DSGVO.</p>
         </article>
 
         <article class="legal-card" data-reveal>
-          <h3>5. Externe Links</h3>
+          <h2>5. Externe Links</h2>
           <p>Diese Website verlinkt auf externe Angebote, insbesondere Instagram, YouTube und Partner-Websites. Wenn Sie einen solchen Link anklicken, verlassen Sie diese Website. Ab diesem Zeitpunkt gilt ausschließlich die Datenschutzerklärung des jeweiligen Anbieters.</p>
         </article>
 
         <article class="legal-card" data-reveal>
-          <h3>6. Speicherdauer</h3>
+          <h2>6. Speicherdauer</h2>
           <p>Personenbezogene Daten werden nur so lange gespeichert, wie dies für die jeweiligen Zwecke erforderlich ist oder gesetzliche Aufbewahrungspflichten bestehen.</p>
           <p>Technische Verbindungsdaten werden nur im für Betrieb, Sicherheit und Fehleranalyse erforderlichen Umfang verarbeitet. Inhalte aus der Kontaktaufnahme speichere ich nur so lange, wie dies zur Bearbeitung Ihrer Anfrage oder zur Erfüllung gesetzlicher Pflichten nötig ist.</p>
         </article>
 
         <article class="legal-card" data-reveal>
-          <h3>7. Ihre Rechte</h3>
+          <h2>7. Ihre Rechte</h2>
           <ul class="legal-list">
             <li>Recht auf Auskunft nach Art. 15 DSGVO</li>
             <li>Recht auf Berichtigung nach Art. 16 DSGVO</li>
@@ -2000,16 +2356,16 @@ function privacyPage() {
     <section class="section">
       <div class="section-shell legal-stack">
         <article class="legal-card" data-reveal>
-          <h3>8. Beschwerderecht bei einer Aufsichtsbehörde</h3>
+          <h2>8. Beschwerderecht bei einer Aufsichtsbehörde</h2>
           <p>Sie haben das Recht, sich bei einer Datenschutz-Aufsichtsbehörde über die Verarbeitung Ihrer personenbezogenen Daten zu beschweren. Für private Anbieter in Bayern ist regelmäßig das Bayerische Landesamt für Datenschutzaufsicht (BayLDA) zuständig.</p>
-          <p><a href="https://www.lda.bayern.de/de/index.html" rel="noopener noreferrer">www.lda.bayern.de</a></p>
+          <p><a href="https://www.lda.bayern.de/de/index.html" target="_blank" rel="noopener noreferrer">www.lda.bayern.de</a></p>
         </article>
         <article class="legal-card" data-reveal>
-          <h3>9. Keine Pflicht zur Bereitstellung</h3>
+          <h2>9. Keine Pflicht zur Bereitstellung</h2>
           <p>Sie sind nicht verpflichtet, mir personenbezogene Daten bereitzustellen. Ohne bestimmte Angaben kann ich Ihre Anfrage jedoch gegebenenfalls nicht oder nicht vollständig bearbeiten.</p>
         </article>
         <article class="legal-card" data-reveal>
-          <h3>10. Aktueller Geltungsbereich</h3>
+          <h2>10. Aktueller Geltungsbereich</h2>
           <p>Diese Datenschutzerklärung wurde auf das aktuell erkennbare technische Setup dieser Website abgestimmt. Wenn künftig weitere Dienste, Tracking- oder Analyse-Tools eingebunden werden, muss diese Erklärung vor deren Einsatz entsprechend aktualisiert werden.</p>
           <p class="legal-note">Ergänzende Hinweise zur Einwilligungslogik finden Sie auf der Seite <a href="/cookies/">Cookies & lokale Speicherungen</a>.</p>
         </article>
@@ -2019,9 +2375,220 @@ function privacyPage() {
 
   return layout({
     path: "/datenschutz/",
-    title: "Datenschutz | Camp Dörfl",
-    description: "Datenschutzerklärung von Camp Dörfl für die Website campdoerfl.de.",
+    title: "Datenschutzerklärung | Camp Dörfl Nürnberg",
+    description:
+      "Datenschutzerklärung von Camp Dörfl: Welche Daten auf der Website campdoerfl.de erhoben und verarbeitet werden und welche Rechte du als Nutzer hast.",
     keywords: ["Datenschutz", "Camp Dörfl", "DSGVO"],
+    bodyClass: "page-premium page-legal",
+    content
+  });
+}
+
+function appPrivacyPage() {
+  const content = `
+    <section class="section section--tight">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Rechtliches",
+          title: "Datenschutzformular App",
+          text: "Datenschutzerklärung für Website, App und digitale Angebote von Camp Dörfl. Stand: 30. Juni 2026.",
+          headingLevel: 1
+        })}
+        <div class="legal-grid legal-grid--intro">
+          <article class="legal-card" data-reveal>
+            <h2>Verantwortlicher</h2>
+            <address>
+              Camp Dörfl<br>
+              ${site.ownerName}<br>
+              ${site.streetAddress}<br>
+              ${site.postalCode} ${site.city}<br>
+              ${site.country}
+            </address>
+            <p><span class="legal-label">E-Mail:</span> <a href="mailto:${site.email}">${site.email}</a></p>
+            <p><span class="legal-label">Telefon:</span> <a href="tel:+4915561562648">015561562648</a></p>
+          </article>
+          <article class="legal-card" data-reveal>
+            <h2>Geltungsbereich</h2>
+            <p>Diese Datenschutzerklärung beschreibt die Verarbeitung personenbezogener Daten auf dieser Website, im Zusammenhang mit Coaching-Angeboten, Terminvereinbarungen, digitalen Member-Bereichen und der Camp-Dörfl-App.</p>
+            <p>Personenbezogene Daten sind alle Informationen, mit denen eine Person direkt oder indirekt identifiziert werden kann.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section-shell legal-grid">
+        <article class="legal-card" data-reveal>
+          <h2>1. Verantwortlicher</h2>
+          <p>Verantwortlich für die Verarbeitung personenbezogener Daten auf dieser Website und im Zusammenhang mit den Angeboten von Camp Dörfl ist:</p>
+          <address>
+            Camp Dörfl<br>
+            ${site.ownerName}<br>
+            ${site.streetAddress}<br>
+            ${site.postalCode} ${site.city}<br>
+            ${site.country}
+          </address>
+          <p><span class="legal-label">E-Mail:</span> <a href="mailto:${site.email}">${site.email}</a></p>
+          <p><span class="legal-label">Telefon:</span> <a href="tel:+4915561562648">015561562648</a></p>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <h2>2. Allgemeine Hinweise zur Datenverarbeitung</h2>
+          <p>Wir verarbeiten personenbezogene Daten nur, soweit dies zur Bereitstellung unserer Website, zur Kommunikation mit Interessenten und Kunden, zur Durchführung unserer Coaching-Angebote, zur Terminvereinbarung, zur Vertragsabwicklung oder aufgrund gesetzlicher Pflichten erforderlich ist.</p>
+          <p>Personenbezogene Daten sind alle Informationen, mit denen eine Person direkt oder indirekt identifiziert werden kann, zum Beispiel Name, E-Mail-Adresse, Telefonnummer, IP-Adresse, Trainingsdaten, Gesundheitsdaten oder Angaben aus Kontakt- und Anmeldeformularen.</p>
+          <p>Die Verarbeitung erfolgt insbesondere auf Grundlage von Art. 6 Abs. 1 lit. a DSGVO, wenn eine Einwilligung erteilt wurde, Art. 6 Abs. 1 lit. b DSGVO, wenn die Verarbeitung zur Durchführung vorvertraglicher Maßnahmen oder eines Vertrags erforderlich ist, Art. 6 Abs. 1 lit. c DSGVO, wenn gesetzliche Pflichten bestehen, und Art. 6 Abs. 1 lit. f DSGVO, wenn ein berechtigtes Interesse besteht.</p>
+          <p>Soweit Gesundheitsdaten verarbeitet werden, erfolgt dies nur auf Grundlage einer ausdrücklichen Einwilligung gemäß Art. 9 Abs. 2 lit. a DSGVO oder soweit dies für ausdrücklich gewünschte Coaching-Leistungen erforderlich und zulässig ist.</p>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <h2>3. Zugriff auf die Website und Server-Logfiles</h2>
+          <p>Beim Besuch unserer Website werden technisch notwendige Daten verarbeitet, damit die Website sicher und stabil angezeigt werden kann. Dazu können gehören:</p>
+          <ul class="legal-list">
+            <li>IP-Adresse</li>
+            <li>Datum und Uhrzeit des Zugriffs</li>
+            <li>aufgerufene Seite</li>
+            <li>Browsertyp und Browserversion</li>
+            <li>Betriebssystem</li>
+            <li>Referrer-URL</li>
+            <li>übertragene Datenmenge</li>
+          </ul>
+          <p>Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO. Unser berechtigtes Interesse liegt in der sicheren, stabilen und fehlerfreien Bereitstellung der Website.</p>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <h2>4. Kontaktaufnahme</h2>
+          <p>Wenn du uns per E-Mail, Telefon, Kontaktformular oder über andere Kommunikationswege kontaktierst, verarbeiten wir die von dir übermittelten Daten, zum Beispiel Name, E-Mail-Adresse, Telefonnummer und Inhalt deiner Nachricht.</p>
+          <p>Die Daten werden verarbeitet, um deine Anfrage zu beantworten, Termine zu koordinieren oder eine mögliche Zusammenarbeit vorzubereiten. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, soweit es um vorvertragliche oder vertragliche Kommunikation geht, und Art. 6 Abs. 1 lit. f DSGVO bei allgemeinen Anfragen.</p>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <h2>5. Terminbuchung und Coaching-Anfragen</h2>
+          <p>Wenn du einen Termin buchst oder eine Coaching-Anfrage stellst, können je nach Formular folgende Daten verarbeitet werden:</p>
+          <ul class="legal-list">
+            <li>Name</li>
+            <li>Kontaktdaten</li>
+            <li>gewünschte Leistung</li>
+            <li>Trainingsziel</li>
+            <li>Ausgangssituation</li>
+            <li>Terminwunsch</li>
+            <li>freiwillige Angaben zu Fitness, Ernährung, Beschwerden oder Gesundheit</li>
+          </ul>
+          <p>Diese Daten verwenden wir zur Vorbereitung, Durchführung und Verwaltung des Coachings. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO. Freiwillige Angaben zu Gesundheit, Training, Körperdaten oder Beschwerden werden nur mit deiner Einwilligung verarbeitet, Art. 9 Abs. 2 lit. a DSGVO.</p>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <h2>6. Verarbeitung von Gesundheits-, Trainings- und Fortschrittsdaten</h2>
+          <p>Im Rahmen unserer Coaching-Angebote und digitalen Member-Bereiche können freiwillig Gesundheits-, Trainings-, Ernährungs- und Fortschrittsdaten verarbeitet werden. Dazu können gehören:</p>
+          <ul class="legal-list">
+            <li>Körperdaten wie Gewicht, Größe, Umfänge oder Fortschrittsbilder</li>
+            <li>Trainingsdaten</li>
+            <li>Ernährungsdaten</li>
+            <li>Check-ins und Fortschrittsnotizen</li>
+            <li>Schlaf-, Aktivitäts- oder Vitaldaten, sofern du diese freiwillig übermittelst</li>
+            <li>hochgeladene Dokumente, zum Beispiel Blutbilder oder Laborwerte</li>
+          </ul>
+          <p>Diese Daten dienen ausschließlich dazu, das Coaching, die Trainingsplanung, die Ernährungsunterstützung und die individuelle Betreuung zu verbessern.</p>
+          <p>Die Bereitstellung solcher Daten ist freiwillig. Du kannst eine erteilte Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen. Ohne bestimmte Daten können einzelne Coaching-Funktionen eventuell nur eingeschränkt genutzt werden.</p>
+          <p>Camp Dörfl ersetzt keine ärztliche Diagnose, Behandlung oder medizinische Beratung. Bei gesundheitlichen Beschwerden oder medizinischen Fragen solltest du ärztlichen Rat einholen.</p>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <h2>7. Member-Bereich, App und digitale Funktionen</h2>
+          <p>Wenn du einen digitalen Member-Bereich oder die Camp-Dörfl-App nutzt, verarbeiten wir Daten, die für Registrierung, Login, Nutzung, Coaching-Funktionen, Fortschrittsverfolgung und Kommunikation erforderlich sind.</p>
+          <p>Dazu können gehören:</p>
+          <ul class="legal-list">
+            <li>Accountdaten</li>
+            <li>Login- und Sitzungsdaten</li>
+            <li>Trainings- und Ernährungspläne</li>
+            <li>Check-ins</li>
+            <li>Chatnachrichten</li>
+            <li>Uploads</li>
+            <li>App-Nutzungsdaten</li>
+            <li>freiwillig verbundene Gesundheitsdaten</li>
+          </ul>
+          <p>Die Verarbeitung erfolgt zur Bereitstellung der gebuchten digitalen Leistungen auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO. Gesundheitsdaten werden nur auf Grundlage deiner ausdrücklichen Einwilligung verarbeitet.</p>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <h2>8. KI-gestützte Unterstützung</h2>
+          <p>Zur Verbesserung der Coaching-Unterstützung können KI-gestützte Funktionen eingesetzt werden, zum Beispiel zur strukturierten Auswertung von Check-ins, Fortschrittsdaten, Ernährungsangaben oder Chatnachrichten.</p>
+          <p>Die KI dient als unterstützendes Werkzeug. Es findet keine ausschließlich automatisierte Entscheidung mit rechtlicher Wirkung oder ähnlich erheblicher Beeinträchtigung im Sinne von Art. 22 DSGVO statt.</p>
+          <p>Soweit personenbezogene Daten an technische Dienstleister übermittelt werden, geschieht dies nur im erforderlichen Umfang und auf Grundlage geeigneter Datenschutzvereinbarungen.</p>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <h2>9. Zahlungsabwicklung und Abonnements</h2>
+          <p>Wenn kostenpflichtige Leistungen, Mitgliedschaften oder digitale Abonnements genutzt werden, können Zahlungs- und Vertragsdaten verarbeitet werden. Zahlungsdaten werden je nach Zahlungsart durch die jeweiligen Zahlungs- oder Plattformanbieter verarbeitet, zum Beispiel App Store, Zahlungsdienstleister oder Abonnement-Dienstleister.</p>
+          <p>Wir erhalten in der Regel keine vollständigen Zahlungsdaten wie vollständige Kreditkartennummern, sondern nur Informationen, die für die Vertrags- und Leistungsverwaltung erforderlich sind.</p>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <h2>10. Cookies und ähnliche Technologien</h2>
+          <p>Unsere Website kann technisch notwendige Cookies oder vergleichbare Technologien verwenden, damit grundlegende Funktionen bereitgestellt werden können.</p>
+          <p>Soweit Analyse-, Marketing- oder Tracking-Technologien eingesetzt werden, geschieht dies nur auf Grundlage deiner Einwilligung gemäß Art. 6 Abs. 1 lit. a DSGVO. Du kannst eine erteilte Einwilligung jederzeit widerrufen.</p>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <h2>11. Externe Dienstleister und Auftragsverarbeitung</h2>
+          <p>Für Betrieb, Hosting, Kommunikation, App-Funktionen, Datenbank, E-Mail-Versand, Zahlungsabwicklung oder technische Sicherheit können externe Dienstleister eingesetzt werden.</p>
+          <p>Diese Dienstleister verarbeiten personenbezogene Daten nur im erforderlichen Umfang und, soweit gesetzlich erforderlich, auf Grundlage eines Vertrags zur Auftragsverarbeitung gemäß Art. 28 DSGVO.</p>
+          <p>Eine Übermittlung in Länder außerhalb der EU oder des EWR erfolgt nur, wenn hierfür geeignete Garantien bestehen, zum Beispiel EU-Standardvertragsklauseln, ein Angemessenheitsbeschluss oder eine ausdrückliche Einwilligung.</p>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <h2>12. Speicherdauer</h2>
+          <p>Wir speichern personenbezogene Daten nur so lange, wie es für die jeweiligen Zwecke erforderlich ist.</p>
+          <p>Daten aus Anfragen werden gelöscht, wenn die Anfrage abschließend bearbeitet ist, sofern keine gesetzlichen Aufbewahrungspflichten bestehen. Vertrags- und Rechnungsdaten werden entsprechend gesetzlicher Aufbewahrungspflichten gespeichert. Coaching-, Gesundheits- und Fortschrittsdaten werden gelöscht, wenn sie für die Betreuung nicht mehr erforderlich sind, du deine Einwilligung widerrufst oder eine Löschung verlangst, soweit keine gesetzlichen Pflichten entgegenstehen.</p>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <h2>13. Datensicherheit</h2>
+          <p>Wir treffen angemessene technische und organisatorische Maßnahmen, um personenbezogene Daten vor Verlust, Missbrauch, unbefugtem Zugriff, Veränderung oder Offenlegung zu schützen.</p>
+          <p>Trotz sorgfältiger Sicherheitsmaßnahmen kann eine Datenübertragung im Internet nie vollständig risikofrei garantiert werden.</p>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <h2>14. Deine Rechte</h2>
+          <p>Du hast im Rahmen der gesetzlichen Voraussetzungen folgende Rechte:</p>
+          <ul class="legal-list">
+            <li>Recht auf Auskunft gemäß Art. 15 DSGVO</li>
+            <li>Recht auf Berichtigung gemäß Art. 16 DSGVO</li>
+            <li>Recht auf Löschung gemäß Art. 17 DSGVO</li>
+            <li>Recht auf Einschränkung der Verarbeitung gemäß Art. 18 DSGVO</li>
+            <li>Recht auf Datenübertragbarkeit gemäß Art. 20 DSGVO</li>
+            <li>Recht auf Widerspruch gemäß Art. 21 DSGVO</li>
+            <li>Recht auf Widerruf einer Einwilligung gemäß Art. 7 Abs. 3 DSGVO</li>
+            <li>Recht auf Beschwerde bei einer Datenschutzaufsichtsbehörde gemäß Art. 77 DSGVO</li>
+          </ul>
+          <p>Wenn du eines deiner Rechte ausüben möchtest, kannst du dich jederzeit an uns wenden: <a href="mailto:${site.email}">${site.email}</a></p>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <h2>15. Beschwerderecht bei der Aufsichtsbehörde</h2>
+          <p>Du hast das Recht, dich bei einer Datenschutzaufsichtsbehörde zu beschweren. Für private Unternehmen in Bayern ist regelmäßig zuständig:</p>
+          <address>
+            Bayerisches Landesamt für Datenschutzaufsicht<br>
+            Promenade 18<br>
+            91522 Ansbach<br>
+            Deutschland
+          </address>
+          <p><span class="legal-label">Website:</span> <a href="https://www.lda.bayern.de" target="_blank" rel="noopener noreferrer">https://www.lda.bayern.de</a></p>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <h2>16. Änderungen dieser Datenschutzerklärung</h2>
+          <p>Wir behalten uns vor, diese Datenschutzerklärung anzupassen, wenn sich rechtliche Anforderungen, technische Funktionen oder unsere Leistungen ändern. Es gilt die jeweils auf der Website veröffentlichte Fassung.</p>
+        </article>
+      </div>
+    </section>
+  `;
+
+  return layout({
+    path: "/datenschutzformular-app/",
+    title: "Datenschutzformular App | Camp Dörfl",
+    description:
+      "Datenschutzformular App von Camp Dörfl: Hinweise zur Verarbeitung personenbezogener Daten bei Website, App, Member-Bereich, Coaching und digitalen Funktionen.",
+    keywords: ["Datenschutzformular App", "Camp Dörfl App Datenschutz", "DSGVO", "Member-Bereich"],
     bodyClass: "page-premium page-legal",
     content
   });
@@ -2039,7 +2606,7 @@ function cookiesPage() {
         })}
         <div class="legal-grid legal-grid--intro">
           <article class="legal-card" data-reveal>
-            <h3>Aktueller Stand</h3>
+            <h2>Aktueller Stand</h2>
             <ul class="legal-list">
               <li>Es werden aktuell keine Analyse-, Marketing- oder Remarketing-Cookies automatisch gesetzt.</li>
               <li>Für das Einwilligungs-Management nutzt die Website derzeit vor allem eine lokale Speicherung im Browser statt klassischer Tracking-Cookies.</li>
@@ -2048,7 +2615,7 @@ function cookiesPage() {
             </ul>
           </article>
           <article class="legal-card" data-reveal>
-            <h3>Einwilligung verwalten</h3>
+            <h2>Einwilligung verwalten</h2>
             <p>Sie können Ihre Auswahl jederzeit erneut aufrufen, ändern oder widerrufen.</p>
             <div class="legal-action-row">
               <button class="button button--secondary-light" type="button" data-open-consent><span>Cookie-Einstellungen öffnen</span><span aria-hidden="true">&rarr;</span></button>
@@ -2062,31 +2629,31 @@ function cookiesPage() {
     <section class="section section--muted">
       <div class="section-shell legal-grid">
         <article class="legal-card" data-reveal>
-          <h3>1. Einwilligungs-Speicherung im Browser</h3>
+          <h2>1. Einwilligungs-Speicherung im Browser</h2>
           <p>Diese Website speichert Ihre Einwilligungsentscheidung lokal in Ihrem Browser, damit die getroffene Auswahl bei weiteren Seitenaufrufen beachtet werden kann.</p>
           <ul class="legal-list">
-            <li><strong>Technischer Name:</strong> <code>campdoerfl-consent</code></li>
-            <li><strong>Inhalt:</strong> Auswahl zu externen Medien, Versionsstand und Zeitstempel der Speicherung</li>
-            <li><strong>Zweck:</strong> Speicherung Ihrer Auswahl zu erforderlichen Funktionen und externen Medien</li>
-            <li><strong>Speicherdauer:</strong> bis zur manuellen Löschung im Browser oder bis eine neue Consent-Version erforderlich wird</li>
+            <li><span class="legal-label">Technischer Name:</span> <code>campdoerfl-consent</code></li>
+            <li><span class="legal-label">Inhalt:</span> Auswahl zu externen Medien, Versionsstand und Zeitstempel der Speicherung</li>
+            <li><span class="legal-label">Zweck:</span> Speicherung Ihrer Auswahl zu erforderlichen Funktionen und externen Medien</li>
+            <li><span class="legal-label">Speicherdauer:</span> bis zur manuellen Löschung im Browser oder bis eine neue Consent-Version erforderlich wird</li>
           </ul>
-          <p><strong>Rechtsgrundlage:</strong> § 25 Abs. 2 Nr. 2 TDDDG sowie Art. 6 Abs. 1 lit. f DSGVO.</p>
+          <p><span class="legal-label">Rechtsgrundlage:</span> § 25 Abs. 2 Nr. 2 TDDDG sowie Art. 6 Abs. 1 lit. f DSGVO.</p>
         </article>
 
         <article class="legal-card" data-reveal>
-          <h3>2. Externe Medien</h3>
+          <h2>2. Externe Medien</h2>
           <p>Auf mehreren Seiten dieser Website sind YouTube-Videos im erweiterten Datenschutzmodus eingebunden. Diese Inhalte werden erst nach Ihrer Freigabe für externe Medien geladen.</p>
           <p>Nach der Freigabe kann beim Erreichen des sichtbaren Bereichs automatisch eine Verbindung zu YouTube beziehungsweise Google hergestellt werden. Die Videos starten dabei stumm; den Ton können Sie bei Bedarf direkt im Player aktivieren.</p>
-          <p><strong>Rechtsgrundlage:</strong> § 25 Abs. 1 TDDDG sowie Art. 6 Abs. 1 lit. a DSGVO.</p>
+          <p><span class="legal-label">Rechtsgrundlage:</span> § 25 Abs. 1 TDDDG sowie Art. 6 Abs. 1 lit. a DSGVO.</p>
         </article>
 
         <article class="legal-card" data-reveal>
-          <h3>3. Aktuell nicht im Einsatz</h3>
+          <h2>3. Aktuell nicht im Einsatz</h2>
           <p>Zum Stand vom 17. Juni 2026 werden auf dieser Website aktuell keine einwilligungspflichtigen Analyse- oder Marketing-Tools wie Tracking-Pixel, Werbe-Cookies, Remarketing-Dienste oder Social-Media-Embeds automatisch aktiviert.</p>
         </article>
 
         <article class="legal-card" data-reveal>
-          <h3>4. Browser-Einstellungen und Widerruf</h3>
+          <h2>4. Browser-Einstellungen und Widerruf</h2>
           <p>Sie können lokale Speicherungen jederzeit über Ihre Browser-Einstellungen löschen. Zusätzlich können Sie Ihre Auswahl direkt über den Link „Cookie-Einstellungen“ im Footer neu setzen.</p>
           <p>Wenn künftig weitere Dienste eingebunden werden, insbesondere Analyse-, Werbe- oder Social-Media-Plugins, müssen diese Seite, die Datenschutzerklärung und die Consent-Logik vor der Aktivierung entsprechend erweitert werden.</p>
         </article>
@@ -2097,7 +2664,7 @@ function cookiesPage() {
   return layout({
     path: "/cookies/",
     title: "Cookies & lokale Speicherungen | Camp Dörfl",
-    description: "Cookie-, Einwilligungs- und Speicherungsinformationen von Camp Dörfl für die Website campdoerfl.de.",
+    description: "Cookie-Hinweise von Camp Dörfl: lokale Speicherungen, Consent-Einstellungen, externe Medien und Widerruf auf campdoerfl.de.",
     keywords: ["Cookies", "Cookie-Einstellungen", "lokale Speicherungen", "Camp Dörfl"],
     bodyClass: "page-premium page-legal",
     content
@@ -2116,7 +2683,7 @@ function partnerTransparencyPage() {
         })}
         <div class="legal-grid legal-grid--intro">
           <article class="legal-card" data-reveal>
-            <h3>Kurz zusammengefasst</h3>
+            <h2>Kurz zusammengefasst</h2>
             <ul class="legal-list">
               <li>Auf dieser Website können Marken, Produkte, Logos, Kooperationen, Rabattcodes und Partnerlinks genannt oder verlinkt werden.</li>
               <li>Solche Inhalte werden auf den jeweiligen Seiten kenntlich gemacht oder sind aus dem Kontext als Kooperation, Werbung oder Partnerhinweis erkennbar.</li>
@@ -2125,7 +2692,7 @@ function partnerTransparencyPage() {
             </ul>
           </article>
           <article class="legal-card" data-reveal>
-            <h3>Aktueller Stand auf dieser Website</h3>
+            <h2>Aktueller Stand auf dieser Website</h2>
             <ul class="legal-list">
               <li>Auf der Partner-Seite werden aktuell unter anderem XXL Nutrition und AEKE vorgestellt.</li>
               <li>Bei AEKE wird derzeit ein direkter Partnerlink mit Referral-Parameter genutzt.</li>
@@ -2140,23 +2707,23 @@ function partnerTransparencyPage() {
     <section class="section section--muted">
       <div class="section-shell legal-grid">
         <article class="legal-card" data-reveal>
-          <h3>1. Kennzeichnung von Werbung und Kooperationen</h3>
+          <h2>1. Kennzeichnung von Werbung und Kooperationen</h2>
           <p>Wenn Camp Dörfl Marken, Produkte oder Unternehmen im Rahmen einer Kooperation vorstellt, geschieht dies als kommerzielle Kommunikation im Sinne der geltenden Informationspflichten. Solche Inhalte werden auf der jeweiligen Seite sprachlich, gestalterisch oder über den Kontext als Partnerinhalt erkennbar gemacht.</p>
         </article>
 
         <article class="legal-card" data-reveal>
-          <h3>2. Partnerlinks und Referral-Links</h3>
+          <h2>2. Partnerlinks und Referral-Links</h2>
           <p>Einzelne externe Links können direkt zu Partner-Angeboten führen und technisch Parameter enthalten, die eine Zuordnung der Empfehlung ermöglichen, beispielsweise Referral- oder Tracking-Parameter wie <code>sca_ref</code>.</p>
           <p>Wenn Sie einem solchen Link folgen oder einen genannten Code verwenden, kann Camp Dörfl hierdurch wirtschaftlich begünstigt werden.</p>
         </article>
 
         <article class="legal-card" data-reveal>
-          <h3>3. Rabattcodes und Vorteile</h3>
+          <h2>3. Rabattcodes und Vorteile</h2>
           <p>Genannte Rabattcodes, Hinweise auf Aktionen oder Produktvorteile dienen der transparenten Kommunikation mit Interessierten. Ob und in welcher Höhe ein Vorteil für Sie entsteht, richtet sich ausschließlich nach dem aktuellen Angebot des jeweiligen Partners.</p>
         </article>
 
         <article class="legal-card" data-reveal>
-          <h3>4. Einordnung und Verantwortung</h3>
+          <h2>4. Einordnung und Verantwortung</h2>
           <p>Kooperationen werden nur dann eingebunden, wenn sie aus Sicht von Camp Dörfl fachlich, inhaltlich und markenseitig zum eigenen Performance-System passen. Die Erwähnung einer Marke ersetzt jedoch keine eigene Prüfung durch Nutzerinnen und Nutzer.</p>
         </article>
       </div>
@@ -2165,7 +2732,7 @@ function partnerTransparencyPage() {
     <section class="section">
       <div class="section-shell legal-stack">
         <article class="legal-card" data-reveal>
-          <h3>Fragen zur Transparenz</h3>
+          <h2>Fragen zur Transparenz</h2>
           <p>Wenn Sie wissen möchten, ob eine konkrete Erwähnung, Verlinkung oder Empfehlung auf dieser Website im Rahmen einer Kooperation erfolgt, schreiben Sie bitte an <a href="mailto:${site.email}">${site.email}</a>.</p>
           <p class="legal-note">Diese Hinweise gelten für den aktuellen Stand der Website und müssen aktualisiert werden, wenn weitere Partner, Affiliate-Modelle oder Werbeformate hinzukommen.</p>
         </article>
@@ -2176,7 +2743,7 @@ function partnerTransparencyPage() {
   return layout({
     path: "/werbung-partnerlinks/",
     title: "Partnerlinks & Werbung | Camp Dörfl",
-    description: "Transparenzhinweise von Camp Dörfl zu Partnerlinks, Rabattcodes, Kooperationen und Werbung.",
+    description: "Transparenz bei Camp Dörfl: Hinweise zu Partnerlinks, Rabattcodes, Kooperationen, Werbung, Markenempfehlungen und kommerziellen Inhalten.",
     keywords: ["Partnerlinks", "Werbung", "Kooperationen", "Camp Dörfl"],
     bodyClass: "page-premium page-legal",
     content
@@ -2195,7 +2762,7 @@ function accessibilityPage() {
         })}
         <div class="legal-grid legal-grid--intro">
           <article class="legal-card" data-reveal>
-            <h3>Aktueller Stand</h3>
+            <h2>Aktueller Stand</h2>
             <ul class="legal-list">
               <li>Die Website ist responsiv aufgebaut und für aktuelle Desktop- und Mobilgeräte ausgelegt.</li>
               <li>Es gibt eine Skip-Navigation zum Hauptinhalt und grundsätzlich per Tastatur erreichbare Navigations- und Aktionsflächen.</li>
@@ -2204,7 +2771,7 @@ function accessibilityPage() {
             </ul>
           </article>
           <article class="legal-card" data-reveal>
-            <h3>Kontakt bei Barrieren</h3>
+            <h2>Kontakt bei Barrieren</h2>
             <p>Wenn Sie auf Barrieren stoßen oder Inhalte in einer anderen Form benötigen, schreiben Sie bitte an <a href="mailto:${site.email}">${site.email}</a>.</p>
             <p>Hinweise helfen dabei, die Website vor und nach der Veröffentlichung gezielt weiter zu verbessern.</p>
           </article>
@@ -2215,25 +2782,35 @@ function accessibilityPage() {
     <section class="section section--muted">
       <div class="section-shell legal-grid">
         <article class="legal-card" data-reveal>
-          <h3>1. Bereits umgesetzte Maßnahmen</h3>
+          <h2>1. Bereits umgesetzte Maßnahmen</h2>
           <p>Die Website verwendet eine klare Seitenstruktur mit Hauptnavigation, Hauptinhalt und Footer. Wichtige Interaktionselemente wie Navigation, Kontaktbereich und Consent-Dialog sind grundsätzlich ohne Maus bedienbar.</p>
           <p>Kontraste, Skalierung und Layout wurden für aktuelle Standardansichten auf Mobilgeräten und Desktop-Bildschirmen ausgelegt.</p>
         </article>
 
         <article class="legal-card" data-reveal>
-          <h3>2. Externe Inhalte</h3>
+          <h2>2. Externe Inhalte</h2>
           <p>Eingebettete YouTube-Inhalte stammen von einem Drittanbieter. Für deren technische und inhaltliche Barrierefreiheit ist auch der jeweilige Anbieter verantwortlich.</p>
         </article>
 
         <article class="legal-card" data-reveal>
-          <h3>3. Bekannte Grenzen</h3>
+          <h2>3. Bekannte Grenzen</h2>
           <p>Die Website arbeitet bewusst mit großen Bildern, Bühnenmotiven und visuell starken Layouts. In Einzelfällen kann das für Nutzerinnen und Nutzer mit speziellen Anforderungen weniger komfortabel sein als ein rein funktionaler Aufbau.</p>
           <p>Auch bei automatisch nach Einwilligung geladenen Videos können zusätzliche Bedienhürden entstehen.</p>
         </article>
 
         <article class="legal-card" data-reveal>
-          <h3>4. Laufende Verbesserung</h3>
+          <h2>4. Laufende Verbesserung</h2>
           <p>Barrierefreiheit wird als laufende Aufgabe verstanden. Bei technischen oder inhaltlichen Änderungen sollten Navigation, Lesbarkeit, Kontraste und Alternativtexte jeweils mitgeprüft werden.</p>
+        </article>
+        <article class="legal-card" data-reveal>
+          <h2>5. Orientierung auf der Website</h2>
+          <p>Die wichtigsten Bereiche sind über die Hauptnavigation, den Footer und interne Verlinkungen erreichbar. Dazu gehören Personal Training, Firmenfitness, Events, Partner, Kontakt sowie die rechtlichen Informationsseiten.</p>
+          <p>Überschriften, Buttons und Formulare werden so aufgebaut, dass Nutzerinnen und Nutzer den jeweiligen Zweck möglichst schnell erfassen können.</p>
+        </article>
+        <article class="legal-card" data-reveal>
+          <h2>6. Bilder und Medien</h2>
+          <p>Inhaltlich relevante Bilder erhalten beschreibende Alternativtexte. Bei Video-Inhalten wird vor dem Laden externer Medien eine Freigabe abgefragt, damit Nutzerinnen und Nutzer die Entscheidung bewusst treffen können.</p>
+          <p>Wenn ein Inhalt nicht gut zugänglich ist, kann über die Kontaktadresse eine alternative Beschreibung oder ein direkter Hinweis angefordert werden.</p>
         </article>
       </div>
     </section>
@@ -2241,8 +2818,9 @@ function accessibilityPage() {
 
   return layout({
     path: "/barrierefreiheit/",
-    title: "Barrierefreiheit | Camp Dörfl",
-    description: "Hinweise zur Barrierefreiheit der Website von Camp Dörfl.",
+    title: "Barrierefreiheit | Camp Dörfl Nürnberg",
+    description:
+      "Barrierefreiheit bei Camp Dörfl: Hinweise zur barrierearmen Nutzung der Website campdoerfl.de, zu umgesetzten Maßnahmen, bekannten Grenzen und Feedback.",
     keywords: ["Barrierefreiheit", "Accessibility", "Camp Dörfl"],
     bodyClass: "page-premium page-legal",
     content
@@ -2292,7 +2870,7 @@ function partnerPage() {
             <p>${text}</p>
             ${videoNote ? `<p class="partner-brand-card__note">${videoNote}</p>` : ""}
             <div class="partner-brand-card__footer">
-              ${meta ? `<strong class="partner-brand-card__meta">${meta}</strong>` : ""}
+              ${meta ? `<span class="partner-brand-card__meta">${meta}</span>` : ""}
               ${
                 href
                   ? `<a class="partner-brand-card__link" href="${href}" target="_blank" rel="sponsored noopener noreferrer">${linkLabel || "Mehr"}</a>`
@@ -2317,7 +2895,7 @@ function partnerPage() {
         ${
           meta || href
             ? `<div class="partner-brand-card__footer">
-                 ${meta ? `<strong class="partner-brand-card__meta">${meta}</strong>` : ""}
+                 ${meta ? `<span class="partner-brand-card__meta">${meta}</span>` : ""}
                  ${
                    href
                      ? `<a class="partner-brand-card__link" href="${href}" target="_blank" rel="sponsored noopener noreferrer">${linkLabel || "Mehr"}</a>`
@@ -2363,7 +2941,7 @@ function partnerPage() {
         </div>
         <div class="ff-hero__showcase ff-hero__showcase--partner" data-reveal>
           <figure class="partner-hero__visual" aria-hidden="true">
-            <img src="/assets/images/partners-hero-banner.svg" alt="">
+            <img src="/assets/images/partners-hero-banner.svg" alt="Partner und Marken von Camp Dörfl">
           </figure>
         </div>
       </div>
@@ -2492,7 +3070,7 @@ function partnerPage() {
 function contactPage() {
   const content = `
     <section class="ff-hero ff-hero--split ff-hero--contact">
-      <img class="ff-hero__img" src="/assets/images/dominik-gym-grey.jpg" alt="" aria-hidden="true">
+      <img class="ff-hero__img" src="/assets/images/dominik-gym-grey.jpg" alt="Dominik Dörfl im Studio als Ansprechpartner für Kontakt und Beratung">
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__shell">
         <div class="ff-hero__inner">
@@ -2506,13 +3084,47 @@ function contactPage() {
           </p>
           <div class="ff-hero__actions" data-reveal>
             <a class="button button--primary" href="#kontaktformular"><span>Formular öffnen</span><span aria-hidden="true">&rarr;</span></a>
-            <a class="button button--secondary-light" href="${site.instagram}" rel="noreferrer"><span>${socialButtonLabel(site.instagram, "Instagram")}</span><span aria-hidden="true">&rarr;</span></a>
+            <a class="button button--secondary-light" href="${site.instagram}" target="_blank" rel="noopener noreferrer"><span>${socialButtonLabel(site.instagram, "Instagram")}</span><span aria-hidden="true">&rarr;</span></a>
           </div>
           <dl class="ff-hero__facts" data-reveal aria-label="Kontaktwege">
             <div><dt>Direkt</dt><dd>Ohne Umwege</dd></div>
             <div><dt>NBG</dt><dd>Nürnberg</dd></div>
             <div><dt>1 Step</dt><dd>Anfrage starten</dd></div>
           </dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Kontakt & Beratung",
+          title: "Klar, persönlich und direkt zur richtigen Anfrage.",
+          text:
+            "Der Kontakt soll ohne Umwege funktionieren: kurz beschreiben, worum es geht, Bereich auswählen und absenden."
+        })}
+        <div class="summary-rows summary-rows--compact">
+          <article class="summary-row" data-reveal>
+            <h3>Für Privatpersonen</h3>
+            <p>Wenn es um Premium Personal Training, Training ohne Bindung, Ernährung oder App-Zugang geht, hilft eine kurze Beschreibung von Ziel, Ausgangslage und gewünschter Begleitung.</p>
+          </article>
+          <article class="summary-row" data-reveal>
+            <h3>Für Unternehmen</h3>
+            <p>Bei Firmenfitness, Gesundheitstagen oder Performance Checks sind Unternehmensgröße, Standort, Zeitraum und gewünschtes Format die wichtigsten Eckdaten.</p>
+          </article>
+          <article class="summary-row" data-reveal>
+            <h3>Für Events und Partner</h3>
+            <p>Für Moderation, Kooperationen oder Markenanfragen reicht zunächst ein Überblick über Anlass, Termin, Zielgruppe und gewünschte Rolle von Camp Dörfl.</p>
+          </article>
+          <article class="summary-row" data-reveal>
+            <h3>Für schnelle Einordnung</h3>
+            <p>Je klarer die Anfrage formuliert ist, desto schneller lässt sich einschätzen, ob ein persönliches Gespräch, ein konkretes Angebot oder ein anderer nächster Schritt sinnvoll ist. So bleibt die Beratung direkt, persönlich und effizient.</p>
+          </article>
+          <article class="summary-row" data-reveal>
+            <h3>Was danach passiert</h3>
+            <p>Nach der Anfrage wird geprüft, welcher Bereich fachlich passt und welche Informationen noch fehlen. Danach folgt eine Rückmeldung mit einer klaren Empfehlung, ob ein Kennenlernen, ein Telefonat, ein Angebot oder eine kurze Rückfrage der beste nächste Schritt ist.</p>
+            <p>So bleibt der Austausch verbindlich, nachvollziehbar und passend zu deinem Anliegen, egal ob es um Training, Unternehmen, Bühne, App oder Kooperation geht.</p>
+          </article>
         </div>
       </div>
     </section>
@@ -2537,9 +3149,9 @@ function contactPage() {
 
   return layout({
     path: "/kontakt/",
-    title: "Kontakt | Camp Dörfl",
+    title: "Kontakt & Beratung | Camp Dörfl Nürnberg",
     description:
-      "Kontakt zu Camp Dörfl für Premium Personal Training, Firmenfitness, Events, Camp Dörfl App und Kooperationen in Nürnberg.",
+      "Kontakt zu Camp Dörfl Nürnberg für Premium Personal Training, Firmenfitness, Events, App-Zugang, Beratung und Kooperationen.",
     keywords: ["Camp Dörfl Kontakt", "Performance Beratung Nürnberg", "Premium Personal Training Nürnberg", "Firmenfitness Nürnberg", "Moderator Nürnberg"],
     bodyClass: "page-premium page-contact",
     content
@@ -2553,12 +3165,13 @@ export const pages = [
   { route: "/firmenfitness/", render: firmenfitnessPage },
   { route: "/events/", render: eventsPage },
   { route: "/partner/", render: partnerPage },
-  { route: "/executive-performance/", render: personalCoachingPage },
+  { route: "/executive-performance/", render: executivePerformancePage },
   { route: "/erfolge-im-team/", render: teamSuccessPage },
-  { route: "/ueber-dominik/", render: teamSuccessPage },
+  { route: "/ueber-dominik/", render: ueberDominikPage },
   { route: "/impressum/", render: impressumPage },
   { route: "/cookies/", render: cookiesPage },
   { route: "/datenschutz/", render: privacyPage },
+  { route: "/datenschutzformular-app/", render: appPrivacyPage },
   { route: "/werbung-partnerlinks/", render: partnerTransparencyPage },
   { route: "/barrierefreiheit/", render: accessibilityPage },
   { route: "/kontakt/", render: contactPage }
