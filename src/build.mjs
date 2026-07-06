@@ -119,6 +119,10 @@ async function copyDeployableAssets(sourceDir, targetDir) {
   }
 }
 
+async function pathExists(path) {
+  return Boolean(await stat(path).catch(() => null));
+}
+
 export async function buildSite() {
   const hostingConfigPath = join(root, ".openai", "hosting.json");
   const hostingConfig = JSON.parse(await readFile(hostingConfigPath, "utf8"));
@@ -130,6 +134,10 @@ export async function buildSite() {
   await rm(dist, { recursive: true, force: true });
   await mkdir(dist, { recursive: true });
   await copyDeployableAssets(join(root, "assets"), join(dist, "assets"));
+  const publicDir = join(root, "public");
+  if (await pathExists(publicDir)) {
+    await copyDeployableAssets(publicDir, dist);
+  }
   await copyFile(join(root, "src", "styles.css"), join(dist, "assets", "styles.css"));
   await copyFile(join(root, "src", "mobile-overrides.css"), join(dist, "assets", "mobile-overrides.css"));
   await copyFile(join(root, "src", "main.js"), join(dist, "assets", "main.js"));
@@ -181,13 +189,13 @@ Canonical: ${site.url}/.well-known/security.txt
   await writeFile(join(dist, ".openai", "hosting.json"), `${JSON.stringify(runtimeHostingConfig, null, 2)}\n`, "utf8");
 
   const serverDir = join(dist, "server");
-  const publicDir = join(serverDir, "public");
+  const serverPublicDir = join(serverDir, "public");
 
-  await mkdir(publicDir, { recursive: true });
+  await mkdir(serverPublicDir, { recursive: true });
 
   for (const entry of await readdir(dist, { withFileTypes: true })) {
     if (entry.name === "server") continue;
-    await cp(join(dist, entry.name), join(publicDir, entry.name), { recursive: true });
+    await cp(join(dist, entry.name), join(serverPublicDir, entry.name), { recursive: true });
   }
 
   await writeFile(join(serverDir, "index.js"), workerEntrypoint, "utf8");
