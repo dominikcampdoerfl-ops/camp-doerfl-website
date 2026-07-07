@@ -69,6 +69,21 @@ export default {
       return redirect;
     }
 
+    // Google-Search-Console-Verifizierung: Die Datei muss unter exakt
+    // /google….html mit Status 200 antworten. Cloudflares Asset-Serving
+    // leitet .html-Pfade sonst per 307 auf die Clean-URL um, was die
+    // Verifizierung scheitern lässt – daher den Inhalt direkt ausliefern.
+    const requestUrl = new URL(request.url);
+    if (/^\\/google[0-9a-f]+\\.html$/.test(requestUrl.pathname)) {
+      const direct = await env.ASSETS.fetch(
+        assetRequest(request, requestUrl.pathname.replace(/\\.html$/, ""))
+      );
+
+      if (direct.status !== 404) {
+        return secureResponse(direct);
+      }
+    }
+
     let response = await env.ASSETS.fetch(request);
 
     if (response.status !== 404) {
