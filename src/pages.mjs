@@ -16,6 +16,7 @@ import {
   devicePreviewGallery,
   faq,
   featureGrid,
+  imageLoadingAttributes,
   layout,
   processList,
   proofMosaic,
@@ -27,6 +28,61 @@ import {
   timelineList,
   transformationGrid
 } from "./components.mjs";
+
+function serviceSchema({ path, name, serviceType, description }) {
+  return {
+    "@type": "Service",
+    "@id": `${site.url}${path}#service`,
+    name,
+    serviceType,
+    description,
+    provider: { "@id": `${site.url}/#business` },
+    areaServed: [
+      { "@type": "City", name: "Nürnberg" },
+      { "@type": "City", name: "Fürth" },
+      { "@type": "City", name: "Erlangen" }
+    ],
+    availableChannel: {
+      "@type": "ServiceChannel",
+      serviceUrl: `${site.url}${path}`
+    }
+  };
+}
+
+function absoluteUrl(pathOrUrl) {
+  if (!pathOrUrl) return site.url;
+  return /^https?:\/\//.test(pathOrUrl) ? pathOrUrl : `${site.url}${pathOrUrl}`;
+}
+
+function faqSchema(path, items) {
+  return {
+    "@type": "FAQPage",
+    "@id": `${site.url}${path}#faq`,
+    mainEntity: items.map(({ question, answer }) => ({
+      "@type": "Question",
+      name: question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: answer
+      }
+    }))
+  };
+}
+
+function videoObjectSchema({ path, id, name, description, thumbnailUrl, embedUrl, watchUrl }) {
+  return {
+    "@type": "VideoObject",
+    "@id": `${site.url}${path}#${id}`,
+    name,
+    description,
+    thumbnailUrl: [absoluteUrl(thumbnailUrl)],
+    embedUrl,
+    url: watchUrl,
+    publisher: {
+      "@id": `${site.url}/#business`
+    }
+  };
+}
 
 function deferredVideoEmbed({
   embedUrl,
@@ -42,7 +98,7 @@ function deferredVideoEmbed({
   return `
     <div class="premium-video-embed${short ? " premium-video-embed--short" : ""}" data-video-embed data-video-src="${embedUrl}" data-video-title="${title}">
       <a class="premium-video-launch${short ? " premium-video-launch--short" : ""}" href="${watchUrl}" target="_blank" rel="noopener noreferrer" aria-label="${title} auf YouTube ansehen">
-        <img src="${image}" alt="${alt}">
+        <img src="${image}" alt="${alt}"${imageLoadingAttributes()}>
         <span class="premium-video-launch__scrim" aria-hidden="true"></span>
         <span class="premium-video-launch__content">
           <span class="premium-video-launch__eyebrow">${eyebrow}</span>
@@ -59,7 +115,7 @@ function eventFormatShowcase(items) {
   const renderCard = (item, featured = false) => `
     <article class="event-format-card${featured ? " event-format-card--featured" : ""}" data-reveal>
       <figure class="event-format-card__media">
-        <img src="${item.image}" alt="${item.alt}" style="object-position: ${item.imagePosition || "center center"};">
+        <img src="${item.image}" alt="${item.alt}"${imageLoadingAttributes()} style="object-position: ${item.imagePosition || "center center"};">
       </figure>
       <div class="event-format-card__body">
         <div class="event-format-card__meta">
@@ -129,7 +185,7 @@ function corporateOutcomeShowcase(items) {
           </p>
         </div>
         <figure class="corporate-outcome-hero__media">
-          <img src="/assets/images/dominik-gym-grey.jpg" alt="Dominik Dörfl in einer professionellen Coaching-Szene" />
+          <img src="/assets/images/dominik-gym-grey.jpg" alt="Dominik Dörfl in einer professionellen Coaching-Szene"${imageLoadingAttributes()} />
         </figure>
       </article>
       <div class="corporate-outcome-grid">
@@ -461,7 +517,7 @@ const homeEntryCards = [
     titleHtml: "TRACKING. STRUKTUR. <span>FORTSCHRITT.</span>",
     text:
       "MEMBER AREA, CLUBS UND PERFORMANCE IN EINER APP.",
-    image: "/assets/images/home-app-preview.png",
+    image: "/assets/images/home-app-preview.jpg",
     alt: "Camp Dörfl App Visual mit Dashboard, Food Truth Score, Scan-Funktionen und Clubs",
     theme: "app",
     href: "/app/",
@@ -881,14 +937,13 @@ const campTransformationCards = [
 function homePage() {
   const content = `
     <section class="ff-hero ff-hero--home-photo">
-      <img class="ff-hero__img" src="/assets/images/home-hero-stadium-wide.png" alt="Dominik Dörfl als Ironman-Finisher im Stadion">
+      <img class="ff-hero__img" src="/assets/images/home-hero-stadium-wide.jpg" alt="Dominik Dörfl als Ironman-Finisher im Stadion"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
-        <p class="ff-hero__eyebrow" data-reveal>Performance System · Nürnberg</p>
+        <p class="ff-hero__eyebrow" data-reveal>Personal Training · Firmenfitness · Events · Nürnberg</p>
         <h1 class="ff-hero__title" data-reveal>Gesundheit.<br>Leistung.<br><span>Präsenz.</span></h1>
         <p class="ff-hero__lead" data-reveal>
-          Das Performance System aus Premium Personal Training, Firmenfitness, Events und App —
-          für Menschen und Unternehmen, die mehr wollen.
+          Camp Dörfl in Nürnberg verbindet Premium Personal Training, Firmenfitness, Event-Moderation und App-Struktur zu einem Performance System für Menschen und Unternehmen mit Anspruch.
         </p>
         <div class="ff-hero__actions" data-reveal>
           <a class="button button--primary" href="${contactHref()}"><span>Beratung anfragen</span><span aria-hidden="true">&rarr;</span></a>
@@ -921,7 +976,7 @@ function homePage() {
                 ({ titleHtml, text, image, alt, href, buttonLabel, theme }) => `
                   <a class="ed-entry ed-entry--${theme}" href="${href}" data-reveal>
                   <div class="ed-entry__media">
-                    <img src="${image}" alt="${alt}">
+                    <img src="${image}" alt="${alt}"${imageLoadingAttributes()}>
                   </div>
                   <div class="ed-entry__body">
                     <h3>${titleHtml}</h3>
@@ -987,6 +1042,29 @@ function homePage() {
       </div>
     </section>
 
+    <section class="section section--muted">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Häufig gesucht",
+          title: "Beliebte Einstiegsfragen aus Google.",
+          text:
+            "Diese beiden Seiten beantworten zwei der häufigsten Fragen vor einer Anfrage und geben mehr Orientierung als eine reine Verkaufsseite."
+        })}
+        <div class="summary-rows summary-rows--compact">
+          <article class="summary-row" data-reveal>
+            <h3>Was kostet Personal Training in Nürnberg?</h3>
+            <p>Wenn du Einzelsessions, Karten und Premium Begleitung vergleichen willst, findest du hier die wichtigsten Preisfaktoren und die passenden Einstiege.</p>
+            <p><a href="/personal-training-kosten-nuernberg/">Zum Kosten-Guide</a></p>
+          </article>
+          <article class="summary-row" data-reveal>
+            <h3>Wie läuft ein Gesundheitstag in Nürnberg ab?</h3>
+            <p>Für Unternehmen, die Firmenfitness oder einen Gesundheitstag professionell planen wollen: Ablauf, Bausteine und typische Entscheidungsfragen kompakt erklärt.</p>
+            <p><a href="/gesundheitstag-nuernberg/">Zum Gesundheitstag-Guide</a></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
     ${ctaSection({
       eyebrow: "Nächster Schritt",
       title: "Starte mit dem Bereich, der gerade zu dir passt.",
@@ -1001,13 +1079,16 @@ function homePage() {
     bodyClass: "page-premium page-home-reboot",
     title: "Camp Dörfl | Performance & Personal Training Nürnberg",
     description:
-      "Camp Dörfl in Nürnberg verbindet Premium Personal Training, Firmenfitness, Event-Moderation und App-Struktur zu einem Performance System.",
+      "Camp Dörfl in Nürnberg bündelt Premium Personal Training, Firmenfitness, Event-Moderation und App-Struktur in einem klaren Performance-System.",
+    pageName: "Camp Dörfl",
+    socialImage: "/assets/images/home-hero-stadium-wide.jpg",
+    socialImageAlt: "Dominik Dörfl als Ironman-Finisher im Stadion",
     keywords: [
-      "Personal Trainer Nürnberg",
-      "Premium Personal Training Nürnberg",
-      "Firmenfitness",
-      "Moderator in Nürnberg",
-      "Camp Dörfl Performance System"
+      "Camp Dörfl Nürnberg",
+      "Performance System Nürnberg",
+      "Premium Coaching Nürnberg",
+      "Firmenfitness Nürnberg",
+      "Moderator Nürnberg"
     ],
     content
   });
@@ -1016,13 +1097,13 @@ function homePage() {
 function appPage() {
   const content = `
     <section class="ff-hero ff-hero--app ff-hero--text-only">
-      <img class="ff-hero__img" src="/assets/images/home-app-preview.png" alt="Vorschau der Camp Dörfl App mit Training, Ernährung, Check-ins und Performance-Funktionen">
+      <img class="ff-hero__img" src="/assets/images/home-app-preview.jpg" alt="Vorschau der Camp Dörfl App mit Training, Ernährung, Check-ins und Performance-Funktionen"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
-          <p class="ff-hero__eyebrow" data-reveal>Camp Dörfl App</p>
+          <p class="ff-hero__eyebrow" data-reveal>Fitness App · Training · Ernährung · Fortschritt</p>
           <h1 class="ff-hero__title" data-reveal>Eine App.<br>Zwei Welten.<br><span>Ein System.</span></h1>
           <p class="ff-hero__lead" data-reveal>
-            Member Bereich, Trainings- und Ernährungsplanung, Scan-Funktionen, Clubs, GPS-Routen und Fortschritt greifen hier in einer klaren Oberfläche zusammen.
+            Die Camp Dörfl App verbindet Trainingsplanung, Ernährungsstruktur, Coach-Chat, Scan-Funktionen, GPS-Routen und Community in einer Oberfläche.
           </p>
           <div class="ff-hero__actions" data-reveal>
             <a class="button button--primary" href="${contactHref("app")}"><span>App-Zugang anfragen</span><span aria-hidden="true">&rarr;</span></a>
@@ -1045,7 +1126,7 @@ function appPage() {
       <div id="app-vorschau" class="section-shell section-shell--wide app-preview-stage">
         ${sectionHeader({
           eyebrow: "App-Vorschau",
-          title: "So wirkt die Camp Dörfl App im echten Einsatz.",
+          title: "Training, Ernährung und Fortschritt in einer Oberfläche.",
           text:
             "Keine austauschbare Fitness-App, sondern eine hochwertige Oberfläche für Struktur, Tracking, Community und klare nächste Schritte."
         })}
@@ -1069,7 +1150,7 @@ function appPage() {
       <div class="section-shell">
         ${sectionHeader({
           eyebrow: "FAQ",
-          title: "Kurz geklärt.",
+          title: "Was du vor dem Start wissen solltest.",
           text:
             "Die Camp Dörfl App ist das digitale Zentrum des Systems und bewusst größer gedacht als eine normale Trainings-App."
         })}
@@ -1089,11 +1170,23 @@ function appPage() {
 
   return layout({
     path: "/app/",
-    title: "Camp Dörfl App | Digitales Performance-System",
+    title: "Camp Dörfl App | Training, Ernährung & Fortschritt",
     description:
-      "Die Camp Dörfl App verbindet Member Bereich, Ernährungs- und Trainingsplanung, Scans, GPS-Routen, Clubs und Score System.",
-    keywords: ["Camp Dörfl App", "Performance App", "Fitness App Nürnberg", "Camp Score"],
+      "Die Camp Dörfl App verbindet Trainingsplanung, Ernährungsstruktur, Check-ins, Scans, Coach-Zugang, GPS-Routen, Clubs und Fortschritt in einer Oberfläche.",
+    keywords: ["Camp Dörfl App", "Trainings App mit Ernährungsplan", "Performance Tracking App", "Coach Chat Fitness App"],
     bodyClass: "page-premium page-app",
+    socialImage: "/assets/images/home-app-preview.jpg",
+    socialImageAlt: "Vorschau der Camp Dörfl App mit Training, Ernährung und Check-ins",
+    extraStructuredData: [
+      serviceSchema({
+        path: "/app/",
+        name: "Camp Dörfl App",
+        serviceType: "Digitales Performance-System",
+        description:
+          "Digitale Struktur für Training, Ernährung, Check-ins, GPS-Routen, Community und Fortschritt."
+      }),
+      faqSchema("/app/", appFaq)
+    ],
     content
   });
 }
@@ -1101,13 +1194,13 @@ function appPage() {
 function personalCoachingPage() {
   const content = `
     <section class="ff-hero ff-hero--coaching ff-hero--coaching-photo">
-      <img class="ff-hero__img" src="/assets/images/premium-training-hero-wide.png" alt="Dominik Dörfl als Personal Trainer in Nürnberg beim Training mit einem Kunden im Studio">
+      <img class="ff-hero__img" src="/assets/images/premium-training-hero-wide.jpg" alt="Dominik Dörfl als Personal Trainer in Nürnberg beim Training mit einem Kunden im Studio"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
         <p class="ff-hero__eyebrow" data-reveal>Premium Personal Training · Camp Dörfl</p>
         <h1 class="ff-hero__title" data-reveal>Personal Trainer <br><span>in Nürnberg.</span></h1>
         <p class="ff-hero__lead" data-reveal>
-          Der private Einstieg in das Performance System: Personal Training ohne Bindung oder Premium Personal Training mit Analyse, Planung, App und laufender Steuerung.
+          Premium Personal Training in Nürnberg mit 1:1 Coaching, 2D-Körperanalyse, InBody, Ernährungsplanung und App-Steuerung.
         </p>
         <div class="ff-hero__actions" data-reveal>
           <a class="button button--primary" href="${contactHref("premium-training")}"><span>Beratung anfragen</span><span aria-hidden="true">&rarr;</span></a>
@@ -1125,19 +1218,19 @@ function personalCoachingPage() {
       <div class="section-shell editorial-stage">
         <div class="editorial-stage__copy" data-reveal>
           ${sectionHeader({
-            eyebrow: "Praxisblick",
-            title: "So sieht Premium Personal Training im echten Einsatz aus.",
+            eyebrow: "Warum Camp Dörfl",
+            title: "1:1 Coaching mit Analyse, Alltag und klarer Führung.",
             text:
-              "Das Video zeigt die persönliche Zusammenarbeit so, wie sie gedacht ist: nah dran, hochwertig geführt und mit klarem Anspruch an Training, Ernährung und Alltag."
+              "Das Video zeigt keine anonyme Trainingsfläche, sondern ein eng geführtes Coaching mit echter Betreuung, ehrlichem Feedback und einem Plan, der im Alltag halten muss."
           })}
           <div class="summary-rows summary-rows--compact">
             <article class="summary-row">
-              <h3>Persönlich statt anonym</h3>
-              <p>Der Mensch steht im Mittelpunkt, nicht ein starrer Standardplan oder eine unpersönliche Massenlösung.</p>
+              <h3>Athletische Erfahrung als Basis</h3>
+              <p>Hinter dem Coaching stehen Leistungssport, Bühnenerfahrung und praktische Arbeit mit Menschen, die spürbare Ergebnisse wollen.</p>
             </article>
             <article class="summary-row">
-              <h3>Struktur mit echter Umsetzung</h3>
-              <p>Analyse, Training, Ernährung und laufende Führung greifen ineinander, damit Fortschritt im Alltag wirklich tragfähig wird.</p>
+              <h3>Steuerung statt Einzelterminen</h3>
+              <p>Analyse, Training, Ernährung und laufende Anpassung greifen ineinander, damit Fortschritt nicht vom Zufall oder von Motivation allein abhängt.</p>
             </article>
           </div>
         </div>
@@ -1161,13 +1254,13 @@ function personalCoachingPage() {
           <div class="coaching-start-stage__head">
             ${sectionHeader({
               eyebrow: "Drei Wege",
-              title: "So startest du mit deinem <span>Personal Trainer in Nürnberg.</span>",
+              title: "Vom Einzeltraining bis zur <span>Premium-Begleitung.</span>",
               text:
                 "Du kannst über Einzelstunden, Premium Coaching oder die Camp Dörfl App in das System einsteigen."
             })}
           </div>
           <figure class="coaching-start-stage__photo" data-reveal>
-            <img src="/assets/images/dominik-bike-road-yellow.jpg" alt="Dominik Doerfl mit Rennrad im gelb-weissen Trikot">
+            <img src="/assets/images/dominik-bike-road-yellow.jpg" alt="Dominik Doerfl mit Rennrad im gelb-weissen Trikot"${imageLoadingAttributes()}>
           </figure>
         </div>
         ${featureGrid(coachingIncludedCards, "feature-grid--coaching-start")}
@@ -1178,7 +1271,7 @@ function personalCoachingPage() {
       <div class="section-shell section-shell--wide">
         ${sectionHeader({
           eyebrow: "Premium Personal Training",
-          title: "Analyse, Planung, App und regelmäßige Anpassung.",
+          title: "Was dieses Personal Training in Nürnberg stärker macht.",
           text:
             "Zum Start entsteht ein messbarer Status. Danach werden Training und Ernährung individuell geplant, wöchentlich angepasst und alle vier Wochen überprüft.",
           align: "center"
@@ -1208,7 +1301,7 @@ function personalCoachingPage() {
           <div class="coaching-reference-stage__copy" data-reveal>
             ${sectionHeader({
               eyebrow: "Video-Referenz",
-              title: "Eine zusätzliche Referenz aus dem <span>echten Coaching-Alltag.</span>",
+              title: "Noch ein echter Einblick in die <span>Zusammenarbeit.</span>",
               text:
                 "Nicht gestellt, nicht überladen: Der Short zeigt genau die Dynamik, Präsenz und persönliche Führung, für die Premium Personal Training bei Camp Dörfl steht."
             })}
@@ -1248,6 +1341,27 @@ function personalCoachingPage() {
     <section class="section">
       <div class="section-shell">
         ${sectionHeader({
+          eyebrow: "Preis & Einstieg",
+          title: "Was kostet Personal Training in Nürnberg?",
+          text:
+            "Wenn du gerade Preise, Formate und sinnvolle Einstiege vergleichst, findest du in dieser Seite eine klare Orientierung vor der Anfrage."
+        })}
+        <div class="summary-rows summary-rows--compact">
+          <article class="summary-row" data-reveal>
+            <h3>Preis hängt vom Setup ab</h3>
+            <p>Entscheidend sind nicht nur Dauer und Häufigkeit, sondern auch Analyse, App-Begleitung, Trainingsziel und wie eng die Steuerung im Alltag sein soll.</p>
+          </article>
+          <article class="summary-row" data-reveal>
+            <h3>Mehr Orientierung vor der Anfrage</h3>
+            <p><a href="/personal-training-kosten-nuernberg/">Hier erklären wir, wann Einzelsessions, Karten oder Premium Begleitung in Nürnberg sinnvoll sind.</a></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-shell">
+        ${sectionHeader({
           eyebrow: "FAQ",
           title: "Passt das zu deinem Leben?",
           text:
@@ -1259,7 +1373,7 @@ function personalCoachingPage() {
 
     ${ctaSection({
       eyebrow: "Premium Personal Training",
-      title: "Beratung anfragen.",
+      title: "Prüfe, ob Premium Personal Training zu dir passt.",
       text:
         "Wenn du wissen willst, ob das Training zu deiner Ausgangslage, deinem Kalender und deinem Anspruch passt, ist das der nächste richtige Schritt.",
       primary: { label: "Beratung anfragen", href: contactHref("premium-training") },
@@ -1269,11 +1383,43 @@ function personalCoachingPage() {
 
   return layout({
     path: "/personal-coaching/",
-    title: "Personal Trainer Nürnberg – Premium Training | Camp Dörfl",
+    title: "Personal Trainer Nürnberg | Premium Personal Training | Camp Dörfl",
     description:
-      "Personal Trainer Nürnberg und Premium Personal Training Nürnberg von Camp Dörfl: Training, Ernährung, Analysen, persönliche Führung und messbare Entwicklung.",
-    keywords: ["Personal Trainer Nürnberg", "Premium Personal Training Nürnberg", "Personal Training Nürnberg"],
+      "Personal Trainer in Nürnberg mit Premium Coaching, 2D-Körperanalyse, InBody, Ernährungsplanung und App-Steuerung von Camp Dörfl.",
+    keywords: ["Personal Trainer Nürnberg", "Premium Personal Training Nürnberg", "1:1 Personal Training Nürnberg", "Ernährungscoaching Nürnberg"],
     bodyClass: "page-premium page-coaching",
+    socialImage: "/assets/images/premium-training-hero-wide.jpg",
+    socialImageAlt: "Dominik Dörfl beim Personal Training mit einem Kunden in Nürnberg",
+    extraStructuredData: [
+      serviceSchema({
+        path: "/personal-coaching/",
+        name: "Personal Trainer Nürnberg – Camp Dörfl",
+        serviceType: "Premium Personal Training",
+        description:
+          "Persönlich geführtes Personal Training mit Analyse, Ernährungsplanung, App und laufender Anpassung."
+      }),
+      faqSchema("/personal-coaching/", coachingFaq),
+      videoObjectSchema({
+        path: "/personal-coaching/",
+        id: "premium-training-video",
+        name: "Camp Dörfl Premium Personal Training",
+        description:
+          "Video-Einblick in das Premium Personal Training von Camp Dörfl mit persönlicher Führung, Training und alltagstauglicher Struktur.",
+        thumbnailUrl: "/assets/images/dominik-personal-coaching-client.webp",
+        embedUrl: "https://www.youtube-nocookie.com/embed/KTvHOvTNJ8w?autoplay=1&rel=0&modestbranding=1&playsinline=1",
+        watchUrl: "https://www.youtube.com/watch?v=KTvHOvTNJ8w"
+      }),
+      videoObjectSchema({
+        path: "/personal-coaching/",
+        id: "premium-training-short",
+        name: "Camp Dörfl Premium Personal Training Short",
+        description:
+          "Kurzer Videoeinblick in die direkte 1:1 Zusammenarbeit im Premium Personal Training von Camp Dörfl.",
+        thumbnailUrl: "/assets/images/premium-training-short-reference.jpg",
+        embedUrl: "https://www.youtube-nocookie.com/embed/bP7DKqZu5xc?autoplay=1&rel=0&modestbranding=1&playsinline=1",
+        watchUrl: "https://youtube.com/shorts/bP7DKqZu5xc?si=VaGdauquMqCuWNyE"
+      })
+    ],
     content
   });
 }
@@ -1281,16 +1427,16 @@ function personalCoachingPage() {
 function firmenfitnessPage() {
   const content = `
     <section class="ff-hero ff-hero--photo ff-hero--firmenfitness ff-hero--firmenfitness-photo ff-hero--text-only">
-      <img class="ff-hero__img" src="/assets/images/firmenfitness-hero-wide.png" alt="Dominik Dörfl im Firmenfitness-Kontext mit Analyse und Beratung für Unternehmen">
+      <img class="ff-hero__img" src="/assets/images/firmenfitness-hero-wide.jpg" alt="Dominik Dörfl im Firmenfitness-Kontext mit Analyse und Beratung für Unternehmen"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
           <p class="ff-hero__eyebrow" data-reveal>Gesundheitstage · Performance Checks</p>
           <h1 class="ff-hero__title" data-reveal>Firmenfitness <br><span>in Nürnberg.</span></h1>
           <p class="ff-hero__lead" data-reveal>
-            Firmenfitness in Nürnberg und der Region: Mitarbeitende werden präzise ausgewertet und anschließend verständlich beraten. Ernährung, Bewegung und Routinen werden passend zum Berufsmodell übersetzt.
+            Firmenfitness in Nürnberg mit 2D-Analyse, InBody, individueller Beratung und Formaten, die für Mitarbeitende verständlich und für Unternehmen leicht organisierbar bleiben.
           </p>
           <p class="ff-hero__support" data-reveal>
-            Die Kombination aus 2D-Technik, InBody und professioneller Einordnung macht das Format einfach, greifbar und stark verkaufbar.
+            Gesundheitstage, Performance Checks und Vorträge werden so aufgebaut, dass sie professionell wirken, verständlich bleiben und organisatorisch sauber laufen.
           </p>
           <div class="ff-hero__actions" data-reveal>
             <a class="button button--primary" href="${contactHref("firmenfitness")}"><span>Firmenfitness anfragen</span><span aria-hidden="true">&rarr;</span></a>
@@ -1341,7 +1487,7 @@ function firmenfitnessPage() {
               ({ name, image, alt, url, text }) => `
                 <a class="corporate-reference-card" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="Website von ${name} öffnen">
                   <span class="corporate-reference-card__logo">
-                    <img src="${image}" alt="${alt}">
+                    <img src="${image}" alt="${alt}"${imageLoadingAttributes()}>
                   </span>
                   <span class="corporate-reference-card__divider" aria-hidden="true"></span>
                   <span class="corporate-reference-card__body">
@@ -1361,19 +1507,19 @@ function firmenfitnessPage() {
       <div class="section-shell editorial-stage">
         <div class="editorial-stage__copy" data-reveal>
           ${sectionHeader({
-            eyebrow: "Praxisblick",
-            title: "So wirkt Firmenfitness im echten Einsatz.",
+            eyebrow: "Warum Camp Dörfl",
+            title: "Gesundheitstage, die intern verständlich und hochwertig wirken.",
             text:
-              "Analyse, Beratung und persönliche Präsenz kommt hier zusammen. Genau so wird aus einem Gesundheitstag ein hochwertiges Format mit echter Wirkung, die auch nach der Veranstaltung noch etwas bewegt."
+              "Camp Dörfl übersetzt Gesundheitsdaten, Aktivierung und Beratung so, dass Mitarbeitende ihren Status verstehen und Unternehmen ein professionell kommunizierbares Format bekommen."
           })}
           <div class="summary-rows summary-rows--compact">
             <article class="summary-row">
-              <h3>Direkt verständlich</h3>
-              <p>Die Leistung wird nicht abstrakt erklärt, sondern für Mitarbeitende und Unternehmen sofort greifbar gemacht.</p>
+              <h3>Gesundheit wird konkret</h3>
+              <p>Mitarbeitende sehen nicht nur Zahlen, sondern verstehen direkt, was Analyse, InBody und Beratung für ihren Alltag bedeuten.</p>
             </article>
             <article class="summary-row">
-              <h3>Professionell präsentierbar</h3>
-              <p>Ideal für Gesundheitstage, interne Formate und Firmenveranstaltungen, die hochwertig auftreten sollen.</p>
+              <h3>Format mit Außenwirkung</h3>
+              <p>Für Unternehmen entsteht ein Gesundheitstag, der hochwertig wirkt, intern leichter vermittelbar ist und organisatorisch realistisch bleibt.</p>
             </article>
           </div>
         </div>
@@ -1396,7 +1542,7 @@ function firmenfitnessPage() {
       <div class="section-shell section-shell--wide">
         ${sectionHeader({
           eyebrow: "Leistung im Unternehmen",
-          title: "Drei klare Bausteine für starke Firmenfitness.",
+          title: "Wie Camp Dörfl Firmenfitness strukturiert.",
           text:
             "Analyse, Einordnung und konkrete Empfehlungen bauen logisch aufeinander auf und machen das Format intern leicht vermittelbar.",
           align: "left"
@@ -1409,7 +1555,7 @@ function firmenfitnessPage() {
       <div class="section-shell section-shell--wide">
         ${sectionHeader({
           eyebrow: "Wirkung",
-          title: "Was Unternehmen dadurch gewinnen.",
+          title: "Was Unternehmen konkret davon haben.",
           text:
             "Das Format schafft Aufmerksamkeit, konkrete Handlungsempfehlungen und einen hochwertigen Anlass für echte Gesundheitskommunikation.",
           align: "center"
@@ -1421,8 +1567,29 @@ function firmenfitnessPage() {
     <section class="section section--muted">
       <div class="section-shell">
         ${sectionHeader({
+          eyebrow: "Gesundheitstag",
+          title: "Wie läuft ein Gesundheitstag in Nürnberg ab?",
+          text:
+            "Wenn Sie Firmenfitness intern planen und zuerst Aufwand, Ablauf und Bausteine verstehen wollen, hilft diese Seite vor der Anfrage."
+        })}
+        <div class="summary-rows summary-rows--compact">
+          <article class="summary-row" data-reveal>
+            <h3>Planung vor Angebot</h3>
+            <p>Teilnehmerzahl, Zeitfenster, Zielbild und gewünschte Tiefe entscheiden darüber, wie ein Gesundheitstag sinnvoll aufgebaut wird.</p>
+          </article>
+          <article class="summary-row" data-reveal>
+            <h3>Mehr Orientierung für Unternehmen</h3>
+            <p><a href="/gesundheitstag-nuernberg/">Hier zeigen wir, wie ein Gesundheitstag in Nürnberg aufgebaut sein kann und welche Bausteine sich bewährt haben.</a></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section-shell">
+        ${sectionHeader({
           eyebrow: "FAQ",
-          title: "Kurz geklärt.",
+          title: "Was Unternehmen vorab klären.",
           text:
             "Die häufigsten Fragen zu Firmenfitness, Gesundheitstagen und dem Ablauf im Unternehmen."
         })}
@@ -1432,7 +1599,7 @@ function firmenfitnessPage() {
 
     ${ctaSection({
       eyebrow: "Firmenfitness",
-      title: "Wenn Sie Firmenfitness in Nürnberg hochwertig aufsetzen wollen, lassen Sie uns sprechen.",
+      title: "Planen Sie Firmenfitness mit klarer Struktur.",
       text:
         "Camp Dörfl entwickelt Formate für Unternehmen, die Gesundheit, Performance und Teamkultur professionell verbinden wollen.",
       primary: { label: "Firmenfitness anfragen", href: contactHref("firmenfitness") },
@@ -1442,11 +1609,43 @@ function firmenfitnessPage() {
 
   return layout({
     path: "/firmenfitness/",
-    title: "Firmenfitness Nürnberg – Gesundheitstage | Camp Dörfl",
+    title: "Firmenfitness Nürnberg | Gesundheitstage & BGM | Camp Dörfl",
     description:
-      "Firmenfitness in Nürnberg von Camp Dörfl: Gesundheitstage, Performance Checks, Vorträge und Aktivierungen für moderne Unternehmen.",
-    keywords: ["Firmenfitness", "Firmenfitness Nürnberg", "Betriebliche Gesundheit", "Gesundheitstag Unternehmen"],
+      "Firmenfitness in Nürnberg mit Gesundheitstagen, 2D-Analyse, InBody und individueller Beratung für Unternehmen von Camp Dörfl.",
+    keywords: ["Firmenfitness Nürnberg", "Gesundheitstag Nürnberg", "BGM Nürnberg", "Betriebliche Gesundheitsförderung Nürnberg"],
     bodyClass: "page-premium page-firmenfitness",
+    socialImage: "/assets/images/firmenfitness-hero-wide.jpg",
+    socialImageAlt: "Dominik Dörfl bei einer Firmenfitness-Analyse und Beratung",
+    extraStructuredData: [
+      serviceSchema({
+        path: "/firmenfitness/",
+        name: "Firmenfitness Nürnberg – Camp Dörfl",
+        serviceType: "Firmenfitness und Gesundheitstage",
+        description:
+          "Gesundheitstage, Performance Checks, Analysen und Beratung für Unternehmen in Nürnberg und der Region."
+      }),
+      faqSchema("/firmenfitness/", corporateFaq),
+      videoObjectSchema({
+        path: "/firmenfitness/",
+        id: "firmenfitness-video",
+        name: "Camp Dörfl Firmenfitness Querformat",
+        description:
+          "Video-Einblick in Firmenfitness und Gesundheitstage von Camp Dörfl mit Aktivierung, Analyse und verständlicher Beratung.",
+        thumbnailUrl: "/assets/images/dominik-bike-blue.jpg",
+        embedUrl: "https://www.youtube-nocookie.com/embed/cDQ3xaj2we8?autoplay=1&rel=0&modestbranding=1&playsinline=1",
+        watchUrl: "https://www.youtube.com/watch?v=cDQ3xaj2we8"
+      }),
+      videoObjectSchema({
+        path: "/firmenfitness/",
+        id: "firmenfitness-short",
+        name: "Camp Dörfl Firmenfitness Short",
+        description:
+          "Kurzer Videoeinblick in Camp Dörfl Firmenfitness mit Ernährungs- und Gesundheitsbezug im Unternehmenskontext.",
+        thumbnailUrl: "/assets/images/dominik-athlete-nutrition.jpg",
+        embedUrl: "https://www.youtube-nocookie.com/embed/rQ9YocgKVSc?autoplay=1&rel=0&modestbranding=1&playsinline=1",
+        watchUrl: "https://www.youtube.com/watch?v=rQ9YocgKVSc"
+      })
+    ],
     content
   });
 }
@@ -1454,16 +1653,16 @@ function firmenfitnessPage() {
 function eventsPage() {
   const content = `
     <section class="ff-hero ff-hero--photo ff-hero--events ff-hero--events-photo ff-hero--text-only">
-      <img class="ff-hero__img" src="/assets/images/events-hero-wide.png" alt="Dominik Dörfl als Moderator auf einer Eventbühne mit Publikum">
+      <img class="ff-hero__img" src="/assets/images/events-hero-wide.jpg" alt="Dominik Dörfl als Moderator auf einer Eventbühne mit Publikum"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
           <p class="ff-hero__eyebrow" data-reveal>Events · Moderation · Hosting</p>
           <h1 class="ff-hero__title" data-reveal>Moderator <br><span>in Nürnberg.</span></h1>
           <p class="ff-hero__lead" data-reveal>
-            Als Moderator in Nürnberg führt Dominik Dörfl Interviews, Eröffnungen, Panels und Events – mit klarer Führung, Energie und professioneller Präsenz.
+            Moderator in Nürnberg für Interviews, Panels, Eröffnungen und Bühnenformate mit sportlicher Präsenz, sauberer Dramaturgie und professioneller Ruhe.
           </p>
           <p class="ff-hero__support" data-reveal>
-            Für Firmen, Sport, Gala und öffentliche Formate.
+            Besonders stark, wenn Markenwirkung, Timing und sichere Gesprächsführung gleichzeitig zählen.
           </p>
           <div class="ff-hero__actions" data-reveal>
             <a class="button button--primary" href="${contactHref("events")}"><span>Event anfragen</span><span aria-hidden="true">&rarr;</span></a>
@@ -1490,7 +1689,7 @@ function eventsPage() {
             embedUrl: "https://www.youtube-nocookie.com/embed/1kpl2HrShto?autoplay=1&rel=0&modestbranding=1&playsinline=1",
             watchUrl: "https://youtu.be/1kpl2HrShto",
             title: "Camp Dörfl Events Video",
-            image: "/assets/images/events-hero-wide.png",
+            image: "/assets/images/events-hero-wide.jpg",
             alt: "Vorschaubild fuer das Event-Video von Camp Doerfl",
             headline: "Events live erleben.",
             actionLabel: "Video laden"
@@ -1503,19 +1702,19 @@ function eventsPage() {
       <div class="section-shell editorial-stage">
         <div class="editorial-stage__copy" data-reveal>
           ${sectionHeader({
-            eyebrow: "Praxisblick",
-            title: "So wirken Events im echten Einsatz.",
+            eyebrow: "Warum Camp Dörfl",
+            title: "Moderation, die Bühne, Gäste und Ablauf zusammenhält.",
             text:
-              "Präsenz, Timing und sichere Führung kommen hier zusammen. Genau so wird aus einer Moderation ein hochwertiges Format mit echter Wirkung, die im Raum sofort spürbar ist."
+              "Camp Dörfl verbindet Energie, Timing und Bühnenruhe so, dass Gäste sicher geführt werden, das Publikum dranbleibt und der Ablauf professionell wirkt."
           })}
           <div class="summary-rows summary-rows--compact">
             <article class="summary-row">
-              <h3>Direkt spürbar</h3>
-              <p>Publikum, Gäste und Veranstalter merken sofort, wenn Energie, Sprache und Präsenz professionell getragen werden.</p>
+              <h3>Spürbare Präsenz</h3>
+              <p>Publikum, Gäste und Veranstalter merken sofort, wenn Sprache, Körpersprache und Energie professionell getragen werden.</p>
             </article>
             <article class="summary-row">
-              <h3>Sauber führbar</h3>
-              <p>Ideal für Eröffnungen, Interviews und Bühnenmomente, die nahbar wirken und trotzdem komplett kontrolliert bleiben.</p>
+              <h3>Sichere Bühnenführung</h3>
+              <p>Ideal für Eröffnungen, Interviews und Bühnenmomente, die nahbar wirken sollen und trotzdem komplett kontrolliert bleiben müssen.</p>
             </article>
           </div>
         </div>
@@ -1582,7 +1781,7 @@ function eventsPage() {
               ({ name, image, alt, url, text }) => `
                 <a class="event-reference-card" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="Website von ${name} öffnen">
                   <span class="event-reference-card__logo">
-                    <img src="${image}" alt="${alt}">
+                    <img src="${image}" alt="${alt}"${imageLoadingAttributes()}>
                   </span>
                   <span class="event-reference-card__divider" aria-hidden="true"></span>
                   <span class="event-reference-card__body">
@@ -1602,7 +1801,7 @@ function eventsPage() {
       <div class="section-shell section-shell--wide">
         ${sectionHeader({
           eyebrow: "Event-Formate",
-          title: "Formate mit Anspruch.",
+          title: "Welche Bühnenformate Camp Dörfl besonders stark trägt.",
           text:
             "Für Veranstalter, die einen Moderator suchen, der Ablauf, Publikum und Marke nicht nur zusammenbringt, sondern sichtbar aufwertet.",
           align: "center"
@@ -1632,19 +1831,19 @@ function eventsPage() {
         </div>
         <div class="event-rule-stage__gallery" data-reveal aria-label="Formate mit klarem Regelwerk bei Camp Dörfl Events">
           <figure class="event-rule-stage__card event-rule-stage__card--award">
-            <img src="/assets/images/event-rule-award.avif" alt="Dominik Dörfl bei einer Ehrung im Gespräch mit einem Preisträger auf der Bühne">
+            <img src="/assets/images/event-rule-award.avif" alt="Dominik Dörfl bei einer Ehrung im Gespräch mit einem Preisträger auf der Bühne"${imageLoadingAttributes()}>
             <figcaption>
               <p>Interviews und Übergaben, die Protokoll und Live-Moment gleichzeitig tragen.</p>
             </figcaption>
           </figure>
           <figure class="event-rule-stage__card event-rule-stage__card--stage">
-            <img src="/assets/images/event-rule-stage.avif" alt="Dominik Dörfl moderiert auf einer Wettkampfbühne mit Mikrofon vor einem Verbands-Backdrop">
+            <img src="/assets/images/event-rule-stage.avif" alt="Dominik Dörfl moderiert auf einer Wettkampfbühne mit Mikrofon vor einem Verbands-Backdrop"${imageLoadingAttributes()}>
             <figcaption>
               <p>Klare Ansagen, saubere Calls und Führung mit Autorität ohne unnötige Härte.</p>
             </figcaption>
           </figure>
           <figure class="event-rule-stage__card event-rule-stage__card--podium">
-            <img src="/assets/images/event-rule-podium.avif" alt="Dominik Dörfl mit Mikrofon und Unterlagen an einem Rednerpult bei einem offiziellen Ablauf">
+            <img src="/assets/images/event-rule-podium.avif" alt="Dominik Dörfl mit Mikrofon und Unterlagen an einem Rednerpult bei einem offiziellen Ablauf"${imageLoadingAttributes()}>
             <figcaption>
               <p>Auch in dichten Programmen bleibt der Ton ruhig, verständlich und präsent.</p>
             </figcaption>
@@ -1674,21 +1873,21 @@ function eventsPage() {
         </div>
         <div class="event-fun-stage__gallery" data-reveal aria-label="Formate mit Spaß-Faktor bei Camp Dörfl Events">
           <figure class="event-fun-stage__card event-fun-stage__card--lead">
-            <img src="/assets/images/event-fun-segmueller-poster.jpg" alt="Dominik Dörfl beim Segmüller Bayern-Wochenende neben einem Veranstaltungsaufsteller">
+            <img src="/assets/images/event-fun-segmueller-poster.jpg" alt="Dominik Dörfl beim Segmüller Bayern-Wochenende neben einem Veranstaltungsaufsteller"${imageLoadingAttributes()}>
             <figcaption>
               <span>Segmüller</span>
               <h3>Bayern-Wochenende mit Challenge-Charakter.</h3>
             </figcaption>
           </figure>
           <figure class="event-fun-stage__card event-fun-stage__card--stemmen">
-            <img src="/assets/images/event-fun-segmueller-stemmen.jpg" alt="Dominik Dörfl mit zwei Maßkrügen vor einem Maßkrugstemmen-Stand">
+            <img src="/assets/images/event-fun-segmueller-stemmen.jpg" alt="Dominik Dörfl mit zwei Maßkrügen vor einem Maßkrugstemmen-Stand"${imageLoadingAttributes()}>
             <figcaption>
               <span>Mitmachformat</span>
               <h3>Publikumsmomente mit Energie und Augenzwinkern.</h3>
             </figcaption>
           </figure>
           <figure class="event-fun-stage__card event-fun-stage__card--hosting">
-            <img src="/assets/images/event-fun-segmueller-hosting.jpg" alt="Dominik Dörfl moderiert ein Maßkrugstemmen mit einem Kind auf der Bühne">
+            <img src="/assets/images/event-fun-segmueller-hosting.jpg" alt="Dominik Dörfl moderiert ein Maßkrugstemmen mit einem Kind auf der Bühne"${imageLoadingAttributes()}>
             <figcaption>
               <span>Nah dran</span>
               <h3>Moderation, die Menschen direkt ins Erlebnis holt.</h3>
@@ -1702,7 +1901,7 @@ function eventsPage() {
       <div class="section-shell">
         ${sectionHeader({
           eyebrow: "FAQ",
-          title: "Kurz geklärt.",
+          title: "Was Veranstalter meist wissen wollen.",
           text:
             "Die wichtigsten Fragen zu Moderation, Eventformaten und dem professionellen Ablauf auf der Bühne."
         })}
@@ -1712,7 +1911,7 @@ function eventsPage() {
 
     ${ctaSection({
       eyebrow: "Events",
-      title: "Wenn Sie einen Moderator in Nürnberg mit echter Performance-Präsenz suchen, melden Sie sich.",
+      title: "Sichern Sie sich Moderation mit Ruhe, Energie und Timing.",
       text:
         "Camp Dörfl moderiert Sport-, Fitness- und Business-Events mit Energie, Klarheit und einer Handschrift, die hängen bleibt.",
       primary: { label: "Event anfragen", href: contactHref("events") },
@@ -1722,11 +1921,53 @@ function eventsPage() {
 
   return layout({
     path: "/events/",
-    title: "Moderator in Nürnberg & Events | Camp Dörfl",
+    title: "Moderator Nürnberg für Events, Bühne & Interviews | Camp Dörfl",
     description:
-      "Moderator in Nürnberg für Sport-, Fitness- und Business-Events: Moderation, Hosting und Performance-Impulse von Camp Dörfl.",
-    keywords: ["Moderator in Nürnberg", "Events Nürnberg", "Event Moderator Nürnberg", "Fitness Event Moderator"],
+      "Moderator in Nürnberg für Events, Interviews, Panels und Bühnenformate mit klarer Führung, Timing und professioneller Präsenz.",
+    keywords: ["Moderator Nürnberg", "Eventmoderator Nürnberg", "Bühnenmoderation Nürnberg", "Interview Moderator Nürnberg"],
     bodyClass: "page-premium page-events",
+    socialImage: "/assets/images/events-hero-wide.jpg",
+    socialImageAlt: "Dominik Dörfl als Moderator auf einer Eventbühne in Nürnberg",
+    extraStructuredData: [
+      serviceSchema({
+        path: "/events/",
+        name: "Moderator in Nürnberg – Camp Dörfl",
+        serviceType: "Event-Moderation",
+        description:
+          "Moderation für Sport-, Fitness- und Business-Events mit Interviews, Panels, Eröffnungen und Hosting."
+      }),
+      faqSchema("/events/", eventFaq),
+      videoObjectSchema({
+        path: "/events/",
+        id: "events-video",
+        name: "Camp Dörfl Events Video",
+        description:
+          "Video-Einblick in die Event-Moderation von Camp Dörfl für Bühne, Publikum und Veranstalter.",
+        thumbnailUrl: "/assets/images/events-hero-wide.jpg",
+        embedUrl: "https://www.youtube-nocookie.com/embed/1kpl2HrShto?autoplay=1&rel=0&modestbranding=1&playsinline=1",
+        watchUrl: "https://youtu.be/1kpl2HrShto"
+      }),
+      videoObjectSchema({
+        path: "/events/",
+        id: "events-short",
+        name: "Camp Dörfl Events Short",
+        description:
+          "Kurzer Videoeinblick in die Event-Moderation von Camp Dörfl mit Präsenz, Timing und Bühnenführung.",
+        thumbnailUrl: "/assets/images/dominik-moderator-mic.jpg",
+        embedUrl: "https://www.youtube-nocookie.com/embed/oTRIacnkFPc?autoplay=1&rel=0&modestbranding=1&playsinline=1",
+        watchUrl: "https://www.youtube.com/watch?v=oTRIacnkFPc"
+      }),
+      videoObjectSchema({
+        path: "/events/",
+        id: "interview-video",
+        name: "Camp Dörfl Interview Beispiel",
+        description:
+          "Video-Beispiel für Interviewführung und Moderation von Camp Dörfl auf einer Live-Bühne.",
+        thumbnailUrl: "/assets/images/event-stage-interview.jpg",
+        embedUrl: "https://www.youtube-nocookie.com/embed/yhV7cyw2Pgg?autoplay=1&rel=0&modestbranding=1&playsinline=1",
+        watchUrl: "https://youtu.be/yhV7cyw2Pgg"
+      })
+    ],
     content
   });
 }
@@ -1734,7 +1975,7 @@ function eventsPage() {
 function teamSuccessPage() {
   const content = `
     <section class="ff-hero ff-hero--split ff-hero--photo ff-hero--team">
-      <img class="ff-hero__img" src="/assets/images/dominik-moderator-mic.jpg" alt="Dominik Dörfl mit Mikrofon bei einer Moderation auf der Bühne">
+      <img class="ff-hero__img" src="/assets/images/dominik-moderator-mic.jpg" alt="Dominik Dörfl mit Mikrofon bei einer Moderation auf der Bühne"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__shell">
         <div class="ff-hero__inner">
@@ -1762,7 +2003,7 @@ function teamSuccessPage() {
         </div>
         <div class="ff-hero__showcase ff-hero__showcase--photo" data-reveal>
           <figure class="ff-hero__photo-card">
-            <img src="/assets/images/dominik-moderator-mic.jpg" alt="Dominik Dörfl mit Mikrofon als Moderator">
+            <img src="/assets/images/dominik-moderator-mic.jpg" alt="Dominik Dörfl mit Mikrofon als Moderator"${imageLoadingAttributes()}>
           </figure>
           <article class="ff-hero__aside">
             <span class="card-tag">Im Team sichtbar</span>
@@ -1826,7 +2067,7 @@ function teamSuccessPage() {
           ${summaryRows(teamSuccessRows)}
         </div>
         <div class="editorial-stage__media" data-reveal>
-          <img src="/assets/images/dominik-coaching-bikeerg.jpg" alt="Dominik Dörfl bei der Arbeit mit einem Klienten">
+          <img src="/assets/images/dominik-coaching-bikeerg.jpg" alt="Dominik Dörfl bei der Arbeit mit einem Klienten"${imageLoadingAttributes()}>
         </div>
       </div>
     </section>
@@ -1846,8 +2087,10 @@ function teamSuccessPage() {
     title: "Erfolge im Team | Camp Dörfl Nürnberg",
     description:
       "Erfolge im Team bei Camp Dörfl Nürnberg: Erfahrung aus Leistungssport, Coaching, Community, Bühne und Unternehmertum für sichtbare Entwicklung.",
-    keywords: ["Erfolge im Team", "Dominik Dörfl", "Performance Coaching Nürnberg"],
+    keywords: ["Erfolge im Team", "Camp Dörfl Ergebnisse", "Transformation Coaching", "Dominik Dörfl"],
     bodyClass: "page-premium page-team",
+    socialImage: "/assets/images/dominik-moderator-mic.jpg",
+    socialImageAlt: "Dominik Dörfl mit Mikrofon und Team-Erfolgen im Hintergrund",
     content
   });
 }
@@ -1913,7 +2156,7 @@ function executivePerformancePage() {
 
   const content = `
     <section class="ff-hero ff-hero--coaching ff-hero--coaching-photo ff-hero--executive">
-      <img class="ff-hero__img" src="/assets/images/dominik-gym-grey.jpg" alt="Dominik Dörfl beim Krafttraining im Studio" loading="eager">
+      <img class="ff-hero__img" src="/assets/images/dominik-gym-grey.jpg" alt="Dominik Dörfl beim Krafttraining im Studio"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
         <div class="premium-badge">
@@ -1923,10 +2166,10 @@ function executivePerformancePage() {
         <p class="ff-hero__eyebrow" data-reveal>Executive Performance</p>
         <h1 class="ff-hero__title" data-reveal>Executive.<br>Performance.<br><span>In 12 Wochen.</span></h1>
         <p class="ff-hero__lead" data-reveal>
-          Das 12-Wochen-Premium-Programm für ambitionierte Menschen, die beruflich viel leisten und körperlich wieder klarer, fitter und leistungsfähiger werden wollen.
+          Das 12-Wochen-Premium-Programm für Führungskräfte, Unternehmer und Leistungsträger, die körperlich wieder klarer, fitter und belastbarer werden wollen.
         </p>
         <p class="ff-hero__support" data-reveal>
-          Analyse, individuelle Planung, persönliche Führung und die Camp Dörfl App – abgestimmt auf einen vollen Kalender und einen echten Premium-Anspruch.
+          Analyse, Ernährungsführung, Training und App-Steuerung - abgestimmt auf einen vollen Kalender, hohe Verantwortung und einen echten Premium-Anspruch.
         </p>
         <div class="ff-hero__actions" data-reveal>
           <a class="button button--primary" href="${contactHref("premium-training")}"><span>Platz anfragen</span><span aria-hidden="true">&rarr;</span></a>
@@ -1963,7 +2206,7 @@ function executivePerformancePage() {
           ${processList(executiveSteps)}
         </div>
         <div class="editorial-stage__media" data-reveal>
-          <img src="/assets/images/dominik-athlete-nutrition.jpg" alt="Dominik Dörfl bei der Ernährungs- und Leistungsplanung">
+          <img src="/assets/images/dominik-athlete-nutrition.jpg" alt="Dominik Dörfl bei der Ernährungs- und Leistungsplanung"${imageLoadingAttributes()}>
         </div>
       </div>
     </section>
@@ -2001,7 +2244,7 @@ function executivePerformancePage() {
       <div class="section-shell">
         ${sectionHeader({
           eyebrow: "FAQ",
-          title: "Häufige Fragen zum Programm."
+          title: "Was Führungskräfte vor dem Start wissen wollen."
         })}
         ${faq(executiveFaq)}
       </div>
@@ -2024,6 +2267,18 @@ function executivePerformancePage() {
       "Executive Performance von Camp Dörfl: 12-Wochen-Premium-Coaching in Nürnberg für Führungskräfte und Leistungsträger mit vollem Kalender – Analyse, Plan und App.",
     keywords: ["Executive Performance", "Performance Coaching Nürnberg", "Coaching für Führungskräfte", "Premium Coaching Nürnberg"],
     bodyClass: "page-premium page-executive",
+    socialImage: "/assets/images/dominik-gym-grey.jpg",
+    socialImageAlt: "Dominik Dörfl beim Krafttraining für Executive Performance Coaching",
+    extraStructuredData: [
+      serviceSchema({
+        path: "/executive-performance/",
+        name: "Executive Performance Coaching Nürnberg",
+        serviceType: "Performance Coaching für Führungskräfte",
+        description:
+          "12-Wochen-Premium-Coaching für Führungskräfte und Leistungsträger mit Analyse, Plan und App."
+      }),
+      faqSchema("/executive-performance/", executiveFaq)
+    ],
     content
   });
 }
@@ -2051,7 +2306,7 @@ function ueberDominikPage() {
 
   const content = `
     <section class="ff-hero ff-hero--split ff-hero--photo ff-hero--about">
-      <img class="ff-hero__img" src="/assets/images/dominik-stage-suit.jpg" alt="Dominik Dörfl im Anzug auf der Bühne als Moderator und Performance Coach">
+      <img class="ff-hero__img" src="/assets/images/dominik-stage-suit.jpg" alt="Dominik Dörfl im Anzug auf der Bühne als Moderator und Performance Coach"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__shell">
         <div class="ff-hero__inner">
@@ -2079,7 +2334,7 @@ function ueberDominikPage() {
         </div>
         <div class="ff-hero__showcase ff-hero__showcase--photo" data-reveal>
           <figure class="ff-hero__photo-card">
-            <img src="/assets/images/dominik-stage-suit.jpg" alt="Dominik Dörfl im Anzug auf der Bühne">
+            <img src="/assets/images/dominik-stage-suit.jpg" alt="Dominik Dörfl im Anzug auf der Bühne"${imageLoadingAttributes()}>
           </figure>
           <article class="ff-hero__aside">
             <span class="card-tag">Auf einen Blick</span>
@@ -2130,7 +2385,7 @@ function ueberDominikPage() {
           </ul>
         </div>
         <div class="editorial-stage__media" data-reveal>
-          <img src="/assets/images/dominik-bodybuilding-desert.jpg" alt="Dominik Dörfl als Bodybuilder">
+          <img src="/assets/images/dominik-bodybuilding-desert.jpg" alt="Dominik Dörfl als Bodybuilder"${imageLoadingAttributes()}>
         </div>
       </div>
     </section>
@@ -2162,8 +2417,11 @@ function ueberDominikPage() {
     title: "Über Dominik Dörfl | Camp Dörfl Nürnberg",
     description:
       "Über Dominik Dörfl: Unternehmer, Ex-Profi-Athlet, Deutscher Meister, Ironman-Finisher und Coach aus Nürnberg – die Person und Erfahrung hinter Camp Dörfl.",
-    keywords: ["Dominik Dörfl", "Über Dominik Dörfl", "Personal Trainer Nürnberg", "Camp Dörfl Gründer"],
+    keywords: ["Dominik Dörfl", "Camp Dörfl Gründer", "Ex-Profi Athlet Nürnberg", "Coach und Moderator Nürnberg"],
     bodyClass: "page-premium page-about",
+    pageType: "AboutPage",
+    socialImage: "/assets/images/dominik-stage-suit.jpg",
+    socialImageAlt: "Dominik Dörfl im Anzug auf der Bühne",
     content
   });
 }
@@ -2255,6 +2513,7 @@ function impressumPage() {
     title: "Impressum | Camp Dörfl Nürnberg",
     description: "Impressum von Camp Dörfl Nürnberg mit Anbieterkennzeichnung, Kontakt, Verantwortlichkeit und rechtlichen Hinweisen zur Website.",
     keywords: ["Impressum", "Camp Dörfl", "Dominik Dörfl"],
+    robots: "noindex,follow,max-image-preview:large",
     bodyClass: "page-premium page-legal",
     content
   });
@@ -2379,6 +2638,7 @@ function privacyPage() {
     description:
       "Datenschutzerklärung von Camp Dörfl: Welche Daten auf der Website campdoerfl.de erhoben und verarbeitet werden und welche Rechte du als Nutzer hast.",
     keywords: ["Datenschutz", "Camp Dörfl", "DSGVO"],
+    robots: "noindex,follow,max-image-preview:large",
     bodyClass: "page-premium page-legal",
     content
   });
@@ -2589,6 +2849,7 @@ function appPrivacyPage() {
     description:
       "Datenschutzformular App von Camp Dörfl: Hinweise zur Verarbeitung personenbezogener Daten bei Website, App, Member-Bereich, Coaching und digitalen Funktionen.",
     keywords: ["Datenschutzformular App", "Camp Dörfl App Datenschutz", "DSGVO", "Member-Bereich"],
+    robots: "noindex,follow,max-image-preview:large",
     bodyClass: "page-premium page-legal",
     content
   });
@@ -2666,6 +2927,7 @@ function cookiesPage() {
     title: "Cookies & lokale Speicherungen | Camp Dörfl",
     description: "Cookie-Hinweise von Camp Dörfl: lokale Speicherungen, Consent-Einstellungen, externe Medien und Widerruf auf campdoerfl.de.",
     keywords: ["Cookies", "Cookie-Einstellungen", "lokale Speicherungen", "Camp Dörfl"],
+    robots: "noindex,follow,max-image-preview:large",
     bodyClass: "page-premium page-legal",
     content
   });
@@ -2745,6 +3007,7 @@ function partnerTransparencyPage() {
     title: "Partnerlinks & Werbung | Camp Dörfl",
     description: "Transparenz bei Camp Dörfl: Hinweise zu Partnerlinks, Rabattcodes, Kooperationen, Werbung, Markenempfehlungen und kommerziellen Inhalten.",
     keywords: ["Partnerlinks", "Werbung", "Kooperationen", "Camp Dörfl"],
+    robots: "noindex,follow,max-image-preview:large",
     bodyClass: "page-premium page-legal",
     content
   });
@@ -2822,6 +3085,7 @@ function accessibilityPage() {
     description:
       "Barrierefreiheit bei Camp Dörfl: Hinweise zur barrierearmen Nutzung der Website campdoerfl.de, zu umgesetzten Maßnahmen, bekannten Grenzen und Feedback.",
     keywords: ["Barrierefreiheit", "Accessibility", "Camp Dörfl"],
+    robots: "noindex,follow,max-image-preview:large",
     bodyClass: "page-premium page-legal",
     content
   });
@@ -2865,7 +3129,7 @@ function partnerPage() {
           </div>
           <div class="partner-brand-card__body">
             <span>${label}</span>
-            <img src="${image}" alt="${alt}">
+            <img src="${image}" alt="${alt}"${imageLoadingAttributes()}>
             <h3>${name}</h3>
             <p>${text}</p>
             ${videoNote ? `<p class="partner-brand-card__note">${videoNote}</p>` : ""}
@@ -2887,7 +3151,7 @@ function partnerPage() {
         <span>${label}</span>
         ${
           image
-            ? `<img src="${image}" alt="${alt}">
+            ? `<img src="${image}" alt="${alt}"${imageLoadingAttributes()}>
                <h3>${name}</h3>`
             : `<h3 class="partner-brand-card__text-logo">${name}</h3>`
         }
@@ -2926,10 +3190,10 @@ function partnerPage() {
             <a class="button button--secondary-light" href="/events/"><span>Events ansehen</span><span aria-hidden="true">&rarr;</span></a>
             <div class="partner-hero__logos" aria-label="Aktuelle Partner">
               <a class="partner-hero__logo" href="https://www.xxlnutrition.com/" target="_blank" rel="sponsored noopener noreferrer" aria-label="XXL Nutrition öffnen">
-                <img src="/assets/images/partner-xxl-nutrition-logo.png" alt="XXL Nutrition">
+                <img src="/assets/images/partner-xxl-nutrition-logo.png" alt="XXL Nutrition"${imageLoadingAttributes()}>
               </a>
               <a class="partner-hero__logo partner-hero__logo--aeke" href="https://eu.aeke.com/products/buy-aeke-k1?sca_ref=11019964.wKUJzkQCK3" target="_blank" rel="sponsored noopener noreferrer" aria-label="AEKE öffnen">
-                <img src="/assets/images/partner-aeke-logo.png" alt="AEKE">
+                <img src="/assets/images/partner-aeke-logo.png" alt="AEKE"${imageLoadingAttributes()}>
               </a>
             </div>
           </div>
@@ -2941,7 +3205,7 @@ function partnerPage() {
         </div>
         <div class="ff-hero__showcase ff-hero__showcase--partner" data-reveal>
           <figure class="partner-hero__visual" aria-hidden="true">
-            <img src="/assets/images/partners-hero-banner.svg" alt="Partner und Marken von Camp Dörfl">
+            <img src="/assets/images/partners-hero-banner.svg" alt="Partner und Marken von Camp Dörfl"${imageLoadingAttributes()}>
           </figure>
         </div>
       </div>
@@ -2952,7 +3216,7 @@ function partnerPage() {
         <div class="editorial-stage__copy" data-reveal>
           ${sectionHeader({
             eyebrow: "AEKE & XXL Nutrition",
-            title: "So sieht die Partnerschaft im echten Einsatz aus.",
+            title: "So werden Marken im Camp-Dörfl-Kontext glaubwürdig sichtbar.",
             text:
               "Die beiden Shorts zeigen, wie AEKE und XXL Nutrition nicht nur als Marken auftauchen, sondern direkt im Performance-Kontext sichtbar werden: smartes Training auf der einen Seite, konkrete Sporternaehrung auf der anderen."
           })}
@@ -3038,7 +3302,7 @@ function partnerPage() {
       <div class="section-shell">
         ${sectionHeader({
           eyebrow: "FAQ",
-          title: "Kurz geklärt.",
+          title: "Was Marken vorab wissen wollen.",
           text:
             "Die wichtigsten Fragen zu Kooperationen, Markenfit und gemeinsamer Umsetzung."
         })}
@@ -3063,6 +3327,9 @@ function partnerPage() {
       "Partner und Kooperationen bei Camp Dörfl: glaubwürdige Markenpräsenz zwischen Performance, Events, Community, App und Unternehmen.",
     keywords: ["Camp Dörfl Partner", "Kooperationen", "Sponsoring", "Markenpartnerschaft Nürnberg"],
     bodyClass: "page-premium page-partner",
+    socialImage: "/assets/images/partners-hero-banner.svg",
+    socialImageAlt: "Partner und Marken von Camp Dörfl",
+    extraStructuredData: [faqSchema("/partner/", partnerFaq)],
     content
   });
 }
@@ -3070,11 +3337,11 @@ function partnerPage() {
 function contactPage() {
   const content = `
     <section class="ff-hero ff-hero--split ff-hero--contact">
-      <img class="ff-hero__img" src="/assets/images/dominik-gym-grey.jpg" alt="Dominik Dörfl im Studio als Ansprechpartner für Kontakt und Beratung">
+      <img class="ff-hero__img" src="/assets/images/dominik-gym-grey.jpg" alt="Dominik Dörfl im Studio als Ansprechpartner für Kontakt und Beratung"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__shell">
         <div class="ff-hero__inner">
-          <p class="ff-hero__eyebrow" data-reveal>Kontakt</p>
+          <p class="ff-hero__eyebrow" data-reveal>Kontakt für Personal Training, Firmenfitness, Events und App</p>
           <h1 class="ff-hero__title" data-reveal>Klar.<br>Persönlich.<br><span>Direkt.</span></h1>
           <p class="ff-hero__lead" data-reveal>
             Ob Premium Personal Training, Firmenfitness, Events, App oder Kooperation: hier startet der direkte Kontakt für alle Anfragearten auf der Seite.
@@ -3152,8 +3419,398 @@ function contactPage() {
     title: "Kontakt & Beratung | Camp Dörfl Nürnberg",
     description:
       "Kontakt zu Camp Dörfl Nürnberg für Premium Personal Training, Firmenfitness, Events, App-Zugang, Beratung und Kooperationen.",
-    keywords: ["Camp Dörfl Kontakt", "Performance Beratung Nürnberg", "Premium Personal Training Nürnberg", "Firmenfitness Nürnberg", "Moderator Nürnberg"],
+    keywords: ["Camp Dörfl Kontakt", "Dominik Dörfl Kontakt", "Beratung Camp Dörfl", "Anfrage Camp Dörfl"],
     bodyClass: "page-premium page-contact",
+    pageType: "ContactPage",
+    socialImage: "/assets/images/dominik-gym-grey.jpg",
+    socialImageAlt: "Dominik Dörfl als Ansprechpartner für Kontakt und Beratung",
+    content
+  });
+}
+
+function personalTrainingCostPage() {
+  const costFactorCards = [
+    {
+      detail: "Betreuungstiefe",
+      title: "Einzelstunde oder laufende Führung",
+      text:
+        "Eine einzelne Session hat eine andere Aufgabe als ein Setup mit regelmäßiger Anpassung, App-Struktur und persönlicher Begleitung über mehrere Wochen."
+    },
+    {
+      detail: "Analyse",
+      title: "Status vor Start",
+      text:
+        "Wenn Analyse, InBody, 2D-Technik oder eine saubere Trainings- und Ernährungsplanung dazugehören sollen, steigt auch die Tiefe der Betreuung."
+    },
+    {
+      detail: "Frequenz",
+      title: "Wie oft du Unterstützung brauchst",
+      text:
+        "Ob punktuelle Kontrolle, ein klarer Wochenrhythmus oder eine engere Führung bei hohem Anspruch: Der sinnvolle Rahmen hängt stark von deinem Kalender ab."
+    },
+    {
+      detail: "Zielbild",
+      title: "Alltag, Leistung oder Transformation",
+      text:
+        "Je nachdem, ob du mehr Energie, klare Routinen, sichtbare Veränderung oder sportliche Leistung willst, verändert sich auch das passende Format."
+    }
+  ];
+
+  const formatRows = [
+    {
+      title: "Einzelsessions",
+      text:
+        "Sinnvoll, wenn du vor allem Technik, Übungsauswahl oder einen konkreten Trainingsimpuls brauchst und bereits viel Eigenstruktur mitbringst."
+    },
+    {
+      title: "5er- oder 10er-Karten",
+      text:
+        "Gut für Menschen, die über mehrere Termine Stabilität aufbauen wollen, ohne direkt in ein umfassendes Premium-Setup zu gehen."
+    },
+    {
+      title: "Premium Begleitung",
+      text:
+        "Die stärkste Lösung, wenn Training, Ernährung, Analyse, App und laufende Anpassung zusammenarbeiten sollen und Fortschritt sauber geführt werden muss."
+    }
+  ];
+
+  const pricingSteps = [
+    "Ziel, Alltag und Ausgangslage ehrlich einordnen.",
+    "Entscheiden, wie viel persönliche Führung wirklich nötig ist.",
+    "Klären, ob Training allein reicht oder Analyse, Ernährung und App dazugehören sollen.",
+    "Das Setup wählen, das Fortschritt möglich macht und nicht nur gut klingt."
+  ];
+
+  const pricingFaq = [
+    {
+      question: "Warum steht hier kein fixer Preis für Personal Training in Nürnberg?",
+      answer:
+        "Weil ein fairer Preis vom sinnvollen Setup abhängt: Einzelsession, Karte oder Premium Begleitung haben unterschiedliche Aufgaben und erzeugen einen sehr unterschiedlichen Betreuungsaufwand."
+    },
+    {
+      question: "Ist günstiger immer die bessere Einstiegsoption?",
+      answer:
+        "Nicht unbedingt. Wenn dir vor allem Struktur, Kontrolle und Verbindlichkeit fehlen, kann ein vermeintlich kleiner Einstieg am Ende weniger wirksam sein als ein klar geführtes Premium-Setup."
+    },
+    {
+      question: "Wann lohnt sich Premium Personal Training statt einzelner Sessions?",
+      answer:
+        "Vor allem dann, wenn du Training, Ernährung, Analyse und laufende Anpassung als zusammenhängendes System brauchst und der Alltag nicht viel Raum für Fehler lässt."
+    },
+    {
+      question: "Wie bekomme ich eine konkrete Preiseinschätzung?",
+      answer:
+        "Am schnellsten über eine kurze Anfrage. Dann lässt sich sauber einordnen, ob Einzelsessions, Karten oder Premium Begleitung für deine Ziele und deinen Kalender sinnvoll sind."
+    }
+  ];
+
+  const content = `
+    <section class="ff-hero ff-hero--coaching ff-hero--coaching-photo ff-hero--text-only">
+      <img class="ff-hero__img" src="/assets/images/premium-training-hero-wide.jpg" alt="Dominik Dörfl beim Personal Training mit einem Kunden im Studio"${imageLoadingAttributes({ eager: true })}>
+      <div class="ff-hero__scrim" aria-hidden="true"></div>
+      <div class="section-shell ff-hero__inner">
+        <p class="ff-hero__eyebrow" data-reveal>Ratgeber · Personal Training Kosten</p>
+        <h1 class="ff-hero__title" data-reveal>Was kostet Personal Training <br><span>in Nürnberg?</span></h1>
+        <p class="ff-hero__lead" data-reveal>
+          Die Kosten hängen nicht nur von der Dauer einer Session ab, sondern vor allem von Betreuungstiefe, Analyse, Trainingsfrequenz und dem Setup, das wirklich zu deinem Alltag passt.
+        </p>
+        <p class="ff-hero__support" data-reveal>
+          Camp Dörfl arbeitet deshalb nicht mit einem künstlichen Einheitsmodell, sondern mit Einzelsessions, Karten und Premium Begleitung je nach Ziel, Anspruch und Verantwortung.
+        </p>
+        <div class="ff-hero__actions" data-reveal>
+          <a class="button button--primary" href="${contactHref("premium-training")}"><span>Preiseinschätzung anfragen</span><span aria-hidden="true">&rarr;</span></a>
+          <a class="button button--secondary-light" href="/personal-coaching/"><span>Personal Training ansehen</span><span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <dl class="ff-hero__facts" data-reveal aria-label="Wichtige Preisfaktoren bei Personal Training in Nürnberg">
+          <div><dt>1:1</dt><dd>Persönliche Führung</dd></div>
+          <div><dt>Analyse</dt><dd>vor dem Start</dd></div>
+          <div><dt>App</dt><dd>optional integriert</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Preisfaktoren",
+          title: "Wovon der Preis wirklich abhängt.",
+          text:
+            "Die sinnvollste Frage ist meist nicht nur, was eine Stunde kostet, sondern welches Format realen Fortschritt bei dir überhaupt möglich macht.",
+          align: "center"
+        })}
+        ${featureGrid(costFactorCards, "feature-grid--coaching-flow")}
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Modelle",
+          title: "Welche Formate in Nürnberg typischerweise Sinn ergeben.",
+          text:
+            "Nicht jede Ausgangslage braucht dieselbe Tiefe. Deshalb lohnt sich die Einordnung vor dem Preisvergleich."
+        })}
+        ${summaryRows(formatRows)}
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-shell editorial-stage editorial-stage--reverse">
+        <div class="editorial-stage__copy" data-reveal>
+          ${sectionHeader({
+            eyebrow: "Einordnung",
+            title: "So findest du das passende Setup."
+          })}
+          ${processList(pricingSteps)}
+        </div>
+        <div class="editorial-stage__media" data-reveal>
+          <img src="/assets/images/dominik-bike-road-yellow.jpg" alt="Dominik Dörfl mit Rennrad als Symbol für individuell passende Trainingssteuerung"${imageLoadingAttributes()}>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "FAQ",
+          title: "Häufige Fragen zu Personal-Training-Kosten in Nürnberg.",
+          text:
+            "Gerade vor der ersten Anfrage sind diese Punkte meistens wichtiger als eine isolierte Zahl ohne Kontext."
+        })}
+        ${faq(pricingFaq)}
+      </div>
+    </section>
+
+    ${ctaSection({
+      eyebrow: "Personal Training Kosten Nürnberg",
+      title: "Hol dir eine klare Preiseinschätzung.",
+      text:
+        "Wenn du kurz beschreibst, wie dein Alltag aussieht und welche Begleitung du suchst, lässt sich schnell einordnen, welches Setup zu dir passt.",
+      primary: { label: "Preiseinschätzung anfragen", href: contactHref("premium-training") },
+      secondary: { label: "Premium Personal Training", href: "/personal-coaching/" }
+    })}
+  `;
+
+  return layout({
+    path: "/personal-training-kosten-nuernberg/",
+    title: "Was kostet Personal Training in Nürnberg? | Camp Dörfl",
+    description:
+      "Was kostet Personal Training in Nürnberg? Camp Dörfl zeigt, welche Faktoren den Preis bestimmen und wann Einzelsessions, Karten oder Premium Begleitung sinnvoll sind.",
+    keywords: [
+      "Personal Training Kosten Nürnberg",
+      "Was kostet Personal Training in Nürnberg",
+      "Personal Trainer Preise Nürnberg",
+      "Premium Personal Training Nürnberg"
+    ],
+    bodyClass: "page-premium page-coaching page-guide-pricing",
+    socialImage: "/assets/images/premium-training-hero-wide.jpg",
+    socialImageAlt: "Dominik Dörfl beim Personal Training mit einem Kunden in Nürnberg",
+    extraStructuredData: [
+      serviceSchema({
+        path: "/personal-training-kosten-nuernberg/",
+        name: "Personal Training Kosten Nürnberg",
+        serviceType: "Beratung zu Personal Training und Premium Coaching",
+        description:
+          "Einordnung zu Preisfaktoren, Formaten und sinnvollen Einstiegen für Personal Training in Nürnberg."
+      }),
+      faqSchema("/personal-training-kosten-nuernberg/", pricingFaq)
+    ],
+    content
+  });
+}
+
+function gesundheitstagNuernbergPage() {
+  const healthDayFitCards = [
+    {
+      detail: "Employer Branding",
+      title: "Wenn Gesundheit sichtbar gemacht werden soll",
+      text:
+        "Ein Gesundheitstag funktioniert gut, wenn Unternehmen Gesundheitsbewusstsein nicht nur intern erwähnen, sondern real und hochwertig erlebbar machen wollen."
+    },
+    {
+      detail: "Mitarbeiterbindung",
+      title: "Wenn Beteiligung wichtiger ist als Pflichtprogramm",
+      text:
+        "Das Format wirkt besonders stark, wenn Mitarbeitende nicht nur zuhören, sondern ihre eigene Ausgangslage verstehen und konkrete Impulse mitnehmen."
+    },
+    {
+      detail: "Praxis statt Vortrag",
+      title: "Wenn Analyse und Beratung zusammengehören sollen",
+      text:
+        "Gesundheitstage werden relevanter, wenn Messung, Einordnung und Alltagsempfehlung ineinandergreifen statt lose nebeneinander zu stehen."
+    },
+    {
+      detail: "Region Nürnberg",
+      title: "Wenn ein lokales Format professionell wirken soll",
+      text:
+        "Gerade im Raum Nürnberg sind vor Ort gut organisierte Formate mit klarer Kommunikation oft der stärkste Einstieg in Firmenfitness."
+    }
+  ];
+
+  const budgetRows = [
+    {
+      title: "Teilnehmerzahl",
+      text:
+        "Ob ein kompaktes Format für ein kleines Team oder ein größerer Gesundheitstag für viele Mitarbeitende geplant wird, verändert Personalbedarf, Ablauf und Zeitfenster."
+    },
+    {
+      title: "Tiefe der Analyse",
+      text:
+        "Je nachdem, ob vor allem Aktivierung gewünscht ist oder 2D-Technik, InBody und individuelle Beratung dazugehören sollen, verändert sich der Aufwand deutlich."
+    },
+    {
+      title: "Ort und Rahmen",
+      text:
+        "Raumsituation, Strom, Datenschutz, Bewegungsfläche und interne Kommunikation wirken sich darauf aus, wie effizient und hochwertig das Format umgesetzt werden kann."
+    }
+  ];
+
+  const healthDayFaq = [
+    {
+      question: "Für welche Unternehmen ist ein Gesundheitstag in Nürnberg sinnvoll?",
+      answer:
+        "Für Unternehmen, die Gesundheit professionell sichtbar machen, Mitarbeitende aktiv einbinden und ein gut kommunizierbares internes Format schaffen wollen."
+    },
+    {
+      question: "Wie viele Mitarbeitende können an einem Gesundheitstag teilnehmen?",
+      answer:
+        "Das hängt vom Zeitfenster und von der Tiefe der Analyse ab. Genau deshalb wird vorab geklärt, ob ein kompaktes oder größeres Setup sinnvoller ist."
+    },
+    {
+      question: "Brauchen wir dafür viel interne Organisation?",
+      answer:
+        "Nicht zwingend. Wenn Ziele, Teilnehmerzahl und Rahmen sauber vorab geklärt sind, lässt sich das Format intern meist sehr klar und effizient aufsetzen."
+    },
+    {
+      question: "Wie bekomme ich eine erste Einschätzung für Ablauf und Budget?",
+      answer:
+        "Am besten über eine kurze Anfrage mit Standort, Teamgröße, Zeitraum und gewünschter Zielrichtung. Dann lässt sich schnell einschätzen, welches Format zu Ihrem Unternehmen passt."
+    }
+  ];
+
+  const content = `
+    <section class="ff-hero ff-hero--photo ff-hero--firmenfitness ff-hero--firmenfitness-photo ff-hero--text-only">
+      <img class="ff-hero__img" src="/assets/images/firmenfitness-hero-wide.jpg" alt="Dominik Dörfl im Gesundheitstag- und Firmenfitness-Kontext bei Analyse und Beratung"${imageLoadingAttributes({ eager: true })}>
+      <div class="ff-hero__scrim" aria-hidden="true"></div>
+      <div class="section-shell ff-hero__inner">
+        <p class="ff-hero__eyebrow" data-reveal>Ratgeber · Gesundheitstag Nürnberg</p>
+        <h1 class="ff-hero__title" data-reveal>Gesundheitstag <br><span>in Nürnberg.</span></h1>
+        <p class="ff-hero__lead" data-reveal>
+          Ein guter Gesundheitstag ist mehr als ein loses Firmen-Event: Er verbindet Analyse, persönliche Einordnung und konkrete Alltagsempfehlungen zu einem Format, das Mitarbeitende wirklich mitnimmt.
+        </p>
+        <p class="ff-hero__support" data-reveal>
+          Camp Dörfl entwickelt Gesundheitstage und Firmenfitness in Nürnberg so, dass sie intern gut kommunizierbar, professionell umsetzbar und für Mitarbeitende direkt verständlich sind.
+        </p>
+        <div class="ff-hero__actions" data-reveal>
+          <a class="button button--primary" href="${contactHref("firmenfitness")}"><span>Gesundheitstag anfragen</span><span aria-hidden="true">&rarr;</span></a>
+          <a class="button button--secondary-light" href="/firmenfitness/"><span>Firmenfitness ansehen</span><span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <dl class="ff-hero__facts" data-reveal aria-label="Wichtige Bausteine für Gesundheitstage in Nürnberg">
+          <div><dt>2D</dt><dd>Analyse & Startpunkt</dd></div>
+          <div><dt>InBody</dt><dd>Messbar erklärt</dd></div>
+          <div><dt>Beratung</dt><dd>direkt im Alltag</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Einsatz",
+          title: "Wann ein Gesundheitstag besonders sinnvoll ist.",
+          text:
+            "Die stärksten Formate entstehen dort, wo Gesundheit nicht abstrakt bleiben soll, sondern für Mitarbeitende und Unternehmen konkret werden muss.",
+          align: "center"
+        })}
+        ${featureGrid(healthDayFitCards, "feature-grid--coaching-flow")}
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section-shell section-shell--wide">
+        ${sectionHeader({
+          eyebrow: "Bausteine",
+          title: "Was in einem guten Gesundheitstag steckt.",
+          text:
+            "Analyse, Einordnung und konkrete Empfehlungen bauen logisch aufeinander auf und machen das Format intern leichter vermittelbar."
+        })}
+        ${corporateModuleShowcase(corporateModuleCards)}
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-shell editorial-stage">
+        <div class="editorial-stage__copy" data-reveal>
+          ${sectionHeader({
+            eyebrow: "Planung",
+            title: "So läuft die Vorbereitung ab."
+          })}
+          ${processList(corporateSteps)}
+        </div>
+        <div class="editorial-stage__media" data-reveal>
+          <img src="/assets/images/dominik-coaching-bikeerg.jpg" alt="Dominik Dörfl bei einer Firmenfitness- und Gesundheitstag-Beratung"${imageLoadingAttributes()}>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Aufwand & Budget",
+          title: "Wovon Umfang und Aufwand abhängen.",
+          text:
+            "Vor einer Preisfrage lohnt sich zuerst die saubere Einordnung von Teamgröße, Zielbild und gewünschter Tiefe des Formats."
+        })}
+        ${summaryRows(budgetRows)}
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "FAQ",
+          title: "Häufige Fragen zu Gesundheitstagen in Nürnberg.",
+          text:
+            "Diese Punkte sind für Unternehmen meist entscheidend, bevor aus einer Idee ein konkreter Termin wird."
+        })}
+        ${faq(healthDayFaq)}
+      </div>
+    </section>
+
+    ${ctaSection({
+      eyebrow: "Gesundheitstag Nürnberg",
+      title: "Lassen Sie Ihren Gesundheitstag sauber einordnen.",
+      text:
+        "Mit ein paar Eckdaten zu Standort, Teamgröße und gewünschter Wirkung lässt sich schnell einschätzen, welches Format für Ihr Unternehmen sinnvoll ist.",
+      primary: { label: "Gesundheitstag anfragen", href: contactHref("firmenfitness") },
+      secondary: { label: "Firmenfitness Nürnberg", href: "/firmenfitness/" }
+    })}
+  `;
+
+  return layout({
+    path: "/gesundheitstag-nuernberg/",
+    title: "Gesundheitstag in Nürnberg für Unternehmen | Camp Dörfl",
+    description:
+      "Gesundheitstag in Nürnberg für Unternehmen: Camp Dörfl zeigt, wie Analyse, Beratung, InBody und Firmenfitness zu einem professionellen Format zusammenkommen.",
+    keywords: [
+      "Gesundheitstag Nürnberg",
+      "Gesundheitstag Unternehmen Nürnberg",
+      "Firmenfitness Nürnberg",
+      "Betriebliche Gesundheit Nürnberg"
+    ],
+    bodyClass: "page-premium page-firmenfitness page-guide-corporate",
+    socialImage: "/assets/images/firmenfitness-hero-wide.jpg",
+    socialImageAlt: "Dominik Dörfl bei Analyse und Beratung für einen Gesundheitstag in Nürnberg",
+    extraStructuredData: [
+      serviceSchema({
+        path: "/gesundheitstag-nuernberg/",
+        name: "Gesundheitstag in Nürnberg",
+        serviceType: "Gesundheitstage und Firmenfitness für Unternehmen",
+        description:
+          "Planung und Umsetzung von Gesundheitstagen mit Analyse, InBody und individueller Beratung für Unternehmen in Nürnberg."
+      }),
+      faqSchema("/gesundheitstag-nuernberg/", healthDayFaq)
+    ],
     content
   });
 }
@@ -3161,18 +3818,20 @@ function contactPage() {
 export const pages = [
   { route: "/", render: homePage },
   { route: "/app/", render: appPage },
+  { route: "/personal-training-kosten-nuernberg/", render: personalTrainingCostPage },
   { route: "/personal-coaching/", render: personalCoachingPage },
+  { route: "/gesundheitstag-nuernberg/", render: gesundheitstagNuernbergPage },
   { route: "/firmenfitness/", render: firmenfitnessPage },
   { route: "/events/", render: eventsPage },
   { route: "/partner/", render: partnerPage },
   { route: "/executive-performance/", render: executivePerformancePage },
   { route: "/erfolge-im-team/", render: teamSuccessPage },
   { route: "/ueber-dominik/", render: ueberDominikPage },
-  { route: "/impressum/", render: impressumPage },
-  { route: "/cookies/", render: cookiesPage },
-  { route: "/datenschutz/", render: privacyPage },
-  { route: "/datenschutzformular-app/", render: appPrivacyPage },
-  { route: "/werbung-partnerlinks/", render: partnerTransparencyPage },
-  { route: "/barrierefreiheit/", render: accessibilityPage },
+  { route: "/impressum/", render: impressumPage, includeInSitemap: false },
+  { route: "/cookies/", render: cookiesPage, includeInSitemap: false },
+  { route: "/datenschutz/", render: privacyPage, includeInSitemap: false },
+  { route: "/datenschutzformular-app/", render: appPrivacyPage, includeInSitemap: false },
+  { route: "/werbung-partnerlinks/", render: partnerTransparencyPage, includeInSitemap: false },
+  { route: "/barrierefreiheit/", render: accessibilityPage, includeInSitemap: false },
   { route: "/kontakt/", render: contactPage }
 ];

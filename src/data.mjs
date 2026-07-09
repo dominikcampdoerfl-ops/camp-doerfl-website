@@ -4,6 +4,7 @@ export const site = {
   domain: "campdoerfl.de",
   url: "https://www.campdoerfl.de",
   email: "dominik@campdoerfl.de",
+  phone: "+4915561562648",
   instagram: "https://www.instagram.com/dominik.doerfl/",
   facebook: "https://www.facebook.com/dominik.dorfl/?locale=de_DE",
   linkedin: "https://de.linkedin.com/in/dominik-dörfl-328445211",

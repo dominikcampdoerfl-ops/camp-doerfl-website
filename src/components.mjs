@@ -1,6 +1,8 @@
 import { navItems, site, sponsors } from "./data.mjs";
 
 const brandLogoPath = "/assets/images/camp-doerfl-logo.png";
+const defaultRobotsContent = "index,follow,max-image-preview:large";
+const defaultSocialImage = "/assets/images/home-hero-stadium-wide.jpg";
 const socialPlatformIcons = {
   instagram: {
     label: "Instagram",
@@ -22,6 +24,10 @@ const socialPlatformIcons = {
 
 export function buttonLink(label, href, variant = "primary") {
   return `<a class="button button--${variant}" href="${href}"><span>${label}</span><span aria-hidden="true">&rarr;</span></a>`;
+}
+
+export function imageLoadingAttributes({ eager = false } = {}) {
+  return eager ? ' loading="eager" decoding="async" fetchpriority="high"' : ' loading="lazy" decoding="async"';
 }
 
 function brandLogo() {
@@ -87,6 +93,38 @@ export function socialButtonLabel(url, label) {
   if (!platform) return label;
 
   return `<span class="social-button-label">${socialIconImage(platform)}<span>${label}</span></span>`;
+}
+
+function normalizedAbsoluteUrl(pathOrUrl) {
+  if (!pathOrUrl) return `${site.url}${defaultSocialImage}`;
+  if (/^https?:\/\//.test(pathOrUrl)) return pathOrUrl;
+  return `${site.url}${pathOrUrl}`;
+}
+
+function htmlText(value = "") {
+  return String(value).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function breadcrumbSchema(path, pageName) {
+  if (path === "/") return null;
+
+  return {
+    "@type": "BreadcrumbList",
+    "@id": `${site.url}${path}#breadcrumb`,
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: site.url
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: pageName
+      }
+    ]
+  };
 }
 
 export function contactHref(topicSlug = "") {
@@ -232,7 +270,7 @@ export function sectionHeader({ eyebrow, title, text, align = "left", headingLev
 }
 
 export function hero({ eyebrow, title, lead, primary, secondary, stats = [], image = false, visual = "", className = "" }) {
-  const imageStyle = image ? ` style="--hero-image: url('/assets/images/camp-doerfl-hero.png')"` : "";
+  const imageStyle = image ? ` style="--hero-image: url('/assets/images/camp-doerfl-hero.jpg')"` : "";
   return `
     <section class="hero ${image ? "hero--image" : "hero--plain"} ${className}"${imageStyle}>
       <div class="hero__inner">
@@ -284,7 +322,7 @@ export function mediaProgramGrid(items) {
           (item) => `
             <a class="media-program-card" href="${item.href}" data-reveal>
               <div class="media-program-card__image ${item.imageMode ? `media-program-card__image--${item.imageMode}` : ""}">
-                <img src="${item.image}" alt="${item.title}"${item.imagePosition ? ` style="object-position: ${item.imagePosition};"` : ""}>
+                <img src="${item.image}" alt="${item.title}"${imageLoadingAttributes()}${item.imagePosition ? ` style="object-position: ${item.imagePosition};"` : ""}>
               </div>
               <div class="media-program-card__body">
                 <div class="media-program-card__top">
@@ -322,7 +360,7 @@ export function proofMosaic(items) {
           (item) => `
             <article class="proof-mosaic__card" data-reveal>
               <div class="proof-mosaic__image">
-                <img src="${item.image}" alt="${item.title}">
+                <img src="${item.image}" alt="${item.title}"${imageLoadingAttributes()}>
               </div>
               <div class="proof-mosaic__body">
                 <h3>${item.title}</h3>
@@ -344,7 +382,7 @@ export function devicePreviewGallery(items) {
           (item) => `
             <article class="device-preview-card" data-reveal>
               <div class="device-preview-card__frame">
-                <img src="${item.image}" alt="${item.alt || item.title}">
+                <img src="${item.image}" alt="${item.alt || item.title}"${imageLoadingAttributes()}>
               </div>
               <div class="device-preview-card__body">
                 ${item.detail ? `<span class="card-tag">${item.detail}</span>` : ""}
@@ -367,7 +405,7 @@ export function transformationGrid(items) {
           (item) => `
             <article class="transformation-card" data-reveal>
               <div class="transformation-card__image">
-                <img src="${item.image}" alt="${item.alt || item.title}">
+                <img src="${item.image}" alt="${item.alt || item.title}"${imageLoadingAttributes()}>
               </div>
               <div class="transformation-card__body">
                 ${item.detail ? `<span class="card-tag">${item.detail}</span>` : ""}
@@ -777,6 +815,13 @@ function navbar(activePath) {
 }
 
 function footer() {
+  const footerNavItems = [
+    ...navItems,
+    { label: "Executive Performance", href: "/executive-performance/" },
+    { label: "Über Dominik", href: "/ueber-dominik/" },
+    { label: "Erfolge im Team", href: "/erfolge-im-team/" }
+  ];
+
   return `
     <footer class="site-footer">
       <div class="section-shell footer-grid">
@@ -789,7 +834,7 @@ function footer() {
         </div>
         <div>
           <h2>Navigation</h2>
-          ${navItems.map((item) => `<a href="${item.href}">${item.label}</a>`).join("")}
+          ${footerNavItems.map((item) => `<a href="${item.href}">${item.label}</a>`).join("")}
         </div>
         <div>
           <h2>Kontakt</h2>
@@ -880,26 +925,73 @@ function consentManager() {
   `;
 }
 
-export function layout({ title, description, path, keywords = [], content, bodyClass = "" }) {
+export function layout({
+  title,
+  description,
+  path,
+  keywords = [],
+  content,
+  bodyClass = "",
+  robots = defaultRobotsContent,
+  pageName = "",
+  pageType = "WebPage",
+  socialImage = defaultSocialImage,
+  socialImageAlt = "Camp Dörfl Performance System in Nürnberg",
+  extraStructuredData = []
+}) {
   const canonicalPath = path === "/" ? "/" : path;
   const canonical = `${site.url}${canonicalPath}`;
-  const allKeywords = [...site.keywords, ...keywords].join(", ");
+  const allKeywords = (keywords.length ? keywords : site.keywords).join(", ");
   const sameAs = socialProfileUrls();
+  const resolvedPageName = htmlText(pageName || title.split("|")[0].trim()) || site.name;
+  const resolvedSocialImage = normalizedAbsoluteUrl(socialImage);
+  const breadcrumb = breadcrumbSchema(canonicalPath, resolvedPageName);
+  const organizationId = `${site.url}/#organization`;
+  const businessId = `${site.url}/#business`;
+  const personId = `${site.url}/#person`;
+  const websiteId = `${site.url}/#website`;
+  const webpageId = `${canonical}#webpage`;
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": ["ProfessionalService", "SportsActivityLocation"],
-        "@id": `${site.url}/#business`,
+        "@type": "Organization",
+        "@id": organizationId,
+        name: site.name,
+        alternateName: "Camp Dörfl – Personal Trainer Nürnberg",
+        url: site.url,
+        logo: normalizedAbsoluteUrl(brandLogoPath),
+        image: resolvedSocialImage,
+        email: site.email,
+        telephone: site.phone,
+        founder: { "@type": "Person", "@id": personId },
+        sameAs,
+        contactPoint: [
+          {
+            "@type": "ContactPoint",
+            contactType: "customer support",
+            email: site.email,
+            telephone: site.phone,
+            availableLanguage: ["de", "en"],
+            areaServed: "DE"
+          }
+        ]
+      },
+      {
+        "@type": ["LocalBusiness", "ProfessionalService", "SportsActivityLocation"],
+        "@id": businessId,
         name: site.name,
         alternateName: "Camp Dörfl – Personal Trainer Nürnberg",
         description,
-        url: `${site.url}/`,
+        url: site.url,
         email: site.email,
-        image: `${site.url}/assets/images/home-hero-stadium-wide.png`,
+        telephone: site.phone,
+        logo: normalizedAbsoluteUrl(brandLogoPath),
+        image: resolvedSocialImage,
         priceRange: "€€€",
         currenciesAccepted: "EUR",
-        founder: { "@type": "Person", name: site.ownerName },
+        founder: { "@id": personId },
+        parentOrganization: { "@id": organizationId },
         sameAs,
         areaServed: [
           { "@type": "City", name: "Nürnberg" },
@@ -936,11 +1028,11 @@ export function layout({ title, description, path, keywords = [], content, bodyC
       },
       {
         "@type": "Person",
+        "@id": personId,
         name: site.ownerName,
         jobTitle: "Personal Trainer, Coach und Moderator",
         worksFor: {
-          "@type": "Organization",
-          name: site.name
+          "@id": organizationId
         },
         sameAs,
         address: {
@@ -953,9 +1045,29 @@ export function layout({ title, description, path, keywords = [], content, bodyC
       },
       {
         "@type": "WebSite",
+        "@id": websiteId,
         name: site.name,
-        url: site.url
-      }
+        url: site.url,
+        inLanguage: "de-DE",
+        publisher: { "@id": organizationId }
+      },
+      {
+        "@type": pageType,
+        "@id": webpageId,
+        name: resolvedPageName,
+        url: canonical,
+        description,
+        inLanguage: "de-DE",
+        isPartOf: { "@id": websiteId },
+        about: { "@id": businessId },
+        primaryImageOfPage: {
+          "@type": "ImageObject",
+          url: resolvedSocialImage
+        },
+        ...(breadcrumb ? { breadcrumb: { "@id": breadcrumb["@id"] } } : {})
+      },
+      ...(breadcrumb ? [breadcrumb] : []),
+      ...extraStructuredData
     ]
   };
 
@@ -967,7 +1079,7 @@ export function layout({ title, description, path, keywords = [], content, bodyC
     <title>${title}</title>
     <meta name="description" content="${description}">
     <meta name="keywords" content="${allKeywords}">
-    <meta name="robots" content="index,follow,max-image-preview:large">
+    <meta name="robots" content="${robots}">
     <link rel="canonical" href="${canonical}">
     <meta property="og:title" content="${title}">
     <meta property="og:description" content="${description}">
@@ -975,15 +1087,15 @@ export function layout({ title, description, path, keywords = [], content, bodyC
     <meta property="og:locale" content="de_DE">
     <meta property="og:type" content="website">
     <meta property="og:url" content="${canonical}">
-    <meta property="og:image" content="${site.url}/assets/images/home-hero-stadium-wide.png">
-    <meta property="og:image:width" content="1774">
-    <meta property="og:image:height" content="887">
-    <meta property="og:image:alt" content="Dominik Dörfl als Ironman-Finisher im Stadion">
+    <meta property="og:image" content="${resolvedSocialImage}">
+    <meta property="og:image:alt" content="${socialImageAlt}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${title}">
     <meta name="twitter:description" content="${description}">
-    <meta name="twitter:image" content="${site.url}/assets/images/home-hero-stadium-wide.png">
+    <meta name="twitter:image" content="${resolvedSocialImage}">
+    <meta name="twitter:image:alt" content="${socialImageAlt}">
 	    <meta name="theme-color" content="#fbf7ef">
+	    <link rel="icon" href="${brandLogoPath}">
 	    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/camp-doerfl-logo.png">
 	    <link rel="stylesheet" href="/assets/styles.css">
 	    <link rel="stylesheet" href="/assets/mobile-overrides.css">

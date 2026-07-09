@@ -134,6 +134,65 @@ async function copyDeployableAssets(sourceDir, targetDir) {
   }
 }
 
+async function collectFiles(dir, predicate) {
+  const matches = [];
+
+  for (const entry of await readdir(dir, { withFileTypes: true })) {
+    const path = join(dir, entry.name);
+
+    if (entry.isDirectory()) {
+      matches.push(...(await collectFiles(path, predicate)));
+      continue;
+    }
+
+    if (entry.isFile() && predicate(path)) {
+      matches.push(path);
+    }
+  }
+
+  return matches;
+}
+
+async function collectReferencedAssetPaths(searchDir) {
+  const textFiles = await collectFiles(searchDir, (path) => /\.(?:html|css|js|xml|txt|json)$/i.test(path));
+  const assetPaths = new Set();
+
+  for (const filePath of textFiles) {
+    const content = await readFile(filePath, "utf8");
+
+    for (const match of content.matchAll(/\/assets\/[A-Za-z0-9._/-]+/g)) {
+      assetPaths.add(match[0].replace(/^\/+/, ""));
+    }
+  }
+
+  return [...assetPaths].sort();
+}
+
+async function copyReferencedAssets(assetPaths) {
+  for (const assetPath of assetPaths) {
+    const sourcePath = join(root, assetPath);
+    const targetPath = join(dist, assetPath);
+
+    if (await pathExists(targetPath)) {
+      continue;
+    }
+
+    if (!(await pathExists(sourcePath))) {
+      console.warn(`Referenced asset missing: ${assetPath}`);
+      continue;
+    }
+
+    const { size } = await stat(sourcePath);
+    if (size > maxCloudflareAssetBytes) {
+      console.warn(`Skipping referenced asset larger than 25 MiB for Cloudflare deploy: ${sourcePath}`);
+      continue;
+    }
+
+    await mkdir(dirname(targetPath), { recursive: true });
+    await copyFile(sourcePath, targetPath);
+  }
+}
+
 async function pathExists(path) {
   return Boolean(await stat(path).catch(() => null));
 }
@@ -148,11 +207,11 @@ export async function buildSite() {
 
   await rm(dist, { recursive: true, force: true });
   await mkdir(dist, { recursive: true });
-  await copyDeployableAssets(join(root, "assets"), join(dist, "assets"));
   const publicDir = join(root, "public");
   if (await pathExists(publicDir)) {
     await copyDeployableAssets(publicDir, dist);
   }
+  await mkdir(join(dist, "assets"), { recursive: true });
   await copyFile(join(root, "src", "styles.css"), join(dist, "assets", "styles.css"));
   await copyFile(join(root, "src", "mobile-overrides.css"), join(dist, "assets", "mobile-overrides.css"));
   await copyFile(join(root, "src", "main.js"), join(dist, "assets", "main.js"));
@@ -163,9 +222,11 @@ export async function buildSite() {
     await writeFile(join(outputDir, "index.html"), page.render(), "utf8");
   }
 
+  const sitemapPages = pages.filter((page) => page.includeInSitemap !== false);
+
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${pages
+${sitemapPages
     .map(
       (page) => `  <url>
     <loc>${site.url}${page.route}</loc>
@@ -202,6 +263,9 @@ Canonical: ${site.url}/.well-known/security.txt
 
   await mkdir(join(dist, ".openai"), { recursive: true });
   await writeFile(join(dist, ".openai", "hosting.json"), `${JSON.stringify(runtimeHostingConfig, null, 2)}\n`, "utf8");
+
+  const referencedAssets = await collectReferencedAssetPaths(dist);
+  await copyReferencedAssets(referencedAssets);
 
   const serverDir = join(dist, "server");
   const serverPublicDir = join(serverDir, "public");
