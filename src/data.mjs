@@ -4,7 +4,11 @@ export const site = {
   domain: "campdoerfl.de",
   url: "https://www.campdoerfl.de",
   email: "dominik@campdoerfl.de",
+  phone: "+4915561562648",
   instagram: "https://www.instagram.com/dominik.doerfl/",
+  facebook: "https://www.facebook.com/dominik.dorfl/?locale=de_DE",
+  linkedin: "https://de.linkedin.com/in/dominik-dörfl-328445211",
+  spotify: "https://open.spotify.com/show/4J0iYTYCdGDuhwkLsXxNo8",
   location: "Nürnberg",
   streetAddress: "Kraftshofer Hauptstraße 154",
   postalCode: "90427",
@@ -40,41 +44,6 @@ export const navItems = [
   { label: "Partner", href: "/partner/" },
   { label: "Camp Dörfl App", href: "/app/" },
   { label: "Kontakt", href: "/kontakt/" }
-];
-
-export const offers = [
-  {
-    title: "Camp Dörfl App",
-    tag: "Digitales System",
-    text:
-      "Training, Ernährung, Health, Check-ins, Community und Fortschritt in einem Betriebssystem für echte Umsetzung.",
-    href: "/app/",
-    meta: "App · Score · Community"
-  },
-  {
-    title: "Executive Performance",
-    tag: "Premium Coaching",
-    text:
-      "12 Wochen für ambitionierte Menschen, die beruflich viel leisten und körperlich wieder klarer, fitter und leistungsfähiger werden wollen.",
-    href: "/executive-performance/",
-    meta: "12 Wochen · wenige Plätze"
-  },
-  {
-    title: "Firmen Performance Check",
-    tag: "B2B Gesundheitstag",
-    text:
-      "InBody-Messungen, Kurzvortrag, individuelle Auswertung und konkrete Handlungsempfehlungen für moderne Unternehmen.",
-    href: "/firmen-performance-check/",
-    meta: "Daten · Energie · Bindung"
-  },
-  {
-    title: "Puzzle Gym Community",
-    tag: "Nürnberg Hub",
-    text:
-      "Der physische Performance-Hub für Krafttraining, Bodybuilding, Hyrox, Kurse, Events und Community in Nürnberg.",
-    href: "/puzzle-gym/",
-    meta: "Gym · Events · Challenges"
-  }
 ];
 
 export const appFeatures = [
@@ -186,12 +155,12 @@ export const appFunctionRows = [
     text: "Der Member Bereich bündelt Trainingsplanung und Ernährungsplanung, damit du nicht zwischen Tools und Notizen springen musst."
   },
   {
-    title: "Mahlzeiten- und Speisekarten-Scan",
-    text: "Ob Restaurant oder Alltag: Essen wird schneller erfassbar, ohne dass du jedes Detail händisch eingeben musst."
+    title: "Lebensmittel Truth Score",
+    text: "Der Lebensmittel Truth Score deckt Marketing-Fallen auf: Du fotografierst ein Produkt und bekommst eine ehrliche Einordnung, wie viel Marketing wirklich drinsteckt, was das Produkt tatsächlich ist und welche sinnvollere Alternative infrage kommt."
   },
   {
-    title: "Barcode-Scan",
-    text: "Lebensmittel können direkt gescannt und einfacher in die Ernährungslogik eingebunden werden."
+    title: "Barcode, Speisekarten & Live Scan",
+    text: "Barcode, Speisekarten und Live-Scans holen Ernährung schneller in den Alltag und machen Erfassung deutlich einfacher."
   },
   {
     title: "Clubs und GPS-Routen",

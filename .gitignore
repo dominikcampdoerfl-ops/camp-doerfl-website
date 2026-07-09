@@ -1,2 +1,6 @@
 dist/
+.wrangler/
 .DS_Store
+
+# 200-MB-Video: über GitHub- (100 MB) und Cloudflare-Limit (25 MB), wird nirgends referenziert
+assets/videos/events-wir-bewegen-bayern.mp4

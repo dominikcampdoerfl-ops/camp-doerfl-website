@@ -1,6 +1,8 @@
 import { navItems, site, sponsors } from "./data.mjs";
 
 const brandLogoPath = "/assets/images/camp-doerfl-logo.png";
+const defaultRobotsContent = "index,follow,max-image-preview:large";
+const defaultSocialImage = "/assets/images/home-hero-stadium-wide.jpg";
 const socialPlatformIcons = {
   instagram: {
     label: "Instagram",
@@ -13,6 +15,10 @@ const socialPlatformIcons = {
   linkedin: {
     label: "LinkedIn",
     src: "/assets/images/social-linkedin.svg"
+  },
+  spotify: {
+    label: "Spotify",
+    src: "/assets/images/social-spotify.png"
   }
 };
 
@@ -20,8 +26,12 @@ export function buttonLink(label, href, variant = "primary") {
   return `<a class="button button--${variant}" href="${href}"><span>${label}</span><span aria-hidden="true">&rarr;</span></a>`;
 }
 
+export function imageLoadingAttributes({ eager = false } = {}) {
+  return eager ? ' loading="eager" decoding="async" fetchpriority="high"' : ' loading="lazy" decoding="async"';
+}
+
 function brandLogo() {
-  return `<span class="brand__mark"><img class="brand__logo" src="${brandLogoPath}" alt=""></span>`;
+  return `<span class="brand__mark"><img class="brand__logo" src="${brandLogoPath}" alt="Camp Dörfl Logo"></span>`;
 }
 
 function socialPlatformFromUrl(url = "") {
@@ -30,12 +40,13 @@ function socialPlatformFromUrl(url = "") {
   if (normalized.includes("instagram.com")) return "instagram";
   if (normalized.includes("facebook.com") || normalized.includes("fb.com")) return "facebook";
   if (normalized.includes("linkedin.com")) return "linkedin";
+  if (normalized.includes("spotify.com")) return "spotify";
 
   return null;
 }
 
 function socialProfileUrls() {
-  return [site.instagram, site.facebook, site.linkedin].filter(Boolean);
+  return [site.instagram, site.facebook, site.linkedin, site.spotify].filter(Boolean);
 }
 
 function socialIconImage(platform) {
@@ -43,7 +54,7 @@ function socialIconImage(platform) {
 
   if (!icon) return "";
 
-  return `<img class="social-link__icon" src="${icon.src}" alt="" aria-hidden="true">`;
+  return `<img class="social-link__icon" src="${icon.src}" alt="${icon.label} Icon">`;
 }
 
 export function socialIconLink(url, { className = "", label, iconOnly = true } = {}) {
@@ -84,12 +95,51 @@ export function socialButtonLabel(url, label) {
   return `<span class="social-button-label">${socialIconImage(platform)}<span>${label}</span></span>`;
 }
 
+function normalizedAbsoluteUrl(pathOrUrl) {
+  if (!pathOrUrl) return `${site.url}${defaultSocialImage}`;
+  if (/^https?:\/\//.test(pathOrUrl)) return pathOrUrl;
+  return `${site.url}${pathOrUrl}`;
+}
+
+function htmlText(value = "") {
+  return String(value).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function breadcrumbSchema(path, pageName) {
+  if (path === "/") return null;
+
+  return {
+    "@type": "BreadcrumbList",
+    "@id": `${site.url}${path}#breadcrumb`,
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: site.url
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: pageName
+      }
+    ]
+  };
+}
+
 export function contactHref(topicSlug = "") {
   return topicSlug ? `/kontakt/?topic=${encodeURIComponent(topicSlug)}#kontaktformular` : "/kontakt/#kontaktformular";
 }
 
 function uiIcon(name) {
   const icons = {
+    home: `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4.5 10.5 12 4l7.5 6.5"></path>
+        <path d="M7.5 9.5V19h9V9.5"></path>
+        <path d="M10 19v-5h4v5"></path>
+      </svg>
+    `,
     app: `
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <rect x="6" y="3.5" width="12" height="17" rx="3"></rect>
@@ -125,13 +175,37 @@ function uiIcon(name) {
         <path d="M15 14.5h2"></path>
       </svg>
     `,
+    team: `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"></path>
+        <path d="M16 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"></path>
+        <path d="M3.5 19a5.2 5.2 0 0 1 9 0"></path>
+        <path d="M11.5 19a5.2 5.2 0 0 1 9 0"></path>
+      </svg>
+    `,
     events: `
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M6 18V8.5a6 6 0 0 1 12 0V18"></path>
-        <path d="M4 18h16"></path>
-        <path d="M12 18v2.5"></path>
-        <path d="M9 20.5h6"></path>
-        <path d="M9.5 6.5h5"></path>
+        <rect x="4.5" y="6.5" width="15" height="13" rx="2.5"></rect>
+        <path d="M8 4v4"></path>
+        <path d="M16 4v4"></path>
+        <path d="M4.5 10h15"></path>
+        <path d="M8.5 13.5h2"></path>
+        <path d="M13.5 13.5h2"></path>
+      </svg>
+    `,
+    partner: `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M8.5 12.5 5 9a2.8 2.8 0 0 1 4-4l3.5 3.5"></path>
+        <path d="M15.5 11.5 19 15a2.8 2.8 0 1 1-4 4l-3.5-3.5"></path>
+        <path d="m10 14 4-4"></path>
+        <path d="m8.5 15.5 2 2"></path>
+        <path d="m13.5 8.5 2 2"></path>
+      </svg>
+    `,
+    contact: `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3.5" y="5.5" width="17" height="13" rx="2.5"></rect>
+        <path d="m5 7 7 5 7-5"></path>
       </svg>
     `,
     member: `
@@ -173,6 +247,17 @@ function uiIcon(name) {
   return `<span class="program-icon">${icons[name] || icons.app}</span>`;
 }
 
+function navIconForHref(href) {
+  if (href === "/") return "home";
+  if (href === "/events/") return "events";
+  if (href === "/firmenfitness/") return "team";
+  if (href === "/personal-coaching/") return "trainer";
+  if (href === "/partner/") return "partner";
+  if (href === "/app/") return "app";
+  if (href === "/kontakt/") return "contact";
+  return "app";
+}
+
 export function sectionHeader({ eyebrow, title, text, align = "left", headingLevel = 2 }) {
   const headingTag = headingLevel === 1 ? "h1" : "h2";
   return `
@@ -185,7 +270,7 @@ export function sectionHeader({ eyebrow, title, text, align = "left", headingLev
 }
 
 export function hero({ eyebrow, title, lead, primary, secondary, stats = [], image = false, visual = "", className = "" }) {
-  const imageStyle = image ? ` style="--hero-image: url('/assets/images/camp-doerfl-hero.png')"` : "";
+  const imageStyle = image ? ` style="--hero-image: url('/assets/images/camp-doerfl-hero.jpg')"` : "";
   return `
     <section class="hero ${image ? "hero--image" : "hero--plain"} ${className}"${imageStyle}>
       <div class="hero__inner">
@@ -201,7 +286,7 @@ export function hero({ eyebrow, title, lead, primary, secondary, stats = [], ima
           ${
             stats.length
               ? `<div class="hero__stats">${stats
-                  .map((stat) => `<div><strong>${stat.value}</strong><span>${stat.label}</span></div>`)
+                  .map((stat) => `<div><span class="hero__stat-value">${stat.value}</span><span>${stat.label}</span></div>`)
                   .join("")}</div>`
               : ""
           }
@@ -212,25 +297,6 @@ export function hero({ eyebrow, title, lead, primary, secondary, stats = [], ima
   `;
 }
 
-export function offerCards(items) {
-  return `
-    <div class="card-grid card-grid--offers">
-      ${items
-        .map(
-          (item) => `
-            <a class="offer-card" href="${item.href}" data-reveal>
-              <span class="card-tag">${item.tag}</span>
-              <h3>${item.title}</h3>
-              <p>${item.text}</p>
-              <span class="card-meta">${item.meta}</span>
-            </a>
-          `
-        )
-        .join("")}
-    </div>
-  `;
-}
-
 export function statStrip(items) {
   return `
     <div class="landing-stat-strip">
@@ -238,7 +304,7 @@ export function statStrip(items) {
         .map(
           (item) => `
             <article class="landing-stat" data-reveal>
-              <strong>${item.value}</strong>
+              <span class="landing-stat__value">${item.value}</span>
               <span>${item.label}</span>
             </article>
           `
@@ -256,7 +322,7 @@ export function mediaProgramGrid(items) {
           (item) => `
             <a class="media-program-card" href="${item.href}" data-reveal>
               <div class="media-program-card__image ${item.imageMode ? `media-program-card__image--${item.imageMode}` : ""}">
-                <img src="${item.image}" alt="${item.title}"${item.imagePosition ? ` style="object-position: ${item.imagePosition};"` : ""}>
+                <img src="${item.image}" alt="${item.title}"${imageLoadingAttributes()}${item.imagePosition ? ` style="object-position: ${item.imagePosition};"` : ""}>
               </div>
               <div class="media-program-card__body">
                 <div class="media-program-card__top">
@@ -264,7 +330,7 @@ export function mediaProgramGrid(items) {
                   ${item.icon ? uiIcon(item.icon) : ""}
                 </div>
                 <h3>${item.title}</h3>
-                <strong>${item.meta}</strong>
+                <span class="media-program-card__meta">${item.meta}</span>
                 <p>${item.text}</p>
                 ${
                   item.highlights?.length
@@ -294,7 +360,7 @@ export function proofMosaic(items) {
           (item) => `
             <article class="proof-mosaic__card" data-reveal>
               <div class="proof-mosaic__image">
-                <img src="${item.image}" alt="${item.title}">
+                <img src="${item.image}" alt="${item.title}"${imageLoadingAttributes()}>
               </div>
               <div class="proof-mosaic__body">
                 <h3>${item.title}</h3>
@@ -316,7 +382,7 @@ export function devicePreviewGallery(items) {
           (item) => `
             <article class="device-preview-card" data-reveal>
               <div class="device-preview-card__frame">
-                <img src="${item.image}" alt="${item.alt || item.title}">
+                <img src="${item.image}" alt="${item.alt || item.title}"${imageLoadingAttributes()}>
               </div>
               <div class="device-preview-card__body">
                 ${item.detail ? `<span class="card-tag">${item.detail}</span>` : ""}
@@ -339,7 +405,7 @@ export function transformationGrid(items) {
           (item) => `
             <article class="transformation-card" data-reveal>
               <div class="transformation-card__image">
-                <img src="${item.image}" alt="${item.alt || item.title}">
+                <img src="${item.image}" alt="${item.alt || item.title}"${imageLoadingAttributes()}>
               </div>
               <div class="transformation-card__body">
                 ${item.detail ? `<span class="card-tag">${item.detail}</span>` : ""}
@@ -418,7 +484,7 @@ export function achievementGrid(items) {
         .map(
           (item) => `
             <div class="stat-card" data-reveal>
-              <strong>${item.value}</strong>
+              <span class="stat-card__value">${item.value}</span>
               <span>${item.label}</span>
             </div>
           `
@@ -542,7 +608,7 @@ export function sponsorStrip() {
       <div class="section-shell sponsor-strip__inner">
         <span>Ökosystem und Partner</span>
         <div>
-          ${sponsors.map((sponsor) => `<strong>${sponsor}</strong>`).join("")}
+          ${sponsors.map((sponsor) => `<span class="sponsor-strip__name">${sponsor}</span>`).join("")}
         </div>
       </div>
     </section>
@@ -555,12 +621,12 @@ export function appVisual() {
       <div class="app-visual__phone">
         <div class="app-visual__topbar">
           <span>Camp Score</span>
-          <strong>84</strong>
+          <span class="app-visual__score-value">84</span>
         </div>
         <div class="score-ring" aria-hidden="true"><span>84</span></div>
-        <div class="metric-row"><span>Training</span><strong>4/5</strong></div>
-        <div class="metric-row"><span>Ernährung</span><strong>91%</strong></div>
-        <div class="metric-row"><span>Schlaf</span><strong>7:22h</strong></div>
+        <div class="metric-row"><span>Training</span><span class="metric-row__value">4/5</span></div>
+        <div class="metric-row"><span>Ernährung</span><span class="metric-row__value">91%</span></div>
+        <div class="metric-row"><span>Schlaf</span><span class="metric-row__value">7:22h</span></div>
         <div class="route-line" aria-hidden="true"></div>
         <div class="app-visual__nav">
           <span></span><span></span><span></span><span></span>
@@ -691,7 +757,18 @@ function navbar(activePath) {
   const appItem = navItems.find((item) => item.href === "/app/");
   const contactItem = navItems.find((item) => item.href === "/kontakt/");
   const navSocials = socialProfileUrls();
-  const socialMarkup = navSocials.length ? socialIconLinks(navSocials, { className: "social-link--chip social-link--nav" }) : "";
+  const desktopSocialMarkup = navSocials.length ? socialIconLinks(navSocials, { className: "social-link--chip social-link--nav" }) : "";
+  const mobileSocialMarkup = navSocials.length ? socialIconLinks(navSocials, { className: "social-link--chip social-link--nav-menu" }) : "";
+  const mobileNavItems = [...primaryNavItems, ...(appItem ? [appItem] : []), ...(contactItem ? [contactItem] : [])];
+  const renderMobileNavItem = (item) => `
+    <a class="site-nav__entry${activePath === item.href ? " is-active" : ""}" href="${item.href}" ${activePath === item.href ? 'aria-current="page"' : ""}>
+      <span class="site-nav__entry-main">
+        <span class="site-nav__entry-icon">${uiIcon(navIconForHref(item.href))}</span>
+        <span class="site-nav__entry-label">${item.label}</span>
+      </span>
+      <span class="site-nav__entry-arrow" aria-hidden="true">&rsaquo;</span>
+    </a>
+  `;
 
   return `
     <header class="site-header" data-site-header>
@@ -699,34 +776,33 @@ function navbar(activePath) {
       <div class="nav-shell">
         <a class="brand" href="/" aria-label="Camp Dörfl Startseite">
           ${brandLogo()}
-          <span><strong>Camp Dörfl</strong><small>Performance System</small></span>
+          <span><span class="brand__name">Camp Dörfl</span><small>Performance System</small></span>
         </a>
         <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">
           <span></span><span></span><span></span>
-          <b>Menü</b>
+          <span class="nav-toggle__label">Menü</span>
         </button>
         <nav class="site-nav" id="site-nav" data-site-nav>
-          ${primaryNavItems
-            .map(
-              (item) => `
-                <a href="${item.href}" ${activePath === item.href ? 'aria-current="page"' : ""}>${item.label}</a>
-              `
-            )
-            .join("")}
-          ${
-            appItem
-              ? `<a class="site-nav__contact" href="${appItem.href}" ${activePath === appItem.href ? 'aria-current="page"' : ""}>${appItem.label}</a>`
-              : ""
-          }
-          ${
-            contactItem
-              ? `<a class="site-nav__contact" href="${contactItem.href}" ${activePath === contactItem.href ? 'aria-current="page"' : ""}>${contactItem.label}</a>`
-              : ""
-          }
-          ${socialMarkup ? `<div class="site-nav__socials" role="group" aria-label="Social Media">${socialMarkup}</div>` : ""}
+          <div class="site-nav__overlay">
+            <div class="site-nav__brand-block" aria-hidden="true">
+              <span class="site-nav__brand-mark">${brandLogo()}</span>
+              <span class="site-nav__brand-copy"><span class="site-nav__brand-name">Camp Dörfl</span><small>Performance System</small></span>
+            </div>
+            <div class="site-nav__list">
+              ${mobileNavItems.map((item) => renderMobileNavItem(item)).join("")}
+            </div>
+            ${
+              mobileSocialMarkup
+                ? `<div class="site-nav__footer">
+                     <p class="site-nav__social-title">Folge uns</p>
+                     <div class="site-nav__socials" role="group" aria-label="Social Media">${mobileSocialMarkup}</div>
+                   </div>`
+                : ""
+            }
+          </div>
         </nav>
         <div class="nav-extras">
-          ${socialMarkup ? `<div class="nav-socials" role="group" aria-label="Social Media">${socialMarkup}</div>` : ""}
+          ${desktopSocialMarkup ? `<div class="nav-socials" role="group" aria-label="Social Media">${desktopSocialMarkup}</div>` : ""}
           ${
             appItem
               ? `<a class="nav-cta${activePath === appItem.href ? " is-active" : ""}" href="${appItem.href}"><span>${appItem.label}</span><span aria-hidden="true">&rarr;</span></a>`
@@ -739,19 +815,26 @@ function navbar(activePath) {
 }
 
 function footer() {
+  const footerNavItems = [
+    ...navItems,
+    { label: "Executive Performance", href: "/executive-performance/" },
+    { label: "Über Dominik", href: "/ueber-dominik/" },
+    { label: "Erfolge im Team", href: "/erfolge-im-team/" }
+  ];
+
   return `
     <footer class="site-footer">
       <div class="section-shell footer-grid">
         <div>
           <a class="brand brand--footer" href="/">
             ${brandLogo()}
-            <span><strong>Camp Dörfl</strong><small>Performance System</small></span>
+            <span><span class="brand__name">Camp Dörfl</span><small>Performance System</small></span>
           </a>
           <p>Performance System für Personal Training, Premium Personal Training, Firmenfitness, Events und die Camp Dörfl App.</p>
         </div>
         <div>
           <h2>Navigation</h2>
-          ${navItems.map((item) => `<a href="${item.href}">${item.label}</a>`).join("")}
+          ${footerNavItems.map((item) => `<a href="${item.href}">${item.label}</a>`).join("")}
         </div>
         <div>
           <h2>Kontakt</h2>
@@ -768,6 +851,7 @@ function footer() {
           <a href="/cookies/">Cookies</a>
           <a href="/werbung-partnerlinks/">Partnerlinks & Werbung</a>
           <a href="/barrierefreiheit/">Barrierefreiheit</a>
+          <a href="/datenschutzformular-app/">Datenschutzformular App</a>
           <button class="footer-link-button" type="button" data-open-consent>Cookie-Einstellungen</button>
           <span>Performance für Training, Ernährung, Gesundheit und Community.</span>
         </div>
@@ -841,30 +925,99 @@ function consentManager() {
   `;
 }
 
-export function layout({ title, description, path, keywords = [], content, bodyClass = "" }) {
+export function layout({
+  title,
+  description,
+  path,
+  keywords = [],
+  content,
+  bodyClass = "",
+  robots = defaultRobotsContent,
+  pageName = "",
+  pageType = "WebPage",
+  socialImage = defaultSocialImage,
+  socialImageAlt = "Camp Dörfl Performance System in Nürnberg",
+  extraStructuredData = []
+}) {
   const canonicalPath = path === "/" ? "/" : path;
   const canonical = `${site.url}${canonicalPath}`;
-  const allKeywords = [...site.keywords, ...keywords].join(", ");
+  const allKeywords = (keywords.length ? keywords : site.keywords).join(", ");
   const sameAs = socialProfileUrls();
+  const resolvedPageName = htmlText(pageName || title.split("|")[0].trim()) || site.name;
+  const resolvedSocialImage = normalizedAbsoluteUrl(socialImage);
+  const breadcrumb = breadcrumbSchema(canonicalPath, resolvedPageName);
+  const organizationId = `${site.url}/#organization`;
+  const businessId = `${site.url}/#business`;
+  const personId = `${site.url}/#person`;
+  const websiteId = `${site.url}/#website`;
+  const webpageId = `${canonical}#webpage`;
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "ProfessionalService",
+        "@type": "Organization",
+        "@id": organizationId,
         name: site.name,
-        description,
-        url: canonical,
+        alternateName: "Camp Dörfl – Personal Trainer Nürnberg",
+        url: site.url,
+        logo: normalizedAbsoluteUrl(brandLogoPath),
+        image: resolvedSocialImage,
         email: site.email,
+        telephone: site.phone,
+        founder: { "@type": "Person", "@id": personId },
         sameAs,
-        areaServed: "Nürnberg",
+        contactPoint: [
+          {
+            "@type": "ContactPoint",
+            contactType: "customer support",
+            email: site.email,
+            telephone: site.phone,
+            availableLanguage: ["de", "en"],
+            areaServed: "DE"
+          }
+        ]
+      },
+      {
+        "@type": ["LocalBusiness", "ProfessionalService", "SportsActivityLocation"],
+        "@id": businessId,
+        name: site.name,
+        alternateName: "Camp Dörfl – Personal Trainer Nürnberg",
+        description,
+        url: site.url,
+        email: site.email,
+        telephone: site.phone,
+        logo: normalizedAbsoluteUrl(brandLogoPath),
+        image: resolvedSocialImage,
+        priceRange: "€€€",
+        currenciesAccepted: "EUR",
+        founder: { "@id": personId },
+        parentOrganization: { "@id": organizationId },
+        sameAs,
+        areaServed: [
+          { "@type": "City", name: "Nürnberg" },
+          { "@type": "City", name: "Fürth" },
+          { "@type": "City", name: "Erlangen" }
+        ],
         address: {
           "@type": "PostalAddress",
           streetAddress: site.streetAddress,
           postalCode: site.postalCode,
           addressLocality: site.city,
+          addressRegion: "Bayern",
           addressCountry: "DE"
         },
-        serviceType: ["Personal Training", "Premium Personal Training", "Firmenfitness", "Event Moderation"],
+        geo: {
+          "@type": "GeoCoordinates",
+          latitude: 49.4884,
+          longitude: 11.0231
+        },
+        serviceType: [
+          "Personal Trainer Nürnberg",
+          "Personal Training",
+          "Premium Personal Training",
+          "Firmenfitness",
+          "Event Moderation"
+        ],
         knowsAbout: [
           "Personal Trainer Nürnberg",
           "Premium Personal Training Nürnberg",
@@ -875,11 +1028,11 @@ export function layout({ title, description, path, keywords = [], content, bodyC
       },
       {
         "@type": "Person",
+        "@id": personId,
         name: site.ownerName,
         jobTitle: "Personal Trainer, Coach und Moderator",
         worksFor: {
-          "@type": "Organization",
-          name: site.name
+          "@id": organizationId
         },
         sameAs,
         address: {
@@ -892,9 +1045,29 @@ export function layout({ title, description, path, keywords = [], content, bodyC
       },
       {
         "@type": "WebSite",
+        "@id": websiteId,
         name: site.name,
-        url: site.url
-      }
+        url: site.url,
+        inLanguage: "de-DE",
+        publisher: { "@id": organizationId }
+      },
+      {
+        "@type": pageType,
+        "@id": webpageId,
+        name: resolvedPageName,
+        url: canonical,
+        description,
+        inLanguage: "de-DE",
+        isPartOf: { "@id": websiteId },
+        about: { "@id": businessId },
+        primaryImageOfPage: {
+          "@type": "ImageObject",
+          url: resolvedSocialImage
+        },
+        ...(breadcrumb ? { breadcrumb: { "@id": breadcrumb["@id"] } } : {})
+      },
+      ...(breadcrumb ? [breadcrumb] : []),
+      ...extraStructuredData
     ]
   };
 
@@ -906,7 +1079,7 @@ export function layout({ title, description, path, keywords = [], content, bodyC
     <title>${title}</title>
     <meta name="description" content="${description}">
     <meta name="keywords" content="${allKeywords}">
-    <meta name="robots" content="index,follow,max-image-preview:large">
+    <meta name="robots" content="${robots}">
     <link rel="canonical" href="${canonical}">
     <meta property="og:title" content="${title}">
     <meta property="og:description" content="${description}">
@@ -914,15 +1087,19 @@ export function layout({ title, description, path, keywords = [], content, bodyC
     <meta property="og:locale" content="de_DE">
     <meta property="og:type" content="website">
     <meta property="og:url" content="${canonical}">
-    <meta property="og:image" content="${site.url}/assets/images/camp-doerfl-hero.png">
+    <meta property="og:image" content="${resolvedSocialImage}">
+    <meta property="og:image:alt" content="${socialImageAlt}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${title}">
     <meta name="twitter:description" content="${description}">
-    <meta name="twitter:image" content="${site.url}/assets/images/camp-doerfl-hero.png">
-    <meta name="theme-color" content="#fbf7ef">
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/camp-doerfl-logo.png">
-    <link rel="stylesheet" href="/assets/styles.css">
-    <script type="application/ld+json">${JSON.stringify(structuredData)}</script>
+    <meta name="twitter:image" content="${resolvedSocialImage}">
+    <meta name="twitter:image:alt" content="${socialImageAlt}">
+	    <meta name="theme-color" content="#fbf7ef">
+	    <link rel="icon" href="${brandLogoPath}">
+	    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/camp-doerfl-logo.png">
+	    <link rel="stylesheet" href="/assets/styles.css">
+	    <link rel="stylesheet" href="/assets/mobile-overrides.css">
+	    <script type="application/ld+json">${JSON.stringify(structuredData)}</script>
   </head>
   <body${bodyClass ? ` class="${bodyClass}"` : ""}>
     ${navbar(path)}

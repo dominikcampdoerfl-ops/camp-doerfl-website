@@ -6,6 +6,8 @@
   "scripts": {
     "build": "node src/build.mjs",
     "dev": "node src/dev.mjs",
-    "preview": "node src/server.mjs"
+    "preview": "node src/server.mjs",
+    "cf:deploy": "npm run build && npx wrangler deploy",
+    "cf:deploy:dry-run": "npm run build && npx wrangler deploy --dry-run"
   }
 }
