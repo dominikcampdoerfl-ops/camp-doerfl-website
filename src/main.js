@@ -2,12 +2,121 @@ const header = document.querySelector("[data-site-header]");
 const navToggle = document.querySelector("[data-nav-toggle]");
 const nav = document.querySelector("[data-site-nav]");
 
+const LANGUAGE_STORAGE_KEY = "campdoerfl-language";
+const requestedLanguage = new URLSearchParams(window.location.search).get("lang");
+const storedLanguage = (() => {
+  try {
+    return localStorage.getItem(LANGUAGE_STORAGE_KEY);
+  } catch {
+    return null;
+  }
+})();
+const selectedLanguage = requestedLanguage === "en" || (!requestedLanguage && storedLanguage === "en") ? "en" : "de";
+
+const setLanguageControls = (language) => {
+  document.querySelectorAll("[data-language]").forEach((button) => {
+    const isActive = button.dataset.language === language;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+};
+
+const setEnglishPageMetadata = () => {
+  document.documentElement.lang = "en";
+  document.documentElement.dataset.language = "en";
+  document.title = `${document.title} | English`;
+  document.querySelector('meta[property="og:locale"]')?.setAttribute("content", "en_US");
+};
+
+const translateText = async (texts) => {
+  const query = new URLSearchParams({ client: "gtx", sl: "de", tl: "en", dt: "t" });
+  texts.forEach((text) => query.append("q", text));
+  const response = await fetch(`https://translate.googleapis.com/translate_a/single?${query.toString()}`);
+  if (!response.ok) throw new Error("Translation request failed");
+
+  const data = await response.json();
+  return data[0].map((entry) => entry?.[0] || "");
+};
+
+const pageTextEntries = () => {
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      const parent = node.parentElement;
+      if (!parent || !node.nodeValue?.trim()) return NodeFilter.FILTER_REJECT;
+      if (parent.closest("script, style, svg, [translate='no'], .notranslate")) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  const entries = [];
+  let node;
+  while ((node = walker.nextNode())) entries.push({ node, text: node.nodeValue.trim() });
+
+  document.querySelectorAll("[alt], [placeholder], [aria-label], [title]").forEach((element) => {
+    if (element.closest("[translate='no'], .notranslate")) return;
+    ["alt", "placeholder", "aria-label", "title"].forEach((attribute) => {
+      const text = element.getAttribute(attribute)?.trim();
+      if (text && !/^(?:DE|EN)$/i.test(text)) entries.push({ element, attribute, text });
+    });
+  });
+  return entries;
+};
+
+const translatePageToEnglish = async () => {
+  const entries = pageTextEntries();
+  const batches = [];
+  let batch = [];
+  let batchLength = 0;
+
+  entries.forEach((entry) => {
+    const entryLength = encodeURIComponent(entry.text).length;
+    if (batch.length && (batch.length >= 18 || batchLength + entryLength > 5000)) {
+      batches.push(batch);
+      batch = [];
+      batchLength = 0;
+    }
+    batch.push(entry);
+    batchLength += entryLength;
+  });
+  if (batch.length) batches.push(batch);
+
+  for (const batch of batches) {
+    const translations = await translateText(batch.map((entry) => entry.text));
+    batch.forEach((entry, translation) => {
+      if (!translation) return;
+      if (entry.node) entry.node.nodeValue = entry.node.nodeValue.replace(entry.text, translation);
+      if (entry.element) entry.element.setAttribute(entry.attribute, translation);
+    });
+  }
+};
+
+setLanguageControls(selectedLanguage);
+document.querySelectorAll("[data-language]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const language = button.dataset.language === "en" ? "en" : "de";
+    try {
+      localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
+    } catch {}
+    const url = new URL(window.location.href);
+    if (language === "en") url.searchParams.set("lang", "en");
+    else url.searchParams.delete("lang");
+    window.location.assign(url);
+  });
+});
+
+if (selectedLanguage === "en") {
+  setEnglishPageMetadata();
+  translatePageToEnglish().catch(() => {
+    // Keep the original German content visible if the translation service is temporarily unavailable.
+  });
+}
+
 if (navToggle && nav) {
-  const navToggleLabel = navToggle.querySelector("b");
+  const navToggleLabel = navToggle.querySelector(".nav-toggle__label");
 
   const setNavState = (isOpen) => {
     navToggle.setAttribute("aria-expanded", String(isOpen));
-    navToggle.setAttribute("aria-label", isOpen ? "Navigation schließen" : "Navigation öffnen");
+    const isEnglish = selectedLanguage === "en";
+    navToggle.setAttribute("aria-label", isOpen ? (isEnglish ? "Close navigation" : "Navigation schließen") : isEnglish ? "Open navigation" : "Navigation öffnen");
     navToggle.classList.toggle("is-open", isOpen);
     nav.classList.toggle("is-open", isOpen);
     nav.setAttribute("aria-hidden", String(!isOpen));
@@ -17,7 +126,7 @@ if (navToggle && nav) {
     }
 
     if (navToggleLabel instanceof HTMLElement) {
-      navToggleLabel.textContent = isOpen ? "Schließen" : "Menü";
+      navToggleLabel.textContent = isOpen ? (isEnglish ? "Close" : "Schließen") : isEnglish ? "Menu" : "Menü";
     }
 
     document.body.classList.toggle("nav-open", isOpen);

@@ -769,6 +769,13 @@ function navbar(activePath) {
       <span class="site-nav__entry-arrow" aria-hidden="true">&rsaquo;</span>
     </a>
   `;
+  const languageSwitcher = (className = "") => `
+    <div class="language-switcher${className ? ` ${className}` : ""}" data-language-switcher translate="no" aria-label="Sprache auswählen">
+      <button class="language-switcher__button is-active" type="button" data-language="de" aria-pressed="true">DE</button>
+      <span aria-hidden="true">/</span>
+      <button class="language-switcher__button" type="button" data-language="en" aria-pressed="false">EN</button>
+    </div>
+  `;
 
   return `
     <header class="site-header" data-site-header>
@@ -782,6 +789,7 @@ function navbar(activePath) {
           <span></span><span></span><span></span>
           <span class="nav-toggle__label">Menü</span>
         </button>
+        ${languageSwitcher("language-switcher--mobile")}
         <nav class="site-nav" id="site-nav" data-site-nav>
           <div class="site-nav__overlay">
             <div class="site-nav__brand-block" aria-hidden="true">
@@ -802,6 +810,7 @@ function navbar(activePath) {
           </div>
         </nav>
         <div class="nav-extras">
+          ${languageSwitcher("language-switcher--desktop")}
           ${desktopSocialMarkup ? `<div class="nav-socials" role="group" aria-label="Social Media">${desktopSocialMarkup}</div>` : ""}
           ${
             appItem
