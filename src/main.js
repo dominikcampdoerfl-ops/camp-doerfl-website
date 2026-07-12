@@ -29,13 +29,30 @@ const setEnglishPageMetadata = () => {
 };
 
 const translateText = async (texts) => {
+  const separator = (index) => `[[[CAMPDOERFL_TRANSLATION_SPLIT_${index}]]]`;
+  const source = texts.map((text, index) => `${text}\n${separator(index)}`).join("\n");
   const query = new URLSearchParams({ client: "gtx", sl: "de", tl: "en", dt: "t" });
-  texts.forEach((text) => query.append("q", text));
+  query.append("q", source);
   const response = await fetch(`https://translate.googleapis.com/translate_a/single?${query.toString()}`);
   if (!response.ok) throw new Error("Translation request failed");
 
   const data = await response.json();
-  return data[0].map((entry) => entry?.[0] || "");
+  const translatedSource = data[0].map((entry) => entry?.[0] || "").join("");
+  const translations = [];
+  let remainder = translatedSource;
+
+  texts.forEach((_, index) => {
+    const marker = separator(index);
+    const markerIndex = remainder.indexOf(marker);
+    if (markerIndex === -1) {
+      translations.push("");
+      return;
+    }
+    translations.push(remainder.slice(0, markerIndex).trim());
+    remainder = remainder.slice(markerIndex + marker.length).trimStart();
+  });
+
+  return translations;
 };
 
 const pageTextEntries = () => {
@@ -69,7 +86,7 @@ const translatePageToEnglish = async () => {
 
   entries.forEach((entry) => {
     const entryLength = encodeURIComponent(entry.text).length;
-    if (batch.length && (batch.length >= 18 || batchLength + entryLength > 5000)) {
+    if (batch.length && (batch.length >= 18 || batchLength + entryLength > 4000)) {
       batches.push(batch);
       batch = [];
       batchLength = 0;

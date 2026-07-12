@@ -10424,6 +10424,11 @@ h1, h2, h3 {
   border-color: transparent;
 }
 .page-home-reboot .nav-cta:hover { background: var(--cd-gold-2); }
+.page-home-reboot .nav-socials .social-link-row,
+.page-premium .nav-socials .social-link-row {
+  display: flex;
+  flex-wrap: nowrap;
+}
 .page-home-reboot .nav-shell { background: transparent; }
 .page-home-reboot .nav-toggle {
   background: rgba(255, 255, 255, 0.12);

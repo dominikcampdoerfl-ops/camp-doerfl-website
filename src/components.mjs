@@ -812,11 +812,6 @@ function navbar(activePath) {
         <div class="nav-extras">
           ${languageSwitcher("language-switcher--desktop")}
           ${desktopSocialMarkup ? `<div class="nav-socials" role="group" aria-label="Social Media">${desktopSocialMarkup}</div>` : ""}
-          ${
-            appItem
-              ? `<a class="nav-cta${activePath === appItem.href ? " is-active" : ""}" href="${appItem.href}"><span>${appItem.label}</span><span aria-hidden="true">&rarr;</span></a>`
-              : ""
-          }
         </div>
       </div>
     </header>
