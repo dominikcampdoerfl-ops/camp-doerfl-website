@@ -98,7 +98,8 @@ const translatePageToEnglish = async () => {
 
   for (const batch of batches) {
     const translations = await translateText(batch.map((entry) => entry.text));
-    batch.forEach((entry, translation) => {
+    batch.forEach((entry, index) => {
+      const translation = translations[index];
       if (!translation) return;
       if (entry.node) entry.node.nodeValue = entry.node.nodeValue.replace(entry.text, translation);
       if (entry.element) entry.element.setAttribute(entry.attribute, translation);
