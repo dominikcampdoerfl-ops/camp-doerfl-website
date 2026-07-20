@@ -40,7 +40,7 @@ export const navItems = [
   { label: "Home", href: "/" },
   { label: "Events", href: "/events/" },
   { label: "Firmenfitness", href: "/firmenfitness/" },
-  { label: "Premium Personal Training", href: "/personal-coaching/" },
+  { label: "Personal Trainer Nürnberg", href: "/personal-coaching/" },
   { label: "Partner", href: "/partner/" },
   { label: "Camp Dörfl App", href: "/app/" },
   { label: "Kontakt", href: "/kontakt/" }
@@ -151,28 +151,34 @@ export const homeFunctionPillars = [
 
 export const appFunctionRows = [
   {
-    title: "Trainings- und Ernährungsplanung",
-    text: "Der Member Bereich bündelt Trainingsplanung und Ernährungsplanung, damit du nicht zwischen Tools und Notizen springen musst."
+    icon: "training",
+    label: "Dein Plan",
+    title: "Training nach deinem Ziel"
   },
   {
-    title: "Lebensmittel Truth Score",
-    text: "Der Lebensmittel Truth Score deckt Marketing-Fallen auf: Du fotografierst ein Produkt und bekommst eine ehrliche Einordnung, wie viel Marketing wirklich drinsteckt, was das Produkt tatsächlich ist und welche sinnvollere Alternative infrage kommt."
+    icon: "nutrition",
+    label: "Smart Nutrition",
+    title: "Ernährung, die zu dir passt"
   },
   {
-    title: "Barcode, Speisekarten & Live Scan",
-    text: "Barcode, Speisekarten und Live-Scans holen Ernährung schneller in den Alltag und machen Erfassung deutlich einfacher."
+    icon: "tools",
+    label: "Scan & Track",
+    title: "Tools für deinen Alltag"
   },
   {
-    title: "Clubs und GPS-Routen",
-    text: "Running Club, Cycling Club, Streckenplanung und GPS-Routen verbinden App, Bewegung und Community."
+    icon: "club",
+    label: "Run · Ride · Connect",
+    title: "Performance Club"
   },
   {
-    title: "Aufzeichnung und Vergleich",
-    text: "Alle Einheiten werden dokumentiert und direkt vergleichbar, damit Entwicklung nachvollziehbar und steuerbar bleibt."
+    icon: "progress",
+    label: "Check · Adapt · Grow",
+    title: "Fortschritt & Coach"
   },
   {
-    title: "Score System und Goodies",
-    text: "Konsequenz wird sichtbar und belohnt: über das Camp Score System bis hin zu kostenlosen Goodies."
+    icon: "ai",
+    label: "KI × Expertise",
+    title: "Camp Dörfl Methode"
   }
 ];
 

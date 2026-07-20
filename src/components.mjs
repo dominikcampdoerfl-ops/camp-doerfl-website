@@ -511,6 +511,34 @@ export function summaryRows(items) {
   `;
 }
 
+const appFeatureIcons = {
+  training: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6m3-8v10m10-10v10m3-8v6M7 12h10"/><path d="M2 10v4h2v-4H2Zm3-3v10h2V7H5Zm12 0v10h2V7h-2Zm3 3v4h2v-4h-2Z"/></svg>`,
+  nutrition: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21c-4.1 0-7-2.8-7-6.7C5 10.5 7.8 8 11.5 8c4.1 0 7.5 2.8 7.5 6.7S16.1 21 12 21Z"/><path d="M12 8c.2-2.3 1.7-4 4-4M11 6c1.1-1.2 2.5-1.8 4.2-1.8"/></svg>`,
+  tools: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/><path d="M8 12h8M12 8v8"/></svg>`,
+  club: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="17" r="2"/><circle cx="18" cy="7" r="2"/><path d="M7.8 16c2.2-4.8 3.8-4.8 5.4-4.8 1.7 0 2.5-1.2 3.1-2.5"/></svg>`,
+  progress: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5m0 14h16"/><path d="m7 15 4-4 3 2 4-5"/><path d="M15 8h3v3"/></svg>`,
+  ai: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 .9 3.1L16 7l-3.1.9L12 11l-.9-3.1L8 7l3.1-.9L12 3ZM6 13l.7 2.3L9 16l-2.3.7L6 19l-.7-2.3L3 16l2.3-.7L6 13Zm11 1 1 3 3 1-3 1-1 3-1-3-3-1 3-1 1-3Z"/></svg>`
+};
+
+export function appFunctionGrid(items) {
+  return `
+    <div class="app-feature-grid" aria-label="Funktionen der Camp Dörfl Fitness App">
+      ${items
+        .map(
+          (item, index) => `
+            <article class="app-feature-card app-feature-card--${item.icon}" data-reveal>
+              <span class="app-feature-card__number">${String(index + 1).padStart(2, "0")}</span>
+              <span class="app-feature-card__icon">${appFeatureIcons[item.icon]}</span>
+              <p class="app-feature-card__label">${item.label}</p>
+              <h3>${item.title}</h3>
+            </article>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+}
+
 export function timelineList(items) {
   return `
     <div class="timeline">

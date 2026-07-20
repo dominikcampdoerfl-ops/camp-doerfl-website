@@ -14,6 +14,7 @@ import {
   contactForm,
   ctaSection,
   devicePreviewGallery,
+  appFunctionGrid,
   faq,
   featureGrid,
   imageLoadingAttributes,
@@ -240,32 +241,32 @@ const homeFaq = [
 
 const appFaq = [
   {
-    question: "Ist die Camp Dörfl App nur eine Trainings-App?",
+    question: "Was ist die Fitness App von Camp Dörfl?",
     answer:
-      "Nein. Die App ist als Performance-System gedacht: Training, Ernährung, Check-ins, Scans, GPS, Community und Fortschritt werden zusammengeführt."
+      "Die Camp Dörfl Fitness App bündelt Training, Ernährung, Check-ins, Scans, GPS-Routen, Community und Fortschrittsanalyse in einem persönlichen Performance-System."
   },
   {
-    question: "Kann ich die App ohne Coaching nutzen?",
+    question: "Für wen eignet sich die Fitness App?",
     answer:
-      "Ja. Die App kann eigenständig genutzt werden und wird gleichzeitig zum stärksten Hebel, wenn sie mit Coaching kombiniert wird."
+      "Für Menschen, die Training und Ernährung im Alltag klar strukturieren, Fortschritte nachvollziehen und bei Bedarf direkten Coach-Zugang nutzen möchten – eigenständig oder kombiniert mit Coaching."
   },
   {
-    question: "Gibt es in der Camp Dörfl App Trainings- und Ernährungspläne?",
+    question: "Gibt es in der Fitness App Trainings- und Ernährungspläne?",
     answer:
-      "Ja. Genau dafür ist sie gebaut: Trainingsplanung, Ernährungsstruktur und tägliche Umsetzung laufen in einer Oberfläche zusammen, statt über mehrere Tools verteilt zu sein."
+      "Ja. Individuelle Trainingsplanung, Ernährungsstruktur und die tägliche Umsetzung laufen in einer Oberfläche zusammen, statt über mehrere Tools verteilt zu sein."
   },
   {
-    question: "Wie starte ich mit der Camp Dörfl App?",
+    question: "Wie starte ich mit der Camp Dörfl Fitness App?",
     answer:
       "Der Einstieg beginnt mit einer kurzen Anfrage. Danach wird geklärt, ob reiner App-Zugang oder die Kombination mit Coaching sinnvoller ist und wie dein Setup aufgebaut wird."
   },
   {
-    question: "Was kostet der Zugang zur Camp Dörfl App?",
+    question: "Was kostet der Zugang zur Fitness App?",
     answer:
       "Das hängt davon ab, ob du die App eigenständig nutzen oder mit Coaching kombinieren willst. Im Erstkontakt wird geklärt, welches Modell zu deinem Ziel, deinem Alltag und deiner gewünschten Begleitung passt."
   },
   {
-    question: "Welche Funktionen sind für den Alltag besonders relevant?",
+    question: "Welche Fitness-App-Funktionen helfen im Alltag besonders?",
     answer:
       "Vor allem der Member Bereich, die Trainings- und Ernährungsplanung, der Lebensmittel Truth Score, Barcode- und Live-Scans, GPS-Routen, Clubs und das Score System."
   }
@@ -300,9 +301,9 @@ const appPreviewCards = [
 
 const coachingFaq = [
   {
-    question: "Für wen ist das Premium Personal Training gedacht?",
+    question: "Für wen ist Personal Training in Nürnberg bei Camp Dörfl gedacht?",
     answer:
-      "Für Menschen mit Anspruch, die in Nürnberg persönliches Training, klare Ernährungsführung und sichtbare Fortschritte in einem hochwertigen Rahmen wollen."
+      "Für Menschen in Nürnberg, die nicht nur trainieren, sondern mit klarer persönlicher Führung, Ernährungsstruktur und messbaren Fortschritten an ihrem Ziel arbeiten möchten – auch bei einem vollen Kalender."
   },
   {
     question: "Was kostet Personal Training oder Premium Personal Training?",
@@ -310,9 +311,9 @@ const coachingFaq = [
       "Der passende Rahmen hängt davon ab, ob du einzelne Personal Trainings, eine 5er- oder 10er-Karte oder die volle Premium-Begleitung suchst. In einer kurzen Beratung wird sauber eingeordnet, welches Setup zu Ziel, Kalender und Betreuungsintensität passt."
   },
   {
-    question: "Wie läuft der Start ins Premium Personal Training ab?",
+    question: "Wie startet Personal Training in Nürnberg bei Camp Dörfl?",
     answer:
-      "Zu Beginn wird deine Ausgangslage klar erfasst, inklusive 2D-Körperanalyse und InBody. Danach folgen Trainings- und Ernährungsplanung, App-Zugang und die laufende Steuerung im Alltag."
+      "Der Start beginnt mit einer persönlichen Einordnung deiner Ausgangslage und Ziele. Danach folgen 2D-Körperanalyse, InBody, ein individueller Trainings- und Ernährungsplan, App-Zugang und die laufende Anpassung im Alltag."
   },
   {
     question: "Passt das Training auch bei wenig Zeit und vollem Kalender?",
@@ -1100,49 +1101,66 @@ function appPage() {
       <img class="ff-hero__img" src="/assets/images/home-app-preview.jpg" alt="Vorschau der Camp Dörfl App mit Training, Ernährung, Check-ins und Performance-Funktionen"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
+        <img class="ff-hero__app-balance" src="/assets/images/camp-doerfl-app-balance.png" alt="Camp Dörfl Fitness App mit Tagesbilanz, Trainingsplan, Ernährung, Check-in und Coach Chat"${imageLoadingAttributes({ eager: true })}>
+        <div class="ff-hero__app-copy">
           <p class="ff-hero__eyebrow" data-reveal>Fitness App · Training · Ernährung · Fortschritt</p>
-          <h1 class="ff-hero__title" data-reveal>Eine App.<br>Zwei Welten.<br><span>Ein System.</span></h1>
+          <h1 class="ff-hero__title" data-reveal>Deine Fitness.<br><span>Komplett begleitet.</span><br>Professionell analysiert.</h1>
           <p class="ff-hero__lead" data-reveal>
-            Die Camp Dörfl App verbindet Trainingsplanung, Ernährungsstruktur, Coach-Chat, Scan-Funktionen, GPS-Routen und Community in einer Oberfläche.
+            Die Fitness App von Camp Dörfl verbindet deinen Trainingsplan, Ernährung, praktische Alltagstools, Community und persönliche Begleitung in einem professionellen System.
           </p>
+          <p class="ff-hero__support" data-reveal>10 Jahre Erfahrung. 13 Deutsche-Meister-Titel. Eine Vision: dich immer weiterzuentwickeln.</p>
           <div class="ff-hero__actions" data-reveal>
-            <a class="button button--primary" href="${contactHref("app")}"><span>App-Zugang anfragen</span><span aria-hidden="true">&rarr;</span></a>
-            <a class="button button--secondary-light" href="#app-vorschau"><span>App ansehen</span><span aria-hidden="true">&rarr;</span></a>
+            <a class="app-store-symbol app-store-symbol--apple" href="https://apps.apple.com/de/app/camp-d%C3%B6rfl/id6767655689" target="_blank" rel="noopener noreferrer" aria-label="Camp Dörfl App im Apple App Store öffnen" title="Im Apple App Store öffnen">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.58 9.05 7.3c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.1l.02-.01zM12.03 7.25C11.88 5.02 13.69 3.18 15.77 3c.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+            </a>
+            <span class="app-store-symbol app-store-symbol--android" role="img" aria-label="Android App – Link folgt" title="Android App – Link folgt">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.2 9.1h9.6v8.8a1.2 1.2 0 0 1-1.2 1.2h-.9v2.3a.9.9 0 0 1-1.8 0v-2.3h-1.8v2.3a.9.9 0 0 1-1.8 0v-2.3h-.9a1.2 1.2 0 0 1-1.2-1.2V9.1Zm1.5-3.8 1-1.7.7.4-.9 1.6a6.2 6.2 0 0 1 5 0l-.9-1.6.7-.4 1 1.7A5.2 5.2 0 0 1 17.2 8H6.8a5.2 5.2 0 0 1 1.9-2.7ZM9.7 7.1a.55.55 0 1 0 0-1.1.55.55 0 0 0 0 1.1Zm4.6 0a.55.55 0 1 0 0-1.1.55.55 0 0 0 0 1.1ZM5.4 9.8h.9v7.1a.9.9 0 0 1-1.8 0v-6.2c0-.5.4-.9.9-.9Zm13.2 0c.5 0 .9.4.9.9v6.2a.9.9 0 0 1-1.8 0V9.8h.9Z"/></svg>
+            </span>
           </div>
-          <dl class="ff-hero__facts" data-reveal aria-label="Leistungsbausteine der Camp Dörfl App">
-            <div><dt>Kostenlos</dt><dd>downloaden</dd></div>
-            <div><dt>Ernährungspläne</dt><dd>individuell</dd></div>
-            <div><dt>Trainingspläne</dt><dd>fürs eigene Ziel</dd></div>
-            <div><dt>Live Scan</dt><dd>und Truth Score</dd></div>
-            <div><dt>Sprachtracking</dt><dd>und Speisekarten Scan</dd></div>
-            <div><dt>Performance Club</dt><dd>mit Running & Cycling Club</dd></div>
-            <div><dt>GPS Routen</dt><dd>planen, ausführen und tracken</dd></div>
-            <div><dt>Longevity</dt><dd>und Erholung</dd></div>
-          </dl>
+        </div>
+        <img class="ff-hero__app-nutrition" src="/assets/images/camp-doerfl-nutrition-scan-hub.png" alt="Camp Dörfl Fitness App mit Food Truth Score, Live-Scan und Speisekarten-Scan"${imageLoadingAttributes({ eager: true })}>
       </div>
     </section>
 
     <section class="section section--tight">
-      <div id="app-vorschau" class="section-shell section-shell--wide app-preview-stage">
-        ${sectionHeader({
-          eyebrow: "App-Vorschau",
-          title: "Training, Ernährung und Fortschritt in einer Oberfläche.",
-          text:
-            "Keine austauschbare Fitness-App, sondern eine hochwertige Oberfläche für Struktur, Tracking, Community und klare nächste Schritte."
-        })}
-        ${devicePreviewGallery(appPreviewCards)}
+      <div class="section-shell">
+        <div class="editorial-stage__media editorial-stage__media--video editorial-stage__media--short" data-reveal>
+          ${deferredVideoEmbed({
+            embedUrl: "https://www.youtube-nocookie.com/embed/hF05HMpokj8?autoplay=1&rel=0&modestbranding=1&playsinline=1",
+            watchUrl: "https://www.youtube.com/shorts/hF05HMpokj8",
+            title: "Camp Dörfl Fitness App",
+            image: "/assets/images/home-app-preview.jpg",
+            alt: "Vorschau der Camp Dörfl Fitness App",
+            headline: "Die Camp Dörfl Fitness App im Einsatz.",
+            actionLabel: "Short laden",
+            eyebrow: "YouTube Short",
+            short: true
+          })}
+        </div>
       </div>
     </section>
 
     <section class="section section--tight">
       <div class="section-shell section-shell--wide app-function-stage">
         ${sectionHeader({
-          eyebrow: "Kernfunktionen",
-          title: "Was du konkret bekommst.",
+          eyebrow: "Fitness App mit echtem Nutzen",
+          title: "Was bekommst du mit der Camp Dörfl Fitness App?",
           text:
-            "Die wichtigsten Funktionen noch einmal kompakt und klar herausgearbeitet."
+            "Ein professionelles Fitness-App-System für Training, Ernährung und messbaren Fortschritt – mit Technologie, Expertenwissen und direktem Coach-Zugang."
         })}
-        ${summaryRows(appFunctionRows)}
+        ${appFunctionGrid(appFunctionRows)}
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div id="app-vorschau" class="section-shell section-shell--wide app-preview-stage">
+        ${sectionHeader({
+          eyebrow: "Fitness App im Alltag",
+          title: "Alles, was du für deinen Fortschritt brauchst. In einer Fitness App.",
+          text:
+            "Trainingsplan, Ernährungsplan, Check-ins, Tools und Community sind dort, wo du sie brauchst: direkt in deiner Camp Dörfl Fitness App."
+        })}
+        ${devicePreviewGallery(appPreviewCards)}
       </div>
     </section>
 
@@ -1150,19 +1168,19 @@ function appPage() {
       <div class="section-shell">
         ${sectionHeader({
           eyebrow: "FAQ",
-          title: "Was du vor dem Start wissen solltest.",
+          title: "Was du über die Fitness App wissen solltest.",
           text:
-            "Die Camp Dörfl App ist das digitale Zentrum des Systems und bewusst größer gedacht als eine normale Trainings-App."
+            "Die Camp Dörfl Fitness App ist das digitale Zentrum deines Systems und bewusst größer gedacht als eine normale Trainings-App."
         })}
         ${faq(appFaq)}
       </div>
     </section>
 
     ${ctaSection({
-      eyebrow: "Camp Dörfl App",
-      title: "Hol dir den digitalen Zugang zu mehr Struktur.",
+      eyebrow: "Camp Dörfl Fitness App",
+      title: "Deine Fitness App für klare Fortschritte.",
       text:
-        "Wenn du Training, Ernährung, GPS, Clubs und Fortschritt in einer klaren Oberfläche zusammenführen willst, ist das dein nächster Schritt.",
+        "Die Camp Dörfl Fitness App verbindet KI-gestützte Programmierung mit Expertenwissen, damit du für deinen nächsten Schritt eine klare, passende Antwort bekommst.",
       primary: { label: "App-Zugang anfragen", href: contactHref("app") },
       secondary: { label: "Zur Startseite", href: "/" }
     })}
@@ -1170,20 +1188,20 @@ function appPage() {
 
   return layout({
     path: "/app/",
-    title: "Camp Dörfl App | Training, Ernährung & Fortschritt",
+    title: "Fitness App für Training, Ernährung & Fortschritt | Camp Dörfl",
     description:
-      "Die Camp Dörfl App verbindet Trainingsplanung, Ernährungsstruktur, Check-ins, Scans, Coach-Zugang, GPS-Routen, Clubs und Fortschritt in einer Oberfläche.",
-    keywords: ["Camp Dörfl App", "Trainings App mit Ernährungsplan", "Performance Tracking App", "Coach Chat Fitness App"],
+      "Fitness App von Camp Dörfl: Trainingsplan, Ernährungsplan, Coach-Zugang, Scans, GPS-Routen, Community und Fortschrittsanalyse in einer App.",
+    keywords: ["Fitness App", "Fitness App mit Trainingsplan", "Fitness App mit Ernährungsplan", "Fitness App mit Coach", "Camp Dörfl App"],
     bodyClass: "page-premium page-app",
     socialImage: "/assets/images/home-app-preview.jpg",
     socialImageAlt: "Vorschau der Camp Dörfl App mit Training, Ernährung und Check-ins",
     extraStructuredData: [
       serviceSchema({
         path: "/app/",
-        name: "Camp Dörfl App",
-        serviceType: "Digitales Performance-System",
+        name: "Camp Dörfl Fitness App",
+        serviceType: "Fitness App für Training und Ernährung",
         description:
-          "Digitale Struktur für Training, Ernährung, Check-ins, GPS-Routen, Community und Fortschritt."
+          "Fitness App für Training, Ernährung, Check-ins, Coach-Zugang, GPS-Routen, Community und Fortschrittsanalyse."
       }),
       faqSchema("/app/", appFaq)
     ],
@@ -1197,10 +1215,10 @@ function personalCoachingPage() {
       <img class="ff-hero__img" src="/assets/images/premium-training-hero-wide.jpg" alt="Dominik Dörfl als Personal Trainer in Nürnberg beim Training mit einem Kunden im Studio"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
-        <p class="ff-hero__eyebrow" data-reveal>Premium Personal Training · Camp Dörfl</p>
-        <h1 class="ff-hero__title" data-reveal>Personal Trainer <br><span>in Nürnberg.</span></h1>
+        <p class="ff-hero__eyebrow" data-reveal>Personal Trainer Nürnberg · 1:1 Coaching</p>
+        <h1 class="ff-hero__title" data-reveal>Personal Trainer <br><span>Nürnberg.</span></h1>
         <p class="ff-hero__lead" data-reveal>
-          Premium Personal Training in Nürnberg mit 1:1 Coaching, 2D-Körperanalyse, InBody, Ernährungsplanung und App-Steuerung.
+          Dein Personal Trainer in Nürnberg für Premium 1:1 Coaching: Training, 2D-Körperanalyse, InBody, Ernährung und persönliche Steuerung in einem klaren System.
         </p>
         <div class="ff-hero__actions" data-reveal>
           <a class="button button--primary" href="${contactHref("premium-training")}"><span>Beratung anfragen</span><span aria-hidden="true">&rarr;</span></a>
@@ -1218,19 +1236,19 @@ function personalCoachingPage() {
       <div class="section-shell editorial-stage">
         <div class="editorial-stage__copy" data-reveal>
           ${sectionHeader({
-            eyebrow: "Warum Camp Dörfl",
-            title: "1:1 Coaching mit Analyse, Alltag und klarer Führung.",
+            eyebrow: "Personal Training in Nürnberg",
+            title: "1:1 Coaching, das zu deinem Alltag passt.",
             text:
-              "Das Video zeigt keine anonyme Trainingsfläche, sondern ein eng geführtes Coaching mit echter Betreuung, ehrlichem Feedback und einem Plan, der im Alltag halten muss."
+              "Als Personal Trainer in Nürnberg begleite ich dich persönlich: mit ehrlichem Feedback, einem nachvollziehbaren Plan und einer Struktur, die auch außerhalb des Trainings funktioniert."
           })}
           <div class="summary-rows summary-rows--compact">
             <article class="summary-row">
-              <h3>Athletische Erfahrung als Basis</h3>
-              <p>Hinter dem Coaching stehen Leistungssport, Bühnenerfahrung und praktische Arbeit mit Menschen, die spürbare Ergebnisse wollen.</p>
+              <h3>Erfahrung, die in dein Training einfließt</h3>
+              <p>Leistungssport, Bühnenerfahrung und die praktische Arbeit mit Menschen mit anspruchsvollen Zielen bilden die Basis für dein individuelles Personal Training.</p>
             </article>
             <article class="summary-row">
-              <h3>Steuerung statt Einzelterminen</h3>
-              <p>Analyse, Training, Ernährung und laufende Anpassung greifen ineinander, damit Fortschritt nicht vom Zufall oder von Motivation allein abhängt.</p>
+              <h3>Steuerung statt isolierter Einzeltermine</h3>
+              <p>Analyse, Training, Ernährung und regelmäßige Anpassung greifen ineinander, damit Fortschritt nicht vom Zufall oder kurzfristiger Motivation abhängt.</p>
             </article>
           </div>
         </div>
@@ -1269,11 +1287,11 @@ function personalCoachingPage() {
 
     <section class="section section--muted">
       <div class="section-shell section-shell--wide">
-        ${sectionHeader({
-          eyebrow: "Premium Personal Training",
-          title: "Was dieses Personal Training in Nürnberg stärker macht.",
-          text:
-            "Zum Start entsteht ein messbarer Status. Danach werden Training und Ernährung individuell geplant, wöchentlich angepasst und alle vier Wochen überprüft.",
+          ${sectionHeader({
+            eyebrow: "Dein Personal Trainer Nürnberg",
+            title: "Was dein Personal Training wirklich voranbringt.",
+            text:
+              "Zum Start erfassen wir deinen Status messbar. Darauf bauen individueller Trainings- und Ernährungsplan, regelmäßige Anpassungen und eine Überprüfung alle vier Wochen auf.",
           align: "center"
         })}
         ${featureGrid(coachingAudienceCards, "feature-grid--coaching-flow")}
@@ -1342,18 +1360,18 @@ function personalCoachingPage() {
       <div class="section-shell">
         ${sectionHeader({
           eyebrow: "Preis & Einstieg",
-          title: "Was kostet Personal Training in Nürnberg?",
+          title: "Was kostet ein Personal Trainer in Nürnberg?",
           text:
-            "Wenn du gerade Preise, Formate und sinnvolle Einstiege vergleichst, findest du in dieser Seite eine klare Orientierung vor der Anfrage."
+            "Wenn du Personal Trainer in Nürnberg vergleichst, hilft dir unser Kosten-Guide dabei, Formate, Betreuungsumfang und den passenden Einstieg klar einzuordnen."
         })}
         <div class="summary-rows summary-rows--compact">
           <article class="summary-row" data-reveal>
-            <h3>Preis hängt vom Setup ab</h3>
-            <p>Entscheidend sind nicht nur Dauer und Häufigkeit, sondern auch Analyse, App-Begleitung, Trainingsziel und wie eng die Steuerung im Alltag sein soll.</p>
+            <h3>Der Umfang bestimmt den passenden Rahmen</h3>
+            <p>Entscheidend sind nicht nur Dauer und Häufigkeit der Einheiten, sondern auch Analyse, App-Begleitung, Trainingsziel und die gewünschte Betreuungsintensität.</p>
           </article>
           <article class="summary-row" data-reveal>
-            <h3>Mehr Orientierung vor der Anfrage</h3>
-            <p><a href="/personal-training-kosten-nuernberg/">Hier erklären wir, wann Einzelsessions, Karten oder Premium Begleitung in Nürnberg sinnvoll sind.</a></p>
+            <h3>Preise und Formate transparent einordnen</h3>
+            <p><a href="/personal-training-kosten-nuernberg/">Hier erklären wir, wann Einzelsessions, Karten oder eine Premium Begleitung in Nürnberg sinnvoll sind.</a></p>
           </article>
         </div>
       </div>
@@ -1373,9 +1391,9 @@ function personalCoachingPage() {
 
     ${ctaSection({
       eyebrow: "Premium Personal Training",
-      title: "Prüfe, ob Premium Personal Training zu dir passt.",
+      title: "Finde heraus, ob dein Personal Trainer in Nürnberg zu dir passt.",
       text:
-        "Wenn du wissen willst, ob das Training zu deiner Ausgangslage, deinem Kalender und deinem Anspruch passt, ist das der nächste richtige Schritt.",
+        "In einer persönlichen Beratung klären wir, ob das Coaching zu deiner Ausgangslage, deinem Kalender und deinem Anspruch passt.",
       primary: { label: "Beratung anfragen", href: contactHref("premium-training") },
       secondary: { label: "Zur Startseite", href: "/" }
     })}
@@ -1383,10 +1401,10 @@ function personalCoachingPage() {
 
   return layout({
     path: "/personal-coaching/",
-    title: "Personal Trainer Nürnberg | Premium Personal Training | Camp Dörfl",
+    title: "Personal Trainer Nürnberg | 1:1 Coaching & Ernährung | Camp Dörfl",
     description:
-      "Personal Trainer in Nürnberg mit Premium Coaching, 2D-Körperanalyse, InBody, Ernährungsplanung und App-Steuerung von Camp Dörfl.",
-    keywords: ["Personal Trainer Nürnberg", "Premium Personal Training Nürnberg", "1:1 Personal Training Nürnberg", "Ernährungscoaching Nürnberg"],
+      "Personal Trainer Nürnberg: 1:1 Coaching mit Training, 2D-Körperanalyse, InBody, Ernährungsplan und persönlicher App-Begleitung bei Camp Dörfl.",
+    keywords: ["Personal Trainer Nürnberg", "Personal Training Nürnberg", "Premium Personal Training Nürnberg", "1:1 Personal Training Nürnberg", "Ernährungscoaching Nürnberg"],
     bodyClass: "page-premium page-coaching",
     socialImage: "/assets/images/premium-training-hero-wide.jpg",
     socialImageAlt: "Dominik Dörfl beim Personal Training mit einem Kunden in Nürnberg",
@@ -1394,9 +1412,9 @@ function personalCoachingPage() {
       serviceSchema({
         path: "/personal-coaching/",
         name: "Personal Trainer Nürnberg – Camp Dörfl",
-        serviceType: "Premium Personal Training",
+        serviceType: "Personal Training in Nürnberg",
         description:
-          "Persönlich geführtes Personal Training mit Analyse, Ernährungsplanung, App und laufender Anpassung."
+          "Persönlich geführtes Personal Training in Nürnberg mit Analyse, Ernährungsplanung, App und laufender Anpassung."
       }),
       faqSchema("/personal-coaching/", coachingFaq),
       videoObjectSchema({

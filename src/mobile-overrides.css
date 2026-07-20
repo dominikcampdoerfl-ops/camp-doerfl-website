@@ -391,6 +391,19 @@
       background 180ms ease;
   }
 
+  /* The text label is also a span. Keep it out of the three-line icon rules. */
+  .page-home-reboot .nav-toggle > .nav-toggle__label,
+  .page-premium .nav-toggle > .nav-toggle__label {
+    grid-column: 2;
+    grid-row: 1;
+    display: block;
+    width: auto;
+    height: auto;
+    margin-top: 0;
+    background: transparent;
+    transform: none;
+  }
+
   .page-home-reboot .nav-toggle span:nth-of-type(1),
   .page-premium .nav-toggle span:nth-of-type(1) {
     transform: translateY(-6px);

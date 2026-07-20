@@ -5704,8 +5704,8 @@ p {
 }
 
 .page-app .app-function-stage .section-header h2 {
-  max-width: 5ch;
-  font-size: clamp(2.8rem, 4.2vw, 4.5rem);
+  max-width: 15ch;
+  font-size: clamp(2.5rem, 3.8vw, 4rem);
 }
 
 .page-app .app-system-stage .section-header p:not(.eyebrow),
@@ -5859,6 +5859,313 @@ p {
 .page-app .app-function-stage .summary-row p {
   color: var(--cd-dim);
   line-height: 1.66;
+}
+
+.page-app .app-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.page-app .app-feature-card {
+  position: relative;
+  min-height: 196px;
+  padding: 24px;
+  overflow: hidden;
+  border: 1px solid var(--feature-line);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 100% 0%, var(--feature-glow), transparent 56%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.page-app .app-feature-card__number {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  color: var(--feature-accent);
+  font-family: var(--font-cond);
+  font-size: 1rem;
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.page-app .app-feature-card__icon {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 22px;
+  border: 1px solid var(--feature-line);
+  border-radius: 18px;
+  color: var(--feature-accent);
+  background: color-mix(in srgb, var(--feature-accent) 16%, transparent);
+}
+
+.page-app .app-feature-card__icon svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.page-app .app-feature-card--ai .app-feature-card__icon svg {
+  fill: currentColor;
+  stroke: none;
+}
+
+.page-app .app-feature-card__label {
+  margin: 0 0 7px;
+  color: var(--feature-accent);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.page-app .app-feature-card h3 {
+  max-width: 15ch;
+  color: #fff;
+  font-size: clamp(1.35rem, 1.55vw, 1.7rem);
+  line-height: 1;
+}
+
+.page-app .app-feature-card:nth-child(1) {
+  --feature-accent: #e6b443;
+  --feature-line: rgba(230, 180, 67, 0.42);
+  --feature-glow: rgba(230, 180, 67, 0.23);
+}
+
+.page-app .app-feature-card:nth-child(2) {
+  --feature-accent: #eb9d59;
+  --feature-line: rgba(235, 157, 89, 0.42);
+  --feature-glow: rgba(235, 157, 89, 0.23);
+}
+
+.page-app .app-feature-card:nth-child(3) {
+  --feature-accent: #80c5a0;
+  --feature-line: rgba(128, 197, 160, 0.42);
+  --feature-glow: rgba(128, 197, 160, 0.23);
+}
+
+.page-app .app-feature-card:nth-child(4) {
+  --feature-accent: #83bce8;
+  --feature-line: rgba(131, 188, 232, 0.42);
+  --feature-glow: rgba(131, 188, 232, 0.23);
+}
+
+.page-app .app-feature-card:nth-child(5) {
+  --feature-accent: #b99ae8;
+  --feature-line: rgba(185, 154, 232, 0.42);
+  --feature-glow: rgba(185, 154, 232, 0.23);
+}
+
+.page-app .app-feature-card:nth-child(6) {
+  --feature-accent: #e88f99;
+  --feature-line: rgba(232, 143, 153, 0.42);
+  --feature-glow: rgba(232, 143, 153, 0.23);
+}
+
+@media (max-width: 900px) {
+  .page-app .app-feature-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 580px) {
+  .page-app .app-feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* A denser editorial rhythm for the app landing page. */
+@media (min-width: 901px) {
+  .page-app .section {
+    padding-block: 34px;
+  }
+
+  .page-app .section--tight {
+    padding-block: 22px;
+  }
+
+  .page-app .app-function-stage,
+  .page-app .app-preview-stage {
+    padding: 38px 42px;
+  }
+
+  .page-app .app-function-stage .section-header h2,
+  .page-app .app-preview-stage .section-header h2 {
+    font-size: clamp(3.1rem, 4.2vw, 5rem);
+    line-height: 0.94;
+  }
+
+  .page-app .app-function-stage .section-header p:not(.eyebrow),
+  .page-app .app-preview-stage .section-header p:not(.eyebrow) {
+    font-size: 1.15rem;
+    line-height: 1.55;
+  }
+
+  .page-app .app-feature-card {
+    min-height: 230px;
+    padding: 28px;
+  }
+
+  .page-app .app-feature-card__icon {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 26px;
+    border-radius: 21px;
+  }
+
+  .page-app .app-feature-card__icon svg {
+    width: 34px;
+    height: 34px;
+  }
+
+  .page-app .app-feature-card__label {
+    font-size: 0.78rem;
+  }
+
+  .page-app .app-feature-card h3 {
+    max-width: 16ch;
+    font-size: clamp(1.55rem, 1.85vw, 2rem);
+  }
+
+  .page-app .device-preview-card {
+    min-height: 300px;
+  }
+
+  .page-app .device-preview-card__body h3 {
+    font-size: clamp(1.5rem, 1.75vw, 1.95rem);
+    line-height: 1.04;
+  }
+
+  .page-app .device-preview-card__body p {
+    font-size: 1.04rem;
+    line-height: 1.55;
+  }
+
+  .page-app .faq summary {
+    min-height: 72px;
+    font-size: 1.16rem;
+  }
+
+  .page-app .faq p {
+    font-size: 1.06rem;
+  }
+
+  .page-app .cta-band h2 {
+    font-size: clamp(3rem, 4.2vw, 5rem);
+  }
+
+  .page-app .cta-band p {
+    font-size: 1.16rem;
+  }
+}
+
+/* App page: keep each desktop section scannable without a long scroll. */
+@media (min-width: 901px) {
+  .page-app .app-function-stage .section-header,
+  .page-app .app-preview-stage .section-header {
+    max-width: none;
+    text-align: center;
+  }
+
+  .page-app .app-function-stage .section-header h2,
+  .page-app .app-preview-stage .section-header h2,
+  .page-app .app-function-stage .section-header p:not(.eyebrow),
+  .page-app .app-preview-stage .section-header p:not(.eyebrow) {
+    margin-inline: auto;
+  }
+
+  .page-app .app-function-stage .section-header h2 {
+    max-width: 22ch;
+  }
+
+  .page-app .app-preview-stage .section-header h2 {
+    max-width: 24ch;
+  }
+
+  .page-app .app-function-stage .section-header p:not(.eyebrow),
+  .page-app .app-preview-stage .section-header p:not(.eyebrow) {
+    max-width: 70ch;
+  }
+
+  .page-app .app-preview-stage .device-preview-gallery {
+    gap: 16px;
+  }
+
+  .page-app .device-preview-card {
+    grid-template-columns: 112px minmax(0, 1fr);
+    align-items: center;
+    min-height: 252px;
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .page-app .device-preview-card__frame {
+    width: 112px;
+    max-height: 216px;
+    padding: 6px;
+    overflow: hidden;
+    border-radius: 20px;
+  }
+
+  .page-app .device-preview-card__frame img {
+    aspect-ratio: 9 / 16;
+    object-fit: cover;
+    object-position: top;
+    border-radius: 14px;
+  }
+
+  .page-app .device-preview-card__body h3 {
+    font-size: clamp(1.25rem, 1.45vw, 1.62rem);
+  }
+
+  .page-app .device-preview-card__body p {
+    font-size: 0.94rem;
+    line-height: 1.5;
+  }
+}
+
+.page-app .app-function-stage .summary-row:nth-child(1),
+.page-app .device-preview-card:nth-child(1) {
+  border-color: rgba(230, 180, 67, 0.36);
+  background: radial-gradient(circle at top right, rgba(230, 180, 67, 0.2), transparent 42%), linear-gradient(180deg, rgba(230, 180, 67, 0.09), rgba(255, 255, 255, 0.03));
+}
+
+.page-app .app-function-stage .summary-row:nth-child(2),
+.page-app .device-preview-card:nth-child(2) {
+  border-color: rgba(224, 140, 77, 0.36);
+  background: radial-gradient(circle at top right, rgba(224, 140, 77, 0.2), transparent 42%), linear-gradient(180deg, rgba(224, 140, 77, 0.09), rgba(255, 255, 255, 0.03));
+}
+
+.page-app .app-function-stage .summary-row:nth-child(3),
+.page-app .device-preview-card:nth-child(3) {
+  border-color: rgba(121, 184, 143, 0.36);
+  background: radial-gradient(circle at top right, rgba(121, 184, 143, 0.2), transparent 42%), linear-gradient(180deg, rgba(121, 184, 143, 0.09), rgba(255, 255, 255, 0.03));
+}
+
+.page-app .app-function-stage .summary-row:nth-child(4) {
+  border-color: rgba(127, 179, 213, 0.36);
+  background: radial-gradient(circle at top right, rgba(127, 179, 213, 0.2), transparent 42%), linear-gradient(180deg, rgba(127, 179, 213, 0.09), rgba(255, 255, 255, 0.03));
+}
+
+.page-app .app-function-stage .summary-row:nth-child(5) {
+  border-color: rgba(166, 139, 210, 0.36);
+  background: radial-gradient(circle at top right, rgba(166, 139, 210, 0.2), transparent 42%), linear-gradient(180deg, rgba(166, 139, 210, 0.09), rgba(255, 255, 255, 0.03));
+}
+
+.page-app .app-function-stage .summary-row:nth-child(6) {
+  border-color: rgba(212, 124, 124, 0.36);
+  background: radial-gradient(circle at top right, rgba(212, 124, 124, 0.2), transparent 42%), linear-gradient(180deg, rgba(212, 124, 124, 0.09), rgba(255, 255, 255, 0.03));
 }
 
 @media (min-width: 1180px) {
@@ -7936,7 +8243,8 @@ p {
 
 .partner-video-stage__grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 360px));
+  justify-content: center;
   gap: 18px;
   width: 100%;
 }
@@ -10638,6 +10946,20 @@ h1, h2, h3 {
   color: rgba(255, 255, 255, 0.55);
 }
 
+/* The coaching hero sits on a detailed photo. Keep supporting copy bright
+   enough to read immediately, while gold remains reserved for emphasis. */
+.page-coaching .ff-hero__eyebrow {
+  color: #f2cf78;
+}
+
+.page-coaching .ff-hero__lead {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.page-coaching .ff-hero__facts dd {
+  color: rgba(255, 255, 255, 0.82);
+}
+
 /* ============================ DARK SECTIONS ============================ */
 .page-home-reboot .ed-section,
 .page-home-reboot .ed-proof { background: transparent; }
@@ -11092,7 +11414,29 @@ html { background: #0a0a0c; }
 .page-premium .form-footer p { color: var(--cd-dim); }
 
 /* ---- FAQ ---- */
-.page-premium .faq summary { color: #fff; }
+.page-premium .faq {
+  gap: 8px;
+}
+.page-premium .faq details {
+  padding: 0;
+}
+.page-premium .faq summary {
+  min-height: 0;
+  padding: 17px 20px;
+  gap: 16px;
+  color: #fff;
+  line-height: 1.35;
+}
+.page-premium .faq summary::after {
+  width: 36px;
+  height: 36px;
+  font-size: 1.35rem;
+}
+.page-premium .faq p {
+  padding: 0 20px 18px;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.55;
+}
 .page-premium .faq summary::-webkit-details-marker { color: var(--cd-gold); }
 
 /* ---- Reference logo bands ---- */
@@ -11501,6 +11845,165 @@ html { background: #0a0a0c; }
 
 .page-app .ff-hero__actions {
   margin-top: 30px;
+}
+
+.app-store-symbol {
+  width: 58px;
+  height: 58px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 14px;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.24);
+}
+
+.app-store-symbol svg {
+  width: 27px;
+  height: 27px;
+  fill: currentColor;
+}
+
+.app-store-symbol--apple {
+  color: #10100e;
+  background: var(--cd-gold);
+  border-color: transparent;
+}
+
+.app-store-symbol--android {
+  color: #fff;
+  background: rgba(8, 8, 10, 0.46);
+}
+
+.ff-hero__app-balance {
+  position: absolute;
+  z-index: 2;
+  left: clamp(28px, 5vw, 108px);
+  bottom: clamp(110px, 10vh, 150px);
+  width: clamp(170px, 14vw, 262px);
+  max-height: 64svh;
+  object-fit: cover;
+  object-position: center top;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 20px;
+  box-shadow: 0 28px 66px rgba(0, 0, 0, 0.48);
+}
+
+@media (min-width: 901px) {
+  .page-app .ff-hero__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .page-app .ff-hero__title {
+    max-width: 22ch;
+    font-size: clamp(3.1rem, 4.8vw, 5.8rem);
+  }
+
+  .page-app .ff-hero__lead,
+  .page-app .ff-hero__support {
+    max-width: 62ch;
+    margin-inline: auto;
+  }
+
+  .page-app .ff-hero__actions {
+    justify-content: center;
+  }
+
+  .ff-hero--app .ff-hero__scrim {
+    background:
+      linear-gradient(90deg, rgba(8, 8, 10, 0.86) 0%, rgba(8, 8, 10, 0.58) 50%, rgba(8, 8, 10, 0.86) 100%),
+      linear-gradient(0deg, rgba(8, 8, 10, 0.88) 0%, rgba(8, 8, 10, 0.22) 54%, rgba(8, 8, 10, 0.7) 100%);
+  }
+}
+
+@media (max-width: 1180px) {
+  .ff-hero__app-balance,
+  .ff-hero__app-nutrition {
+    display: none;
+  }
+
+  .page-app .ff-hero__app-copy {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1181px) {
+  .page-app .ff-hero__inner {
+    display: grid;
+    grid-template-columns: minmax(180px, 0.72fr) minmax(0, 2.2fr) minmax(180px, 0.72fr);
+    gap: clamp(28px, 3vw, 58px);
+    align-items: stretch;
+  }
+
+  .page-app .ff-hero__app-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  .page-app .ff-hero__app-balance,
+  .page-app .ff-hero__app-nutrition {
+    position: relative;
+    z-index: 2;
+    left: auto;
+    bottom: auto;
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    min-height: 0;
+    object-fit: cover;
+    object-position: center top;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 22px;
+    box-shadow: 0 28px 66px rgba(0, 0, 0, 0.48);
+  }
+}
+
+/* Desktop-wide content density: cards grow with their content instead of
+   reserving oversized empty areas or cutting the next option off-screen. */
+@media (min-width: 1181px) {
+  .page-premium .section {
+    padding-block: clamp(30px, 3vw, 52px);
+  }
+
+  .page-premium .feature-grid,
+  .page-premium .capability-grid,
+  .page-premium .summary-rows,
+  .page-premium .pricing-grid,
+  .page-premium .achievement-grid,
+  .page-premium .device-preview-gallery {
+    gap: clamp(14px, 1.35vw, 22px);
+    align-items: stretch;
+  }
+
+  .page-premium .feature-card,
+  .page-premium .capability-card,
+  .page-premium .summary-row,
+  .page-premium .pricing-card,
+  .page-premium .stat-card,
+  .page-premium .timeline__item {
+    min-height: 0;
+  }
+
+  .page-premium .feature-card h3,
+  .page-premium .capability-card h3,
+  .page-premium .summary-row h3,
+  .page-premium .pricing-card h3 {
+    font-size: clamp(1.2rem, 1.35vw, 1.55rem);
+    line-height: 1.08;
+  }
+
+  .page-premium .feature-card p,
+  .page-premium .capability-card p,
+  .page-premium .summary-row p,
+  .page-premium .pricing-card p {
+    font-size: clamp(1rem, 1.08vw, 1.16rem);
+    line-height: 1.52;
+  }
 }
 
 .page-app .ff-hero__pills {
@@ -12425,8 +12928,8 @@ html { background: #0a0a0c; }
   display: inline-flex;
   align-items: center;
   gap: 0;
-  min-height: 66px;
-  padding: 12px 18px;
+  min-height: 84px;
+  padding: 14px 24px;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 999px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.05));
@@ -12454,7 +12957,7 @@ html { background: #0a0a0c; }
 }
 
 .partner-hero__logo {
-  height: 38px;
+  height: 52px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -12463,13 +12966,13 @@ html { background: #0a0a0c; }
 }
 
 .partner-hero__logo + .partner-hero__logo {
-  margin-left: 12px;
-  padding-left: 18px;
+  margin-left: 18px;
+  padding-left: 24px;
   border-left: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 .partner-hero__logo--aeke {
-  height: 31px;
+  height: 42px;
 }
 
 .partner-hero__logo:hover,
@@ -13123,10 +13626,10 @@ body.consent-modal-open {
   }
   .partner-hero__logo {
     flex: 0 1 auto;
-    height: 34px;
+    height: 40px;
   }
   .partner-hero__logo--aeke {
-    height: 27px;
+    height: 33px;
   }
   .partner-brand-band__grid {
     grid-template-columns: 1fr;
@@ -13211,6 +13714,24 @@ body.consent-modal-open {
   box-shadow: none !important;
 }
 .page-home-reboot .ed-entry:hover .ed-entry__cta { transform: translateY(-1px); }
+
+/* Home entry actions: one confident, high-contrast gold treatment. */
+.page-home-reboot .ed-entry__cta,
+.page-home-reboot .ed-entry-grid .ed-entry:nth-child(1) .ed-entry__cta,
+.page-home-reboot .ed-entry-grid .ed-entry:nth-child(2) .ed-entry__cta,
+.page-home-reboot .ed-entry-grid .ed-entry:nth-child(3) .ed-entry__cta,
+.page-home-reboot .ed-entry-grid .ed-entry:nth-child(4) .ed-entry__cta {
+  background: linear-gradient(135deg, #f6cd57 0%, var(--cd-gold) 56%, #c89422 100%) !important;
+  border-color: rgba(255, 222, 126, 0.92) !important;
+  color: #11100d !important;
+  box-shadow: 0 14px 28px -18px rgba(223, 169, 44, 0.82) !important;
+}
+
+.page-home-reboot .ed-entry__cta span:last-child {
+  border-color: rgba(17, 16, 13, 0.24) !important;
+  background: rgba(255, 255, 255, 0.26) !important;
+  color: #11100d !important;
+}
 
 /* ============================================================
    PARTNER — "Warum Partner" value cards upgraded to the
