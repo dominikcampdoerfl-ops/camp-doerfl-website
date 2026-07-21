@@ -482,47 +482,36 @@ const coachingOutcomeRows = [
 const homeEntryCards = [
   {
     detail: "01 / LIVE MODERATION",
-    titleHtml: "PRÄSENZ. ENERGIE. <span>EVENTS.</span>",
+    titleHtml: "<span>MODERATOR</span> &amp; GASTGEBER",
     text:
       "INTERVIEWS, OPENINGS UND BÜHNENFÜHRUNG MIT KLARER WIRKUNG.",
     image: "/assets/images/dominik-stage-suit.jpg",
     alt: "Dominik Dörfl als Moderator bei einem Firmenevent",
     theme: "accent",
     href: "/events/",
-    buttonLabel: "EVENTS ANSEHEN"
+    buttonLabel: "EVENT PLANEN"
   },
   {
     detail: "02 / CORPORATE HEALTH",
-    titleHtml: "GESUNDHEIT. ANALYSE. <span>WIRKUNG.</span>",
+    titleHtml: "GESUNDHEITSTAGE, <span>DIE ETWAS BEWEGEN.</span>",
     text:
       "2D-SCAN, INBODY UND BERATUNG FÜR STARKE GESUNDHEITSTAGE.",
     image: "/assets/images/dominik-coaching-bikeerg.jpg",
     alt: "Firmenfitness mit InBody Messung und persönlicher Beratung",
     theme: "light",
     href: "/firmenfitness/",
-    buttonLabel: "FIRMENFITNESS ANSEHEN"
+    buttonLabel: "GESUNDHEITSTAG PLANEN"
   },
   {
     detail: "03 / PREMIUM COACHING",
-    titleHtml: "ANALYSE. FÜHRUNG. <span>RESULTAT.</span>",
+    titleHtml: "PERSONAL TRAINING <span>VOM PROFI.</span>",
     text:
       "TRAINING UND ERNÄHRUNG IN PERSÖNLICHER PREMIUM-BEGLEITUNG.",
     image: "/assets/images/dominik-personal-coaching-client.webp",
     alt: "Dominik Dörfl mit einem Klienten im Personal Training im Studio",
     theme: "coaching",
     href: "/personal-coaching/",
-    buttonLabel: "TRAINING ANSEHEN"
-  },
-  {
-    detail: "04 / DIGITAL SYSTEM",
-    titleHtml: "TRACKING. STRUKTUR. <span>FORTSCHRITT.</span>",
-    text:
-      "MEMBER AREA, CLUBS UND PERFORMANCE IN EINER APP.",
-    image: "/assets/images/home-app-preview.jpg",
-    alt: "Camp Dörfl App Visual mit Dashboard, Food Truth Score, Scan-Funktionen und Clubs",
-    theme: "app",
-    href: "/app/",
-    buttonLabel: "APP ANSEHEN"
+    buttonLabel: "TRAINIERE MIT MIR"
   }
 ];
 
@@ -938,25 +927,25 @@ const campTransformationCards = [
 function homePage() {
   const content = `
     <section class="ff-hero ff-hero--home-photo">
-      <img class="ff-hero__img" src="/assets/images/home-hero-stadium-wide.jpg" alt="Dominik Dörfl als Ironman-Finisher im Stadion"${imageLoadingAttributes({ eager: true })}>
+      <picture>
+        <source media="(max-width: 900px)" srcset="/assets/images/home-hero-stadium-mobile.png">
+        <img class="ff-hero__img" src="/assets/images/home-hero-stadium-wide.png" alt="Dominik Dörfl mit einem Wegbegleiter als Ironman-Finisher im Stadion"${imageLoadingAttributes({ eager: true })}>
+      </picture>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
         <p class="ff-hero__eyebrow" data-reveal>Personal Training · Firmenfitness · Events · Nürnberg</p>
         <h1 class="ff-hero__title" data-reveal>Gesundheit.<br>Leistung.<br><span>Präsenz.</span></h1>
-        <p class="ff-hero__lead" data-reveal>
-          Camp Dörfl in Nürnberg verbindet Premium Personal Training, Firmenfitness, Event-Moderation und App-Struktur zu einem Performance System für Menschen und Unternehmen mit Anspruch.
-        </p>
         <div class="ff-hero__actions" data-reveal>
           <a class="button button--primary" href="${contactHref()}"><span>Beratung anfragen</span><span aria-hidden="true">&rarr;</span></a>
           <a class="button button--ghost" href="#einstiege"><span>Vier Einstiege ansehen</span><span aria-hidden="true">&rarr;</span></a>
         </div>
         <dl class="ff-hero__facts" data-reveal aria-label="Camp Dörfl in Zahlen">
-          <div><dt>2×</dt><dd>Deutscher Meister</dd></div>
-          <div><dt>Profi Athlet</dt><dd>Fitness &amp; Bodybuilding</dd></div>
-          <div><dt>Ironman</dt><dd>Finisher</dd></div>
           <div><dt>Moderator</dt><dd>knapp 100 Events</dd></div>
           <div><dt>Firmenfitness</dt><dd>für gesunde Unternehmen</dd></div>
           <div><dt>Fitness Trainer</dt><dd>ausgebildet & zertifiziert</dd></div>
+          <div><dt>Profi Athlet</dt><dd>Fitness &amp; Bodybuilding</dd></div>
+          <div><dt>2×</dt><dd>Deutscher Meister</dd></div>
+          <div><dt>Ironman</dt><dd>Finisher</dd></div>
         </dl>
       </div>
     </section>
@@ -966,22 +955,18 @@ function homePage() {
         <div class="ed-section__stage">
           <div class="ed-section__head" data-reveal>
             <p class="eyebrow">Vier Einstiege</p>
-            <h2 class="ed-section__title">Ein System.<br><span>Vier Wege hinein.</span></h2>
-            <p class="ed-section__lead">
-              Ob persönlich geführt, digital oder im Unternehmen: du startest dort, wo es gerade am meisten bewegt.
-            </p>
+            <h2 class="ed-section__title"><span>4 Wege</span> ins Performance System</h2>
           </div>
           <div class="ed-entry-grid" aria-label="Vier Einstiege ins Performance System">
             ${homeEntryCards
               .map(
-                ({ titleHtml, text, image, alt, href, buttonLabel, theme }) => `
+                ({ titleHtml, image, alt, href, buttonLabel, theme }) => `
                   <a class="ed-entry ed-entry--${theme}" href="${href}" data-reveal>
                   <div class="ed-entry__media">
                     <img src="${image}" alt="${alt}"${imageLoadingAttributes()}>
                   </div>
                   <div class="ed-entry__body">
                     <h3>${titleHtml}</h3>
-                    <p>${text}</p>
                     <span class="ed-entry__cta"><span class="ed-entry__cta-label">${buttonLabel}</span><span aria-hidden="true">&rarr;</span></span>
                   </div>
                   </a>
@@ -989,6 +974,16 @@ function homePage() {
               )
               .join("")}
           </div>
+          <a class="ed-app-banner" href="/app/" data-reveal>
+            <div class="ed-app-banner__media">
+              <img src="/assets/images/home-app-banner-coaching.png" alt="Dominik Dörfl zeigt die Camp Dörfl App im Training"${imageLoadingAttributes()}>
+            </div>
+            <div class="ed-app-banner__content">
+              <h3>Deine Fitness.<br><span>Komplett begleitet.</span></h3>
+              <p class="ed-app-banner__offer">Jetzt 7 Tage kostenlos testen!</p>
+              <span class="ed-app-banner__cta">Zur Camp Dörfl App <span aria-hidden="true">&rarr;</span></span>
+            </div>
+          </a>
         </div>
       </div>
     </section>
@@ -1017,51 +1012,57 @@ function homePage() {
       </div>
     </section>
 
-    <section class="section section--tight">
+    <section class="section ed-google-reviews" aria-labelledby="google-reviews-title">
       <div class="section-shell">
-        ${sectionHeader({
-          eyebrow: "Performance System",
-          title: "Gesundheit, Leistung und Präsenz gehören zusammen.",
-          text:
-            "Camp Dörfl verbindet Personal Training, Firmenfitness, Event-Moderation und digitale App-Struktur zu einem System für Nürnberg und die Region."
-        })}
-        <div class="summary-rows summary-rows--compact">
-          <article class="summary-row" data-reveal>
-            <h3>Gesundheit wird messbar</h3>
-            <p>Analyse, Training, Ernährung und Check-ins machen sichtbar, was im Alltag wirklich wirkt. Aus einem diffusen Ziel entsteht ein klarer Status mit konkreten nächsten Schritten.</p>
-          </article>
-          <article class="summary-row" data-reveal>
-            <h3>Leistung bekommt Struktur</h3>
-            <p>Ob Führungskraft, Unternehmen, Athlet oder Team: die Umsetzung wird so geplant, dass sie zu Kalender, Verantwortung und Energie passt.</p>
-          </article>
-          <article class="summary-row" data-reveal>
-            <h3>Präsenz wird erlebbar</h3>
-            <p>Auf der Trainingsfläche, im Unternehmen und auf der Bühne bleibt der Anspruch gleich: klare Führung, echte Erfahrung und eine professionelle Wirkung, die hängen bleibt.</p>
-            <p><a href="/executive-performance/">Executive Performance ansehen</a></p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--muted">
-      <div class="section-shell">
-        ${sectionHeader({
-          eyebrow: "Häufig gesucht",
-          title: "Beliebte Einstiegsfragen aus Google.",
-          text:
-            "Diese beiden Seiten beantworten zwei der häufigsten Fragen vor einer Anfrage und geben mehr Orientierung als eine reine Verkaufsseite."
-        })}
-        <div class="summary-rows summary-rows--compact">
-          <article class="summary-row" data-reveal>
-            <h3>Was kostet Personal Training in Nürnberg?</h3>
-            <p>Wenn du Einzelsessions, Karten und Premium Begleitung vergleichen willst, findest du hier die wichtigsten Preisfaktoren und die passenden Einstiege.</p>
-            <p><a href="/personal-training-kosten-nuernberg/">Zum Kosten-Guide</a></p>
-          </article>
-          <article class="summary-row" data-reveal>
-            <h3>Wie läuft ein Gesundheitstag in Nürnberg ab?</h3>
-            <p>Für Unternehmen, die Firmenfitness oder einen Gesundheitstag professionell planen wollen: Ablauf, Bausteine und typische Entscheidungsfragen kompakt erklärt.</p>
-            <p><a href="/gesundheitstag-nuernberg/">Zum Gesundheitstag-Guide</a></p>
-          </article>
+        <div class="ed-google-reviews__stage">
+          <div class="ed-google-reviews__summary" data-reveal>
+            <div class="ed-google-reviews__brand" aria-label="Google">
+              <span aria-hidden="true">G</span><strong>Google</strong>
+            </div>
+            <p class="eyebrow">Google Bewertungen</p>
+            <p class="ed-google-reviews__score" aria-label="5 von 5 Sternen">5,0<span>/5</span></p>
+            <div class="ed-google-reviews__stars" aria-hidden="true">★★★★★</div>
+            <p>34 Bewertungen von Kundinnen und Kunden, die Training, Ernährung und persönliche Begleitung mit Camp Dörfl erlebt haben.</p>
+            <a class="ed-google-reviews__link" href="https://share.google/wUJdg1MGgXUMY8q5n" target="_blank" rel="noopener noreferrer">Alle Google Bewertungen <span aria-hidden="true">&rarr;</span></a>
+          </div>
+          <div class="ed-google-reviews__content">
+            <div class="ed-google-reviews__head" data-reveal>
+              <p class="eyebrow">Echte Erfahrungen</p>
+              <h2 id="google-reviews-title">Was Menschen über Camp Dörfl sagen.</h2>
+            </div>
+            <div class="ed-google-reviews__grid">
+              <figure class="ed-google-review" data-reveal>
+                <div class="ed-google-review__stars" aria-label="5 von 5 Sternen">★★★★★</div>
+                <blockquote>„Einfach perfekt.“</blockquote>
+                <figcaption>ron D. <span>Google Bewertung</span></figcaption>
+              </figure>
+              <figure class="ed-google-review" data-reveal>
+                <div class="ed-google-review__stars" aria-label="5 von 5 Sternen">★★★★★</div>
+                <blockquote>„Sehr professionelle Betreuung. Sehr gute Beratung.“</blockquote>
+                <figcaption>Michael T. <span>Google Bewertung</span></figcaption>
+              </figure>
+              <figure class="ed-google-review" data-reveal>
+                <div class="ed-google-review__stars" aria-label="5 von 5 Sternen">★★★★★</div>
+                <blockquote>„Super Beratung, jederzeit erreichbar und für jede Frage eine kompetente Antwort.“</blockquote>
+                <figcaption>Deniz I. <span>Google Bewertung</span></figcaption>
+              </figure>
+              <figure class="ed-google-review" data-reveal>
+                <div class="ed-google-review__stars" aria-label="5 von 5 Sternen">★★★★★</div>
+                <blockquote>„Top Service, super empathisch auf mich eingegangen. Ich bin sehr zufrieden!“</blockquote>
+                <figcaption>Stefan S. <span>Google Bewertung</span></figcaption>
+              </figure>
+              <figure class="ed-google-review" data-reveal>
+                <div class="ed-google-review__stars" aria-label="5 von 5 Sternen">★★★★★</div>
+                <blockquote>„Die Trainings- und Ernährungspläne sind perfekt auf die persönlichen Bedürfnisse und Ziele abgestimmt.“</blockquote>
+                <figcaption>Leon S. <span>Google Bewertung</span></figcaption>
+              </figure>
+              <figure class="ed-google-review" data-reveal>
+                <div class="ed-google-review__stars" aria-label="5 von 5 Sternen">★★★★★</div>
+                <blockquote>„Best Coach ever.“</blockquote>
+                <figcaption>Günter P. <span>Google Bewertung</span></figcaption>
+              </figure>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1082,7 +1083,7 @@ function homePage() {
     description:
       "Camp Dörfl in Nürnberg bündelt Premium Personal Training, Firmenfitness, Event-Moderation und App-Struktur in einem klaren Performance-System.",
     pageName: "Camp Dörfl",
-    socialImage: "/assets/images/home-hero-stadium-wide.jpg",
+    socialImage: "/assets/images/home-hero-stadium-wide.png",
     socialImageAlt: "Dominik Dörfl als Ironman-Finisher im Stadion",
     keywords: [
       "Camp Dörfl Nürnberg",
@@ -1101,7 +1102,6 @@ function appPage() {
       <img class="ff-hero__img" src="/assets/images/home-app-preview.jpg" alt="Vorschau der Camp Dörfl App mit Training, Ernährung, Check-ins und Performance-Funktionen"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
-        <img class="ff-hero__app-balance" src="/assets/images/camp-doerfl-app-balance.png" alt="Camp Dörfl Fitness App mit Tagesbilanz, Trainingsplan, Ernährung, Check-in und Coach Chat"${imageLoadingAttributes({ eager: true })}>
         <div class="ff-hero__app-copy">
           <p class="ff-hero__eyebrow" data-reveal>Fitness App · Training · Ernährung · Fortschritt</p>
           <h1 class="ff-hero__title" data-reveal>Deine Fitness.<br><span>Komplett begleitet.</span><br>Professionell analysiert.</h1>
@@ -1118,7 +1118,6 @@ function appPage() {
             </span>
           </div>
         </div>
-        <img class="ff-hero__app-nutrition" src="/assets/images/camp-doerfl-nutrition-scan-hub.png" alt="Camp Dörfl Fitness App mit Food Truth Score, Live-Scan und Speisekarten-Scan"${imageLoadingAttributes({ eager: true })}>
       </div>
     </section>
 
@@ -3230,64 +3229,36 @@ function partnerPage() {
     </section>
 
     <section class="section section--tight">
-      <div class="section-shell section-shell--wide editorial-stage editorial-stage--partner-videos">
-        <div class="editorial-stage__copy" data-reveal>
+      <div class="section-shell section-shell--wide premium-sponsor-stage">
+        <div class="premium-sponsor-stage__intro" data-reveal>
           ${sectionHeader({
-            eyebrow: "AEKE & XXL Nutrition",
-            title: "So werden Marken im Camp-Dörfl-Kontext glaubwürdig sichtbar.",
+            eyebrow: "Partner im Performance System",
+            title: "Premium Sponsoren im Camp.",
             text:
-              "Die beiden Shorts zeigen, wie AEKE und XXL Nutrition nicht nur als Marken auftauchen, sondern direkt im Performance-Kontext sichtbar werden: smartes Training auf der einen Seite, konkrete Sporternaehrung auf der anderen."
+              "XXL Nutrition und AEKE ergänzen das Camp Dörfl Performance System mit Produkten, die im Training, in der Regeneration und im Alltag echten Mehrwert schaffen."
           })}
-          <div class="summary-rows summary-rows--compact">
-            <article class="summary-row">
-              <h3>AEKE im Trainingskontext</h3>
-              <p>Das System wird dort sichtbar, wo smarte Hardware, Bewegung und gefuehrtes Training wirklich zusammenkommen.</p>
-            </article>
-            <article class="summary-row">
-              <h3>XXL Nutrition mit direktem Mehrwert</h3>
-              <p>Die Partnerschaft wird ueber konkrete Empfehlung und den Rabattcode Dominik sofort greifbar statt nur erzaehlt.</p>
-            </article>
-          </div>
         </div>
-        <div class="editorial-stage__media editorial-stage__media--video partner-video-stage" data-reveal>
-          <div class="partner-video-stage__grid" aria-label="Partner-Videos von AEKE und XXL Nutrition">
-            ${partnerBrandCards
-              .filter(({ videoEmbedUrl, videoWatchUrl }) => videoEmbedUrl && videoWatchUrl)
-              .map(
-                ({
-                  name,
-                  href,
-                  videoEmbedUrl,
-                  videoWatchUrl,
-                  videoImage,
-                  videoAlt,
-                  videoHeadline,
-                  videoActionLabel,
-                  videoEyebrow,
-                  videoButtonLabel
-                }) => `
-                  <article class="partner-video-card">
-                    ${deferredVideoEmbed({
-                      embedUrl: videoEmbedUrl,
-                      watchUrl: videoWatchUrl,
-                      title: `${name} bei Camp Dörfl`,
-                      image: videoImage,
-                      alt: videoAlt,
-                      headline: videoHeadline || `${name} im Einsatz.`,
-                      actionLabel: videoActionLabel || "Short laden",
-                      eyebrow: videoEyebrow || name,
-                      short: true
-                    })}
-                    ${
-                      href
-                        ? `<a class="partner-video-card__button" href="${href}" target="_blank" rel="sponsored noopener noreferrer">${videoButtonLabel || name}</a>`
-                        : ""
-                    }
-                  </article>
-                `
-              )
-              .join("")}
-          </div>
+        <div class="premium-sponsor-stage__grid" aria-label="Premium Sponsoren">
+          <a class="premium-sponsor-card premium-sponsor-card--xxl" href="https://www.xxlnutrition.com/de" target="_blank" rel="sponsored noopener noreferrer" data-reveal>
+            <span class="premium-sponsor-card__logo">
+              <img src="/assets/images/partner-xxl-nutrition-logo.png" alt="XXL Nutrition"${imageLoadingAttributes()}>
+            </span>
+            <span class="premium-sponsor-card__copy">
+              <strong>XXL Nutrition</strong>
+              <span>Sporternährung und Supplements für Leistung, Regeneration und klare Ziele.</span>
+            </span>
+            <span class="premium-sponsor-card__action">Zur Website <b aria-hidden="true">→</b></span>
+          </a>
+          <a class="premium-sponsor-card premium-sponsor-card--aeke" href="https://www.aeke.com" target="_blank" rel="sponsored noopener noreferrer" data-reveal>
+            <span class="premium-sponsor-card__logo">
+              <img src="/assets/images/partner-aeke-logo.png" alt="AEKE"${imageLoadingAttributes()}>
+            </span>
+            <span class="premium-sponsor-card__copy">
+              <strong>AEKE</strong>
+              <span>Smarte Trainingshardware für präzise Bewegung und messbare Entwicklung.</span>
+            </span>
+            <span class="premium-sponsor-card__action">Zur Website <b aria-hidden="true">→</b></span>
+          </a>
         </div>
       </div>
     </section>
