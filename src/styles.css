@@ -12075,6 +12075,13 @@ body.page-premium.page-events .editorial-stage--event-video .summary-row :is(p, 
   color: rgba(25, 21, 14, 0.78) !important;
 }
 
+body.page-premium.page-events .editorial-stage--event-video .event-interview-card__text {
+  color: #4f4537 !important;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.62;
+}
+
 .coaching-start-stage {
   position: relative;
   overflow: hidden;
