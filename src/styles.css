@@ -6252,6 +6252,7 @@ p {
 }
 
 .event-reference-card__body,
+.event-reference-card__copy,
 .corporate-reference-card__body {
   display: grid;
   align-content: center;
@@ -6260,6 +6261,7 @@ p {
 }
 
 .event-reference-card__body .reference-card__name,
+.event-reference-card__copy .reference-card__name,
 .corporate-reference-card__body .reference-card__name {
   color: #fff;
   font-family: var(--font-cond);
@@ -6270,6 +6272,7 @@ p {
 }
 
 .event-reference-card__body span,
+.event-reference-card__copy span,
 .corporate-reference-card__body span {
   color: rgba(255, 255, 255, 0.72);
   font-size: clamp(0.96rem, 1.05vw, 1.08rem);
@@ -8934,6 +8937,7 @@ p {
   }
 
   .event-reference-card__body,
+  .event-reference-card__copy,
   .corporate-reference-card__body {
     gap: 10px;
   }

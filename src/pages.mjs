@@ -1801,7 +1801,7 @@ function eventsPage() {
                     <img src="${image}" alt="${alt}"${imageLoadingAttributes()}>
                   </span>
                   <span class="event-reference-card__divider" aria-hidden="true"></span>
-                  <span class="event-reference-card__body">
+                  <span class="event-reference-card__copy">
                     <span class="reference-card__name">${name}</span>
                     <span>${text}</span>
                   </span>

@@ -2577,6 +2577,22 @@ body.page-premium.page-events main .event-reference-card__body {
   box-shadow: none !important;
 }
 
+/* Reference copy deliberately has no panel of its own. */
+body.page-premium.page-events main .event-reference-card__copy,
+body.page-premium.page-events main .event-reference-card__copy > span {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+body.page-premium.page-events main .event-reference-card__copy .reference-card__name {
+  color: #fffdf8 !important;
+}
+
+body.page-premium.page-events main .event-reference-card__copy > span:last-child {
+  color: rgba(255, 253, 248, 0.8) !important;
+}
+
 body.page-premium.page-events main .event-reference-card__body .reference-card__name {
   color: #fffdf8 !important;
 }
