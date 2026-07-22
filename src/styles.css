@@ -1123,7 +1123,7 @@ textarea {
 .hero--plain {
   background-image:
     linear-gradient(90deg, rgba(255, 255, 255, 0.97), rgba(255, 255, 255, 0.9) 45%, rgba(255, 255, 255, 0.72)),
-    url("/assets/images/camp-doerfl-hero.jpg");
+    url("/assets/images/camp-doerfl-hero.webp");
   background-size: cover;
   background-position: center;
 }
@@ -5211,7 +5211,7 @@ p {
   background:
     linear-gradient(90deg, rgba(253, 251, 246, 0.98) 0%, rgba(253, 251, 246, 0.9) 38%, rgba(253, 251, 246, 0.18) 72%),
     linear-gradient(180deg, rgba(253, 251, 246, 0.35), rgba(20, 17, 12, 0.16)),
-    url("/assets/images/dominik-athlete-bike-yellow.jpg") 63% 18% / 104% auto no-repeat;
+    url("/assets/images/dominik-athlete-bike-yellow.webp") 63% 18% / 104% auto no-repeat;
 }
 
 .reboot-hero__content {
@@ -8568,7 +8568,7 @@ p {
   .reboot-hero__media {
     background:
       linear-gradient(180deg, rgba(253, 251, 246, 0.96) 0%, rgba(253, 251, 246, 0.86) 50%, rgba(253, 251, 246, 0.18) 100%),
-      url("/assets/images/dominik-athlete-bike-yellow.jpg") 58% 24% / cover no-repeat;
+      url("/assets/images/dominik-athlete-bike-yellow.webp") 58% 24% / cover no-repeat;
   }
 
   .reboot-hero h1 {
@@ -9941,7 +9941,7 @@ p {
   .page-home-reboot .reboot-hero__media {
     background:
       linear-gradient(180deg, rgba(255, 253, 248, 0.98) 0%, rgba(255, 253, 248, 0.9) 46%, rgba(255, 253, 248, 0.32) 100%),
-      url("/assets/images/dominik-athlete-bike-yellow.jpg") 58% 20% / cover no-repeat;
+      url("/assets/images/dominik-athlete-bike-yellow.webp") 58% 20% / cover no-repeat;
   }
 
   .page-home-reboot .reboot-hero h1 {

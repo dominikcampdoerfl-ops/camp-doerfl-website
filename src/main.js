@@ -1,3 +1,5 @@
+import { resolveContactTopicValue } from "./contact-topics.js";
+
 const header = document.querySelector("[data-site-header]");
 const navToggle = document.querySelector("[data-nav-toggle]");
 const nav = document.querySelector("[data-site-nav]");
@@ -210,14 +212,6 @@ if ("IntersectionObserver" in window) {
   revealItems.forEach((item) => item.classList.add("is-visible"));
 }
 
-const normalizeContactTopicKey = (value = "") =>
-  String(value)
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-
 const setContactFormStatus = (form, message = "", state = "") => {
   const status = form.querySelector("[data-contact-status]");
   if (!(status instanceof HTMLElement)) return;
@@ -254,10 +248,8 @@ document.querySelectorAll("[data-contact-simple-form]").forEach((form) => {
   const topicParam = new URLSearchParams(window.location.search).get("topic");
 
   if (topicField instanceof HTMLSelectElement && topicParam) {
-    const normalizedTopicParam = normalizeContactTopicKey(topicParam);
-    const requestedTopic = Array.from(topicField.options).find(
-      (option) => normalizeContactTopicKey(option.value) === normalizedTopicParam
-    );
+    const requestedTopicValue = resolveContactTopicValue(topicParam);
+    const requestedTopic = Array.from(topicField.options).find((option) => option.value === requestedTopicValue);
 
     if (requestedTopic) {
       topicField.value = requestedTopic.value;

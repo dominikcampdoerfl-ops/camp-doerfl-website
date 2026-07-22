@@ -204,7 +204,7 @@ export const landingPrograms = [
     href: "/personal-coaching/"
   },
   {
-    image: "/assets/images/dominik-coaching-bikeerg.jpg",
+    image: "/assets/images/dominik-coaching-bikeerg.webp",
     imagePosition: "center 20%",
     tag: "02",
     icon: "corporate",
@@ -248,22 +248,22 @@ export const landingProofCards = [
   {
     title: "2x Deutscher Meister",
     text: "Leistung auf höchstem Niveau in Bodybuilding und Powerlifting, nicht nur Theorie.",
-    image: "/assets/images/dominik-bodybuilding-desert.jpg"
+    image: "/assets/images/dominik-bodybuilding-desert.webp"
   },
   {
     title: "Coaching in der Praxis",
     text: "Arbeit mit Athleten und ambitionierten Menschen, die echte Führung und Struktur brauchen.",
-    image: "/assets/images/dominik-coaching-bikeerg.jpg"
+    image: "/assets/images/dominik-coaching-bikeerg.webp"
   },
   {
     title: "Ausdauer und Härte",
     text: "Ironman 70.3, Marathon, Triathlon und extreme Herausforderungen als gelebte Leistungsfähigkeit.",
-    image: "/assets/images/dominik-athlete-bike-yellow.jpg"
+    image: "/assets/images/dominik-athlete-bike-yellow.webp"
   },
   {
     title: "Unternehmerische Perspektive",
     text: "Ein System entwickelt für Menschen mit Verantwortung, nicht für perfekte Laborbedingungen.",
-    image: "/assets/images/dominik-moderator-mic.jpg"
+    image: "/assets/images/dominik-moderator-mic.webp"
   }
 ];
 

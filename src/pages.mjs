@@ -186,7 +186,7 @@ function corporateOutcomeShowcase(items) {
           </p>
         </div>
         <figure class="corporate-outcome-hero__media">
-          <img src="/assets/images/dominik-gym-grey.jpg" alt="Dominik Dörfl in einer professionellen Coaching-Szene"${imageLoadingAttributes()} />
+          <img src="/assets/images/dominik-gym-grey.webp" alt="Dominik Dörfl in einer professionellen Coaching-Szene"${imageLoadingAttributes()} />
         </figure>
       </article>
       <div class="corporate-outcome-grid">
@@ -278,7 +278,7 @@ const appPreviewCards = [
     title: "Dein Überblick für Plan, Check-ins und nächste Schritte.",
     text:
       "Der Member Bereich bringt Tagesstruktur, Score, Camp-Status und die nächsten To-dos in eine klare Startoberfläche.",
-    image: "/assets/images/app-screen-member-area.jpg",
+    image: "/assets/images/app-screen-member-area.webp",
     alt: "Camp Dörfl App Vorschau mit Member Area und Planansicht"
   },
   {
@@ -286,7 +286,7 @@ const appPreviewCards = [
     title: "Ernährung und Eingaben schnell und hochwertig erfassen.",
     text:
       "Foto-Scan, Barcode, Speisekarte und Sprachtracking holen Dokumentation aus dem Chaos und direkt in den Alltag.",
-    image: "/assets/images/app-screen-tracking-tools.jpg",
+    image: "/assets/images/app-screen-tracking-tools.webp",
     alt: "Camp Dörfl App Vorschau mit Tracker-Werkzeugen und Sprachtracking"
   },
   {
@@ -294,7 +294,7 @@ const appPreviewCards = [
     title: "Community, GPS und Club-Formate in einer App.",
     text:
       "Running Club, Cycling Club, Routen und Vergleiche verbinden digitale Struktur mit echter Bewegung und Motivation.",
-    image: "/assets/images/app-screen-club.jpg",
+    image: "/assets/images/app-screen-club.webp",
     alt: "Camp Dörfl App Vorschau mit Performance Club für Running und Cycling"
   }
 ];
@@ -485,7 +485,7 @@ const homeEntryCards = [
     titleHtml: "<span>MODERATOR</span> &amp; GASTGEBER",
     text:
       "INTERVIEWS, OPENINGS UND BÜHNENFÜHRUNG MIT KLARER WIRKUNG.",
-    image: "/assets/images/dominik-stage-suit.jpg",
+    image: "/assets/images/dominik-stage-suit.webp",
     alt: "Dominik Dörfl als Moderator bei einem Firmenevent",
     theme: "accent",
     href: "/events/",
@@ -496,7 +496,7 @@ const homeEntryCards = [
     titleHtml: "GESUNDHEITSTAGE, <span>DIE ETWAS BEWEGEN.</span>",
     text:
       "2D-SCAN, INBODY UND BERATUNG FÜR STARKE GESUNDHEITSTAGE.",
-    image: "/assets/images/dominik-coaching-bikeerg.jpg",
+    image: "/assets/images/dominik-coaching-bikeerg.webp",
     alt: "Firmenfitness mit InBody Messung und persönlicher Beratung",
     theme: "light",
     href: "/firmenfitness/",
@@ -536,7 +536,7 @@ const corporateModuleCards = [
     text:
       "Mitarbeitende bekommen eine präzise Standortbestimmung. Körperdaten werden sichtbar, verständlich und professionell eingeordnet.",
     points: ["sichtbarer Startpunkt", "saubere Datengrundlage", "professionell erklärt"],
-    image: "/assets/images/dominik-coaching-bikeerg.jpg",
+    image: "/assets/images/dominik-coaching-bikeerg.webp",
     alt: "Dominik Doerfl im Firmenfitness-Kontext bei Analyse und Einordnung",
     imagePosition: "center 36%"
   },
@@ -547,7 +547,7 @@ const corporateModuleCards = [
     text:
       "Nach der Messung folgt die Beratung: Ernährung, Bewegung und Routinen werden passend zum Arbeitsmodell erklärt.",
     points: ["alltagstaugliche Empfehlungen", "Ernaehrung & Routinen", "zum Berufsmodell passend"],
-    image: "/assets/images/dominik-athlete-nutrition.jpg",
+    image: "/assets/images/dominik-athlete-nutrition.webp",
     alt: "Dominik Doerfl im Kontext von Ernaehrung und Beratung",
     imagePosition: "center 24%"
   },
@@ -558,7 +558,7 @@ const corporateModuleCards = [
     text:
       "Das Angebot ist leicht in Unternehmen integrierbar und hat sich bereits mehrfach in kurzer Zeit erfolgreich verkauft.",
     points: ["leicht intern organisierbar", "direkt nutzbar im Team"],
-    image: "/assets/images/dominik-athlete-bike-yellow.jpg",
+    image: "/assets/images/dominik-athlete-bike-yellow.webp",
     alt: "Dominik Doerfl in einer aktiven Performance-Szene",
     imagePosition: "center 20%"
   }
@@ -664,7 +664,7 @@ const eventFormatCards = [
     title: "Souverän eröffnen",
     text: "Klare Worte, sichere Führung und ein Auftakt, der Marke, Gastgeber und Publikum sofort auf ein Niveau bringt.",
     note: "Ideal für Formate, in denen der erste Eindruck bereits Teil der Markenwirkung ist.",
-    image: "/assets/images/event-opening-moderation.jpg",
+    image: "/assets/images/event-opening-moderation.webp",
     alt: "Dominik Dörfl bei einer Eröffnung auf der Bühne",
     imagePosition: "center 34%"
   },
@@ -674,7 +674,7 @@ const eventFormatCards = [
     title: "Energie glaubwürdig transportieren",
     text: "Sportliche Praxis macht die Moderation nahbar, dynamisch und glaubwürdig, ohne dass Inszenierung aufgesetzt wirkt.",
     note: "Für Bühnen, auf denen Dynamik spürbar sein soll und trotzdem alles kontrolliert bleibt.",
-    image: "/assets/images/event-stage-interview.jpg",
+    image: "/assets/images/event-stage-interview.webp",
     alt: "Dominik Dörfl moderiert ein Sportevent im Live-Moment",
     imagePosition: "64% 42%"
   },
@@ -684,7 +684,7 @@ const eventFormatCards = [
     title: "Gespräche sauber führen",
     text: "Für Panels, Galas und Interviews, bei denen Timing, Ton und Gesprächsführung professionell getragen werden müssen.",
     note: "Besonders stark, wenn Gäste sichtbar werden sollen und der Ablauf elegant zusammenhalten muss.",
-    image: "/assets/images/event-panel-talk.jpg",
+    image: "/assets/images/event-panel-talk.webp",
     alt: "Dominik Dörfl bei einer Paneldiskussion auf einer Bühne",
     imagePosition: "68% 54%"
   }
@@ -764,7 +764,7 @@ const partnerBrandCards = [
     meta: "Code: Dominik",
     videoEmbedUrl: "https://www.youtube-nocookie.com/embed/jvV0XFf21D8?autoplay=1&rel=0&modestbranding=1&playsinline=1",
     videoWatchUrl: "https://www.youtube.com/watch?v=jvV0XFf21D8",
-    videoImage: "/assets/images/dominik-athlete-nutrition.jpg",
+    videoImage: "/assets/images/dominik-athlete-nutrition.webp",
     videoAlt: "Dominik Dörfl im Performance- und Ernaehrungs-Kontext fuer XXL Nutrition",
     videoHeadline: "XXL Nutrition im Einsatz.",
     videoActionLabel: "Short laden",
@@ -783,7 +783,7 @@ const partnerBrandCards = [
     meta: "Direkter Partnerlink",
     videoEmbedUrl: "https://www.youtube-nocookie.com/embed/yi6t6tSS4s0?autoplay=1&rel=0&modestbranding=1&playsinline=1",
     videoWatchUrl: "https://youtube.com/shorts/yi6t6tSS4s0",
-    videoImage: "/assets/images/dominik-gym-grey.jpg",
+    videoImage: "/assets/images/dominik-gym-grey.webp",
     videoAlt: "Dominik Dörfl beim Training im Gym",
     videoHeadline: "AEKE im Einsatz.",
     videoActionLabel: "Short laden",
@@ -928,8 +928,8 @@ function homePage() {
   const content = `
     <section class="ff-hero ff-hero--home-photo">
       <picture>
-        <source media="(max-width: 900px)" srcset="/assets/images/home-hero-stadium-mobile.png">
-        <img class="ff-hero__img" src="/assets/images/home-hero-stadium-wide.png" alt="Dominik Dörfl mit einem Wegbegleiter als Ironman-Finisher im Stadion"${imageLoadingAttributes({ eager: true })}>
+        <source media="(max-width: 900px)" srcset="/assets/images/home-hero-stadium-mobile.webp">
+        <img class="ff-hero__img" src="/assets/images/home-hero-stadium-wide.webp" srcset="/assets/images/home-hero-stadium-wide-960.webp 960w, /assets/images/home-hero-stadium-wide.webp 1717w" sizes="100vw" alt="Dominik Dörfl mit einem Wegbegleiter als Ironman-Finisher im Stadion"${imageLoadingAttributes({ eager: true })}>
       </picture>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
@@ -976,7 +976,7 @@ function homePage() {
           </div>
           <a class="ed-app-banner" href="/app/" data-reveal>
             <div class="ed-app-banner__media">
-              <img src="/assets/images/home-app-banner-coaching.png" alt="Dominik Dörfl zeigt die Camp Dörfl App im Training"${imageLoadingAttributes()}>
+              <img src="/assets/images/home-app-banner-coaching.webp" alt="Dominik Dörfl zeigt die Camp Dörfl App im Training"${imageLoadingAttributes()}>
             </div>
             <div class="ed-app-banner__content">
               <h3>Deine Fitness.<br><span>Komplett begleitet.</span></h3>
@@ -1083,7 +1083,7 @@ function homePage() {
     description:
       "Camp Dörfl in Nürnberg bündelt Premium Personal Training, Firmenfitness, Event-Moderation und App-Struktur in einem klaren Performance-System.",
     pageName: "Camp Dörfl",
-    socialImage: "/assets/images/home-hero-stadium-wide.png",
+    socialImage: "/assets/images/home-hero-stadium-wide-social.jpg",
     socialImageAlt: "Dominik Dörfl als Ironman-Finisher im Stadion",
     keywords: [
       "Camp Dörfl Nürnberg",
@@ -1099,7 +1099,7 @@ function homePage() {
 function appPage() {
   const content = `
     <section class="ff-hero ff-hero--app ff-hero--text-only">
-      <img class="ff-hero__img" src="/assets/images/home-app-preview.jpg" alt="Vorschau der Camp Dörfl App mit Training, Ernährung, Check-ins und Performance-Funktionen"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/home-app-preview.webp" alt="Vorschau der Camp Dörfl App mit Training, Ernährung, Check-ins und Performance-Funktionen"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
         <div class="ff-hero__app-copy">
@@ -1128,7 +1128,7 @@ function appPage() {
             embedUrl: "https://www.youtube-nocookie.com/embed/hF05HMpokj8?autoplay=1&rel=0&modestbranding=1&playsinline=1",
             watchUrl: "https://www.youtube.com/shorts/hF05HMpokj8",
             title: "Camp Dörfl Fitness App",
-            image: "/assets/images/home-app-preview.jpg",
+            image: "/assets/images/home-app-preview.webp",
             alt: "Vorschau der Camp Dörfl Fitness App",
             headline: "Die Camp Dörfl Fitness App im Einsatz.",
             actionLabel: "Short laden",
@@ -1192,7 +1192,7 @@ function appPage() {
       "Fitness App von Camp Dörfl: Trainingsplan, Ernährungsplan, Coach-Zugang, Scans, GPS-Routen, Community und Fortschrittsanalyse in einer App.",
     keywords: ["Fitness App", "Fitness App mit Trainingsplan", "Fitness App mit Ernährungsplan", "Fitness App mit Coach", "Camp Dörfl App"],
     bodyClass: "page-premium page-app",
-    socialImage: "/assets/images/home-app-preview.jpg",
+    socialImage: "/assets/images/home-app-preview-social.jpg",
     socialImageAlt: "Vorschau der Camp Dörfl App mit Training, Ernährung und Check-ins",
     extraStructuredData: [
       serviceSchema({
@@ -1211,7 +1211,7 @@ function appPage() {
 function personalCoachingPage() {
   const content = `
     <section class="ff-hero ff-hero--coaching ff-hero--coaching-photo">
-      <img class="ff-hero__img" src="/assets/images/premium-training-hero-wide.jpg" alt="Dominik Dörfl als Personal Trainer in Nürnberg beim Training mit einem Kunden im Studio"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/premium-training-hero-wide.webp" srcset="/assets/images/premium-training-hero-wide-960.webp 960w, /assets/images/premium-training-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl als Personal Trainer in Nürnberg beim Training mit einem Kunden im Studio"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
         <p class="ff-hero__eyebrow" data-reveal>Personal Trainer Nürnberg · 1:1 Coaching</p>
@@ -1277,7 +1277,7 @@ function personalCoachingPage() {
             })}
           </div>
           <figure class="coaching-start-stage__photo" data-reveal>
-            <img src="/assets/images/dominik-bike-road-yellow.jpg" alt="Dominik Doerfl mit Rennrad im gelb-weissen Trikot"${imageLoadingAttributes()}>
+            <img src="/assets/images/dominik-bike-road-yellow.webp" alt="Dominik Doerfl mit Rennrad im gelb-weissen Trikot"${imageLoadingAttributes()}>
           </figure>
         </div>
         ${featureGrid(coachingIncludedCards, "feature-grid--coaching-start")}
@@ -1405,7 +1405,7 @@ function personalCoachingPage() {
       "Personal Trainer Nürnberg: 1:1 Coaching mit Training, 2D-Körperanalyse, InBody, Ernährungsplan und persönlicher App-Begleitung bei Camp Dörfl.",
     keywords: ["Personal Trainer Nürnberg", "Personal Training Nürnberg", "Premium Personal Training Nürnberg", "1:1 Personal Training Nürnberg", "Ernährungscoaching Nürnberg"],
     bodyClass: "page-premium page-coaching",
-    socialImage: "/assets/images/premium-training-hero-wide.jpg",
+    socialImage: "/assets/images/premium-training-hero-wide-social.jpg",
     socialImageAlt: "Dominik Dörfl beim Personal Training mit einem Kunden in Nürnberg",
     extraStructuredData: [
       serviceSchema({
@@ -1444,7 +1444,7 @@ function personalCoachingPage() {
 function firmenfitnessPage() {
   const content = `
     <section class="ff-hero ff-hero--photo ff-hero--firmenfitness ff-hero--firmenfitness-photo ff-hero--text-only">
-      <img class="ff-hero__img" src="/assets/images/firmenfitness-hero-wide.jpg" alt="Dominik Dörfl im Firmenfitness-Kontext mit Analyse und Beratung für Unternehmen"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/firmenfitness-hero-wide.webp" srcset="/assets/images/firmenfitness-hero-wide-960.webp 960w, /assets/images/firmenfitness-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl im Firmenfitness-Kontext mit Analyse und Beratung für Unternehmen"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
           <p class="ff-hero__eyebrow" data-reveal>Gesundheitstage · Performance Checks</p>
@@ -1480,7 +1480,7 @@ function firmenfitnessPage() {
             embedUrl: "https://www.youtube-nocookie.com/embed/cDQ3xaj2we8?autoplay=1&rel=0&modestbranding=1&playsinline=1",
             watchUrl: "https://www.youtube.com/watch?v=cDQ3xaj2we8",
             title: "Camp Dörfl Firmenfitness Querformat",
-            image: "/assets/images/dominik-bike-blue.jpg",
+            image: "/assets/images/dominik-bike-blue.webp",
             alt: "Camp Dörfl Firmenfitness mit Aktivierung und Bewegungsbezug",
             headline: "Firmenfitness. Groß gedacht.",
             actionLabel: "Video laden"
@@ -1545,7 +1545,7 @@ function firmenfitnessPage() {
             embedUrl: "https://www.youtube-nocookie.com/embed/rQ9YocgKVSc?autoplay=1&rel=0&modestbranding=1&playsinline=1",
             watchUrl: "https://www.youtube.com/watch?v=rQ9YocgKVSc",
             title: "Camp Dörfl Firmenfitness",
-            image: "/assets/images/dominik-athlete-nutrition.jpg",
+            image: "/assets/images/dominik-athlete-nutrition.webp",
             alt: "Dominik Dörfl in einem Performance- und Ernährungs-Kontext",
             headline: "Firmenfitness im Einsatz.",
             actionLabel: "Video laden",
@@ -1631,7 +1631,7 @@ function firmenfitnessPage() {
       "Firmenfitness in Nürnberg mit Gesundheitstagen, 2D-Analyse, InBody und individueller Beratung für Unternehmen von Camp Dörfl.",
     keywords: ["Firmenfitness Nürnberg", "Gesundheitstag Nürnberg", "BGM Nürnberg", "Betriebliche Gesundheitsförderung Nürnberg"],
     bodyClass: "page-premium page-firmenfitness",
-    socialImage: "/assets/images/firmenfitness-hero-wide.jpg",
+    socialImage: "/assets/images/firmenfitness-hero-wide-social.jpg",
     socialImageAlt: "Dominik Dörfl bei einer Firmenfitness-Analyse und Beratung",
     extraStructuredData: [
       serviceSchema({
@@ -1648,7 +1648,7 @@ function firmenfitnessPage() {
         name: "Camp Dörfl Firmenfitness Querformat",
         description:
           "Video-Einblick in Firmenfitness und Gesundheitstage von Camp Dörfl mit Aktivierung, Analyse und verständlicher Beratung.",
-        thumbnailUrl: "/assets/images/dominik-bike-blue.jpg",
+        thumbnailUrl: "/assets/images/dominik-bike-blue-social.jpg",
         embedUrl: "https://www.youtube-nocookie.com/embed/cDQ3xaj2we8?autoplay=1&rel=0&modestbranding=1&playsinline=1",
         watchUrl: "https://www.youtube.com/watch?v=cDQ3xaj2we8"
       }),
@@ -1658,7 +1658,7 @@ function firmenfitnessPage() {
         name: "Camp Dörfl Firmenfitness Short",
         description:
           "Kurzer Videoeinblick in Camp Dörfl Firmenfitness mit Ernährungs- und Gesundheitsbezug im Unternehmenskontext.",
-        thumbnailUrl: "/assets/images/dominik-athlete-nutrition.jpg",
+        thumbnailUrl: "/assets/images/dominik-athlete-nutrition-social.jpg",
         embedUrl: "https://www.youtube-nocookie.com/embed/rQ9YocgKVSc?autoplay=1&rel=0&modestbranding=1&playsinline=1",
         watchUrl: "https://www.youtube.com/watch?v=rQ9YocgKVSc"
       })
@@ -1670,7 +1670,7 @@ function firmenfitnessPage() {
 function eventsPage() {
   const content = `
     <section class="ff-hero ff-hero--photo ff-hero--events ff-hero--events-photo ff-hero--text-only">
-      <img class="ff-hero__img" src="/assets/images/events-hero-wide.jpg" alt="Dominik Dörfl als Moderator auf einer Eventbühne mit Publikum"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/events-hero-wide.webp" srcset="/assets/images/events-hero-wide-960.webp 960w, /assets/images/events-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl als Moderator auf einer Eventbühne mit Publikum"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
           <p class="ff-hero__eyebrow" data-reveal>Events · Moderation · Hosting</p>
@@ -1706,7 +1706,7 @@ function eventsPage() {
             embedUrl: "https://www.youtube-nocookie.com/embed/1kpl2HrShto?autoplay=1&rel=0&modestbranding=1&playsinline=1",
             watchUrl: "https://youtu.be/1kpl2HrShto",
             title: "Camp Dörfl Events Video",
-            image: "/assets/images/events-hero-wide.jpg",
+            image: "/assets/images/events-hero-wide.webp",
             alt: "Vorschaubild fuer das Event-Video von Camp Doerfl",
             headline: "Events live erleben.",
             actionLabel: "Video laden"
@@ -1740,7 +1740,7 @@ function eventsPage() {
             embedUrl: "https://www.youtube-nocookie.com/embed/oTRIacnkFPc?autoplay=1&rel=0&modestbranding=1&playsinline=1",
             watchUrl: "https://www.youtube.com/watch?v=oTRIacnkFPc",
             title: "Camp Dörfl Events",
-            image: "/assets/images/dominik-moderator-mic.jpg",
+            image: "/assets/images/dominik-moderator-mic.webp",
             alt: "Dominik Dörfl als Moderator mit Mikrofon auf einer Bühne",
             headline: "Events im Einsatz.",
             actionLabel: "Video laden",
@@ -1775,7 +1775,7 @@ function eventsPage() {
             embedUrl: "https://www.youtube-nocookie.com/embed/yhV7cyw2Pgg?autoplay=1&rel=0&modestbranding=1&playsinline=1",
             watchUrl: "https://youtu.be/yhV7cyw2Pgg",
             title: "Camp Dörfl Interview Beispiel",
-            image: "/assets/images/event-stage-interview.jpg",
+            image: "/assets/images/event-stage-interview.webp",
             alt: "Dominik Dörfl fuehrt ein Interview auf einer Event-Buehne",
             headline: "Interview live erleben.",
             actionLabel: "Interview laden",
@@ -1886,21 +1886,21 @@ function eventsPage() {
         </div>
         <div class="event-fun-stage__gallery" data-reveal aria-label="Formate mit Spaß-Faktor bei Camp Dörfl Events">
           <figure class="event-fun-stage__card event-fun-stage__card--lead">
-            <img src="/assets/images/event-fun-segmueller-poster.jpg" alt="Dominik Dörfl beim Segmüller Bayern-Wochenende neben einem Veranstaltungsaufsteller"${imageLoadingAttributes()}>
+            <img src="/assets/images/event-fun-segmueller-poster.webp" alt="Dominik Dörfl beim Segmüller Bayern-Wochenende neben einem Veranstaltungsaufsteller"${imageLoadingAttributes()}>
             <figcaption>
               <span>Segmüller</span>
               <h3>Bayern-Wochenende mit Challenge-Charakter.</h3>
             </figcaption>
           </figure>
           <figure class="event-fun-stage__card event-fun-stage__card--stemmen">
-            <img src="/assets/images/event-fun-segmueller-stemmen.jpg" alt="Dominik Dörfl mit zwei Maßkrügen vor einem Maßkrugstemmen-Stand"${imageLoadingAttributes()}>
+            <img src="/assets/images/event-fun-segmueller-stemmen.webp" alt="Dominik Dörfl mit zwei Maßkrügen vor einem Maßkrugstemmen-Stand"${imageLoadingAttributes()}>
             <figcaption>
               <span>Mitmachformat</span>
               <h3>Publikumsmomente mit Energie und Augenzwinkern.</h3>
             </figcaption>
           </figure>
           <figure class="event-fun-stage__card event-fun-stage__card--hosting">
-            <img src="/assets/images/event-fun-segmueller-hosting.jpg" alt="Dominik Dörfl moderiert ein Maßkrugstemmen mit einem Kind auf der Bühne"${imageLoadingAttributes()}>
+            <img src="/assets/images/event-fun-segmueller-hosting.webp" alt="Dominik Dörfl moderiert ein Maßkrugstemmen mit einem Kind auf der Bühne"${imageLoadingAttributes()}>
             <figcaption>
               <span>Nah dran</span>
               <h3>Moderation, die Menschen direkt ins Erlebnis holt.</h3>
@@ -1939,7 +1939,7 @@ function eventsPage() {
       "Moderator in Nürnberg für Events, Interviews, Panels und Bühnenformate mit klarer Führung, Timing und professioneller Präsenz.",
     keywords: ["Moderator Nürnberg", "Eventmoderator Nürnberg", "Bühnenmoderation Nürnberg", "Interview Moderator Nürnberg"],
     bodyClass: "page-premium page-events",
-    socialImage: "/assets/images/events-hero-wide.jpg",
+    socialImage: "/assets/images/events-hero-wide-social.jpg",
     socialImageAlt: "Dominik Dörfl als Moderator auf einer Eventbühne in Nürnberg",
     extraStructuredData: [
       serviceSchema({
@@ -1956,7 +1956,7 @@ function eventsPage() {
         name: "Camp Dörfl Events Video",
         description:
           "Video-Einblick in die Event-Moderation von Camp Dörfl für Bühne, Publikum und Veranstalter.",
-        thumbnailUrl: "/assets/images/events-hero-wide.jpg",
+        thumbnailUrl: "/assets/images/events-hero-wide-social.jpg",
         embedUrl: "https://www.youtube-nocookie.com/embed/1kpl2HrShto?autoplay=1&rel=0&modestbranding=1&playsinline=1",
         watchUrl: "https://youtu.be/1kpl2HrShto"
       }),
@@ -1966,7 +1966,7 @@ function eventsPage() {
         name: "Camp Dörfl Events Short",
         description:
           "Kurzer Videoeinblick in die Event-Moderation von Camp Dörfl mit Präsenz, Timing und Bühnenführung.",
-        thumbnailUrl: "/assets/images/dominik-moderator-mic.jpg",
+        thumbnailUrl: "/assets/images/dominik-moderator-mic-social.jpg",
         embedUrl: "https://www.youtube-nocookie.com/embed/oTRIacnkFPc?autoplay=1&rel=0&modestbranding=1&playsinline=1",
         watchUrl: "https://www.youtube.com/watch?v=oTRIacnkFPc"
       }),
@@ -1976,7 +1976,7 @@ function eventsPage() {
         name: "Camp Dörfl Interview Beispiel",
         description:
           "Video-Beispiel für Interviewführung und Moderation von Camp Dörfl auf einer Live-Bühne.",
-        thumbnailUrl: "/assets/images/event-stage-interview.jpg",
+        thumbnailUrl: "/assets/images/event-stage-interview-social.jpg",
         embedUrl: "https://www.youtube-nocookie.com/embed/yhV7cyw2Pgg?autoplay=1&rel=0&modestbranding=1&playsinline=1",
         watchUrl: "https://youtu.be/yhV7cyw2Pgg"
       })
@@ -1988,7 +1988,7 @@ function eventsPage() {
 function teamSuccessPage() {
   const content = `
     <section class="ff-hero ff-hero--split ff-hero--photo ff-hero--team">
-      <img class="ff-hero__img" src="/assets/images/dominik-moderator-mic.jpg" alt="Dominik Dörfl mit Mikrofon bei einer Moderation auf der Bühne"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/dominik-moderator-mic.webp" alt="Dominik Dörfl mit Mikrofon bei einer Moderation auf der Bühne"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__shell">
         <div class="ff-hero__inner">
@@ -2016,7 +2016,7 @@ function teamSuccessPage() {
         </div>
         <div class="ff-hero__showcase ff-hero__showcase--photo" data-reveal>
           <figure class="ff-hero__photo-card">
-            <img src="/assets/images/dominik-moderator-mic.jpg" alt="Dominik Dörfl mit Mikrofon als Moderator"${imageLoadingAttributes()}>
+            <img src="/assets/images/dominik-moderator-mic.webp" alt="Dominik Dörfl mit Mikrofon als Moderator"${imageLoadingAttributes()}>
           </figure>
           <article class="ff-hero__aside">
             <span class="card-tag">Im Team sichtbar</span>
@@ -2080,7 +2080,7 @@ function teamSuccessPage() {
           ${summaryRows(teamSuccessRows)}
         </div>
         <div class="editorial-stage__media" data-reveal>
-          <img src="/assets/images/dominik-coaching-bikeerg.jpg" alt="Dominik Dörfl bei der Arbeit mit einem Klienten"${imageLoadingAttributes()}>
+          <img src="/assets/images/dominik-coaching-bikeerg.webp" alt="Dominik Dörfl bei der Arbeit mit einem Klienten"${imageLoadingAttributes()}>
         </div>
       </div>
     </section>
@@ -2102,7 +2102,7 @@ function teamSuccessPage() {
       "Erfolge im Team bei Camp Dörfl Nürnberg: Erfahrung aus Leistungssport, Coaching, Community, Bühne und Unternehmertum für sichtbare Entwicklung.",
     keywords: ["Erfolge im Team", "Camp Dörfl Ergebnisse", "Transformation Coaching", "Dominik Dörfl"],
     bodyClass: "page-premium page-team",
-    socialImage: "/assets/images/dominik-moderator-mic.jpg",
+    socialImage: "/assets/images/dominik-moderator-mic-social.jpg",
     socialImageAlt: "Dominik Dörfl mit Mikrofon und Team-Erfolgen im Hintergrund",
     content
   });
@@ -2169,7 +2169,7 @@ function executivePerformancePage() {
 
   const content = `
     <section class="ff-hero ff-hero--coaching ff-hero--coaching-photo ff-hero--executive">
-      <img class="ff-hero__img" src="/assets/images/dominik-gym-grey.jpg" alt="Dominik Dörfl beim Krafttraining im Studio"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/dominik-gym-grey.webp" alt="Dominik Dörfl beim Krafttraining im Studio"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
         <div class="premium-badge">
@@ -2185,7 +2185,7 @@ function executivePerformancePage() {
           Analyse, Ernährungsführung, Training und App-Steuerung - abgestimmt auf einen vollen Kalender, hohe Verantwortung und einen echten Premium-Anspruch.
         </p>
         <div class="ff-hero__actions" data-reveal>
-          <a class="button button--primary" href="${contactHref("premium-training")}"><span>Platz anfragen</span><span aria-hidden="true">&rarr;</span></a>
+          <a class="button button--primary" href="${contactHref("executive-performance")}"><span>Platz anfragen</span><span aria-hidden="true">&rarr;</span></a>
           <a class="button button--secondary-light" href="/personal-coaching/"><span>Personal Training ansehen</span><span aria-hidden="true">&rarr;</span></a>
         </div>
         <dl class="ff-hero__facts" data-reveal aria-label="Eckdaten Executive Performance">
@@ -2219,7 +2219,7 @@ function executivePerformancePage() {
           ${processList(executiveSteps)}
         </div>
         <div class="editorial-stage__media" data-reveal>
-          <img src="/assets/images/dominik-athlete-nutrition.jpg" alt="Dominik Dörfl bei der Ernährungs- und Leistungsplanung"${imageLoadingAttributes()}>
+          <img src="/assets/images/dominik-athlete-nutrition.webp" alt="Dominik Dörfl bei der Ernährungs- und Leistungsplanung"${imageLoadingAttributes()}>
         </div>
       </div>
     </section>
@@ -2268,7 +2268,7 @@ function executivePerformancePage() {
       title: "Sichere dir einen der wenigen Plätze.",
       text:
         "Wenn du beruflich viel leistest und körperlich wieder an deine echte Leistungsfähigkeit willst, ist eine kurze, ehrliche Anfrage der richtige Start.",
-      primary: { label: "Platz anfragen", href: contactHref("premium-training") },
+      primary: { label: "Platz anfragen", href: contactHref("executive-performance") },
       secondary: { label: "Camp Dörfl App ansehen", href: "/app/" }
     })}
   `;
@@ -2280,7 +2280,7 @@ function executivePerformancePage() {
       "Executive Performance von Camp Dörfl: 12-Wochen-Premium-Coaching in Nürnberg für Führungskräfte und Leistungsträger mit vollem Kalender – Analyse, Plan und App.",
     keywords: ["Executive Performance", "Performance Coaching Nürnberg", "Coaching für Führungskräfte", "Premium Coaching Nürnberg"],
     bodyClass: "page-premium page-executive",
-    socialImage: "/assets/images/dominik-gym-grey.jpg",
+    socialImage: "/assets/images/dominik-gym-grey-social.jpg",
     socialImageAlt: "Dominik Dörfl beim Krafttraining für Executive Performance Coaching",
     extraStructuredData: [
       serviceSchema({
@@ -2319,7 +2319,7 @@ function ueberDominikPage() {
 
   const content = `
     <section class="ff-hero ff-hero--split ff-hero--photo ff-hero--about">
-      <img class="ff-hero__img" src="/assets/images/dominik-stage-suit.jpg" alt="Dominik Dörfl im Anzug auf der Bühne als Moderator und Performance Coach"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/dominik-stage-suit.webp" alt="Dominik Dörfl im Anzug auf der Bühne als Moderator und Performance Coach"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__shell">
         <div class="ff-hero__inner">
@@ -2347,7 +2347,7 @@ function ueberDominikPage() {
         </div>
         <div class="ff-hero__showcase ff-hero__showcase--photo" data-reveal>
           <figure class="ff-hero__photo-card">
-            <img src="/assets/images/dominik-stage-suit.jpg" alt="Dominik Dörfl im Anzug auf der Bühne"${imageLoadingAttributes()}>
+            <img src="/assets/images/dominik-stage-suit.webp" alt="Dominik Dörfl im Anzug auf der Bühne"${imageLoadingAttributes()}>
           </figure>
           <article class="ff-hero__aside">
             <span class="card-tag">Auf einen Blick</span>
@@ -2398,7 +2398,7 @@ function ueberDominikPage() {
           </ul>
         </div>
         <div class="editorial-stage__media" data-reveal>
-          <img src="/assets/images/dominik-bodybuilding-desert.jpg" alt="Dominik Dörfl als Bodybuilder"${imageLoadingAttributes()}>
+          <img src="/assets/images/dominik-bodybuilding-desert.webp" alt="Dominik Dörfl als Bodybuilder"${imageLoadingAttributes()}>
         </div>
       </div>
     </section>
@@ -2433,7 +2433,7 @@ function ueberDominikPage() {
     keywords: ["Dominik Dörfl", "Camp Dörfl Gründer", "Ex-Profi Athlet Nürnberg", "Coach und Moderator Nürnberg"],
     bodyClass: "page-premium page-about",
     pageType: "AboutPage",
-    socialImage: "/assets/images/dominik-stage-suit.jpg",
+    socialImage: "/assets/images/dominik-stage-suit-social.jpg",
     socialImageAlt: "Dominik Dörfl im Anzug auf der Bühne",
     content
   });
@@ -3322,7 +3322,7 @@ function partnerPage() {
 function contactPage() {
   const content = `
     <section class="ff-hero ff-hero--split ff-hero--contact">
-      <img class="ff-hero__img" src="/assets/images/dominik-gym-grey.jpg" alt="Dominik Dörfl im Studio als Ansprechpartner für Kontakt und Beratung"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/dominik-gym-grey.webp" alt="Dominik Dörfl im Studio als Ansprechpartner für Kontakt und Beratung"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__shell">
         <div class="ff-hero__inner">
@@ -3407,7 +3407,7 @@ function contactPage() {
     keywords: ["Camp Dörfl Kontakt", "Dominik Dörfl Kontakt", "Beratung Camp Dörfl", "Anfrage Camp Dörfl"],
     bodyClass: "page-premium page-contact",
     pageType: "ContactPage",
-    socialImage: "/assets/images/dominik-gym-grey.jpg",
+    socialImage: "/assets/images/dominik-gym-grey-social.jpg",
     socialImageAlt: "Dominik Dörfl als Ansprechpartner für Kontakt und Beratung",
     content
   });
@@ -3491,7 +3491,7 @@ function personalTrainingCostPage() {
 
   const content = `
     <section class="ff-hero ff-hero--coaching ff-hero--coaching-photo ff-hero--text-only">
-      <img class="ff-hero__img" src="/assets/images/premium-training-hero-wide.jpg" alt="Dominik Dörfl beim Personal Training mit einem Kunden im Studio"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/premium-training-hero-wide.webp" srcset="/assets/images/premium-training-hero-wide-960.webp 960w, /assets/images/premium-training-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl beim Personal Training mit einem Kunden im Studio"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
         <p class="ff-hero__eyebrow" data-reveal>Ratgeber · Personal Training Kosten</p>
@@ -3549,7 +3549,7 @@ function personalTrainingCostPage() {
           ${processList(pricingSteps)}
         </div>
         <div class="editorial-stage__media" data-reveal>
-          <img src="/assets/images/dominik-bike-road-yellow.jpg" alt="Dominik Dörfl mit Rennrad als Symbol für individuell passende Trainingssteuerung"${imageLoadingAttributes()}>
+          <img src="/assets/images/dominik-bike-road-yellow.webp" alt="Dominik Dörfl mit Rennrad als Symbol für individuell passende Trainingssteuerung"${imageLoadingAttributes()}>
         </div>
       </div>
     </section>
@@ -3588,7 +3588,7 @@ function personalTrainingCostPage() {
       "Premium Personal Training Nürnberg"
     ],
     bodyClass: "page-premium page-coaching page-guide-pricing",
-    socialImage: "/assets/images/premium-training-hero-wide.jpg",
+    socialImage: "/assets/images/premium-training-hero-wide-social.jpg",
     socialImageAlt: "Dominik Dörfl beim Personal Training mit einem Kunden in Nürnberg",
     extraStructuredData: [
       serviceSchema({
@@ -3675,7 +3675,7 @@ function gesundheitstagNuernbergPage() {
 
   const content = `
     <section class="ff-hero ff-hero--photo ff-hero--firmenfitness ff-hero--firmenfitness-photo ff-hero--text-only">
-      <img class="ff-hero__img" src="/assets/images/firmenfitness-hero-wide.jpg" alt="Dominik Dörfl im Gesundheitstag- und Firmenfitness-Kontext bei Analyse und Beratung"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/firmenfitness-hero-wide.webp" srcset="/assets/images/firmenfitness-hero-wide-960.webp 960w, /assets/images/firmenfitness-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl im Gesundheitstag- und Firmenfitness-Kontext bei Analyse und Beratung"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
         <p class="ff-hero__eyebrow" data-reveal>Ratgeber · Gesundheitstag Nürnberg</p>
@@ -3733,7 +3733,7 @@ function gesundheitstagNuernbergPage() {
           ${processList(corporateSteps)}
         </div>
         <div class="editorial-stage__media" data-reveal>
-          <img src="/assets/images/dominik-coaching-bikeerg.jpg" alt="Dominik Dörfl bei einer Firmenfitness- und Gesundheitstag-Beratung"${imageLoadingAttributes()}>
+          <img src="/assets/images/dominik-coaching-bikeerg.webp" alt="Dominik Dörfl bei einer Firmenfitness- und Gesundheitstag-Beratung"${imageLoadingAttributes()}>
         </div>
       </div>
     </section>
@@ -3784,7 +3784,7 @@ function gesundheitstagNuernbergPage() {
       "Betriebliche Gesundheit Nürnberg"
     ],
     bodyClass: "page-premium page-firmenfitness page-guide-corporate",
-    socialImage: "/assets/images/firmenfitness-hero-wide.jpg",
+    socialImage: "/assets/images/firmenfitness-hero-wide-social.jpg",
     socialImageAlt: "Dominik Dörfl bei Analyse und Beratung für einen Gesundheitstag in Nürnberg",
     extraStructuredData: [
       serviceSchema({

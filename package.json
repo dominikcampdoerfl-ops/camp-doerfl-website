@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "build": "node src/build.mjs",
+    "test": "node --test",
     "dev": "node src/dev.mjs",
     "preview": "node src/server.mjs",
+    "test:redirects": "node --test test/legacy-redirects.test.mjs",
     "cf:deploy": "npm run build && npx wrangler deploy",
     "cf:deploy:dry-run": "npm run build && npx wrangler deploy --dry-run"
   }

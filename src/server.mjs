@@ -4,6 +4,7 @@ import { stat } from "node:fs/promises";
 import { extname, join, normalize, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { dirname } from "node:path";
+import { resolveLegacyRedirect } from "./redirects.mjs";
 import { securityHeaders } from "./security.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..", "dist");
@@ -17,6 +18,8 @@ const types = {
   ".png": "image/png",
   ".jpg": "image/jpeg",
   ".jpeg": "image/jpeg",
+  ".webp": "image/webp",
+  ".avif": "image/avif",
   ".svg": "image/svg+xml",
   ".xml": "application/xml; charset=utf-8",
   ".txt": "text/plain; charset=utf-8"
@@ -47,6 +50,17 @@ function applySecurityHeaders(res) {
 }
 
 const server = createServer(async (req, res) => {
+  const requestUrl = new URL(req.url || "/", "http://localhost");
+  const redirectTarget = resolveLegacyRedirect(requestUrl.pathname);
+
+  if (redirectTarget) {
+    applySecurityHeaders(res);
+    res.statusCode = 301;
+    res.setHeader("Location", `${redirectTarget}${requestUrl.search}`);
+    res.end();
+    return;
+  }
+
   const filePath = await resolveFile(req.url || "/");
   applySecurityHeaders(res);
   res.setHeader("Content-Type", types[extname(filePath)] || "application/octet-stream");

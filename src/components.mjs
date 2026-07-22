@@ -1,8 +1,9 @@
 import { navItems, site, sponsors } from "./data.mjs";
+import { contactTopics, resolveContactTopicKey } from "./contact-topics.js";
 
 const brandLogoPath = "/assets/images/camp-doerfl-logo.png";
 const defaultRobotsContent = "index,follow,max-image-preview:large";
-const defaultSocialImage = "/assets/images/home-hero-stadium-wide.jpg";
+const defaultSocialImage = "/assets/images/home-hero-stadium-wide-social.jpg";
 const socialPlatformIcons = {
   instagram: {
     label: "Instagram",
@@ -128,7 +129,8 @@ function breadcrumbSchema(path, pageName) {
 }
 
 export function contactHref(topicSlug = "") {
-  return topicSlug ? `/kontakt/?topic=${encodeURIComponent(topicSlug)}#kontaktformular` : "/kontakt/#kontaktformular";
+  const topicKey = resolveContactTopicKey(topicSlug);
+  return topicKey ? `/kontakt/?topic=${encodeURIComponent(topicKey)}#kontaktformular` : "/kontakt/#kontaktformular";
 }
 
 function uiIcon(name) {
@@ -270,7 +272,7 @@ export function sectionHeader({ eyebrow, title, text, align = "left", headingLev
 }
 
 export function hero({ eyebrow, title, lead, primary, secondary, stats = [], image = false, visual = "", className = "" }) {
-  const imageStyle = image ? ` style="--hero-image: url('/assets/images/camp-doerfl-hero.jpg')"` : "";
+  const imageStyle = image ? ` style="--hero-image: url('/assets/images/camp-doerfl-hero.webp')"` : "";
   return `
     <section class="hero ${image ? "hero--image" : "hero--plain"} ${className}"${imageStyle}>
       <div class="hero__inner">
@@ -745,12 +747,7 @@ export function contactForm() {
           <span>Bereich</span>
           <select name="topic" data-contact-topic-select>
             <option value="">Bitte auswählen</option>
-            <option value="Premium Personal Training">Premium Personal Training</option>
-            <option value="Firmenfitness">Firmenfitness</option>
-            <option value="Events und Moderation">Events und Moderation</option>
-            <option value="Camp Dörfl App">Camp Dörfl App</option>
-            <option value="Kooperation und Sponsoring">Kooperation und Sponsoring</option>
-            <option value="Allgemeine Anfrage">Allgemeine Anfrage</option>
+            ${contactTopics.map((topic) => `<option value="${topic.label}">${topic.label}</option>`).join("")}
           </select>
         </label>
         <label>
@@ -1140,7 +1137,7 @@ export function layout({
     </main>
     ${footer()}
     ${consentManager()}
-    <script src="/assets/main.js" defer></script>
+    <script type="module" src="/assets/main.js"></script>
   </body>
 </html>`;
 }

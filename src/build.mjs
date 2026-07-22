@@ -3,6 +3,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { pages } from "./pages.mjs";
 import { site } from "./data.mjs";
+import { legacyRedirectRules } from "./redirects.mjs";
 import { securityHeaders } from "./security.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -12,6 +13,7 @@ const productionHost = new URL(site.url).hostname;
 const oneYearInMilliseconds = 365 * 24 * 60 * 60 * 1000;
 const workerEntrypoint = `const productionHost = ${JSON.stringify(productionHost)};
 const apexHost = ${JSON.stringify(site.domain)};
+const legacyRedirectRules = ${JSON.stringify(legacyRedirectRules, null, 2)};
 const securityHeaders = ${JSON.stringify(securityHeaders, null, 2)};
 
 function secureResponse(response) {
@@ -51,6 +53,69 @@ function canonicalHttpsRedirect(request) {
   return null;
 }
 
+function normalizeLegacyPathname(pathname) {
+  let decodedPathname;
+
+  try {
+    decodedPathname = decodeURIComponent(pathname);
+  } catch {
+    return null;
+  }
+
+  if (!decodedPathname.startsWith("/")) {
+    return null;
+  }
+
+  let normalized = decodedPathname.toLowerCase().replace(/\\/{2,}/g, "/");
+  normalized = normalized.replace(/\\/index\\.html?$/, "/").replace(/\\.html?$/, "");
+
+  if (normalized === "/") {
+    return normalized;
+  }
+
+  return normalized.endsWith("/") ? normalized : normalized + "/";
+}
+
+function resolveLegacyRedirect(pathname) {
+  const normalizedPathname = normalizeLegacyPathname(pathname);
+
+  if (!normalizedPathname) {
+    return null;
+  }
+
+  const exactTarget = legacyRedirectRules.exact[normalizedPathname];
+
+  if (exactTarget) {
+    return exactTarget;
+  }
+
+  for (const rule of legacyRedirectRules.prefixes) {
+    if (normalizedPathname === rule.from || normalizedPathname.startsWith(rule.from)) {
+      return rule.to;
+    }
+  }
+
+  return null;
+}
+
+function legacyContentRedirect(request) {
+  const url = new URL(request.url);
+  const targetPathname = resolveLegacyRedirect(url.pathname);
+
+  if (!targetPathname) {
+    return null;
+  }
+
+  url.pathname = targetPathname;
+
+  if (url.hostname === productionHost || url.hostname === apexHost) {
+    url.protocol = "https:";
+    url.hostname = productionHost;
+  }
+
+  return secureRedirect(url);
+}
+
 const notFound = () =>
   secureResponse(new Response("Not found", {
     status: 404,
@@ -63,7 +128,7 @@ function assetRequest(request, pathname) {
 
 export default {
   async fetch(request, env) {
-    const redirect = canonicalHttpsRedirect(request);
+    const redirect = legacyContentRedirect(request) || canonicalHttpsRedirect(request);
 
     if (redirect) {
       return redirect;
@@ -215,6 +280,7 @@ export async function buildSite() {
   await copyFile(join(root, "src", "styles.css"), join(dist, "assets", "styles.css"));
   await copyFile(join(root, "src", "mobile-overrides.css"), join(dist, "assets", "mobile-overrides.css"));
   await copyFile(join(root, "src", "main.js"), join(dist, "assets", "main.js"));
+  await copyFile(join(root, "src", "contact-topics.js"), join(dist, "assets", "contact-topics.js"));
 
   for (const page of pages) {
     const outputDir = page.route === "/" ? dist : join(dist, page.route.replace(/^\/|\/$/g, ""));
