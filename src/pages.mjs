@@ -1883,10 +1883,6 @@ function eventsPage() {
             <span>Center-Events</span>
             <span>Publikum aktiviert</span>
           </div>
-          <div class="event-fun-stage__signal" data-reveal>
-            <span>Locker geführt</span>
-            <h3>Leicht, nahbar und trotzdem professionell: Entertainment-Formate, die Stimmung machen und Menschen wirklich ins Geschehen ziehen.</h3>
-          </div>
         </div>
         <div class="event-fun-stage__gallery" data-reveal aria-label="Formate mit Spaß-Faktor bei Camp Dörfl Events">
           <figure class="event-fun-stage__card event-fun-stage__card--lead">

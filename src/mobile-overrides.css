@@ -2634,3 +2634,8 @@ body.page-premium.page-events main .event-reference-card__body :is(.reference-ca
 body.page-premium.page-events main .editorial-stage--event-video .summary-row p {
   color: rgba(25, 21, 14, 0.78) !important;
 }
+
+/* The first Events editorial stage is intentionally light, so its lead stays dark. */
+body.page-premium.page-events main .editorial-stage:not(.editorial-stage--event-video) .section-header p:not(.eyebrow) {
+  color: rgba(25, 21, 14, 0.78) !important;
+}
