@@ -2323,22 +2323,64 @@ h3 {
 }
 
 @media (max-width: 900px) {
+  .page-home-reboot .ff-hero--home-photo {
+    align-items: stretch;
+  }
+
+  .page-home-reboot .ff-hero--home-photo .ff-hero__inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 100svh;
+    padding-top: calc(var(--header-height) + 24px);
+    padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
+  }
+
   .page-home-reboot .ff-hero--home-photo .ff-hero__title,
   .page-home-reboot .ff-hero--home-photo .ff-hero__eyebrow {
     display: none;
   }
 
   .page-home-reboot .ff-hero--home-photo .ff-hero__actions {
-    margin-top: auto;
+    flex: 0 0 auto;
+    margin-top: 0;
   }
 
   .page-home-reboot .ff-hero--home-photo .ff-hero__facts {
+    flex: 0 0 auto;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 18px 20px;
+    margin-top: clamp(24px, 4svh, 38px);
+    padding-top: clamp(18px, 2.8svh, 26px);
   }
 
   .page-home-reboot .ff-hero--home-photo .ff-hero__facts div {
     min-height: 58px;
+  }
+}
+
+@media (max-width: 900px) and (max-height: 720px) {
+  .page-home-reboot .ff-hero--home-photo .ff-hero__inner {
+    padding-top: calc(var(--header-height) + 12px);
+    padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .page-home-reboot .ff-hero--home-photo .ff-hero__actions {
+    gap: 10px;
+  }
+
+  .page-home-reboot .ff-hero--home-photo .ff-hero__actions .button {
+    min-height: 52px;
+  }
+
+  .page-home-reboot .ff-hero--home-photo .ff-hero__facts {
+    gap: 12px 18px;
+    margin-top: 18px;
+    padding-top: 14px;
+  }
+
+  .page-home-reboot .ff-hero--home-photo .ff-hero__facts div {
+    min-height: 48px;
   }
 }
 
@@ -2654,4 +2696,110 @@ body.page-premium.page-events main .editorial-stage--event-video .summary-row p 
 /* The first Events editorial stage is intentionally light, so its lead stays dark. */
 body.page-premium.page-events main .editorial-stage:not(.editorial-stage--event-video) .section-header p:not(.eyebrow) {
   color: rgba(25, 21, 14, 0.78) !important;
+}
+
+/* ============================================================
+   MOBILE TYPE SYSTEM
+   One shared scale keeps long German headlines readable across every
+   content page. Component-specific desktop display sizes remain untouched.
+   ============================================================ */
+@media (max-width: 700px) {
+  body.page-premium main :is(h1, h2) {
+    min-width: 0;
+    max-width: 100%;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+    hyphens: manual !important;
+    text-wrap: balance;
+  }
+
+  body.page-premium main h3 {
+    min-width: 0;
+    max-width: 100%;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+    hyphens: manual !important;
+    text-wrap: pretty;
+  }
+
+  body.page-premium main :is(
+    .section-header,
+    .ff-hero__inner,
+    .summary-row,
+    .feature-card,
+    .legal-card,
+    .app-system-card,
+    .app-feature-card,
+    .device-preview-card,
+    .corporate-module-card,
+    .corporate-outcome-card,
+    .corporate-reference-band__copy,
+    .event-format-card,
+    .event-rule-stage__signal,
+    .event-fun-stage__signal
+  ) {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  body.page-premium main .ff-hero__title {
+    max-width: 100% !important;
+    font-size: clamp(2.35rem, 10.8vw, 2.85rem) !important;
+    line-height: 0.91 !important;
+    letter-spacing: -0.012em !important;
+  }
+
+  body.page-premium main :is(
+    .section-header h2,
+    .cta-band h2,
+    .ed-section__title,
+    .corporate-reference-band__copy h2
+  ) {
+    max-width: 100% !important;
+    font-size: clamp(2rem, 9vw, 2.4rem) !important;
+    line-height: 0.98 !important;
+    letter-spacing: -0.025em !important;
+  }
+
+  body.page-premium main :is(
+    .ed-entry__body h3,
+    .ed-app-banner h3,
+    .spotlight-card__content h3,
+    .app-system-card__copy h3,
+    .app-feature-card h3,
+    .device-preview-card__body h3,
+    .corporate-module-card h3,
+    .corporate-outcome-card h3,
+    .event-format-card h3,
+    .event-rule-stage__signal h3,
+    .event-fun-stage__signal h3
+  ) {
+    max-width: 100% !important;
+    font-size: clamp(1.45rem, 6.8vw, 1.85rem) !important;
+    line-height: 1.02 !important;
+    letter-spacing: -0.02em !important;
+  }
+
+  body.page-premium main .corporate-outcome-hero h3 {
+    font-size: clamp(1.95rem, 8vw, 2.1rem) !important;
+    line-height: 0.98 !important;
+  }
+
+  body.page-premium main .corporate-outcome-hero__nowrap {
+    white-space: normal !important;
+  }
+
+  body.page-premium.page-legal main .legal-card {
+    width: 100%;
+    min-width: 0;
+    padding: clamp(20px, 6vw, 26px);
+  }
+
+  body.page-premium.page-legal main .legal-card h2 {
+    max-width: 100%;
+    font-size: clamp(1.2rem, 5.5vw, 1.45rem);
+    line-height: 1.16;
+  }
 }
