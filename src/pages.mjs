@@ -1762,11 +1762,11 @@ function eventsPage() {
           <div class="summary-rows summary-rows--compact">
             <article class="summary-row">
               <h3>Gespräche mit Haltung</h3>
-              <p>Fragen, Übergänge und Reaktionen bleiben klar, nahbar und souverän, ohne künstlich oder überladen zu wirken.</p>
+              <p style="color: #4f4537 !important;">Fragen, Übergänge und Reaktionen bleiben klar, nahbar und souverän, ohne künstlich oder überladen zu wirken.</p>
             </article>
             <article class="summary-row">
               <h3>Stark für Gäste und Publikum</h3>
-              <p>Ideal für Bühneninterviews, Talk-Momente und Einbindungen, bei denen Präsenz, Sicherheit und Vertrauen direkt sichtbar werden sollen.</p>
+              <p style="color: #4f4537 !important;">Ideal für Bühneninterviews, Talk-Momente und Einbindungen, bei denen Präsenz, Sicherheit und Vertrauen direkt sichtbar werden sollen.</p>
             </article>
           </div>
         </div>
