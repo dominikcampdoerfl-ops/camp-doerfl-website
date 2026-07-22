@@ -2618,3 +2618,19 @@ body.page-premium.page-guide-corporate main .corporate-module-card li {
 .page-home-reboot .ed-app-banner h3 span {
   color: #f2bf46 !important;
 }
+
+/* Events references live on the dark card surface; the copy needs no inset panel. */
+body.page-premium.page-events main .event-reference-card__body {
+  background: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+body.page-premium.page-events main .event-reference-card__body :is(.reference-card__name, span) {
+  background: transparent !important;
+}
+
+/* Light interview callouts need dark body copy for reliable contrast. */
+body.page-premium.page-events main .editorial-stage--event-video .summary-row p {
+  color: rgba(25, 21, 14, 0.78) !important;
+}
