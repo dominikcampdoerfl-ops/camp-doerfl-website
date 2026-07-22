@@ -12052,6 +12052,29 @@ html { background: #0a0a0c; }
   }
 }
 
+/* Explicit contrast for light copy on the Personal Training stage. */
+body.page-premium.page-coaching .coaching-start-stage__head .section-header h2 {
+  color: #fffdf8 !important;
+}
+
+body.page-premium.page-coaching .coaching-start-stage__head .section-header h2 span,
+body.page-premium.page-coaching .coaching-start-stage__head .section-header .eyebrow {
+  color: #f2bf46 !important;
+}
+
+body.page-premium.page-coaching .coaching-start-stage__head .section-header p:not(.eyebrow) {
+  color: rgba(255, 253, 248, 0.84) !important;
+}
+
+/* The interview callouts are intentionally light, so their full copy stays dark. */
+body.page-premium.page-events .editorial-stage--event-video .summary-row :is(h2, h3, h4, strong) {
+  color: #19150e !important;
+}
+
+body.page-premium.page-events .editorial-stage--event-video .summary-row :is(p, li) {
+  color: rgba(25, 21, 14, 0.78) !important;
+}
+
 .coaching-start-stage {
   position: relative;
   overflow: hidden;
