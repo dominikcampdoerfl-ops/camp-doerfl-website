@@ -29,7 +29,7 @@ npm run cf:deploy:dry-run
 
 - `/`
 - `/app/`
-- `/personal-coaching/`
+- `/personal-trainer-nürnberg/`
 - `/firmenfitness/`
 - `/events/`
 - `/partner/`

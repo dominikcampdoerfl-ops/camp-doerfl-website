@@ -40,7 +40,7 @@ export const navItems = [
   { label: "Home", href: "/" },
   { label: "Events", href: "/events/" },
   { label: "Firmenfitness", href: "/firmenfitness/" },
-  { label: "Personal Trainer Nürnberg", href: "/personal-coaching/" },
+  { label: "Personal Trainer Nürnberg", href: "/personal-trainer-nürnberg/" },
   { label: "Partner", href: "/partner/" },
   { label: "Camp Dörfl App", href: "/app/" },
   { label: "Kontakt", href: "/kontakt/" }
@@ -201,7 +201,7 @@ export const landingPrograms = [
       "Für Privatpersonen: flexibel mit Personal Training oder als Premium Personal Training mit Analyse, Planung, App und laufender Steuerung.",
     highlights: ["Personal Training ohne Bindung", "Premium Training mit Analyse", "Training und Ernährung aus einer Hand"],
     cta: "Premium Personal Training ansehen",
-    href: "/personal-coaching/"
+    href: "/personal-trainer-nürnberg/"
   },
   {
     image: "/assets/images/dominik-coaching-bikeerg.webp",

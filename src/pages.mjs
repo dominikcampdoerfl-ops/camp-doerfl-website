@@ -510,7 +510,7 @@ const homeEntryCards = [
     image: "/assets/images/dominik-personal-coaching-client.webp",
     alt: "Dominik Dörfl mit einem Klienten im Personal Training im Studio",
     theme: "coaching",
-    href: "/personal-coaching/",
+    href: "/personal-trainer-nürnberg/",
     buttonLabel: "TRAINIERE MIT MIR"
   }
 ];
@@ -1399,7 +1399,7 @@ function personalCoachingPage() {
   `;
 
   return layout({
-    path: "/personal-coaching/",
+    path: "/personal-trainer-nürnberg/",
     title: "Personal Trainer Nürnberg | 1:1 Coaching & Ernährung | Camp Dörfl",
     description:
       "Personal Trainer Nürnberg: 1:1 Coaching mit Training, 2D-Körperanalyse, InBody, Ernährungsplan und persönlicher App-Begleitung bei Camp Dörfl.",
@@ -1409,15 +1409,15 @@ function personalCoachingPage() {
     socialImageAlt: "Dominik Dörfl beim Personal Training mit einem Kunden in Nürnberg",
     extraStructuredData: [
       serviceSchema({
-        path: "/personal-coaching/",
+        path: "/personal-trainer-nürnberg/",
         name: "Personal Trainer Nürnberg – Camp Dörfl",
         serviceType: "Personal Training in Nürnberg",
         description:
           "Persönlich geführtes Personal Training in Nürnberg mit Analyse, Ernährungsplanung, App und laufender Anpassung."
       }),
-      faqSchema("/personal-coaching/", coachingFaq),
+      faqSchema("/personal-trainer-nürnberg/", coachingFaq),
       videoObjectSchema({
-        path: "/personal-coaching/",
+        path: "/personal-trainer-nürnberg/",
         id: "premium-training-video",
         name: "Camp Dörfl Premium Personal Training",
         description:
@@ -1427,7 +1427,7 @@ function personalCoachingPage() {
         watchUrl: "https://www.youtube.com/watch?v=KTvHOvTNJ8w"
       }),
       videoObjectSchema({
-        path: "/personal-coaching/",
+        path: "/personal-trainer-nürnberg/",
         id: "premium-training-short",
         name: "Camp Dörfl Premium Personal Training Short",
         description:
@@ -2006,7 +2006,7 @@ function teamSuccessPage() {
           </p>
           <div class="ff-hero__actions" data-reveal>
             <a class="button button--primary" href="${contactHref("erfolge-im-team")}"><span>Zusammenarbeit anfragen</span><span aria-hidden="true">&rarr;</span></a>
-            <a class="button button--secondary-light" href="/personal-coaching/"><span>Training ansehen</span><span aria-hidden="true">&rarr;</span></a>
+            <a class="button button--secondary-light" href="/personal-trainer-nürnberg/"><span>Training ansehen</span><span aria-hidden="true">&rarr;</span></a>
           </div>
           <dl class="ff-hero__facts" data-reveal aria-label="Erfolge bei Camp Dörfl">
             <div><dt>2×</dt><dd>Deutscher Meister</dd></div>
@@ -2186,7 +2186,7 @@ function executivePerformancePage() {
         </p>
         <div class="ff-hero__actions" data-reveal>
           <a class="button button--primary" href="${contactHref("executive-performance")}"><span>Platz anfragen</span><span aria-hidden="true">&rarr;</span></a>
-          <a class="button button--secondary-light" href="/personal-coaching/"><span>Personal Training ansehen</span><span aria-hidden="true">&rarr;</span></a>
+          <a class="button button--secondary-light" href="/personal-trainer-nürnberg/"><span>Personal Training ansehen</span><span aria-hidden="true">&rarr;</span></a>
         </div>
         <dl class="ff-hero__facts" data-reveal aria-label="Eckdaten Executive Performance">
           <div><dt>12</dt><dd>Wochen Programm</dd></div>
@@ -3504,7 +3504,7 @@ function personalTrainingCostPage() {
         </p>
         <div class="ff-hero__actions" data-reveal>
           <a class="button button--primary" href="${contactHref("premium-training")}"><span>Preiseinschätzung anfragen</span><span aria-hidden="true">&rarr;</span></a>
-          <a class="button button--secondary-light" href="/personal-coaching/"><span>Personal Training ansehen</span><span aria-hidden="true">&rarr;</span></a>
+          <a class="button button--secondary-light" href="/personal-trainer-nürnberg/"><span>Personal Training ansehen</span><span aria-hidden="true">&rarr;</span></a>
         </div>
         <dl class="ff-hero__facts" data-reveal aria-label="Wichtige Preisfaktoren bei Personal Training in Nürnberg">
           <div><dt>1:1</dt><dd>Persönliche Führung</dd></div>
@@ -3572,7 +3572,7 @@ function personalTrainingCostPage() {
       text:
         "Wenn du kurz beschreibst, wie dein Alltag aussieht und welche Begleitung du suchst, lässt sich schnell einordnen, welches Setup zu dir passt.",
       primary: { label: "Preiseinschätzung anfragen", href: contactHref("premium-training") },
-      secondary: { label: "Premium Personal Training", href: "/personal-coaching/" }
+      secondary: { label: "Premium Personal Training", href: "/personal-trainer-nürnberg/" }
     })}
   `;
 
@@ -3804,7 +3804,7 @@ export const pages = [
   { route: "/", render: homePage },
   { route: "/app/", render: appPage },
   { route: "/personal-training-kosten-nuernberg/", render: personalTrainingCostPage },
-  { route: "/personal-coaching/", render: personalCoachingPage },
+  { route: "/personal-trainer-nürnberg/", render: personalCoachingPage },
   { route: "/gesundheitstag-nuernberg/", render: gesundheitstagNuernbergPage },
   { route: "/firmenfitness/", render: firmenfitnessPage },
   { route: "/events/", render: eventsPage },

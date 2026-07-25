@@ -253,7 +253,7 @@ function navIconForHref(href) {
   if (href === "/") return "home";
   if (href === "/events/") return "events";
   if (href === "/firmenfitness/") return "team";
-  if (href === "/personal-coaching/") return "trainer";
+  if (href === "/personal-trainer-nürnberg/") return "trainer";
   if (href === "/partner/") return "partner";
   if (href === "/app/") return "app";
   if (href === "/kontakt/") return "contact";
