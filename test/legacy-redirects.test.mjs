@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { pages } from "../src/pages.mjs";
-import { resolveLegacyRedirect } from "../src/redirects.mjs";
+import { resolveCanonicalRedirect, resolveLegacyRedirect } from "../src/redirects.mjs";
 import { legacyPaths } from "./fixtures/legacy-paths.mjs";
 
 await import("../src/build.mjs");
@@ -18,9 +19,13 @@ async function fetchWorker(path, origin = "https://www.campdoerfl.de") {
 
 test("the historical inventory is unique and every legacy path resolves", () => {
   assert.equal(new Set(legacyPaths).size, legacyPaths.length);
+  const currentRoutes = new Set(pages.map((page) => page.route));
 
   for (const path of legacyPaths) {
-    assert.ok(resolveLegacyRedirect(path), `Missing redirect rule for ${path}`);
+    const target = resolveLegacyRedirect(path);
+    assert.ok(target, `Missing redirect rule for ${path}`);
+    assert.ok(currentRoutes.has(target), `Legacy URL does not land on a current page: ${path} → ${target}`);
+    assert.equal(resolveLegacyRedirect(target), null, `Redirect chain detected: ${path} → ${target}`);
   }
 });
 
@@ -55,7 +60,13 @@ test("semantic exceptions win over their broader legacy groups", async () => {
     ["/athletenbereich/bodybuilding-coach/gewichtslimits/", "/personal-trainer-nürnberg/"],
     ["/athletenbereich/camp-doerfl-podcast/", "/ueber-dominik/"],
     ["/athletenbereich/supplement-empfehlung/", "/partner/"],
+    ["/athletenbereich/archiv/halbmarathon-termine-2024/", "/laufkalender-2026/"],
+    ["/athletenbereich/triathlon-termine-2024/", "/triathlon-kalender-2026/"],
+    ["/athletenbereich/bodybuilding-wettkaempfe-2023/", "/bodybuilding-wettkaempfe-2026/"],
     ["/personal-training-in-nuernberg/xxl-nutrition/", "/partner/"],
+    ["/personal-trainer-nuernberg/", "/personal-trainer-nürnberg/"],
+    ["/firmenfitness-aus-nuernberg/gesundheitstag/", "/gesundheitstag-nuernberg/"],
+    ["/fuer-unternehmen/gesundheitstag/", "/gesundheitstag-nuernberg/"],
     ["/preise-und-leistungen/", "/personal-training-kosten-nuernberg/"],
     ["/shop/fitness-ebook/", "/app/"],
     ["/cookie-einstellungen/", "/cookies/"],
@@ -114,11 +125,55 @@ test("the former canonical coaching URL permanently redirects to the new SEO rou
 });
 
 test("current routes are never caught by a legacy rule", async () => {
+  const canonicalRoutes = pages.map((page) => page.route);
+
   for (const page of pages) {
     assert.equal(resolveLegacyRedirect(page.route), null, `Current route was redirected: ${page.route}`);
+    assert.equal(resolveCanonicalRedirect(page.route, canonicalRoutes), null, `Canonical route was normalized again: ${page.route}`);
 
     const response = await fetchWorker(page.route);
     assert.equal(response.status, 200, `Current route did not reach assets: ${page.route}`);
     assert.equal(response.headers.get("location"), null);
+  }
+});
+
+test("current URL variants redirect to one clean canonical structure", async () => {
+  const variants = new Map([
+    ["/EVENTS", "/events/"],
+    ["/events.html", "/events/"],
+    ["/events/index.html", "/events/"],
+    ["//events//", "/events/"],
+    ["/PERSONAL-TRAINER-N%C3%9CRNBERG", "/personal-trainer-nürnberg/"]
+  ]);
+  const canonicalRoutes = pages.map((page) => page.route);
+
+  for (const [variant, expectedPathname] of variants) {
+    assert.equal(resolveCanonicalRedirect(variant, canonicalRoutes), expectedPathname);
+
+    const response = await fetchWorker(`${variant}?utm_source=variant`);
+    const location = new URL(response.headers.get("location"));
+
+    assert.equal(response.status, 301);
+    assert.equal(location.origin, "https://www.campdoerfl.de");
+    assert.equal(decodeURI(location.pathname), expectedPathname);
+    assert.equal(location.search, "?utm_source=variant");
+  }
+});
+
+test("the sitemap contains canonical pages only", async () => {
+  const sitemap = await readFile(new URL("../dist/sitemap.xml", import.meta.url), "utf8");
+
+  for (const page of pages.filter((page) => page.includeInSitemap !== false)) {
+    assert.ok(
+      sitemap.includes(`<loc>https://www.campdoerfl.de${page.route}</loc>`),
+      `Canonical page missing from sitemap: ${page.route}`
+    );
+  }
+
+  for (const legacyPath of legacyPaths) {
+    assert.ok(
+      !sitemap.includes(`<loc>https://www.campdoerfl.de${legacyPath}</loc>`),
+      `Legacy URL leaked into sitemap: ${legacyPath}`
+    );
   }
 });

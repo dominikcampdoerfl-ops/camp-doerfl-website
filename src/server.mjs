@@ -4,12 +4,14 @@ import { stat } from "node:fs/promises";
 import { extname, join, normalize, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { dirname } from "node:path";
-import { resolveLegacyRedirect } from "./redirects.mjs";
+import { pages } from "./pages.mjs";
+import { resolveCanonicalRedirect, resolveLegacyRedirect } from "./redirects.mjs";
 import { securityHeaders } from "./security.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..", "dist");
 const port = Number(process.env.PORT || 4173);
 const host = process.env.HOST || "127.0.0.1";
+const canonicalRoutes = pages.map((page) => page.route);
 
 const types = {
   ".html": "text/html; charset=utf-8",
@@ -51,7 +53,9 @@ function applySecurityHeaders(res) {
 
 const server = createServer(async (req, res) => {
   const requestUrl = new URL(req.url || "/", "http://localhost");
-  const redirectTarget = resolveLegacyRedirect(requestUrl.pathname);
+  const redirectTarget =
+    resolveLegacyRedirect(requestUrl.pathname) ||
+    resolveCanonicalRedirect(requestUrl.pathname, canonicalRoutes);
 
   if (redirectTarget) {
     applySecurityHeaders(res);

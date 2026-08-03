@@ -9,22 +9,32 @@ export const legacyRedirectRules = Object.freeze({
   exact: Object.freeze({
     "/agb/": "/impressum/",
     "/archiv/bodybuilding-wettkaempfe-2024/": "/bodybuilding-wettkaempfe-2026/",
+    "/archiv/halbmarathon-termine-2024/": "/laufkalender-2026/",
     "/athletenbereich/archiv/bodybuilding-wettkaempfe-2024/": "/bodybuilding-wettkaempfe-2026/",
+    "/athletenbereich/archiv/halbmarathon-termine-2024/": "/laufkalender-2026/",
     "/athletenbereich/bodybuilding-wettkaempfe-2024/": "/bodybuilding-wettkaempfe-2026/",
     "/athletenbereich/bodybuilding-wettkaempfe-2025/": "/bodybuilding-wettkaempfe-2026/",
     "/athletenbereich/bodybuilding-wettkaempfe-2026/": "/bodybuilding-wettkaempfe-2026/",
     "/athletenbereich/camp-doerfl-podcast/": "/ueber-dominik/",
+    "/athletenbereich/halbmarathon-termine-2024/": "/laufkalender-2026/",
     "/athletenbereich/supplement-empfehlung/": "/partner/",
+    "/athletenbereich/triathlon-termine-2024/": "/triathlon-kalender-2026/",
     "/camp-doerfl-podcast/": "/ueber-dominik/",
     "/cookie-einstellungen/": "/cookies/",
     "/dein-trainer/": "/ueber-dominik/",
     "/dein-trainer/partner/": "/partner/",
     "/die-starken-partner/": "/partner/",
+    "/firmenfitness-aus-nuernberg/gesundheitstag/": "/gesundheitstag-nuernberg/",
+    "/firmenfitness-in-nuernberg/gesundheitstag/": "/gesundheitstag-nuernberg/",
     "/fitnessstudio-in-nuernberg/supplement-shop-nuernberg/": "/partner/",
+    "/gesundheitstag/": "/gesundheitstag-nuernberg/",
+    "/gesundheitstag-in-nuernberg/": "/gesundheitstag-nuernberg/",
+    "/gesundheitstage-nuernberg/": "/gesundheitstag-nuernberg/",
     "/home/die-starken-partner/": "/partner/",
     "/home/preise-und-leistungen/": "/personal-training-kosten-nuernberg/",
     "/lieferbedingungen/": "/impressum/",
     "/personal-coaching/": "/personal-trainer-nürnberg/",
+    "/personal-trainer-nuernberg/": "/personal-trainer-nürnberg/",
     "/personal-training-in-nuernberg/xxl-nutrition/": "/partner/",
     "/preise/": "/personal-training-kosten-nuernberg/",
     "/preise-und-leistungen/": "/personal-training-kosten-nuernberg/",
@@ -46,7 +56,9 @@ export const legacyRedirectRules = Object.freeze({
     Object.freeze({ from: "/athletenbereich/bodybuilding-gewichtslimits/", to: "/personal-trainer-nürnberg/" }),
     Object.freeze({ from: "/athletenbereich/bodybuilding-klassen-gewichtslimits/", to: "/personal-trainer-nürnberg/" }),
     Object.freeze({ from: "/athletenbereich/bodybuilding-verbaende/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/athletenbereich/bodybuilding-wettkaempfe-", to: "/personal-trainer-nürnberg/" }),
+    Object.freeze({ from: "/athletenbereich/bodybuilding-wettkaempfe-", to: "/bodybuilding-wettkaempfe-2026/" }),
+    Object.freeze({ from: "/athletenbereich/halbmarathon-termine-", to: "/laufkalender-2026/" }),
+    Object.freeze({ from: "/athletenbereich/triathlon-termine-", to: "/triathlon-kalender-2026/" }),
     Object.freeze({ from: "/athletenbereich/ablauf-bodybuilding-wettkampf/", to: "/personal-trainer-nürnberg/" }),
     Object.freeze({ from: "/athletenbereich/blog/", to: "/personal-trainer-nürnberg/" }),
     Object.freeze({ from: "/athletenbereich/fitness-blog/", to: "/personal-trainer-nürnberg/" }),
@@ -101,7 +113,7 @@ export const legacyRedirectRules = Object.freeze({
     Object.freeze({ from: "/fuer-unternehmen/veranstaltungen/", to: "/events/" }),
     Object.freeze({ from: "/fuer-unternehmen/bgm/", to: "/firmenfitness/" }),
     Object.freeze({ from: "/fuer-unternehmen/gesundheitscheck/", to: "/firmenfitness/" }),
-    Object.freeze({ from: "/fuer-unternehmen/gesundheitstag/", to: "/firmenfitness/" }),
+    Object.freeze({ from: "/fuer-unternehmen/gesundheitstag/", to: "/gesundheitstag-nuernberg/" }),
     Object.freeze({ from: "/fuer-unternehmen/", to: "/firmenfitness/" }),
     Object.freeze({ from: "/veranstaltungen-und-events/", to: "/events/" }),
     Object.freeze({ from: "/speaker-und-moderator/", to: "/events/" }),
@@ -123,7 +135,7 @@ export function normalizeLegacyPathname(pathname) {
     return null;
   }
 
-  let normalized = decodedPathname.toLowerCase().replace(/\/{2,}/g, "/");
+  let normalized = decodedPathname.normalize("NFC").toLowerCase().replace(/\/{2,}/g, "/");
   normalized = normalized.replace(/\/index\.html?$/, "/").replace(/\.html?$/, "");
 
   if (normalized === "/") {
@@ -131,6 +143,32 @@ export function normalizeLegacyPathname(pathname) {
   }
 
   return normalized.endsWith("/") ? normalized : `${normalized}/`;
+}
+
+export function resolveCanonicalRedirect(pathname, canonicalRoutes) {
+  const normalizedPathname = normalizeLegacyPathname(pathname);
+
+  if (!normalizedPathname) {
+    return null;
+  }
+
+  const canonicalTarget = canonicalRoutes.find(
+    (route) => normalizeLegacyPathname(route) === normalizedPathname
+  );
+
+  if (!canonicalTarget) {
+    return null;
+  }
+
+  let decodedPathname;
+
+  try {
+    decodedPathname = decodeURIComponent(pathname).normalize("NFC");
+  } catch {
+    return null;
+  }
+
+  return decodedPathname === canonicalTarget ? null : canonicalTarget;
 }
 
 export function resolveLegacyRedirect(pathname) {

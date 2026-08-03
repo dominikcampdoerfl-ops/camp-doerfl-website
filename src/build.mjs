@@ -10,9 +10,11 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");
 const maxCloudflareAssetBytes = 25 * 1024 * 1024;
 const productionHost = new URL(site.url).hostname;
+const canonicalRoutes = pages.map((page) => page.route);
 const oneYearInMilliseconds = 365 * 24 * 60 * 60 * 1000;
 const workerEntrypoint = `const productionHost = ${JSON.stringify(productionHost)};
 const apexHost = ${JSON.stringify(site.domain)};
+const canonicalRoutes = ${JSON.stringify(canonicalRoutes, null, 2)};
 const legacyRedirectRules = ${JSON.stringify(legacyRedirectRules, null, 2)};
 const securityHeaders = ${JSON.stringify(securityHeaders, null, 2)};
 
@@ -66,7 +68,7 @@ function normalizeLegacyPathname(pathname) {
     return null;
   }
 
-  let normalized = decodedPathname.toLowerCase().replace(/\\/{2,}/g, "/");
+  let normalized = decodedPathname.normalize("NFC").toLowerCase().replace(/\\/{2,}/g, "/");
   normalized = normalized.replace(/\\/index\\.html?$/, "/").replace(/\\.html?$/, "");
 
   if (normalized === "/") {
@@ -74,6 +76,32 @@ function normalizeLegacyPathname(pathname) {
   }
 
   return normalized.endsWith("/") ? normalized : normalized + "/";
+}
+
+function resolveCanonicalRedirect(pathname) {
+  const normalizedPathname = normalizeLegacyPathname(pathname);
+
+  if (!normalizedPathname) {
+    return null;
+  }
+
+  const canonicalTarget = canonicalRoutes.find(
+    (route) => normalizeLegacyPathname(route) === normalizedPathname
+  );
+
+  if (!canonicalTarget) {
+    return null;
+  }
+
+  let decodedPathname;
+
+  try {
+    decodedPathname = decodeURIComponent(pathname).normalize("NFC");
+  } catch {
+    return null;
+  }
+
+  return decodedPathname === canonicalTarget ? null : canonicalTarget;
 }
 
 function resolveLegacyRedirect(pathname) {
@@ -116,6 +144,24 @@ function legacyContentRedirect(request) {
   return secureRedirect(url);
 }
 
+function canonicalPathRedirect(request) {
+  const url = new URL(request.url);
+  const targetPathname = resolveCanonicalRedirect(url.pathname);
+
+  if (!targetPathname) {
+    return null;
+  }
+
+  url.pathname = targetPathname;
+
+  if (url.hostname === productionHost || url.hostname === apexHost) {
+    url.protocol = "https:";
+    url.hostname = productionHost;
+  }
+
+  return secureRedirect(url);
+}
+
 const notFound = () =>
   secureResponse(new Response("Not found", {
     status: 404,
@@ -128,7 +174,7 @@ function assetRequest(request, pathname) {
 
 export default {
   async fetch(request, env) {
-    const redirect = legacyContentRedirect(request) || canonicalHttpsRedirect(request);
+    const redirect = legacyContentRedirect(request) || canonicalPathRedirect(request) || canonicalHttpsRedirect(request);
 
     if (redirect) {
       return redirect;
