@@ -278,7 +278,7 @@ requestAnimationFrame(() => {
 });
 
 const counterItems = document.querySelectorAll(
-  ".ff-hero__facts dt, .hero__stat-value, .landing-stat__value, .stat-card__value, .bbcal-hero__stat strong, .spot-results-count strong"
+  ".ff-hero__facts dt, .hero__stat-value, .landing-stat__value, .stat-card__value, .bbcal-hero__stat strong, .spot-results-count strong, .coaching-success-proof__stats strong"
 );
 
 const parseCounter = (element) => {

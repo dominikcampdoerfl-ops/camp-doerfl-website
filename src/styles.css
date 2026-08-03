@@ -15230,7 +15230,7 @@ body.consent-modal-open {
 .ff-hero .ff-hero__actions { transition-delay: 360ms; }
 .ff-hero :is(.ff-hero__pills, .ff-hero__facts) { transition-delay: 430ms; }
 
-:is(.ff-hero__facts dt, .hero__stat-value, .landing-stat__value, .stat-card__value, .bbcal-hero__stat strong, .spot-results-count strong) {
+:is(.ff-hero__facts dt, .hero__stat-value, .landing-stat__value, .stat-card__value, .bbcal-hero__stat strong, .spot-results-count strong, .coaching-success-proof__stats strong) {
   font-variant-numeric: tabular-nums;
 }
 

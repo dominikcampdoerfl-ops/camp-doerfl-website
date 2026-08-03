@@ -1845,6 +1845,28 @@ function personalCoachingPage() {
       </div>
     </section>
 
+    <section class="section section--tight coaching-success-proof-section">
+      <div class="section-shell section-shell--wide">
+        <a class="coaching-success-proof" href="/erfolge-im-team/" data-reveal aria-label="Alle Erfolge im Team ansehen">
+          <div class="coaching-success-proof__copy">
+            <p class="eyebrow">Erfolge aus dem Camp Dörfl</p>
+            <h2>Coaching, das sich <span>auf der Bühne beweist.</span></h2>
+            <p>Vom ersten Wettkampf bis zur internationalen Pro Card: Ein kurzer Einblick in die dokumentierten Resultate der Athletinnen und Athleten aus dem Camp.</p>
+            <span class="coaching-success-proof__cta">Alle Erfolge im Team ansehen <span aria-hidden="true">&rarr;</span></span>
+          </div>
+          <dl class="coaching-success-proof__stats" aria-label="Erfolgsbilanz im Camp Dörfl">
+            <div><strong>${coachSuccessStats.placements}</strong><span>Platzierungen</span></div>
+            <div><strong>${coachSuccessStats.wins}</strong><span>Siege</span></div>
+            <div><strong>${coachSuccessStats.podiums}</strong><span>Podiumsplätze</span></div>
+            <div><strong>IFBB</strong><span>Pro Card 2026</span></div>
+          </dl>
+          <figure class="coaching-success-proof__media">
+            <img src="/assets/images/team-success-hero-960.jpg" alt="Camp-Dörfl-Athlet in erfolgreicher Wettkampfform"${imageLoadingAttributes()}>
+          </figure>
+        </a>
+      </div>
+    </section>
+
     <section class="section section--tight section--coaching-reference">
       <div class="section-shell section-shell--wide">
         <div class="coaching-reference-stage">

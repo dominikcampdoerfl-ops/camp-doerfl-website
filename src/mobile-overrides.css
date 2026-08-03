@@ -1387,6 +1387,157 @@ html body.page-premium.page-events main .event-reference-band__intro h2 {
   }
 }
 
+/* Compact proof block on the Personal Training page. */
+.page-coaching .coaching-success-proof {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.82fr) minmax(240px, 0.68fr);
+  align-items: stretch;
+  overflow: hidden;
+  border: 1px solid rgba(215, 195, 148, 0.3);
+  border-radius: 34px;
+  color: #fffdf8;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(215, 195, 148, 0.17), transparent 36%),
+    linear-gradient(135deg, #17171b, #09090b 70%);
+  box-shadow: 0 34px 82px -38px rgba(0, 0, 0, 0.72);
+}
+
+.page-coaching .coaching-success-proof__copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(30px, 4vw, 58px);
+}
+
+.page-coaching .coaching-success-proof__copy .eyebrow {
+  color: #d7c394 !important;
+}
+
+.page-coaching .coaching-success-proof__copy h2 {
+  max-width: 11ch;
+  margin: 0;
+  color: #fffdf8 !important;
+  font-size: clamp(2.25rem, 3.8vw, 4.2rem);
+  line-height: 0.92;
+}
+
+.page-coaching .coaching-success-proof__copy h2 span {
+  color: #d7c394;
+}
+
+.page-coaching .coaching-success-proof__copy > p:not(.eyebrow) {
+  max-width: 54ch;
+  margin: 18px 0 0;
+  color: rgba(255, 253, 248, 0.76) !important;
+}
+
+.page-coaching .coaching-success-proof__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  margin-top: 24px;
+  color: #f2dfa8;
+  font-weight: 800;
+}
+
+.page-coaching .coaching-success-proof__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: center;
+  margin: 0;
+  border-inline: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.page-coaching .coaching-success-proof__stats div {
+  display: flex;
+  min-height: 132px;
+  padding: 24px;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.page-coaching .coaching-success-proof__stats strong {
+  color: #f2dfa8 !important;
+  font-family: var(--font-cond);
+  font-size: clamp(2rem, 3vw, 3.5rem);
+  font-style: italic;
+  line-height: 0.9;
+}
+
+.page-coaching .coaching-success-proof__stats span {
+  margin-top: 8px;
+  color: rgba(255, 253, 248, 0.68);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.page-coaching .coaching-success-proof__media {
+  min-height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+.page-coaching .coaching-success-proof__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  filter: saturate(0.82) contrast(1.06);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), filter 0.5s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .page-coaching .coaching-success-proof:hover .coaching-success-proof__media img {
+    transform: scale(1.055);
+    filter: saturate(0.94) contrast(1.08);
+  }
+
+  .page-coaching .coaching-success-proof:hover .coaching-success-proof__cta {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 1080px) {
+  .page-coaching .coaching-success-proof {
+    grid-template-columns: 1fr 0.85fr;
+  }
+
+  .page-coaching .coaching-success-proof__media {
+    grid-column: 1 / -1;
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 680px) {
+  .page-coaching .coaching-success-proof {
+    grid-template-columns: 1fr;
+    border-radius: 26px;
+  }
+
+  .page-coaching .coaching-success-proof__copy {
+    padding: 28px 22px;
+  }
+
+  .page-coaching .coaching-success-proof__stats {
+    border-inline: 0;
+    border-block: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .page-coaching .coaching-success-proof__stats div {
+    min-height: 108px;
+    padding: 20px;
+  }
+
+  .page-coaching .coaching-success-proof__media {
+    min-height: 260px;
+  }
+}
+
 /* ============================================================
    HOME IN LIGHT — a warm, editorial continuation of the Google
    review panel. The photo hero remains cinematic for legibility;
