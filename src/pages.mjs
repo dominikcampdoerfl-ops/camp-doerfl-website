@@ -2010,11 +2010,12 @@ function guenterStoryPreview(context = "team") {
         <a class="guenter-story-preview" href="/erfolge-im-team/guenter-preis/" data-reveal aria-label="Die Erfolgsgeschichte von Günter Preis lesen">
           <figure class="guenter-story-preview__media">
             <img src="/assets/images/guenter-preis-coach-stage.jpg" alt="Dominik Dörfl gemeinsam mit Günter Preis und seiner Medaille nach einem Bodybuilding-Wettkampf"${imageLoadingAttributes()}>
+            <span class="guenter-story-preview__badge">Neue Erfolgsgeschichte</span>
           </figure>
           <div class="guenter-story-preview__copy">
             <p class="eyebrow">Erfolgsgeschichte · Günter Preis</p>
             <h2>Gesundheit zuerst.<br><span>Bühne später.</span></h2>
-            <p>2021 begann eine Zusammenarbeit, deren größter Erfolg weit vor den Medaillen lag: Günter stabilisierte mit konsequenter Struktur seine Gesundheit – und wurde mit 63 Jahren Vizeweltmeister.</p>
+            <p>Eine zufällige Begegnung im Jahr 2021 wurde zum Anfang einer außergewöhnlichen Geschichte: erst raus aus der gesundheitlichen Gefahrenzone, dann zurück auf die Bühne – bis zum Vizeweltmeistertitel mit 63.</p>
             <dl class="guenter-story-preview__facts" aria-label="Günters Entwicklung in Zahlen">
               <div><strong>63</strong><span>Jahre</span></div>
               <div><strong>3</strong><span>Saisons im Team</span></div>
@@ -2550,7 +2551,7 @@ function guenterPreisStoryPage() {
           <a class="guenter-story-backlink" href="/erfolge-im-team/"><span aria-hidden="true">&larr;</span> Erfolge im Team</a>
           <p class="eyebrow" data-reveal>Erfolgsgeschichte · Günter Preis</p>
           <h1 data-reveal>Gesundheit zuerst.<br><span>Dann kam die Bühne.</span></h1>
-          <p class="guenter-story-hero__lead" data-reveal>Mit 63 Jahren ist Günter Vizeweltmeister und mehrfacher Bronzemedaillengewinner bei Deutschen Meisterschaften. Der wichtigste Erfolg dieser Zusammenarbeit begann jedoch lange vor der nächsten Wettkampfdiät.</p>
+          <p class="guenter-story-hero__lead" data-reveal>Heute ist Günter mit 63 Jahren Vizeweltmeister und mehrfacher Bronzemedaillengewinner bei Deutschen Meisterschaften. Doch diese Geschichte beginnt nicht im Scheinwerferlicht. Sie beginnt mit besorgniserregenden Blutwerten, vielen Medikamenten – und einer Entscheidung: Gesundheit kommt vor Wettkampf.</p>
           <dl class="guenter-story-hero__facts" data-reveal aria-label="Eckdaten der Zusammenarbeit">
             <div><dt>2021</dt><dd>Kennengelernt</dd></div>
             <div><dt>3</dt><dd>gemeinsame Saisons</dd></div>
@@ -2559,32 +2560,44 @@ function guenterPreisStoryPage() {
         </div>
         <figure class="guenter-story-hero__media" data-reveal>
           <img src="/assets/images/guenter-preis-coach-stage.jpg" alt="Dominik Dörfl und Günter Preis mit Medaille bei einer Bodybuilding-Meisterschaft"${imageLoadingAttributes({ eager: true })}>
+          <span class="guenter-story-hero__seal" aria-hidden="true"><strong>63</strong><span>Jahre · heute</span></span>
           <figcaption>Dominik und Günter: aus einer Begegnung 2021 wurden drei gemeinsame Saisons.</figcaption>
         </figure>
       </div>
     </section>
 
-    <section class="section guenter-story-origin">
+    <nav class="guenter-story-jump" aria-label="Kapitel dieser Erfolgsgeschichte">
+      <div class="section-shell section-shell--wide">
+        <span>Günters Weg</span>
+        <a href="#kennenlernen"><b>01</b> Kennenlernen</a>
+        <a href="#gesundheit"><b>02</b> Ausgangslage</a>
+        <a href="#diabetes-in-deutschland"><b>03</b> Warum es zählt</a>
+        <a href="#heute"><b>04</b> Heute</a>
+        <a href="#buehne"><b>05</b> Bühne</a>
+      </div>
+    </nav>
+
+    <section class="section guenter-story-origin" id="kennenlernen">
       <div class="section-shell guenter-story-editorial">
         <div class="guenter-story-editorial__intro" data-reveal>
           <p class="eyebrow">Der Anfang</p>
           <h2>Eine Warteschlange.<br>Ein gutes Gefühl.<br><span>Und zunächst Funkstille.</span></h2>
         </div>
         <div class="guenter-story-editorial__body" data-reveal>
-          <p class="guenter-story-dropcap">2021 standen Günter und Dominik bei einem Wettkampf in der Schlange zur Anmeldung. Die Sympathie war sofort da. Nach diesem kurzen Kennenlernen verloren sie sich zunächst wieder aus den Augen.</p>
-          <p>Nach der Saison meldete Günter sich bei Dominik. Er wollte seine nächste Entwicklung gemeinsam mit Camp Dörfl angehen. Schnell wurde klar: Das erste Ziel durfte nicht die nächste Platzierung sein.</p>
-          <blockquote>„Bevor wir über eine neue Wettkampfform gesprochen haben, mussten wir zuerst die gesundheitliche Basis stabilisieren.“</blockquote>
+          <p class="guenter-story-dropcap">Manchmal beginnt eine große Geschichte an einem völlig unspektakulären Ort. 2021 standen Günter und Dominik bei einem Wettkampf in der Schlange zur Anmeldung. Ein kurzes Gespräch, sofortige Sympathie – dann gingen beide wieder ihrer Wege.</p>
+          <p>Erst nach der Saison meldete Günter sich. Er wollte mit Camp Dörfl arbeiten, stärker werden und sportlich noch einmal angreifen. Doch beim ehrlichen Blick auf seine Ausgangslage rückte die Bühne zunächst weit in den Hintergrund.</p>
+          <blockquote>„Wir haben nicht zuerst über Form, Gewicht oder Platzierungen gesprochen. Wir haben gesagt: Jetzt müssen wir deine gesundheitliche Basis stabilisieren.“</blockquote>
         </div>
       </div>
     </section>
 
-    <section class="section section--muted guenter-story-start">
+    <section class="section section--muted guenter-story-start" id="gesundheit">
       <div class="section-shell section-shell--wide">
         ${sectionHeader({
           eyebrow: "Gesundheit vor Wettkampf",
-          title: "Der wichtigste Plan hatte zunächst <span>nichts mit einer Medaille</span> zu tun.",
+          title: "Der wichtigste Plan führte nicht zur Bühne – <span>sondern weg von der gesundheitlichen Gefahrenzone.</span>",
           text:
-            "Günter lebte mit Typ-2-Diabetes, nahm mehrere Medikamente und seine Nierenwerte gaben Anlass zur Sorge. Eine mögliche Dialyse stand als gesundheitliches Risiko im Raum. Deshalb bekam die Stabilisierung seiner Gesundheit klare Priorität."
+            "Günter lebte mit Typ-2-Diabetes und einer hohen Medikamenteneinnahme. Gleichzeitig machten die Nierenwerte Sorgen; eine mögliche Dialyse stand als ernstes Risiko im Raum. Aus dem sportlichen Coaching wurde deshalb zuerst ein präzise strukturierter Neustart – mit Gesundheit als einziger Priorität."
         })}
         <div class="guenter-story-plan">
           <article data-reveal>
@@ -2611,7 +2624,60 @@ function guenterPreisStoryPage() {
       </div>
     </section>
 
-    <section class="section section--dark guenter-story-health">
+    <section class="section guenter-story-diabetes" id="diabetes-in-deutschland">
+      <div class="section-shell section-shell--wide">
+        <div class="guenter-story-diabetes__heading" data-reveal>
+          <div>
+            <p class="eyebrow">Weg vom Diabetes</p>
+            <h2>Günter ist mein Typ.<br><span>Ein Kämpfer gegen Typ 2.</span></h2>
+          </div>
+          <div>
+            <p>Günters Geschichte ist persönlich. Das Problem dahinter betrifft Millionen Menschen: Typ-2-Diabetes kann lange unbemerkt bleiben und auf Dauer auch die feinen Blutgefäße der Nieren schädigen.</p>
+            <p>„Weg vom Diabetes“ bedeutet hier nicht Heilversprechen, sondern Richtung: Werte verstehen, Gewohnheiten verändern, medizinisch begleiten lassen und jeden messbaren Fortschritt konsequent absichern.</p>
+          </div>
+        </div>
+
+        <div class="guenter-story-data" data-reveal>
+          <article class="guenter-story-chart" aria-labelledby="diabetes-chart-title">
+            <div class="guenter-story-chart__head">
+              <div>
+                <p class="eyebrow">Deutschland</p>
+                <h3 id="diabetes-chart-title">Diagnostizierter Diabetes bei Erwachsenen</h3>
+              </div>
+              <strong>+4,4<span>Prozentpunkte</span></strong>
+            </div>
+            <div class="guenter-story-chart__plot" role="img" aria-label="Anteil der Erwachsenen mit diagnostiziertem Diabetes: 5,8 Prozent im Jahr 2003 und 10,2 Prozent im Jahr 2022">
+              <div class="guenter-story-chart__grid" aria-hidden="true"><span>10 %</span><span>5 %</span><span>0 %</span></div>
+              <div class="guenter-story-chart__bars">
+                <div><i style="--bar-height: 56.9%"><b>5,8 %</b></i><span>2003</span></div>
+                <div><i style="--bar-height: 100%"><b>10,2 %</b></i><span>2022</span></div>
+              </div>
+            </div>
+            <p class="guenter-story-source">Quelle: <a href="https://www.gbe.rki.de/DE/Themen/Gesundheitszustand/KoerperlicheErkrankungen/DiabetesMellitus/DiabetesPraevalenz18Plus/diabetesPraevalenz_node.html" target="_blank" rel="noopener noreferrer">Robert Koch-Institut, GEDA 2003–2022 <span aria-hidden="true">&nearr;</span></a></p>
+          </article>
+
+          <div class="guenter-story-research">
+            <article>
+              <span class="guenter-story-research__number">40<sup>%</sup></span>
+              <h3>Diabetes und Niere hängen eng zusammen.</h3>
+              <p>Nach Angaben der Deutschen Diabetes Gesellschaft entwickeln etwa 40 Prozent der Menschen mit Typ-2-Diabetes eine Nierenschädigung. Dauerhaft erhöhte Blutzuckerwerte können die kleinen Gefäße der Niere schädigen; Bluthochdruck verstärkt das Risiko zusätzlich.</p>
+              <a href="https://www.ddg.info/die-ddg/arbeitsgemeinschaften/diabetes-niere" target="_blank" rel="noopener noreferrer">Quelle: DDG, Diabetes &amp; Niere <span aria-hidden="true">&nearr;</span></a>
+            </article>
+            <article>
+              <span class="guenter-story-research__tag">Was Forschung zeigt</span>
+              <h3>Remission ist möglich – aber nicht garantiert.</h3>
+              <p>Die randomisierte DiRECT-Studie zeigte, dass eine intensive Gewichtsmanagement-Intervention bei einem Teil der Teilnehmenden eine Remission des Typ-2-Diabetes erreichen konnte. Fachleute sprechen von Remission, wenn der HbA1c mindestens drei Monate ohne blutzuckersenkende Medikamente unter 6,5 Prozent liegt. Kontrollen bleiben notwendig.</p>
+              <div class="guenter-story-research__links">
+                <a href="https://doi.org/10.1016/S2213-8587(23)00385-6" target="_blank" rel="noopener noreferrer">DiRECT, 5-Jahres-Daten <span aria-hidden="true">&nearr;</span></a>
+                <a href="https://www.diabinfo.de/fachkreise/forschung/artikel/article/die-definition-von-remission-bei-diabetes-typ-2.html" target="_blank" rel="noopener noreferrer">Definition der Remission <span aria-hidden="true">&nearr;</span></a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--dark guenter-story-health" id="heute">
       <div class="section-shell section-shell--wide guenter-story-health__grid">
         <figure class="guenter-story-health__media" data-reveal>
           <img src="/assets/images/guenter-preis-portrait-2024.jpg" alt="Günter Preis in athletischer Form während einer Wettkampfvorbereitung"${imageLoadingAttributes()}>
@@ -2619,8 +2685,8 @@ function guenterPreisStoryPage() {
         <div class="guenter-story-health__copy" data-reveal>
           <p class="eyebrow">Der größte Erfolg</p>
           <h2>Zwei Jahre Struktur.<br><span>Heute durchweg gute Werte.</span></h2>
-          <p>Nach rund zwei Jahren konsequenter Umsetzung kommt Günter nach eigener Auskunft ohne blutzuckersenkende Medikamente aus. Seine aktuellen Kontrollen zeigen nach seinen Angaben einen Langzeitblutzucker und Nierenwerte im Referenzbereich eines gesunden Menschen.</p>
-          <p>Sein Diabetes-Arzt hat ihn nach seiner Auskunft aus der laufenden Spezialbetreuung entlassen. Auch nach der inzwischen dritten gemeinsamen Saison fühlt Günter sich heute besser als noch vor einigen Jahren.</p>
+          <p>Woche für Woche entstand aus vielen kleinen Entscheidungen ein neuer Alltag: mehr Ausdauer, weniger Kohlenhydrate, eine veränderte Ernährung und kontinuierliche Blutzuckermessungen. Nicht spektakulär – aber konsequent, kontrolliert und über zwei Jahre durchgezogen.</p>
+          <p>Heute kommt Günter nach eigener Auskunft ohne blutzuckersenkende Medikamente aus. Seine aktuellen Kontrollen zeigen nach seinen Angaben einen Langzeitblutzucker und Nierenwerte im Referenzbereich eines gesunden Menschen; sein Diabetes-Arzt entließ ihn aus der laufenden Spezialbetreuung. Für Günter ist genau das der größte Titel dieser Geschichte.</p>
           <dl class="guenter-story-health__facts" aria-label="Günters heutiger Gesundheitsstand">
             <div><dt>0</dt><dd>blutzuckersenkende Medikamente</dd></div>
             <div><dt>HbA1c</dt><dd>im gesunden Referenzbereich</dd></div>
@@ -2630,18 +2696,18 @@ function guenterPreisStoryPage() {
       </div>
     </section>
 
-    <section class="section guenter-story-competition">
+    <section class="section guenter-story-competition" id="buehne">
       <div class="section-shell section-shell--wide guenter-story-competition__grid">
         <div class="guenter-story-competition__copy" data-reveal>
           <p class="eyebrow">Die sportliche Zugabe</p>
           <h2>Als die Gesundheit stabil war, wurde auch die Bühne wieder zum Ziel.</h2>
-          <p>Auf der neu aufgebauten Basis folgten drei gemeinsame Wettkampfsaisons. Günter wurde Vizeweltmeister und gewann mehrfach Bronze bei Deutschen Meisterschaften – mit aktuell 63 Jahren.</p>
+          <p>Erst als das Fundament wieder trug, kehrte das alte Ziel zurück. Aus der gesundheitlichen Stabilisierung wurde erneut Wettkampfvorbereitung – nun auf einer völlig anderen Basis. Drei gemeinsame Saisons später wurde Günter Vizeweltmeister und gewann mehrfach Bronze bei Deutschen Meisterschaften. Mit 63 Jahren.</p>
           <div class="guenter-story-medals" aria-label="Wettkampferfolge von Günter Preis">
             <div><strong>Vize</strong><span>Weltmeister</span></div>
             <div><strong>Mehrfach</strong><span>Bronze bei Deutschen Meisterschaften</span></div>
             <div><strong>3</strong><span>gemeinsame Saisons</span></div>
           </div>
-          <blockquote>Eine außergewöhnliche sportliche Geschichte. Noch wertvoller ist, dass Günter sich heute gesundheitlich stärker fühlt als vor der Zusammenarbeit.</blockquote>
+          <blockquote>Die Medaillen machen diese Geschichte sichtbar. Ihr eigentlicher Wert liegt darin, dass Günter sich heute stärker und gesünder fühlt als vor einigen Jahren.</blockquote>
         </div>
         <figure class="guenter-story-competition__media" data-reveal>
           <img src="/assets/images/guenter-preis-stage-2026.jpg" alt="Günter Preis in Wettkampfform auf der Bühne der NABBA European Championship"${imageLoadingAttributes()}>

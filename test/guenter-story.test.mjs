@@ -16,6 +16,16 @@ test("Günter Preis has a dedicated, indexable success story", () => {
   assert.match(html, /Nierenwerte/);
   assert.match(html, /kein medizinisches Versprechen/i);
   assert.match(html, /Diagnostik sowie Änderungen verschriebener Medikamente/);
+  assert.match(html, /class="guenter-story-jump"/);
+  assert.match(html, /id="kennenlernen"/);
+  assert.match(html, /id="gesundheit"/);
+  assert.match(html, /id="diabetes-in-deutschland"/);
+  assert.match(html, /id="heute"/);
+  assert.match(html, /id="buehne"/);
+  assert.match(html, /10,2 %/);
+  assert.match(html, /40<sup>%<\/sup>/);
+  assert.match(html, /DiRECT/);
+  assert.match(html, /Remission ist möglich – aber nicht garantiert/);
   assert.match(html, /"@type":"Article"/);
 });
 
@@ -39,6 +49,7 @@ test("Personal Training and team success pages link to the full story", () => {
     const page = pages.find((entry) => entry.route === route);
     assert.ok(page, `Missing source page: ${route}`);
     assert.match(page.render(), /href="\/erfolge-im-team\/guenter-preis\/"/);
+    assert.match(page.render(), /Neue Erfolgsgeschichte/);
   }
 });
 
