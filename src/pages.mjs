@@ -4049,24 +4049,6 @@ function personalTrainingCostPage() {
     }
   ];
 
-  const formatRows = [
-    {
-      title: "Einzelsessions",
-      text:
-        "Für 120 Euro oder 150 Euro inklusive 2D-Körperanalyse – sinnvoll, wenn du Technik, Übungsauswahl oder einen konkreten Trainingsimpuls brauchst."
-    },
-    {
-      title: "5er- oder 10er-Karten",
-      text:
-        "Die 5er-Karte kostet 500 Euro, die 10er-Karte 800 Euro. Beide passen zu Menschen, die über mehrere Termine Stabilität aufbauen wollen."
-    },
-    {
-      title: "Premium Begleitung",
-      text:
-        "Ab 200 Euro monatlich die stärkste Lösung, wenn Training, Ernährung, Analyse, App und laufende Anpassung zusammenarbeiten sollen."
-    }
-  ];
-
   const pricingSteps = [
     "Ziel, Alltag und Ausgangslage ehrlich einordnen.",
     "Entscheiden, wie viel persönliche Führung wirklich nötig ist.",
@@ -4146,18 +4128,6 @@ function personalTrainingCostPage() {
           align: "center"
         })}
         ${featureGrid(costFactorCards, "feature-grid--coaching-flow")}
-      </div>
-    </section>
-
-    <section class="section section--muted">
-      <div class="section-shell">
-        ${sectionHeader({
-          eyebrow: "Modelle",
-          title: "Welche Formate in Nürnberg typischerweise Sinn ergeben.",
-          text:
-            "Nicht jede Ausgangslage braucht dieselbe Tiefe. Deshalb lohnt sich die Einordnung vor dem Preisvergleich."
-        })}
-        ${summaryRows(formatRows)}
       </div>
     </section>
 
