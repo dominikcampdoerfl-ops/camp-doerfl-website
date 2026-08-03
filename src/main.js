@@ -242,6 +242,21 @@ if (header) {
 
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
+const autoRevealSelectors = [
+  ".pricing-card",
+  ".start-card",
+  ".corporate-reference-card",
+  ".event-reference-card",
+  ".partner-brand-card",
+  ".basis-partner-card",
+  ".spot-nearby-card",
+  ".coach-success__totals > div"
+];
+
+document
+  .querySelectorAll(autoRevealSelectors.map((selector) => `${selector}:not([data-reveal])`).join(", "))
+  .forEach((item) => item.setAttribute("data-reveal", "card"));
+
 document.querySelectorAll("main > section:not(.ff-hero):not(.hero)").forEach((section) => {
   const revealTarget = section.querySelector(":scope > .section-shell, :scope > .hero__inner, :scope > [class*='__inner']");
   if (revealTarget && !revealTarget.hasAttribute("data-reveal")) {
@@ -278,7 +293,7 @@ requestAnimationFrame(() => {
 });
 
 const counterItems = document.querySelectorAll(
-  ".ff-hero__facts dt, .hero__stat-value, .landing-stat__value, .stat-card__value, .bbcal-hero__stat strong, .spot-results-count strong, .coaching-success-proof__stats strong"
+  ".ff-hero__facts dt, .ff-hero__facts dd, .hero__stat-value, .landing-stat__value, .stat-card__value, .bbcal-hero__stat strong, .spot-results-count strong, .coaching-success-proof__stats strong, .coach-success__totals strong, .ed-proof__item dt, .ed-google-reviews__score, .pricing-card__price, .start-card__price"
 );
 
 const parseCounter = (element) => {
@@ -302,6 +317,7 @@ const animateCounter = (element) => {
   if (!counter || !Number.isFinite(counter.value)) return;
   element.dataset.counted = "true";
   if (prefersReducedMotion.matches) return;
+  element.classList.add("is-counting");
 
   const startedAt = performance.now();
   const prefix = counter.original.slice(0, counter.start);
@@ -315,7 +331,11 @@ const animateCounter = (element) => {
     const current = counter.value * (1 - Math.pow(1 - progress, 4));
     element.textContent = `${prefix}${formatter.format(current)}${suffix}`;
     if (progress < 1) requestAnimationFrame(tick);
-    else element.textContent = counter.original;
+    else {
+      element.textContent = counter.original;
+      element.classList.remove("is-counting");
+      element.classList.add("is-counted");
+    }
   };
   requestAnimationFrame(tick);
 };
@@ -351,6 +371,28 @@ if (parallaxHeroes.length && !prefersReducedMotion.matches) {
   updateParallax();
   window.addEventListener("scroll", requestParallaxUpdate, { passive: true });
   window.addEventListener("resize", requestParallaxUpdate, { passive: true });
+}
+
+if (!prefersReducedMotion.matches) {
+  const scrollProgress = document.createElement("div");
+  scrollProgress.className = "site-scroll-progress";
+  scrollProgress.setAttribute("aria-hidden", "true");
+  document.body.append(scrollProgress);
+
+  let progressFrame = 0;
+  const updateScrollProgress = () => {
+    progressFrame = 0;
+    const scrollableHeight = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+    const progress = Math.max(0, Math.min(1, window.scrollY / scrollableHeight));
+    scrollProgress.style.setProperty("--scroll-progress", progress.toFixed(4));
+  };
+  const requestScrollProgressUpdate = () => {
+    if (!progressFrame) progressFrame = requestAnimationFrame(updateScrollProgress);
+  };
+
+  updateScrollProgress();
+  window.addEventListener("scroll", requestScrollProgressUpdate, { passive: true });
+  window.addEventListener("resize", requestScrollProgressUpdate, { passive: true });
 }
 
 const setContactFormStatus = (form, message = "", state = "") => {

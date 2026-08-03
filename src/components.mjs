@@ -1157,8 +1157,8 @@ export function layout({
 	    <meta name="theme-color" content="#fbf7ef">
 	    <link rel="icon" href="${brandLogoPath}">
 	    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/camp-doerfl-logo.png">
-	    <link rel="stylesheet" href="/assets/styles.css">
-	    <link rel="stylesheet" href="/assets/mobile-overrides.css?v=20260803-1">
+	    <link rel="stylesheet" href="/assets/styles.css?v=20260803-2">
+	    <link rel="stylesheet" href="/assets/mobile-overrides.css?v=20260803-2">
 	    <script type="application/ld+json">${JSON.stringify(structuredData)}</script>
   </head>
   <body${bodyClass ? ` class="${bodyClass}"` : ""}>
@@ -1168,7 +1168,7 @@ export function layout({
     </main>
     ${footer()}
     ${consentManager()}
-    <script type="module" src="/assets/main.js"></script>
+    <script type="module" src="/assets/main.js?v=20260803-2"></script>
   </body>
 </html>`;
 }
