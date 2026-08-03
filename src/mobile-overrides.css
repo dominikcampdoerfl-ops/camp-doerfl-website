@@ -1378,6 +1378,13 @@ html body.page-premium.page-events main .event-reference-band__intro h2 {
     min-height: clamp(190px, 16vw, 230px) !important;
     padding: clamp(22px, 1.8vw, 28px) !important;
   }
+
+  html body.page-premium.page-coaching .ff-hero--coaching-photo .ff-hero__img,
+  html body.page-premium.page-coaching .ff-hero--coaching-photo.is-hero-ready .ff-hero__img {
+    object-position: 58% 38% !important;
+    transform: translate3d(0, calc(var(--parallax-y, 0px) + 24px), 0) scale(1.16) !important;
+    transform-origin: 58% 38%;
+  }
 }
 
 /* ============================================================
