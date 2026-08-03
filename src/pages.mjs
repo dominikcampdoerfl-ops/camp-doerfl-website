@@ -2222,7 +2222,7 @@ function eventsPage() {
     </section>
 
     <section class="section section--tight">
-      <div class="section-shell editorial-stage">
+      <div class="section-shell editorial-stage event-moderation-intro">
         <div class="editorial-stage__copy" data-reveal>
           ${sectionHeader({
             eyebrow: "Warum Camp Dörfl",

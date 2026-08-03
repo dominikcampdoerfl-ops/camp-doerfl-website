@@ -1366,6 +1366,20 @@ h3 {
   }
 }
 
+/* Final readability and density refinements requested for the live service pages. */
+html body.page-premium.page-events main .event-moderation-intro .section-header h2,
+html body.page-premium.page-events main .event-reference-band__intro h2 {
+  color: #15120b !important;
+  text-shadow: none !important;
+}
+
+@media (min-width: 900px) {
+  html body.page-premium.page-coaching main .coaching-outcome-stage .summary-row {
+    min-height: clamp(190px, 16vw, 230px) !important;
+    padding: clamp(22px, 1.8vw, 28px) !important;
+  }
+}
+
 /* ============================================================
    HOME IN LIGHT — a warm, editorial continuation of the Google
    review panel. The photo hero remains cinematic for legibility;
