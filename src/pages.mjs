@@ -1845,6 +1845,8 @@ function personalCoachingPage() {
       </div>
     </section>
 
+    ${guenterStoryPreview("coaching")}
+
     <section class="section section--tight coaching-success-proof-section">
       <div class="section-shell section-shell--wide">
         <a class="coaching-success-proof" href="/erfolge-im-team/" data-reveal aria-label="Alle Erfolge im Team ansehen">
@@ -1999,6 +2001,30 @@ function personalCoachingPage() {
     ],
     content
   });
+}
+
+function guenterStoryPreview(context = "team") {
+  return `
+    <section class="section section--tight guenter-story-preview-section guenter-story-preview-section--${context}">
+      <div class="section-shell section-shell--wide">
+        <a class="guenter-story-preview" href="/erfolge-im-team/guenter-preis/" data-reveal aria-label="Die Erfolgsgeschichte von Günter Preis lesen">
+          <figure class="guenter-story-preview__media">
+            <img src="/assets/images/guenter-preis-coach-stage.jpg" alt="Dominik Dörfl gemeinsam mit Günter Preis und seiner Medaille nach einem Bodybuilding-Wettkampf"${imageLoadingAttributes()}>
+          </figure>
+          <div class="guenter-story-preview__copy">
+            <p class="eyebrow">Erfolgsgeschichte · Günter Preis</p>
+            <h2>Gesundheit zuerst.<br><span>Bühne später.</span></h2>
+            <p>2021 begann eine Zusammenarbeit, deren größter Erfolg weit vor den Medaillen lag: Günter stabilisierte mit konsequenter Struktur seine Gesundheit – und wurde mit 63 Jahren Vizeweltmeister.</p>
+            <dl class="guenter-story-preview__facts" aria-label="Günters Entwicklung in Zahlen">
+              <div><strong>63</strong><span>Jahre</span></div>
+              <div><strong>3</strong><span>Saisons im Team</span></div>
+              <div><strong>2</strong><span>Jahre Gesundheitsfokus</span></div>
+            </dl>
+            <span class="guenter-story-preview__cta">Günters ganze Geschichte lesen <span aria-hidden="true">&rarr;</span></span>
+          </div>
+        </a>
+      </div>
+    </section>`;
 }
 
 function firmenfitnessPage() {
@@ -2516,6 +2542,189 @@ function eventsPage() {
   });
 }
 
+function guenterPreisStoryPage() {
+  const content = `
+    <section class="guenter-story-hero">
+      <div class="section-shell section-shell--wide guenter-story-hero__grid">
+        <div class="guenter-story-hero__copy">
+          <a class="guenter-story-backlink" href="/erfolge-im-team/"><span aria-hidden="true">&larr;</span> Erfolge im Team</a>
+          <p class="eyebrow" data-reveal>Erfolgsgeschichte · Günter Preis</p>
+          <h1 data-reveal>Gesundheit zuerst.<br><span>Dann kam die Bühne.</span></h1>
+          <p class="guenter-story-hero__lead" data-reveal>Mit 63 Jahren ist Günter Vizeweltmeister und mehrfacher Bronzemedaillengewinner bei Deutschen Meisterschaften. Der wichtigste Erfolg dieser Zusammenarbeit begann jedoch lange vor der nächsten Wettkampfdiät.</p>
+          <dl class="guenter-story-hero__facts" data-reveal aria-label="Eckdaten der Zusammenarbeit">
+            <div><dt>2021</dt><dd>Kennengelernt</dd></div>
+            <div><dt>3</dt><dd>gemeinsame Saisons</dd></div>
+            <div><dt>63</dt><dd>Jahre alt</dd></div>
+          </dl>
+        </div>
+        <figure class="guenter-story-hero__media" data-reveal>
+          <img src="/assets/images/guenter-preis-coach-stage.jpg" alt="Dominik Dörfl und Günter Preis mit Medaille bei einer Bodybuilding-Meisterschaft"${imageLoadingAttributes({ eager: true })}>
+          <figcaption>Dominik und Günter: aus einer Begegnung 2021 wurden drei gemeinsame Saisons.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section guenter-story-origin">
+      <div class="section-shell guenter-story-editorial">
+        <div class="guenter-story-editorial__intro" data-reveal>
+          <p class="eyebrow">Der Anfang</p>
+          <h2>Eine Warteschlange.<br>Ein gutes Gefühl.<br><span>Und zunächst Funkstille.</span></h2>
+        </div>
+        <div class="guenter-story-editorial__body" data-reveal>
+          <p class="guenter-story-dropcap">2021 standen Günter und Dominik bei einem Wettkampf in der Schlange zur Anmeldung. Die Sympathie war sofort da. Nach diesem kurzen Kennenlernen verloren sie sich zunächst wieder aus den Augen.</p>
+          <p>Nach der Saison meldete Günter sich bei Dominik. Er wollte seine nächste Entwicklung gemeinsam mit Camp Dörfl angehen. Schnell wurde klar: Das erste Ziel durfte nicht die nächste Platzierung sein.</p>
+          <blockquote>„Bevor wir über eine neue Wettkampfform gesprochen haben, mussten wir zuerst die gesundheitliche Basis stabilisieren.“</blockquote>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted guenter-story-start">
+      <div class="section-shell section-shell--wide">
+        ${sectionHeader({
+          eyebrow: "Gesundheit vor Wettkampf",
+          title: "Der wichtigste Plan hatte zunächst <span>nichts mit einer Medaille</span> zu tun.",
+          text:
+            "Günter lebte mit Typ-2-Diabetes, nahm mehrere Medikamente und seine Nierenwerte gaben Anlass zur Sorge. Eine mögliche Dialyse stand als gesundheitliches Risiko im Raum. Deshalb bekam die Stabilisierung seiner Gesundheit klare Priorität."
+        })}
+        <div class="guenter-story-plan">
+          <article data-reveal>
+            <span>01</span>
+            <h3>Ausdauer gezielt erhöhen</h3>
+            <p>Regelmäßiges Ausdauertraining wurde zu einem festen Bestandteil der Woche – planbar, messbar und passend zu Günters Belastbarkeit.</p>
+          </article>
+          <article data-reveal>
+            <span>02</span>
+            <h3>Ernährung neu strukturieren</h3>
+            <p>Die Ernährung wurde kohlenhydratbewusster aufgebaut und konsequent an Blutzuckerwerte, Alltag und Trainingsbelastung angepasst.</p>
+          </article>
+          <article data-reveal>
+            <span>03</span>
+            <h3>Werte eng beobachten</h3>
+            <p>Blutzucker und Blutwerte blieben laufend im Blick. So wurde nicht nach Gefühl gesteuert, sondern auf Grundlage der tatsächlichen Entwicklung.</p>
+          </article>
+          <article data-reveal>
+            <span>04</span>
+            <h3>Medikation ärztlich begleiten</h3>
+            <p>Das Ziel war, Voraussetzungen für eine medizinisch verantwortete Reduzierung der Medikamente zu schaffen – beginnend bei Metformin.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--dark guenter-story-health">
+      <div class="section-shell section-shell--wide guenter-story-health__grid">
+        <figure class="guenter-story-health__media" data-reveal>
+          <img src="/assets/images/guenter-preis-portrait-2024.jpg" alt="Günter Preis in athletischer Form während einer Wettkampfvorbereitung"${imageLoadingAttributes()}>
+        </figure>
+        <div class="guenter-story-health__copy" data-reveal>
+          <p class="eyebrow">Der größte Erfolg</p>
+          <h2>Zwei Jahre Struktur.<br><span>Heute durchweg gute Werte.</span></h2>
+          <p>Nach rund zwei Jahren konsequenter Umsetzung kommt Günter nach eigener Auskunft ohne blutzuckersenkende Medikamente aus. Seine aktuellen Kontrollen zeigen nach seinen Angaben einen Langzeitblutzucker und Nierenwerte im Referenzbereich eines gesunden Menschen.</p>
+          <p>Sein Diabetes-Arzt hat ihn nach seiner Auskunft aus der laufenden Spezialbetreuung entlassen. Auch nach der inzwischen dritten gemeinsamen Saison fühlt Günter sich heute besser als noch vor einigen Jahren.</p>
+          <dl class="guenter-story-health__facts" aria-label="Günters heutiger Gesundheitsstand">
+            <div><dt>0</dt><dd>blutzuckersenkende Medikamente</dd></div>
+            <div><dt>HbA1c</dt><dd>im gesunden Referenzbereich</dd></div>
+            <div><dt>Nierenwerte</dt><dd>im gesunden Referenzbereich</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="section guenter-story-competition">
+      <div class="section-shell section-shell--wide guenter-story-competition__grid">
+        <div class="guenter-story-competition__copy" data-reveal>
+          <p class="eyebrow">Die sportliche Zugabe</p>
+          <h2>Als die Gesundheit stabil war, wurde auch die Bühne wieder zum Ziel.</h2>
+          <p>Auf der neu aufgebauten Basis folgten drei gemeinsame Wettkampfsaisons. Günter wurde Vizeweltmeister und gewann mehrfach Bronze bei Deutschen Meisterschaften – mit aktuell 63 Jahren.</p>
+          <div class="guenter-story-medals" aria-label="Wettkampferfolge von Günter Preis">
+            <div><strong>Vize</strong><span>Weltmeister</span></div>
+            <div><strong>Mehrfach</strong><span>Bronze bei Deutschen Meisterschaften</span></div>
+            <div><strong>3</strong><span>gemeinsame Saisons</span></div>
+          </div>
+          <blockquote>Eine außergewöhnliche sportliche Geschichte. Noch wertvoller ist, dass Günter sich heute gesundheitlich stärker fühlt als vor der Zusammenarbeit.</blockquote>
+        </div>
+        <figure class="guenter-story-competition__media" data-reveal>
+          <img src="/assets/images/guenter-preis-stage-2026.jpg" alt="Günter Preis in Wettkampfform auf der Bühne der NABBA European Championship"${imageLoadingAttributes()}>
+          <figcaption>Günter Preis auf der internationalen Wettkampfbühne.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section section--muted guenter-story-gallery-section">
+      <div class="section-shell section-shell--wide">
+        ${sectionHeader({
+          eyebrow: "Der Weg dazwischen",
+          title: "Fortschritt entsteht nicht am Wettkampftag.",
+          text:
+            "Die Bühne zeigt das Ergebnis. Entscheidend waren die vielen kontrollierten Wochen aus Training, Ernährung, Ausdauer und konsequenter Rückmeldung."
+        })}
+        <div class="guenter-story-gallery">
+          <figure data-reveal>
+            <img src="/assets/images/guenter-preis-training-front.jpg" alt="Günter Preis während eines Formchecks im Fitnessstudio von vorn"${imageLoadingAttributes()}>
+            <figcaption>Formcheck im Training</figcaption>
+          </figure>
+          <figure data-reveal>
+            <img src="/assets/images/guenter-preis-training-side.jpg" alt="Günter Preis während eines seitlichen Formchecks im Fitnessstudio"${imageLoadingAttributes()}>
+            <figcaption>Konsequenz zwischen den Wettkämpfen</figcaption>
+          </figure>
+          <figure data-reveal>
+            <img src="/assets/images/guenter-preis-coach-stage.jpg" alt="Dominik Dörfl und Günter Preis nach einer erfolgreichen Meisterschaft"${imageLoadingAttributes()}>
+            <figcaption>Drei Saisons als Team</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section guenter-story-note-section">
+      <div class="section-shell">
+        <aside class="guenter-story-note" data-reveal aria-labelledby="guenter-medical-note-title">
+          <p class="eyebrow">Wichtige Einordnung</p>
+          <h2 id="guenter-medical-note-title">Eine persönliche Erfolgsgeschichte – kein medizinisches Versprechen.</h2>
+          <p>Diese Seite beschreibt Günters individuellen Verlauf. Sie ersetzt keine ärztliche Beratung und lässt sich nicht pauschal auf andere Menschen übertragen. Diagnostik sowie Änderungen verschriebener Medikamente gehören ausschließlich in die Hände der behandelnden Ärztinnen und Ärzte. Auch bei stabilen Werten bleiben regelmäßige medizinische Kontrollen wichtig.</p>
+          <a href="https://www.diabinfo.de/leben/typ-2-diabetes/grundlagen/krankheitsbild-und-symptome.html" target="_blank" rel="noopener noreferrer">Fachinformationen zu Typ-2-Diabetes und Remission <span aria-hidden="true">&nearr;</span></a>
+        </aside>
+      </div>
+    </section>
+
+    ${ctaSection({
+      eyebrow: "Personal Training Nürnberg",
+      title: "Dein Ziel beginnt mit einer ehrlichen Bestandsaufnahme.",
+      text:
+        "Gesundheitliche Voraussetzungen, Alltag, Training und Ziele müssen zusammen betrachtet werden. Genau dort beginnt die persönliche Zusammenarbeit bei Camp Dörfl.",
+      primary: { label: "Beratung anfragen", href: contactHref("premium-training") },
+      secondary: { label: "Personal Training ansehen", href: "/personal-trainer-nürnberg/" }
+    })}
+  `;
+
+  return layout({
+    path: "/erfolge-im-team/guenter-preis/",
+    title: "Günter Preis: Gesundheit & Wettkampferfolg mit 63 | Camp Dörfl",
+    pageName: "Erfolgsgeschichte Günter Preis",
+    description:
+      "Die Erfolgsgeschichte von Günter Preis: gesundheitliche Stabilisierung bei Typ-2-Diabetes, drei gemeinsame Wettkampfsaisons und Vizeweltmeister mit 63 Jahren.",
+    keywords: ["Günter Preis Bodybuilding", "Erfolgsgeschichte Personal Training", "Bodybuilding mit 63", "Camp Dörfl Erfolge"],
+    bodyClass: "page-premium page-guenter-story",
+    socialImage: "/assets/images/guenter-preis-coach-stage.jpg",
+    socialImageAlt: "Dominik Dörfl gemeinsam mit Günter Preis und Wettkampfmedaille",
+    extraStructuredData: [
+      {
+        "@type": "Article",
+        "@id": `${site.url}/erfolge-im-team/guenter-preis/#article`,
+        headline: "Günter Preis: Gesundheit zuerst, dann die Bühne",
+        description:
+          "Günters persönliche Entwicklung vom gesundheitlichen Neustart bis zu internationalen Bodybuilding-Erfolgen mit 63 Jahren.",
+        image: [absoluteUrl("/assets/images/guenter-preis-coach-stage.jpg")],
+        datePublished: "2026-08-04",
+        dateModified: "2026-08-04",
+        author: { "@id": `${site.url}/#person` },
+        publisher: { "@id": `${site.url}/#organization` },
+        mainEntityOfPage: { "@id": `${site.url}/erfolge-im-team/guenter-preis/#webpage` }
+      }
+    ],
+    content
+  });
+}
+
 function teamSuccessPage() {
   const content = `
     <section class="ff-hero ff-hero--split ff-hero--photo ff-hero--team">
@@ -2562,6 +2771,8 @@ function teamSuccessPage() {
         </div>
       </div>
     </section>
+
+    ${guenterStoryPreview("team")}
 
     ${coachSuccessOverview()}
 
@@ -5798,6 +6009,7 @@ export const pages = [
   { route: "/sport-spot-finden/", render: sportSpotFinderPage },
   { route: "/executive-performance/", render: executivePerformancePage },
   { route: "/erfolge-im-team/", render: teamSuccessPage },
+  { route: "/erfolge-im-team/guenter-preis/", render: guenterPreisStoryPage },
   { route: "/ueber-dominik/", render: ueberDominikPage },
   { route: "/impressum/", render: impressumPage, includeInSitemap: false },
   { route: "/cookies/", render: cookiesPage, includeInSitemap: false },
