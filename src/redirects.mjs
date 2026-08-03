@@ -8,6 +8,11 @@
 export const legacyRedirectRules = Object.freeze({
   exact: Object.freeze({
     "/agb/": "/impressum/",
+    "/archiv/bodybuilding-wettkaempfe-2024/": "/bodybuilding-wettkaempfe-2026/",
+    "/athletenbereich/archiv/bodybuilding-wettkaempfe-2024/": "/bodybuilding-wettkaempfe-2026/",
+    "/athletenbereich/bodybuilding-wettkaempfe-2024/": "/bodybuilding-wettkaempfe-2026/",
+    "/athletenbereich/bodybuilding-wettkaempfe-2025/": "/bodybuilding-wettkaempfe-2026/",
+    "/athletenbereich/bodybuilding-wettkaempfe-2026/": "/bodybuilding-wettkaempfe-2026/",
     "/athletenbereich/camp-doerfl-podcast/": "/ueber-dominik/",
     "/athletenbereich/supplement-empfehlung/": "/partner/",
     "/camp-doerfl-podcast/": "/ueber-dominik/",

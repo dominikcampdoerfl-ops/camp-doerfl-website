@@ -192,6 +192,7 @@ export const landingStats = [
 export const landingPrograms = [
   {
     image: "/assets/images/dominik-personal-coaching-client.webp",
+    alt: "Dominik Dörfl begleitet einen Kunden beim Personal Training im Fitnessstudio",
     imagePosition: "center 14%",
     tag: "01",
     icon: "trainer",
@@ -205,6 +206,7 @@ export const landingPrograms = [
   },
   {
     image: "/assets/images/dominik-coaching-bikeerg.webp",
+    alt: "Dominik Dörfl erklärt einem Teilnehmer die Ergebnisse einer Körperanalyse",
     imagePosition: "center 20%",
     tag: "02",
     icon: "corporate",
@@ -218,6 +220,7 @@ export const landingPrograms = [
   },
   {
     image: "/assets/images/dominik-moderator-segmueller.jpg",
+    alt: "Dominik Dörfl moderiert eine Veranstaltung bei Segmüller",
     imagePosition: "center 12%",
     tag: "03",
     icon: "events",
@@ -231,6 +234,7 @@ export const landingPrograms = [
   },
   {
     image: "/assets/images/app-screen-all-tools.jpg",
+    alt: "Bildschirmansicht der Camp Dörfl App mit Trainings- und Ernährungsfunktionen",
     imagePosition: "center 18%",
     tag: "04",
     icon: "app",
@@ -248,22 +252,26 @@ export const landingProofCards = [
   {
     title: "2x Deutscher Meister",
     text: "Leistung auf höchstem Niveau in Bodybuilding und Powerlifting, nicht nur Theorie.",
-    image: "/assets/images/dominik-bodybuilding-desert.webp"
+    image: "/assets/images/dominik-bodybuilding-desert.webp",
+    alt: "Dominik Dörfl in Bodybuilding-Wettkampfform bei einem Fotoshooting in einer Felslandschaft"
   },
   {
     title: "Coaching in der Praxis",
     text: "Arbeit mit Athleten und ambitionierten Menschen, die echte Führung und Struktur brauchen.",
-    image: "/assets/images/dominik-coaching-bikeerg.webp"
+    image: "/assets/images/dominik-coaching-bikeerg.webp",
+    alt: "Dominik Dörfl begleitet einen Klienten beim Training auf dem Bike-Ergometer"
   },
   {
     title: "Ausdauer und Härte",
     text: "Ironman 70.3, Marathon, Triathlon und extreme Herausforderungen als gelebte Leistungsfähigkeit.",
-    image: "/assets/images/dominik-athlete-bike-yellow.webp"
+    image: "/assets/images/dominik-athlete-bike-yellow.webp",
+    alt: "Dominik Dörfl im gelben Radtrikot neben seinem Zeitfahrrad nach einer Ausdauereinheit"
   },
   {
     title: "Unternehmerische Perspektive",
     text: "Ein System entwickelt für Menschen mit Verantwortung, nicht für perfekte Laborbedingungen.",
-    image: "/assets/images/dominik-moderator-mic.webp"
+    image: "/assets/images/dominik-moderator-mic.webp",
+    alt: "Dominik Dörfl im Anzug mit Mikrofon während einer Veranstaltung"
   }
 ];
 
@@ -329,7 +337,6 @@ export const dominikFacts = [
   "Moderator und Gastgeber hochwertiger Sport-, Fitness- und Business-Events",
   "Partner von XXL Nutrition und AEKE",
   "Inhaber clever fit Nürnberg Süd seit November 2024",
-  "Mitgründer von Puzzle Gym Nürnberg",
   "Entwickler der Camp Dörfl App"
 ];
 
@@ -357,7 +364,7 @@ export const timeline = [
   {
     title: "Unternehmertum und Community",
     text:
-      "Mit clever fit Nürnberg Süd, Puzzle Gym und Camp Dörfl verbindet er physische Orte, digitale Begleitung und Community zu einem skalierbaren Performance-Ökosystem."
+      "Mit clever fit Nürnberg Süd und Camp Dörfl verbindet er physische Orte, digitale Begleitung und Community zu einem skalierbaren Performance-Ökosystem."
   }
 ];
 
@@ -380,7 +387,7 @@ export const corporateSteps = [
   "Optionale Follow-ups, Challenges oder App-Anbindung"
 ];
 
-export const sponsors = ["XXL Nutrition", "AEKE", "Puzzle Gym", "trueFormance", "clever fit Nürnberg Süd"];
+export const sponsors = ["XXL Nutrition", "AEKE", "Puzzle Gym", "Trueformance", "clever fit Nürnberg Süd", "Strava"];
 
 export const contactTopicConfigs = [
   {

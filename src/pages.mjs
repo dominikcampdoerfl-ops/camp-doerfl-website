@@ -19,6 +19,7 @@ import {
   featureGrid,
   imageLoadingAttributes,
   layout,
+  pricingCards,
   processList,
   proofMosaic,
   sectionHeader,
@@ -29,6 +30,14 @@ import {
   timelineList,
   transformationGrid
 } from "./components.mjs";
+import { dtuTriathlonEvents2026 } from "./triathlon-events-2026.mjs";
+import { runningEvents2026 } from "./running-events-2026.mjs";
+import {
+  golfAssociations,
+  golfEvents2026,
+  internationalTriathlonEvents2026
+} from "./sports-calendar-data.mjs";
+import { popularSportSpotCategoryIds, sportSpotCategories } from "./sport-spots-data.mjs";
 
 function serviceSchema({ path, name, serviceType, description }) {
   return {
@@ -70,13 +79,18 @@ function faqSchema(path, items) {
   };
 }
 
-function videoObjectSchema({ path, id, name, description, thumbnailUrl, embedUrl, watchUrl }) {
+function videoObjectSchema({ path, id, name, description, thumbnailUrl, embedUrl, watchUrl, uploadDate }) {
+  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})$/.test(uploadDate || "")) {
+    throw new Error(`VideoObject ${id || name || "unknown"} requires a valid ISO 8601 uploadDate`);
+  }
+
   return {
     "@type": "VideoObject",
     "@id": `${site.url}${path}#${id}`,
     name,
     description,
     thumbnailUrl: [absoluteUrl(thumbnailUrl)],
+    uploadDate,
     embedUrl,
     url: watchUrl,
     publisher: {
@@ -308,7 +322,7 @@ const coachingFaq = [
   {
     question: "Was kostet Personal Training oder Premium Personal Training?",
     answer:
-      "Der passende Rahmen hängt davon ab, ob du einzelne Personal Trainings, eine 5er- oder 10er-Karte oder die volle Premium-Begleitung suchst. In einer kurzen Beratung wird sauber eingeordnet, welches Setup zu Ziel, Kalender und Betreuungsintensität passt."
+      "Eine Einzelsession kostet 120 Euro; inklusive 2D-Körperanalyse sind es 150 Euro. Die 5er-Karte kostet 500 Euro, die 10er-Karte 800 Euro und die Premium Begleitung startet ab 200 Euro monatlich. Alle Details findest du in der Preisübersicht."
   },
   {
     question: "Wie startet Personal Training in Nürnberg bei Camp Dörfl?",
@@ -445,19 +459,25 @@ const coachingIncludedCards = [
     detail: "Personal Training",
     title: "Einzelstunde",
     text:
-      "Technik, Struktur und direkter Trainingsreiz — als Einzeltermin oder 5er-/10er-Karte, ganz ohne Bindung."
+      "Technik, Struktur und direkter Trainingsreiz — als Einzeltermin oder 5er-/10er-Karte, ganz ohne Bindung.",
+    href: contactHref("premium-training"),
+    ctaLabel: "Termin anfragen"
   },
   {
     detail: "Premium Coaching",
     title: "Premium Betreuung",
     text:
-      "Eng geführtes System aus gemeinsamen Trainings, 2D-Analyse, Fortschrittskontrolle sowie Trainings- und Ernährungsplanung."
+      "Eng geführtes System aus gemeinsamen Trainings, 2D-Analyse, Fortschrittskontrolle sowie Trainings- und Ernährungsplanung.",
+    href: contactHref("premium-training"),
+    ctaLabel: "Premium-Begleitung prüfen"
   },
   {
     detail: "Digitaler Zugang",
     title: "Camp Dörfl App",
     text:
-      "Der digitale Einstieg in individuelle Betreuung über Planung, Struktur und klare Fortschrittslogik."
+      "Der digitale Einstieg in individuelle Betreuung über Planung, Struktur und klare Fortschrittslogik.",
+    href: "/app/",
+    ctaLabel: "App entdecken"
   }
 ];
 
@@ -482,7 +502,7 @@ const coachingOutcomeRows = [
 const homeEntryCards = [
   {
     detail: "01 / LIVE MODERATION",
-    titleHtml: "<span>MODERATOR</span> &amp; GASTGEBER",
+    titleHtml: "MODERATOR &amp;<br><span>GASTGEBER</span>",
     text:
       "INTERVIEWS, OPENINGS UND BÜHNENFÜHRUNG MIT KLARER WIRKUNG.",
     image: "/assets/images/dominik-stage-suit.webp",
@@ -493,7 +513,7 @@ const homeEntryCards = [
   },
   {
     detail: "02 / CORPORATE HEALTH",
-    titleHtml: "GESUNDHEITSTAGE, <span>DIE ETWAS BEWEGEN.</span>",
+    titleHtml: "GESUNDHEITSTAGE,<br><span>DIE ETWAS BEWEGEN.</span>",
     text:
       "2D-SCAN, INBODY UND BERATUNG FÜR STARKE GESUNDHEITSTAGE.",
     image: "/assets/images/dominik-coaching-bikeerg.webp",
@@ -504,7 +524,7 @@ const homeEntryCards = [
   },
   {
     detail: "03 / PREMIUM COACHING",
-    titleHtml: "PERSONAL TRAINING <span>VOM PROFI.</span>",
+    titleHtml: "PERSONAL TRAINING<br><span>VOM PROFI.</span>",
     text:
       "TRAINING UND ERNÄHRUNG IN PERSÖNLICHER PREMIUM-BEGLEITUNG.",
     image: "/assets/images/dominik-personal-coaching-client.webp",
@@ -512,6 +532,17 @@ const homeEntryCards = [
     theme: "coaching",
     href: "/personal-trainer-nürnberg/",
     buttonLabel: "TRAINIERE MIT MIR"
+  },
+  {
+    detail: "04 / DIGITAL COACHING",
+    titleHtml: "CAMP DÖRFL APP<br><span>DEIN SYSTEM.</span>",
+    text:
+      "TRAINING, ERNÄHRUNG UND FORTSCHRITT IN EINEM KLAREN DIGITALEN SYSTEM.",
+    image: "/assets/images/home-app-banner-coaching.webp",
+    alt: "Dominik Dörfl zeigt die Camp Dörfl App auf einem Smartphone im Fitnessstudio",
+    theme: "app",
+    href: "/app/",
+    buttonLabel: "APP ENTDECKEN"
   }
 ];
 
@@ -537,7 +568,7 @@ const corporateModuleCards = [
       "Mitarbeitende bekommen eine präzise Standortbestimmung. Körperdaten werden sichtbar, verständlich und professionell eingeordnet.",
     points: ["sichtbarer Startpunkt", "saubere Datengrundlage", "professionell erklärt"],
     image: "/assets/images/dominik-coaching-bikeerg.webp",
-    alt: "Dominik Doerfl im Firmenfitness-Kontext bei Analyse und Einordnung",
+    alt: "Dominik Dörfl erläutert eine Körperanalyse im Rahmen eines Firmenfitness-Angebots",
     imagePosition: "center 36%"
   },
   {
@@ -548,7 +579,7 @@ const corporateModuleCards = [
       "Nach der Messung folgt die Beratung: Ernährung, Bewegung und Routinen werden passend zum Arbeitsmodell erklärt.",
     points: ["alltagstaugliche Empfehlungen", "Ernaehrung & Routinen", "zum Berufsmodell passend"],
     image: "/assets/images/dominik-athlete-nutrition.webp",
-    alt: "Dominik Doerfl im Kontext von Ernaehrung und Beratung",
+    alt: "Dominik Dörfl bei einer persönlichen Beratung zu Ernährung und Leistungsfähigkeit",
     imagePosition: "center 24%"
   },
   {
@@ -559,7 +590,7 @@ const corporateModuleCards = [
       "Das Angebot ist leicht in Unternehmen integrierbar und hat sich bereits mehrfach in kurzer Zeit erfolgreich verkauft.",
     points: ["leicht intern organisierbar", "direkt nutzbar im Team"],
     image: "/assets/images/dominik-athlete-bike-yellow.webp",
-    alt: "Dominik Doerfl in einer aktiven Performance-Szene",
+    alt: "Dominik Dörfl im Radtrikot neben seinem Zeitfahrrad auf einer Landstraße",
     imagePosition: "center 20%"
   }
 ];
@@ -850,6 +881,302 @@ const partnerFaq = [
   }
 ];
 
+const bodybuildingCalendarSources = [
+  {
+    id: "npc-germany",
+    number: "01",
+    name: "NPC Germany",
+    descriptor: "NPC Worldwide · IFBB Pro League",
+    sourceUrl: "https://www.ifbbproleaguegermany.de/",
+    sourceLabel: "Offizieller NPC-Germany-Kalender",
+    note: "Regional Shows, Pro Qualifier und Pro Shows in Deutschland.",
+    events: [
+      { date: "2026-08-29", label: "29. August 2026", name: "NPC Deutsche Meisterschaft", location: "Sankt Leon-Rot", type: "Regional Show" },
+      { date: "2026-09-12", label: "12. September 2026", name: "European Championship", location: "Offenbach am Main", type: "Pro Qualifier" },
+      { date: "2026-09-13", label: "13. September 2026", name: "Europa Pro", location: "Offenbach am Main", type: "Olympia Qualifier · Pro Show" },
+      { date: "2026-09-26", label: "26. September 2026", name: "Weider Classic", location: "Friedberg", type: "Regional Show" },
+      { date: "2026-10-03", label: "3. Oktober 2026", name: "Int. South German Cup", location: "Erlangen", type: "Regional Show" },
+      { date: "2026-11-14", label: "14. November 2026", name: "NRW Cup", location: "Oer-Erkenschwick", type: "Regional Show" },
+      { date: "2026-11-21", label: "21. November 2026", name: "Dennis James Classic", location: "Sankt Leon-Rot", type: "Pro Qualifier" },
+      { date: "2026-03-28", label: "28. März 2026", name: "BaWü Championship", location: "Deutschland", type: "Regional Show", past: true },
+      { date: "2026-04-04", label: "4. April 2026", name: "Ruhr Cup", location: "Deutschland", type: "Regional Show", past: true },
+      { date: "2026-04-11", label: "11. April 2026", name: "Massive Soldier Berlin Classic", location: "Berlin", type: "Regional Show", past: true },
+      { date: "2026-04-16", label: "16. April 2026", name: "FIBO Pro Qualifier", location: "Köln", type: "Pro Qualifier", past: true },
+      { date: "2026-04-17", label: "17. April 2026", name: "FIBO Pro Championships", location: "Köln", type: "Pro Show", past: true },
+      { date: "2026-04-25", label: "25. April 2026", name: "Iron Cup", location: "Deutschland", type: "Regional Show", past: true },
+      { date: "2026-05-02", label: "2. Mai 2026", name: "All Stars Classic", location: "Deutschland", type: "Regional Show", past: true }
+    ]
+  },
+  {
+    id: "dbfv",
+    number: "02",
+    name: "DBFV e.V.",
+    descriptor: "Deutscher Bodybuilding- und Fitness-Verband",
+    sourceUrl: "https://www.dbfv.de/termine/",
+    sourceLabel: "Offizieller DBFV-Terminkalender",
+    note: "Nationale und internationale Meisterschaften des DBFV und seiner Landesverbände.",
+    events: [
+      { date: "2026-10-10", label: "10. Oktober 2026", name: "Int. Deutsche Newcomer", location: "Hofheim", type: "Newcomer" },
+      { date: "2026-10-11", label: "11. Oktober 2026", name: "Int. Süddeutsche Meisterschaft", location: "Hofheim", type: "inkl. Junioren & Masters" },
+      { date: "2026-10-17", label: "17. Oktober 2026", name: "Int. Deutsche Jugend-, Junioren- & Masters-Meisterschaft", location: "Petersberg", type: "Nationale Meisterschaft" },
+      { date: "2026-10-18", label: "18. Oktober 2026", name: "Pure Classics", location: "Petersberg", type: "Classic Wettkampf" },
+      { date: "2026-10-25", label: "25. Oktober 2026", name: "Int. Großer Preis von Hessen", location: "Stadthalle Fritzlar", type: "Regionalmeisterschaft" },
+      { date: "2026-11-01", label: "1. November 2026", name: "Int. Berliner Meisterschaft", location: "Fontane-Haus, Berlin", type: "Regionalmeisterschaft" },
+      { date: "2026-11-07", label: "7. November 2026", name: "Int. Ostdeutsche Meisterschaft", location: "Stadthalle Apolda", type: "Regionalmeisterschaft" },
+      { date: "2026-11-14", label: "14. November 2026", name: "Int. BaWü Meisterschaft", location: "Staufenhalle Plüderhausen", type: "Regionalmeisterschaft" },
+      { date: "2026-11-21", label: "21. November 2026", name: "Int. NRW Landesmeisterschaft", location: "Rheinhausenhalle Duisburg", type: "Landesmeisterschaft" },
+      { date: "2026-11-22", label: "22. November 2026", name: "Int. Bayerische Meisterschaft", location: "Gersthofen", type: "Landesmeisterschaft" },
+      { date: "2026-11-28", label: "28. November 2026", name: "Int. Deutsche Meisterschaft", location: "Wiesloch", type: "Deutsche Meisterschaft" },
+      { date: "2026-04-26", label: "26. April 2026", name: "Deutsche Jugend-, Junioren- & Masters-Meisterschaft", location: "Petersberg", type: "Nationale Meisterschaft", past: true },
+      { date: "2026-05-09", label: "9. Mai 2026", name: "NRW Landesmeisterschaft", location: "Rheinhausenhalle Duisburg", type: "Landesmeisterschaft", past: true },
+      { date: "2026-05-23", label: "23. Mai 2026", name: "Deutsche Meisterschaft", location: "Wiesloch", type: "Deutsche Meisterschaft", past: true }
+    ]
+  },
+  {
+    id: "gnbf",
+    number: "03",
+    name: "GNBF e.V.",
+    descriptor: "German Natural Bodybuilding & Fitness Federation",
+    sourceUrl: "https://gnbf.net/meisterschaften/",
+    sourceLabel: "Offizielle GNBF-Meisterschaften",
+    note: "Natural-Bodybuilding-Meisterschaften mit eigenem Anti-Doping-Regelwerk.",
+    events: [
+      { date: "2026-09-19", endDate: "2026-09-20", label: "19.–20. September 2026", name: "10th GNBF Int. German Championships", location: "Stadthalle Walsrode", type: "inkl. Newcomer Championships" },
+      { date: "2026-11-28", label: "28. November 2026", name: "1st GNBF German Open", location: "Stadthalle Walsrode", type: "German Open" }
+    ]
+  },
+  {
+    id: "nac-germany",
+    number: "04",
+    name: "NAC Germany",
+    descriptor: "National Athletic Committee Germany",
+    sourceUrl: "https://www.nac-germany.de/termine.html",
+    sourceLabel: "Offizieller NAC-Terminkalender",
+    note: "Newcomer-, Regional-, Deutsche und internationale Meisterschaften.",
+    events: [
+      { date: "2026-10-24", label: "24. Oktober 2026", name: "Int. Deutsche Newcomer – First Season", location: "PRISMA, Freiberg am Neckar", type: "Newcomer" },
+      { date: "2026-10-24", label: "24. Oktober 2026", name: "Int. German Masters – Herbstsaison", location: "PRISMA, Freiberg am Neckar", type: "Masters" },
+      { date: "2026-10-24", label: "24. Oktober 2026", name: "NAC Classic PRO AM", location: "PRISMA, Freiberg am Neckar", type: "Pro/Am" },
+      { date: "2026-10-25", label: "25. Oktober 2026", name: "Int. Süddeutsche Meisterschaft", location: "PRISMA, Freiberg am Neckar", type: "Regionalmeisterschaft" },
+      { date: "2026-11-07", label: "7. November 2026", name: "Großer Preis von Norddeutschland", location: "Stadthalle Walsrode", type: "Regionalmeisterschaft" },
+      { date: "2026-11-07", label: "7. November 2026", name: "Int. Ostdeutsche Meisterschaft", location: "Fontane Kulturzentrum, Berlin", type: "Regionalmeisterschaft" },
+      { date: "2026-11-08", label: "8. November 2026", name: "Int. Westdeutsche Meisterschaft", location: "Stadthalle Rheinbach", type: "Regionalmeisterschaft" },
+      { date: "2026-11-14", label: "14. November 2026", name: "Int. Deutsche Meisterschaft – Herbst", location: "Koblenz", type: "Deutsche Meisterschaft" },
+      { date: "2026-11-21", label: "21. November 2026", name: "Universe 2026", location: "Stadthalle Walsrode", type: "International" },
+      { date: "2026-04-12", label: "12. April 2026", name: "Deutsche Newcomer Meisterschaft – First Season", location: "Deutschland", type: "Newcomer", past: true },
+      { date: "2026-04-12", label: "12. April 2026", name: "German Masters – Frühjahr", location: "Deutschland", type: "Masters", past: true },
+      { date: "2026-04-12", label: "12. April 2026", name: "Frey Classic", location: "Deutschland", type: "Pro/Am", past: true },
+      { date: "2026-04-19", label: "19. April 2026", name: "Süddeutsche Meisterschaft", location: "Deutschland", type: "Regionalmeisterschaft", past: true },
+      { date: "2026-05-02", label: "2. Mai 2026", name: "35. Int. Nordsee-Cup", location: "Norddeutschland", type: "Regionalmeisterschaft", past: true },
+      { date: "2026-05-02", label: "2. Mai 2026", name: "Ostdeutsche Meisterschaft – Frühjahr", location: "Ostdeutschland", type: "Regionalmeisterschaft", past: true },
+      { date: "2026-05-03", label: "3. Mai 2026", name: "Westdeutsche Meisterschaft – Frühjahr", location: "Stadthalle Rheinbach", type: "Regionalmeisterschaft", past: true },
+      { date: "2026-05-23", label: "23. Mai 2026", name: "Deutsche Meisterschaft & WM-Qualifikation", location: "Stadthalle Walsrode", type: "Deutsche Meisterschaft", past: true },
+      { date: "2026-06-06", label: "6. Juni 2026", name: "Weltmeisterschaft 2026", location: "Riga, Lettland", type: "International", past: true }
+    ]
+  },
+  {
+    id: "wff-nabba",
+    number: "05",
+    name: "WFF / NABBA",
+    descriptor: "DFFV e.V. · WFF & NABBA Germany",
+    sourceUrl: "https://www.wff-germany.de/termine",
+    sourceLabel: "Offizieller WFF/NABBA-Terminkalender",
+    note: "Deutsche Meisterschaften sowie ausgewählte Europa-, Welt- und Universe-Termine.",
+    events: [
+      { date: "2026-10-17", endDate: "2026-10-18", label: "17.–18. Oktober 2026", name: "WFF / NABBA Deutsche Meisterschaft", location: "Bad Langensalza, Thüringen", type: "Deutsche Meisterschaft" },
+      { date: "2026-11-01", label: "1. November 2026", name: "NABBA Universe", location: "Vereinigtes Königreich", type: "International" },
+      { date: "2026-11-14", endDate: "2026-11-15", label: "14.–15. November 2026", name: "WFF Universe", location: "Kulmbach", type: "International" },
+      { date: "2026-06-06", label: "6. Juni 2026", name: "NABBA Europameisterschaft", location: "Graz, Österreich", type: "International", past: true },
+      { date: "2026-06-06", endDate: "2026-06-07", label: "6.–7. Juni 2026", name: "WFF Europameisterschaft", location: "Manchester, UK", type: "International", past: true },
+      { date: "2026-06-20", label: "20. Juni 2026", name: "NABBA Weltmeisterschaft", location: "Newcastle, UK", type: "International", past: true },
+      { date: "2026-07-25", endDate: "2026-07-26", label: "25.–26. Juli 2026", name: "WFF Weltmeisterschaft", location: "Jaunde, Kamerun", type: "International", past: true }
+    ]
+  },
+  {
+    id: "pca-germany",
+    number: "06",
+    name: "PCA Germany",
+    descriptor: "Physical Culture Association",
+    sourceUrl: "https://www.pcaofficial.com/international",
+    sourceLabel: "Offizieller PCA-International-Kalender",
+    note: "Deutsche PCA-Shows in Vallendar; Anmeldung und Klassen direkt über PCA.",
+    events: [
+      { date: "2026-10-03", label: "3. Oktober 2026", name: "PCA German Championships", location: "Stadt- und Kongresshalle Vallendar", type: "German Championships" },
+      { date: "2026-05-09", label: "9. Mai 2026", name: "PCA German Open", location: "Kongresshalle Vallendar", type: "German Open", past: true }
+    ]
+  }
+];
+
+const bodybuildingCalendarFaq = [
+  {
+    question: "Welche Bodybuilding-Verbände sind in der Übersicht enthalten?",
+    answer:
+      "Die Seite bündelt bestätigte Termine von NPC Germany, DBFV e.V., GNBF e.V., NAC Germany, WFF/NABBA Germany und PCA Germany."
+  },
+  {
+    question: "Kann ich unabhängig von meinem bisherigen Verband starten?",
+    answer:
+      "Das hängt vom jeweiligen Regelwerk ab. Mitgliedschaft, Starterlizenz, Newcomer-Status und mögliche Qualifikationen müssen immer direkt beim ausrichtenden Verband geprüft werden."
+  },
+  {
+    question: "Welcher Verband veranstaltet Natural-Bodybuilding-Wettkämpfe?",
+    answer:
+      "In dieser Übersicht steht die GNBF ausdrücklich für Natural Bodybuilding mit eigenem Anti-Doping-Regelwerk. Die konkreten Voraussetzungen veröffentlicht die GNBF auf ihrer offiziellen Website."
+  },
+  {
+    question: "Wo finde ich Anmeldung, Klassen und Startgebühren?",
+    answer:
+      "Jeder Verbandsblock führt direkt zur offiziellen Quelle. Dort stehen die verbindlichen Angaben zu Anmeldung, Klassen, Lizenzen, Gebühren, Waage und Ablauf."
+  },
+  {
+    question: "Sind die Termine garantiert?",
+    answer:
+      "Nein. Die Übersicht wird redaktionell aus offiziellen Verbandsquellen zusammengetragen. Verbindlich ist immer die aktuelle Veröffentlichung des jeweiligen Verbandes oder Veranstalters."
+  }
+];
+
+const boxingCalendarSources = [
+  {
+    id: "wba",
+    number: "01",
+    division: "profi",
+    name: "WBA",
+    descriptor: "World Boxing Association",
+    sourceUrl: "https://www.wbaboxing.com/wba-fights-schedule",
+    note: "Ausgewählte Welt-, Interims- und Gold-Titelkämpfe aus dem laufend aktualisierten WBA-Kampfplan.",
+    events: [
+      { date: "2026-08-08", label: "8. August 2026", name: "Cherneka Johnson vs. Dina Thorslund", location: "Orlando, Florida · USA", type: "Bantamgewicht · Unified World Title" },
+      { date: "2026-08-15", label: "15. August 2026", name: "Claressa Shields vs. Kaye Scott", location: "Atlanta, Georgia · USA", type: "Mittelgewicht · WBA/WBC" },
+      { date: "2026-08-22", label: "22. August 2026", name: "Rolando Romero vs. Teofimo Lopez", location: "Las Vegas, Nevada · USA", type: "Weltergewicht · WBA Super World" },
+      { date: "2026-08-29", label: "29. August 2026", name: "Mikaela Mayer vs. Chantelle Cameron", location: "Birmingham · Großbritannien", type: "Superweltergewicht · WBA/WBC/WBO" },
+      { date: "2026-09-05", label: "5. September 2026", name: "Katie Taylor vs. Flora Pili", location: "Dublin · Irland", type: "Superleichtgewicht · Undisputed" },
+      { date: "2026-10-25", label: "25. Oktober 2026", name: "Shauna Browne vs. Jade Burden", location: "London · Großbritannien", type: "Leichtgewicht · WBA Gold" },
+      { date: "2026-05-23", label: "23. Mai 2026", name: "Oleksandr Usyk vs. Rico Verhoeven", location: "Gizeh · Ägypten", type: "Schwergewicht · WBA Super World", past: true }
+    ]
+  },
+  {
+    id: "wbc",
+    number: "02",
+    division: "profi",
+    name: "WBC",
+    descriptor: "World Boxing Council",
+    sourceUrl: "https://wbcboxing.com/en/",
+    note: "Offiziell angekündigte WBC-Welt-, Interims- und Silver-Titelkämpfe.",
+    events: [
+      { date: "2026-08-01", label: "1. August 2026", name: "William Zepeda vs. Lamont Roach Jr.", location: "Las Vegas, Nevada · USA", type: "Leichtgewicht · WBC World" },
+      { date: "2026-08-15", label: "15. August 2026", name: "Claressa Shields vs. Kaye Scott", location: "Atlanta, Georgia · USA", type: "Mittelgewicht · WBC World" },
+      { date: "2026-08-29", label: "29. August 2026", name: "Lester Martinez vs. Luka Plantić", location: "Los Angeles, Kalifornien · USA", type: "Supermittelgewicht · WBC Interim" },
+      { date: "2026-08-29", label: "29. August 2026", name: "Luis Torres vs. Jordan White", location: "Los Angeles, Kalifornien · USA", type: "Leichtgewicht · WBC Silver" },
+      { date: "2026-08-29", label: "29. August 2026", name: "Caroline Dubois vs. Amelia Moore", location: "Birmingham · Großbritannien", type: "Leichtgewicht · WBC World" },
+      { date: "2026-01-10", label: "10. Januar 2026", name: "Agit Kabayel vs. Damian Knyba", location: "Oberhausen · Deutschland", type: "Schwergewicht · WBC Interim", past: true },
+      { date: "2026-07-20", label: "20. Juli 2026", name: "Shokichi Iwata vs. Erik Badillo", location: "Tokio · Japan", type: "Halbfliegengewicht · WBC World", past: true }
+    ]
+  },
+  {
+    id: "wbf",
+    number: "03",
+    division: "profi",
+    name: "WBF",
+    descriptor: "World Boxing Federation",
+    sourceUrl: "https://www.worldboxingfederation.org/wbfresults.htm",
+    note: "Der offizielle Ergebnisdienst führt aktuell ausschließlich bereits ausgetragene WBF-Kämpfe für 2026.",
+    events: [
+      { date: "2026-05-02", label: "2. Mai 2026", name: "Givi Todua vs. Elmo Traya", location: "Tiflis · Georgien", type: "Mittelgewicht · Interim World", past: true },
+      { date: "2026-05-01", label: "1. Mai 2026", name: "Phannarai Netisri vs. Lena Venjacob", location: "Hamburg · Deutschland", type: "Bantamgewicht · World", past: true },
+      { date: "2026-05-01", label: "1. Mai 2026", name: "Alexander Pavlov vs. Dorde Krsmanovic", location: "Hamburg · Deutschland", type: "Weltergewicht · World", past: true },
+      { date: "2026-05-01", label: "1. Mai 2026", name: "Steve Robinson vs. Angelo Venjakob", location: "Hamburg · Deutschland", type: "Schwergewicht · International", past: true },
+      { date: "2026-02-07", label: "7. Februar 2026", name: "Artur Mann vs. Gregorio Garcia", location: "Bad Hersfeld · Deutschland", type: "Bridgergewicht · World", past: true },
+      { date: "2026-02-07", label: "7. Februar 2026", name: "Viktor Temirov vs. Domenik Arnold", location: "Bad Hersfeld · Deutschland", type: "Mittelgewicht · World", past: true },
+      { date: "2026-01-17", label: "17. Januar 2026", name: "Freddy Kiwitt vs. Suleiman Jafaru", location: "Flensburg · Deutschland", type: "Superweltergewicht · World", past: true }
+    ]
+  },
+  {
+    id: "wbo",
+    number: "04",
+    division: "profi",
+    name: "WBO",
+    descriptor: "World Boxing Organization",
+    sourceUrl: "https://wboboxing.com/",
+    note: "Bestätigte kommende Weltmeisterschaftskämpfe aus dem offiziellen WBO-Kampfplan.",
+    events: [
+      { date: "2026-08-08", label: "8. August 2026", name: "Cherneka Johnson vs. Dina Thorslund", location: "Orlando, Florida · USA", type: "Bantamgewicht · Unified World Title" },
+      { date: "2026-08-08", label: "8. August 2026", name: "Desley Robinson vs. Tamm Thibeault", location: "Orlando, Florida · USA", type: "Mittelgewicht · WBO World" },
+      { date: "2026-08-21", label: "21. August 2026", name: "Amanda Serrano vs. Lucrecia Manzur", location: "Kalifornien · USA", type: "Federgewicht · WBO World" },
+      { date: "2026-08-29", label: "29. August 2026", name: "Chantelle Cameron vs. Mikaela Mayer", location: "Birmingham · Großbritannien", type: "Superweltergewicht · Unified World Title" },
+      { date: "2026-08-29", label: "29. August 2026", name: "Caroline Dubois vs. Amelia Moore", location: "Birmingham · Großbritannien", type: "Leichtgewicht · WBO World" },
+      { date: "2026-09-05", label: "5. September 2026", name: "Katie Taylor vs. Flora Pili", location: "Dublin · Irland", type: "Superleichtgewicht · Undisputed" },
+      { date: "2026-07-25", label: "25. Juli 2026", name: "Hamzah Sheeraz vs. Simon Zachenhuber", location: "Dschidda · Saudi-Arabien", type: "Supermittelgewicht · WBO World", past: true }
+    ]
+  },
+  {
+    id: "world-boxing",
+    number: "05",
+    division: "amateur",
+    name: "World Boxing",
+    descriptor: "Olympisches Boxen · International",
+    sourceUrl: "https://worldboxing.org/world-boxing-publishes-updated-2026-competition-calendar/",
+    note: "Internationale Cups, Kontinentalmeisterschaften und Multisport-Events unter World-Boxing-Regeln.",
+    events: [
+      { date: "2026-07-23", endDate: "2026-08-02", label: "23. Juli–2. August 2026", name: "Commonwealth Games", location: "Glasgow · Schottland", type: "Elite · Multisport-Event", status: "Läuft" },
+      { date: "2026-09-15", endDate: "2026-09-26", label: "15.–26. September 2026", name: "European Boxing Championships", location: "Sofia · Bulgarien", type: "Elite · Europameisterschaft" },
+      { date: "2026-09-19", endDate: "2026-10-04", label: "19. September–4. Oktober 2026", name: "Asian Games", location: "Aichi/Nagoya · Japan", type: "Elite · Multisport-Event" },
+      { date: "2026-10-10", endDate: "2026-10-17", label: "10.–17. Oktober 2026", name: "PanAmerican Boxing Championships", location: "Puebla · Mexiko", type: "Elite · Kontinentalmeisterschaft" },
+      { date: "2026-10-31", endDate: "2026-11-13", label: "31. Oktober–13. November 2026", name: "Youth Olympic Games", location: "Dakar · Senegal", type: "U19 · Olympisches Jugendturnier" },
+      { date: "2026-11-25", endDate: "2026-12-02", label: "25. November–2. Dezember 2026", name: "World Boxing Cup Finals", location: "Taschkent · Usbekistan", type: "Elite · World Cup Finals" },
+      { date: "2026-03-08", endDate: "2026-03-15", label: "8.–15. März 2026", name: "World Boxing Futures Cup", location: "Bangkok · Thailand", type: "U19 · Nachwuchsturnier", past: true },
+      { date: "2026-03-28", endDate: "2026-04-11", label: "28. März–11. April 2026", name: "Asian Boxing Championships", location: "Ulaanbaatar · Mongolei", type: "Elite · Kontinentalmeisterschaft", past: true },
+      { date: "2026-04-20", endDate: "2026-04-26", label: "20.–26. April 2026", name: "World Boxing Cup – Stage 1", location: "Foz do Iguaçu · Brasilien", type: "Elite · World Cup", past: true },
+      { date: "2026-06-15", endDate: "2026-06-20", label: "15.–20. Juni 2026", name: "World Boxing Cup – Stage 2", location: "Guiyang · China", type: "Elite · World Cup", past: true }
+    ]
+  },
+  {
+    id: "dbv",
+    number: "06",
+    division: "amateur",
+    name: "Deutscher Boxsport-Verband",
+    shortName: "DBV",
+    descriptor: "Olympisches Boxen · Deutschland",
+    sourceUrl: "https://www.boxverband.de/deutsche-meisterschaften-im-olympischen-boxen/",
+    note: "Deutsche Meisterschaften der verschiedenen Altersklassen im olympischen Boxen.",
+    events: [
+      { date: "2026-09-29", endDate: "2026-10-03", label: "29. September–3. Oktober 2026", name: "Deutsche Meisterschaft U23", location: "Frankfurt am Main · Deutschland", type: "U23 · Deutsche Meisterschaft" },
+      { date: "2026-11-03", endDate: "2026-11-07", label: "3.–7. November 2026", name: "Deutsche Meisterschaft U18", location: "Köln · Deutschland", type: "U18 · Deutsche Meisterschaft" },
+      { date: "2026-12-08", endDate: "2026-12-12", label: "8.–12. Dezember 2026", name: "Deutsche Meisterschaft Elite", location: "Austragungsort noch offen", type: "Elite · Deutsche Meisterschaft" },
+      { date: "2026-04-14", endDate: "2026-04-18", label: "14.–18. April 2026", name: "Deutsche Meisterschaft U17", location: "Bremerhaven · Deutschland", type: "U17 · Deutsche Meisterschaft", past: true },
+      { date: "2026-05-12", endDate: "2026-05-16", label: "12.–16. Mai 2026", name: "Deutsche Meisterschaft U15", location: "Lindow (Mark) · Deutschland", type: "U15 · Deutsche Meisterschaft", past: true },
+      { date: "2026-06-02", endDate: "2026-06-06", label: "2.–6. Juni 2026", name: "Deutsche Meisterschaft U19", location: "Warnemünde · Deutschland", type: "U19 · Deutsche Meisterschaft", past: true }
+    ]
+  }
+];
+
+const boxingCalendarFaq = [
+  {
+    question: "Was ist der Unterschied zwischen Profi- und Amateurboxen?",
+    answer:
+      "Profiboxen wird über einzelne Veranstalter und Titelverbände organisiert. Im olympischen Amateurboxen stehen Turniere, Nationalmannschaften, Altersklassen und Meisterschaften unter den Regeln von World Boxing und den nationalen Verbänden im Mittelpunkt."
+  },
+  {
+    question: "Warum taucht ein Profikampf bei mehreren Verbänden auf?",
+    answer:
+      "Bei einem Vereinigungs- oder Undisputed-Kampf können Titel mehrerer Organisationen gleichzeitig auf dem Spiel stehen. Deshalb kann derselbe Kampf etwa bei WBA, WBC und WBO geführt werden."
+  },
+  {
+    question: "Wo finde ich Tickets und Übertragungen?",
+    answer:
+      "Die offiziellen Verbandsquellen führen zur jeweiligen Ankündigung oder zum aktuellen Kampfplan. Ticketanbieter und Sender können regional abweichen und sollten direkt beim Veranstalter geprüft werden."
+  },
+  {
+    question: "Wie kann man an einer Deutschen Meisterschaft im Amateurboxen teilnehmen?",
+    answer:
+      "Meldungen zu Deutschen Meisterschaften erfolgen in der Regel über Vereine und Landesverbände. Altersklasse, Startberechtigung, Qualifikation und Meldeschluss legt der Deutsche Boxsport-Verband verbindlich fest."
+  },
+  {
+    question: "Sind alle Termine garantiert?",
+    answer:
+      "Nein. Profikämpfe können verschoben oder neu angesetzt werden, und auch Turnierdetails können sich ändern. Verbindlich bleibt immer die aktuelle Veröffentlichung der Organisation oder des Veranstalters."
+  }
+];
+
 const teamSuccessCards = [
   {
     detail: "Athleten",
@@ -888,6 +1215,232 @@ const teamSuccessRows = [
       "Mehr Energie, bessere Form, höhere Verlässlichkeit im Alltag und ein System, das sich auch langfristig tragen lässt."
   }
 ];
+
+const coachSuccessYears = [
+  {
+    year: "2026",
+    results: [
+      "3. Platz Diamond Cup Austria Masters Bodybuilding",
+      "2. Platz Diamond Cup Austria Classic Bodybuilding",
+      "1. Platz Mr Universe Liechtenstein Classic Bodybuilding + IFBB Pro Card",
+      "1. Platz Süddeutsche Meisterschaft Classic Physique 40+",
+      "2. Platz Süddeutsche Meisterschaft Masters 50+",
+      "4. Platz Süddeutsche Meisterschaft Masters 60+",
+      "4. Platz Süddeutsche Meisterschaft Body 2"
+    ]
+  },
+  {
+    year: "2025",
+    results: [
+      "4. Platz Deutsche Newcomer Meisterschaft Bikini Fitness",
+      "4. Platz BaWü-Meisterschaft Mens Physique",
+      "5. Platz Deutsche Masters Meisterschaft Masters Bodybuilding Ü50",
+      "3. Platz Deutsche Masters Meisterschaft Masters Bodybuilding Ü60",
+      "5. Platz FIBO Cup Mens Physique",
+      "1. Platz Fränkische Meisterschaft Bikini Fitness",
+      "3. Platz Fränkische Meisterschaft Masters Bodybuilding Ü50",
+      "1. Platz Olimp Cup Bodybuilding + Gesamtsieg",
+      "1. Platz Olimp Cup Wellness Fitness",
+      "2. Platz Bayerische Meisterschaft Bodybuilding bis 80 kg",
+      "2. Platz All Stars Classic Mens Physique",
+      "3. Platz Sweden Grand Prix Bodybuilding",
+      "3. Platz Sweden Grand Prix Wellness Fitness",
+      "1. Platz Süddeutsche Meisterschaft Masters Bodybuilding Ü60",
+      "5. Platz Diamond Cup Luxemburg Classic Bodybuilding",
+      "3. Platz Diamond Cup Prag Classic Bodybuilding",
+      "3. Platz Deutsche Newcomer Meisterschaft Bodybuilding",
+      "4. Platz Deutsche Newcomer Meisterschaft Fitness Figur",
+      "3. Platz Mr Universe Switzerland Classic Bodybuilding",
+      "3. Platz Süddeutsche Meisterschaft Masters Fitness Figur",
+      "3. Platz NRW Meisterschaft Fitness Figur",
+      "4. Platz Bayerische Meisterschaft Fitness Figur"
+    ]
+  },
+  {
+    year: "2024",
+    results: [
+      "1. Platz Invictus Cup Bodybuilding bis 80 kg",
+      "1. Platz Fränkische Meisterschaft Bodybuilding bis 80 kg + Gesamtsieg",
+      "4. Platz Fränkische Meisterschaft Classic Bodybuilding",
+      "3. Platz Mr Universe Liechtenstein Bodybuilding",
+      "1. Platz Deutsche Masters Meisterschaft Mens Physique",
+      "3. Platz Deutsche Masters Meisterschaft Bodybuilding über 60",
+      "3. Platz Deutsche Masters Meisterschaft Classic Physique",
+      "6. Platz Deutsche Newcomer Meisterschaft Bodybuilding über 80 kg",
+      "1. Platz Bayerische Meisterschaft Bodybuilding bis 80 kg + Gesamtsieg",
+      "3. Platz Bayerische Meisterschaft Classic Bodybuilding",
+      "4. Platz Bayerische Meisterschaft Bodybuilding bis 90 kg",
+      "1. Platz Olimp Cup Bodybuilding bis 80 kg",
+      "1. Platz Süddeutsche Meisterschaft Mens Physique",
+      "1. Platz Berliner Meisterschaft Bodybuilding bis 90 kg",
+      "2. Platz Berliner Meisterschaft Classic Bodybuilding",
+      "1. Platz Deutsche Meisterschaft Bodybuilding bis 80 kg",
+      "5. Platz Internationale Österreichische Meisterschaft Masters Bikini Fitness",
+      "2. Platz Süddeutsche Meisterschaft Masters Bikini Fitness",
+      "1. Platz Süddeutsche Meisterschaft Classic Physique Masters",
+      "3. Platz Süddeutsche Meisterschaft Bodybuilding",
+      "3. Platz Süddeutsche Meisterschaft Classic Physique Junioren",
+      "1. Platz Deutsche Masters Meisterschaft Bikini Fitness Ü40",
+      "1. Platz Deutsche Masters Meisterschaft Classic Physique",
+      "1. Platz Süddeutsche Meisterschaft Classic Physique + Gesamtsieg",
+      "1. Platz Bayerische Meisterschaft Classic Bodybuilding + Gesamtsieg",
+      "1. Platz Bayerische Meisterschaft Bodybuilding +100 kg",
+      "2. Platz Bayerische Meisterschaft Masters Bodybuilding",
+      "3. Platz Bayerische Meisterschaft Masters Bikini",
+      "4. Platz Bayerische Meisterschaft Bikini Fitness",
+      "6. Platz Deutsche Meisterschaft Bodybuilding +100 kg"
+    ]
+  },
+  {
+    year: "2023",
+    results: [
+      "1. Platz Fitness Authority Polen Wellness Fitness",
+      "2. Platz Fitness Authority Polen Bodybuilding",
+      "2. Platz Bayerische Meisterschaft Bodybuilding über 90 kg",
+      "2. Platz Fränkische Meisterschaft Bodybuilding über 90 kg",
+      "2. Platz NRW Meisterschaft Bodybuilding über 100 kg",
+      "1. Platz Deutsche Meisterschaft Bodybuilding über 100 kg",
+      "1. Platz Ostdeutsche Meisterschaft Wellness Fitness",
+      "1. Platz All Stars Classic Bodybuilding bis 102 kg",
+      "1. Platz All Stars Classic Wellness Fitness",
+      "3. Platz All Stars Classic Bodybuilding bis 80 kg",
+      "2. Platz Deutsche Meisterschaft Masters Bikini Fitness",
+      "2. Platz Sheru Classic Classic Physique Pro",
+      "2. Platz Süddeutsche Meisterschaft Masters Bikini Fitness",
+      "2. Platz Süddeutsche Meisterschaft Masters Mens Physique",
+      "1. Platz Deutsche Masters Meisterschaft Mens Physique",
+      "4. Platz Deutsche Newcomer Meisterschaft Mens Physique",
+      "4. Platz Deutsche Newcomer Meisterschaft Masters Mens Physique",
+      "1. Platz Süddeutsche Meisterschaft Masters Classic Physique",
+      "1. Platz Süddeutsche Meisterschaft Bodybuilding",
+      "4. Platz Ostdeutsche Meisterschaft Junioren Bodybuilding",
+      "3. Platz Romanian Muscle Fest Pro Classic Physique"
+    ]
+  },
+  {
+    year: "2022",
+    results: [
+      "6. Platz Deutsche Meisterschaft Junioren",
+      "6. Platz Deutsche Meisterschaft Bodybuilding",
+      "2. Platz FIBO Cup Bikini Shape",
+      "1. Platz Deutsche Newcomer Meisterschaft Junioren",
+      "1. Platz Ostdeutsche Meisterschaft Junioren",
+      "1. Platz Frey Classic Bikini Shape",
+      "5. Platz Deutsche Newcomer Meisterschaft Bodybuilding",
+      "2. Platz Mr Big Evolution Mens Physique",
+      "1. Platz Fränkische Meisterschaft Bodybuilding bis 80 kg",
+      "3. Platz Fränkische Meisterschaft Bodybuilding bis 100 kg",
+      "1. Platz Fränkische Meisterschaft Bodybuilding über 100 kg",
+      "4. Platz Fränkische Meisterschaft Bodybuilding bis 90 kg",
+      "6. Platz Deutsche Newcomer Meisterschaft Bodybuilding",
+      "5. Platz Süddeutsche Meisterschaft Masters Bodybuilding",
+      "5. Platz Deutsche Meisterschaft Masters Bodybuilding",
+      "2. Platz Fränkische Meisterschaft Classic Bodybuilding",
+      "2. Platz Ostdeutsche Meisterschaft Junioren"
+    ]
+  },
+  {
+    year: "2021",
+    results: [
+      "1. Platz German Cup Bikini Fitness Masters",
+      "3. Platz German Cup Bodybuilding bis 90 kg",
+      "1. Platz Swiss Cup Bodybuilding bis 80 kg",
+      "4. Platz German Cup Bikini Fitness",
+      "1. Platz Schweizer Meisterschaft Bodybuilding bis 80 kg",
+      "1. Platz Deutsche Newcomer Meisterschaft Fitness Figur",
+      "4. Platz Ronny Rockel Classic Bikini Shape",
+      "4. Platz Deutsche Newcomer Meisterschaft Junioren",
+      "3. Platz Süddeutsche Meisterschaft Classic Bodybuilding",
+      "1. Platz Süddeutsche Meisterschaft Junioren",
+      "3. Platz Süddeutsche Meisterschaft Bikini",
+      "1. Platz Ostdeutsche Meisterschaft Figur",
+      "1. Platz Ostdeutsche Meisterschaft Bodybuilding",
+      "1. Platz Deutsche Meisterschaft Bikini Shape",
+      "2. Platz Bayerische Meisterschaft Classic Bodybuilding",
+      "1. Platz Deutsche Meisterschaft Figur Fitness",
+      "2. Platz Deutsche Meisterschaft Bodybuilding",
+      "2. Platz Rhein Neckar Pokal Classic Bodybuilding",
+      "1. Platz Rhein Neckar Pokal Bodybuilding bis 80 kg",
+      "2. Platz Ms Universe Bikini Shape",
+      "2. Platz Ms Universe Figur Fitness",
+      "3. Platz Deutsche Meisterschaft Bodybuilding bis 80 kg",
+      "5. Platz Diamond Cup Rom Bodybuilding bis 80 kg"
+    ]
+  },
+  {
+    year: "2019",
+    results: [
+      "1. Platz Niederbayerische Meisterschaft Masters Bodybuilding",
+      "1. Platz Niederbayerische Meisterschaft Classic Bodybuilding",
+      "1. Platz Bayerische Meisterschaft Classic Bodybuilding",
+      "1. Platz Ostdeutsche Meisterschaft Bodybuilding",
+      "1. Platz Deutsche Meisterschaft Bodybuilding bis 100 kg",
+      "3. Platz IFBB Elite Pro Weltmeisterschaft Figure Fitness"
+    ]
+  }
+];
+
+const coachSuccessStats = coachSuccessYears.reduce(
+  (stats, year) => {
+    stats.placements += year.results.length;
+    stats.wins += year.results.filter((result) => result.startsWith("1. Platz")).length;
+    stats.podiums += year.results.filter((result) => /^[123]\. Platz/.test(result)).length;
+    return stats;
+  },
+  { placements: 0, wins: 0, podiums: 0 }
+);
+
+function coachSuccessOverview() {
+  const yearLinks = coachSuccessYears
+    .map(({ year }) => `<a href="#coach-erfolge-${year}">${year}</a>`)
+    .join("");
+
+  const years = coachSuccessYears
+    .map(({ year, results }, index) => {
+      const wins = results.filter((result) => result.startsWith("1. Platz")).length;
+      const podiums = results.filter((result) => /^[123]\. Platz/.test(result)).length;
+      const list = results
+        .map((result) => {
+          const [, place, title] = result.match(/^(\d+)\. Platz\s+(.+)$/) || [null, "–", result];
+          return `<li><span class="coach-success__place coach-success__place--${place}">${place}.</span><span>${title}</span></li>`;
+        })
+        .join("");
+
+      return `
+        <details class="coach-success__year" id="coach-erfolge-${year}"${index === 0 ? " open" : ""}>
+          <summary>
+            <span class="coach-success__year-label">${year}</span>
+            <span class="coach-success__year-stats">${results.length} Platzierungen · ${wins} Siege · ${podiums} Podiumsplätze</span>
+            <span class="coach-success__toggle" aria-hidden="true"></span>
+          </summary>
+          <ol class="coach-success__results">${list}</ol>
+        </details>`;
+    })
+    .join("");
+
+  return `
+    <section class="section coach-success" id="coach-erfolge">
+      <div class="section-shell">
+        <div class="coach-success__intro">
+          ${sectionHeader({
+            eyebrow: "Erfolge als Coach",
+            title: "Eine Bilanz, die das ganze Camp sichtbar macht.",
+            text:
+              "Von regionalen Meisterschaften bis zur internationalen Pro Card: Diese Übersicht bündelt die Platzierungen, die Athletinnen und Athleten mit Camp-Dörfl-Coaching erreicht haben."
+          })}
+          <div class="coach-success__totals" aria-label="Gesamtbilanz der Coach-Erfolge">
+            <div><strong>${coachSuccessStats.placements}</strong><span>Platzierungen</span></div>
+            <div><strong>${coachSuccessStats.wins}</strong><span>Siege</span></div>
+            <div><strong>${coachSuccessStats.podiums}</strong><span>Podiumsplätze</span></div>
+            <div><strong>${coachSuccessYears.length}</strong><span>Wettkampfjahre</span></div>
+          </div>
+        </div>
+        <nav class="coach-success__years" aria-label="Coach-Erfolge nach Jahr">${yearLinks}</nav>
+        <div class="coach-success__timeline">${years}</div>
+        <p class="coach-success__note">Stand: 2026 · Aufgeführt sind die im Camp dokumentierten Wettkampfplatzierungen aus den Jahren 2019 und 2021 bis 2026.</p>
+      </div>
+    </section>`;
+}
 
 const campTransformationCards = [
   {
@@ -928,25 +1481,28 @@ function homePage() {
   const content = `
     <section class="ff-hero ff-hero--home-photo">
       <picture>
-        <source media="(max-width: 900px)" srcset="/assets/images/home-hero-stadium-mobile.webp">
-        <img class="ff-hero__img" src="/assets/images/home-hero-stadium-wide.webp" srcset="/assets/images/home-hero-stadium-wide-960.webp 960w, /assets/images/home-hero-stadium-wide.webp 1717w" sizes="100vw" alt="Dominik Dörfl mit einem Wegbegleiter als Ironman-Finisher im Stadion"${imageLoadingAttributes({ eager: true })}>
+        <source media="(max-width: 900px)" srcset="/assets/images/home-hero-ironman-interview-mobile.webp">
+        <img class="ff-hero__img" src="/assets/images/home-hero-ironman-interview.webp" srcset="/assets/images/home-hero-ironman-interview-960.webp 960w, /assets/images/home-hero-ironman-interview.webp 1920w" sizes="100vw" alt="Dominik Dörfl als Ironman-Finisher mit Medaille bei einem Interview im Stadion"${imageLoadingAttributes({ eager: true })}>
       </picture>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
-        <p class="ff-hero__eyebrow" data-reveal>Personal Training · Firmenfitness · Events · Nürnberg</p>
-        <h1 class="ff-hero__title" data-reveal>Gesundheit.<br>Leistung.<br><span>Präsenz.</span></h1>
-        <div class="ff-hero__actions" data-reveal>
-          <a class="button button--primary" href="${contactHref()}"><span>Beratung anfragen</span><span aria-hidden="true">&rarr;</span></a>
-          <a class="button button--ghost" href="#einstiege"><span>Vier Einstiege ansehen</span><span aria-hidden="true">&rarr;</span></a>
+        <div class="ff-hero__home-card">
+          <p class="ff-hero__eyebrow" data-reveal>Personal Training · Firmenfitness · Events · Nürnberg</p>
+          <h1 class="ff-hero__title" data-reveal>Gesundheit.<br>Leistung.<br><span>Präsenz.</span></h1>
+          <div class="ff-hero__actions" data-reveal>
+            <a class="button button--primary" href="${contactHref()}"><span>Beratung anfragen</span><span aria-hidden="true">&rarr;</span></a>
+            <a class="button button--ghost" href="#einstiege"><span>Vier Einstiege ansehen</span><span aria-hidden="true">&rarr;</span></a>
+          </div>
+          <p class="ff-hero__mobile-welcome" data-reveal>Willkommen bei Camp Dörfl</p>
+          <dl class="ff-hero__facts" data-reveal aria-label="Camp Dörfl in Zahlen">
+            <div><dt>Moderator</dt><dd>knapp 100 Events</dd></div>
+            <div><dt>Firmenfitness</dt><dd>für gesunde Unternehmen</dd></div>
+            <div><dt>Fitness Trainer</dt><dd>ausgebildet & zertifiziert</dd></div>
+            <div><dt>Profi Athlet</dt><dd>Fitness &amp; Bodybuilding</dd></div>
+            <div><dt>2×</dt><dd>Deutscher Meister</dd></div>
+            <div><dt>Ironman</dt><dd>Finisher</dd></div>
+          </dl>
         </div>
-        <dl class="ff-hero__facts" data-reveal aria-label="Camp Dörfl in Zahlen">
-          <div><dt>Moderator</dt><dd>knapp 100 Events</dd></div>
-          <div><dt>Firmenfitness</dt><dd>für gesunde Unternehmen</dd></div>
-          <div><dt>Fitness Trainer</dt><dd>ausgebildet & zertifiziert</dd></div>
-          <div><dt>Profi Athlet</dt><dd>Fitness &amp; Bodybuilding</dd></div>
-          <div><dt>2×</dt><dd>Deutscher Meister</dd></div>
-          <div><dt>Ironman</dt><dd>Finisher</dd></div>
-        </dl>
       </div>
     </section>
 
@@ -974,16 +1530,6 @@ function homePage() {
               )
               .join("")}
           </div>
-          <a class="ed-app-banner" href="/app/" data-reveal>
-            <div class="ed-app-banner__media">
-              <img src="/assets/images/home-app-banner-coaching.webp" alt="Dominik Dörfl zeigt die Camp Dörfl App im Training"${imageLoadingAttributes()}>
-            </div>
-            <div class="ed-app-banner__content">
-              <h3>Deine Fitness.<br><span>Komplett begleitet.</span></h3>
-              <p class="ed-app-banner__offer">Jetzt 7 Tage kostenlos testen!</p>
-              <span class="ed-app-banner__cta">Zur Camp Dörfl App <span aria-hidden="true">&rarr;</span></span>
-            </div>
-          </a>
         </div>
       </div>
     </section>
@@ -1033,33 +1579,33 @@ function homePage() {
             <div class="ed-google-reviews__grid">
               <figure class="ed-google-review" data-reveal>
                 <div class="ed-google-review__stars" aria-label="5 von 5 Sternen">★★★★★</div>
-                <blockquote>„Einfach perfekt.“</blockquote>
-                <figcaption>ron D. <span>Google Bewertung</span></figcaption>
+                <blockquote>„Sehr motivierend und professionell und vor allem zu 100 Prozent zuverlässig.“</blockquote>
+                <figcaption data-initials="MS"><strong>Markus S.</strong><span>Google Bewertung</span></figcaption>
               </figure>
               <figure class="ed-google-review" data-reveal>
                 <div class="ed-google-review__stars" aria-label="5 von 5 Sternen">★★★★★</div>
                 <blockquote>„Sehr professionelle Betreuung. Sehr gute Beratung.“</blockquote>
-                <figcaption>Michael T. <span>Google Bewertung</span></figcaption>
+                <figcaption data-initials="MT"><strong>Michael T.</strong><span>Google Bewertung</span></figcaption>
               </figure>
               <figure class="ed-google-review" data-reveal>
                 <div class="ed-google-review__stars" aria-label="5 von 5 Sternen">★★★★★</div>
                 <blockquote>„Super Beratung, jederzeit erreichbar und für jede Frage eine kompetente Antwort.“</blockquote>
-                <figcaption>Deniz I. <span>Google Bewertung</span></figcaption>
+                <figcaption data-initials="DI"><strong>Deniz I.</strong><span>Google Bewertung</span></figcaption>
               </figure>
               <figure class="ed-google-review" data-reveal>
                 <div class="ed-google-review__stars" aria-label="5 von 5 Sternen">★★★★★</div>
                 <blockquote>„Top Service, super empathisch auf mich eingegangen. Ich bin sehr zufrieden!“</blockquote>
-                <figcaption>Stefan S. <span>Google Bewertung</span></figcaption>
+                <figcaption data-initials="SS"><strong>Stefan S.</strong><span>Google Bewertung</span></figcaption>
               </figure>
               <figure class="ed-google-review" data-reveal>
                 <div class="ed-google-review__stars" aria-label="5 von 5 Sternen">★★★★★</div>
                 <blockquote>„Die Trainings- und Ernährungspläne sind perfekt auf die persönlichen Bedürfnisse und Ziele abgestimmt.“</blockquote>
-                <figcaption>Leon S. <span>Google Bewertung</span></figcaption>
+                <figcaption data-initials="LS"><strong>Leon S.</strong><span>Google Bewertung</span></figcaption>
               </figure>
               <figure class="ed-google-review" data-reveal>
                 <div class="ed-google-review__stars" aria-label="5 von 5 Sternen">★★★★★</div>
-                <blockquote>„Best Coach ever.“</blockquote>
-                <figcaption>Günter P. <span>Google Bewertung</span></figcaption>
+                <blockquote>„Seine ehrliche, motivierende und zielstrebige Art bringt mich Tag für Tag meinem Ziel näher.“</blockquote>
+                <figcaption data-initials="MT"><strong>Meik T.</strong><span>Google Bewertung</span></figcaption>
               </figure>
             </div>
           </div>
@@ -1083,7 +1629,7 @@ function homePage() {
     description:
       "Camp Dörfl in Nürnberg bündelt Premium Personal Training, Firmenfitness, Event-Moderation und App-Struktur in einem klaren Performance-System.",
     pageName: "Camp Dörfl",
-    socialImage: "/assets/images/home-hero-stadium-wide-social.jpg",
+    socialImage: "/assets/images/home-hero-ironman-interview-social.jpg",
     socialImageAlt: "Dominik Dörfl als Ironman-Finisher im Stadion",
     keywords: [
       "Camp Dörfl Nürnberg",
@@ -1284,19 +1830,6 @@ function personalCoachingPage() {
       </div>
     </section>
 
-    <section class="section section--muted">
-      <div class="section-shell section-shell--wide">
-          ${sectionHeader({
-            eyebrow: "Dein Personal Trainer Nürnberg",
-            title: "Was dein Personal Training wirklich voranbringt.",
-            text:
-              "Zum Start erfassen wir deinen Status messbar. Darauf bauen individueller Trainings- und Ernährungsplan, regelmäßige Anpassungen und eine Überprüfung alle vier Wochen auf.",
-          align: "center"
-        })}
-        ${featureGrid(coachingAudienceCards, "feature-grid--coaching-flow")}
-      </div>
-    </section>
-
     <section class="section section--muted section--coaching-outcome">
       <div class="section-shell section-shell--wide">
         <div class="coaching-outcome-stage">
@@ -1329,12 +1862,12 @@ function personalCoachingPage() {
             </div>
             <div class="summary-rows summary-rows--compact">
               <article class="summary-row">
-                <h3>Präsenz statt Show</h3>
-                <p>Man sieht sofort, wie eng Training, Ausstrahlung und persönliche Begleitung hier zusammengehören.</p>
+                <h3>Präsenz, die Vertrauen schafft</h3>
+                <p>Persönliche Führung, klare Kommunikation und professionelles Coaching greifen spürbar ineinander.</p>
               </article>
               <article class="summary-row">
-                <h3>Kurzer Clip, klares Gefühl</h3>
-                <p>Gerade im kompakten Format wird sichtbar, wie direkt, hochwertig und nahbar das Coaching aufgebaut ist.</p>
+                <h3>Premium Coaching. Echt erlebt.</h3>
+                <p>Ein unverstellter Einblick in eine Zusammenarbeit, die individuell, verbindlich und auf nachhaltige Entwicklung ausgerichtet ist.</p>
               </article>
             </div>
           </div>
@@ -1344,7 +1877,7 @@ function personalCoachingPage() {
               watchUrl: "https://youtube.com/shorts/bP7DKqZu5xc?si=VaGdauquMqCuWNyE",
               title: "Camp Dörfl Premium Personal Training",
               image: "/assets/images/premium-training-short-reference.jpg",
-              alt: "YouTube Short als Referenz fuer Camp Doerfl Premium Personal Training",
+            alt: "Vorschaubild eines YouTube-Shorts über das Premium Personal Training bei Camp Dörfl",
               headline: "Premium Personal Training als Short-Referenz.",
               actionLabel: "Short laden",
               eyebrow: "YouTube Short",
@@ -1370,8 +1903,11 @@ function personalCoachingPage() {
           </article>
           <article class="summary-row" data-reveal>
             <h3>Preise und Formate transparent einordnen</h3>
-            <p><a href="/personal-training-kosten-nuernberg/">Hier erklären wir, wann Einzelsessions, Karten oder eine Premium Begleitung in Nürnberg sinnvoll sind.</a></p>
+            <p>Von der Einzelsession über 5er- und 10er-Karten bis zur monatlichen Premium Begleitung: Die vollständige Übersicht zeigt Preise und Leistungsrahmen auf einen Blick.</p>
           </article>
+        </div>
+        <div class="ff-hero__actions" data-reveal>
+          <a class="button button--primary" href="/personal-training-kosten-nuernberg/"><span>Preise für Personal Training ansehen</span><span aria-hidden="true">&rarr;</span></a>
         </div>
       </div>
     </section>
@@ -1423,6 +1959,7 @@ function personalCoachingPage() {
         description:
           "Video-Einblick in das Premium Personal Training von Camp Dörfl mit persönlicher Führung, Training und alltagstauglicher Struktur.",
         thumbnailUrl: "/assets/images/dominik-personal-coaching-client.webp",
+        uploadDate: "2025-12-03T15:48:09-08:00",
         embedUrl: "https://www.youtube-nocookie.com/embed/KTvHOvTNJ8w?autoplay=1&rel=0&modestbranding=1&playsinline=1",
         watchUrl: "https://www.youtube.com/watch?v=KTvHOvTNJ8w"
       }),
@@ -1433,6 +1970,7 @@ function personalCoachingPage() {
         description:
           "Kurzer Videoeinblick in die direkte 1:1 Zusammenarbeit im Premium Personal Training von Camp Dörfl.",
         thumbnailUrl: "/assets/images/premium-training-short-reference.jpg",
+        uploadDate: "2026-06-16T13:34:05-07:00",
         embedUrl: "https://www.youtube-nocookie.com/embed/bP7DKqZu5xc?autoplay=1&rel=0&modestbranding=1&playsinline=1",
         watchUrl: "https://youtube.com/shorts/bP7DKqZu5xc?si=VaGdauquMqCuWNyE"
       })
@@ -1558,19 +2096,6 @@ function firmenfitnessPage() {
     <section class="section">
       <div class="section-shell section-shell--wide">
         ${sectionHeader({
-          eyebrow: "Leistung im Unternehmen",
-          title: "Wie Camp Dörfl Firmenfitness strukturiert.",
-          text:
-            "Analyse, Einordnung und konkrete Empfehlungen bauen logisch aufeinander auf und machen das Format intern leicht vermittelbar.",
-          align: "left"
-        })}
-        ${corporateModuleShowcase(corporateModuleCards)}
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-shell section-shell--wide">
-        ${sectionHeader({
           eyebrow: "Wirkung",
           title: "Was Unternehmen konkret davon haben.",
           text:
@@ -1578,27 +2103,6 @@ function firmenfitnessPage() {
           align: "center"
         })}
         ${corporateOutcomeShowcase(corporateOutcomeRows)}
-      </div>
-    </section>
-
-    <section class="section section--muted">
-      <div class="section-shell">
-        ${sectionHeader({
-          eyebrow: "Gesundheitstag",
-          title: "Wie läuft ein Gesundheitstag in Nürnberg ab?",
-          text:
-            "Wenn Sie Firmenfitness intern planen und zuerst Aufwand, Ablauf und Bausteine verstehen wollen, hilft diese Seite vor der Anfrage."
-        })}
-        <div class="summary-rows summary-rows--compact">
-          <article class="summary-row" data-reveal>
-            <h3>Planung vor Angebot</h3>
-            <p>Teilnehmerzahl, Zeitfenster, Zielbild und gewünschte Tiefe entscheiden darüber, wie ein Gesundheitstag sinnvoll aufgebaut wird.</p>
-          </article>
-          <article class="summary-row" data-reveal>
-            <h3>Mehr Orientierung für Unternehmen</h3>
-            <p><a href="/gesundheitstag-nuernberg/">Hier zeigen wir, wie ein Gesundheitstag in Nürnberg aufgebaut sein kann und welche Bausteine sich bewährt haben.</a></p>
-          </article>
-        </div>
       </div>
     </section>
 
@@ -1649,6 +2153,7 @@ function firmenfitnessPage() {
         description:
           "Video-Einblick in Firmenfitness und Gesundheitstage von Camp Dörfl mit Aktivierung, Analyse und verständlicher Beratung.",
         thumbnailUrl: "/assets/images/dominik-bike-blue-social.jpg",
+        uploadDate: "2026-02-10T10:18:36-08:00",
         embedUrl: "https://www.youtube-nocookie.com/embed/cDQ3xaj2we8?autoplay=1&rel=0&modestbranding=1&playsinline=1",
         watchUrl: "https://www.youtube.com/watch?v=cDQ3xaj2we8"
       }),
@@ -1659,6 +2164,7 @@ function firmenfitnessPage() {
         description:
           "Kurzer Videoeinblick in Camp Dörfl Firmenfitness mit Ernährungs- und Gesundheitsbezug im Unternehmenskontext.",
         thumbnailUrl: "/assets/images/dominik-athlete-nutrition-social.jpg",
+        uploadDate: "2026-06-16T13:32:09-07:00",
         embedUrl: "https://www.youtube-nocookie.com/embed/rQ9YocgKVSc?autoplay=1&rel=0&modestbranding=1&playsinline=1",
         watchUrl: "https://www.youtube.com/watch?v=rQ9YocgKVSc"
       })
@@ -1707,7 +2213,7 @@ function eventsPage() {
             watchUrl: "https://youtu.be/1kpl2HrShto",
             title: "Camp Dörfl Events Video",
             image: "/assets/images/events-hero-wide.webp",
-            alt: "Vorschaubild fuer das Event-Video von Camp Doerfl",
+            alt: "Vorschaubild eines Videos mit Dominik Dörfl bei einer Eventmoderation",
             headline: "Events live erleben.",
             actionLabel: "Video laden"
           })}
@@ -1776,7 +2282,7 @@ function eventsPage() {
             watchUrl: "https://youtu.be/yhV7cyw2Pgg",
             title: "Camp Dörfl Interview Beispiel",
             image: "/assets/images/event-stage-interview.webp",
-            alt: "Dominik Dörfl fuehrt ein Interview auf einer Event-Buehne",
+            alt: "Dominik Dörfl führt ein Interview auf einer Eventbühne",
             headline: "Interview live erleben.",
             actionLabel: "Interview laden",
             short: true
@@ -1957,6 +2463,7 @@ function eventsPage() {
         description:
           "Video-Einblick in die Event-Moderation von Camp Dörfl für Bühne, Publikum und Veranstalter.",
         thumbnailUrl: "/assets/images/events-hero-wide-social.jpg",
+        uploadDate: "2025-09-05T02:09:12-07:00",
         embedUrl: "https://www.youtube-nocookie.com/embed/1kpl2HrShto?autoplay=1&rel=0&modestbranding=1&playsinline=1",
         watchUrl: "https://youtu.be/1kpl2HrShto"
       }),
@@ -1967,6 +2474,7 @@ function eventsPage() {
         description:
           "Kurzer Videoeinblick in die Event-Moderation von Camp Dörfl mit Präsenz, Timing und Bühnenführung.",
         thumbnailUrl: "/assets/images/dominik-moderator-mic-social.jpg",
+        uploadDate: "2026-06-16T09:04:24-07:00",
         embedUrl: "https://www.youtube-nocookie.com/embed/oTRIacnkFPc?autoplay=1&rel=0&modestbranding=1&playsinline=1",
         watchUrl: "https://www.youtube.com/watch?v=oTRIacnkFPc"
       }),
@@ -1977,6 +2485,7 @@ function eventsPage() {
         description:
           "Video-Beispiel für Interviewführung und Moderation von Camp Dörfl auf einer Live-Bühne.",
         thumbnailUrl: "/assets/images/event-stage-interview-social.jpg",
+        uploadDate: "2026-06-17T15:24:51-07:00",
         embedUrl: "https://www.youtube-nocookie.com/embed/yhV7cyw2Pgg?autoplay=1&rel=0&modestbranding=1&playsinline=1",
         watchUrl: "https://youtu.be/yhV7cyw2Pgg"
       })
@@ -1988,7 +2497,7 @@ function eventsPage() {
 function teamSuccessPage() {
   const content = `
     <section class="ff-hero ff-hero--split ff-hero--photo ff-hero--team">
-      <img class="ff-hero__img" src="/assets/images/dominik-moderator-mic.webp" alt="Dominik Dörfl mit Mikrofon bei einer Moderation auf der Bühne"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/team-success-hero.jpg" srcset="/assets/images/team-success-hero-960.jpg 960w, /assets/images/team-success-hero.jpg 1920w" sizes="100vw" alt="Dominik Dörfl als erfolgreicher Bodybuilding-Athlet bei einem Outdoor-Shooting"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__shell">
         <div class="ff-hero__inner">
@@ -2016,7 +2525,7 @@ function teamSuccessPage() {
         </div>
         <div class="ff-hero__showcase ff-hero__showcase--photo" data-reveal>
           <figure class="ff-hero__photo-card">
-            <img src="/assets/images/dominik-moderator-mic.webp" alt="Dominik Dörfl mit Mikrofon als Moderator"${imageLoadingAttributes()}>
+            <img src="/assets/images/team-success-hero-960.jpg" alt="Dominik Dörfl in Wettkampfform bei einem Bodybuilding-Shooting"${imageLoadingAttributes()}>
           </figure>
           <article class="ff-hero__aside">
             <span class="card-tag">Im Team sichtbar</span>
@@ -2031,6 +2540,8 @@ function teamSuccessPage() {
         </div>
       </div>
     </section>
+
+    ${coachSuccessOverview()}
 
     <section class="section section--muted">
       <div class="section-shell">
@@ -2102,7 +2613,7 @@ function teamSuccessPage() {
       "Erfolge im Team bei Camp Dörfl Nürnberg: Erfahrung aus Leistungssport, Coaching, Community, Bühne und Unternehmertum für sichtbare Entwicklung.",
     keywords: ["Erfolge im Team", "Camp Dörfl Ergebnisse", "Transformation Coaching", "Dominik Dörfl"],
     bodyClass: "page-premium page-team",
-    socialImage: "/assets/images/dominik-moderator-mic-social.jpg",
+    socialImage: "/assets/images/team-success-hero-social.jpg",
     socialImageAlt: "Dominik Dörfl mit Mikrofon und Team-Erfolgen im Hintergrund",
     content
   });
@@ -2319,16 +2830,17 @@ function ueberDominikPage() {
 
   const content = `
     <section class="ff-hero ff-hero--split ff-hero--photo ff-hero--about">
-      <img class="ff-hero__img" src="/assets/images/dominik-stage-suit.webp" alt="Dominik Dörfl im Anzug auf der Bühne als Moderator und Performance Coach"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/dominik-about-training-hero.jpg" alt="Dominik Dörfl beim intensiven Ausdauertraining im Fitnessstudio"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__shell">
+        <p class="ff-hero__mobile-role" aria-hidden="true">Unternehmer · Athlet · Coach</p>
         <div class="ff-hero__inner">
           <div class="premium-badge">
             <span>ÜBER DOMINIK</span>
             <small>Unternehmer, Athlet, Coach und Gründer von Camp Dörfl.</small>
           </div>
           <p class="ff-hero__eyebrow" data-reveal>Die Person hinter Camp Dörfl</p>
-          <h1 class="ff-hero__title" data-reveal>Dominik.<br>Dörfl.<br><span>Performance gelebt.</span></h1>
+          <h1 class="ff-hero__title" data-reveal>Dominik.<br class="ff-hero__break--desktop"> Dörfl.<br><span>Performance gelebt.</span></h1>
           <p class="ff-hero__lead" data-reveal>
             Ex-Profi-Athlet, zweifacher Deutscher Meister, Ironman-Finisher, Coach von Top-Athleten und Unternehmer aus Nürnberg. Camp Dörfl ist die Summe dieser Erfahrung.
           </p>
@@ -2347,7 +2859,7 @@ function ueberDominikPage() {
         </div>
         <div class="ff-hero__showcase ff-hero__showcase--photo" data-reveal>
           <figure class="ff-hero__photo-card">
-            <img src="/assets/images/dominik-stage-suit.webp" alt="Dominik Dörfl im Anzug auf der Bühne"${imageLoadingAttributes()}>
+            <img src="/assets/images/dominik-about-training-hero.jpg" alt="Dominik Dörfl beim Ausdauertraining im Fitnessstudio"${imageLoadingAttributes()}>
           </figure>
           <article class="ff-hero__aside">
             <span class="card-tag">Auf einen Blick</span>
@@ -2387,7 +2899,7 @@ function ueberDominikPage() {
     </section>
 
     <section class="section">
-      <div class="section-shell editorial-stage">
+      <div class="section-shell editorial-stage editorial-stage--about-profile">
         <div class="editorial-stage__copy" data-reveal>
           ${sectionHeader({
             eyebrow: "Kurzprofil",
@@ -2397,8 +2909,13 @@ function ueberDominikPage() {
             ${facts.map((fact) => `<li>${fact}</li>`).join("")}
           </ul>
         </div>
-        <div class="editorial-stage__media" data-reveal>
-          <img src="/assets/images/dominik-bodybuilding-desert.webp" alt="Dominik Dörfl als Bodybuilder"${imageLoadingAttributes()}>
+        <div class="editorial-stage__media editorial-stage__media--duo" data-reveal>
+          <figure>
+            <img src="/assets/images/dominik-bodybuilding-desert.webp" alt="Dominik Dörfl als Bodybuilder bei einem Outdoor-Shooting"${imageLoadingAttributes()}>
+          </figure>
+          <figure>
+            <img src="/assets/images/dominik-about-gym-portrait.jpg" alt="Dominik Dörfl in Sportkleidung im Fitnessstudio"${imageLoadingAttributes()}>
+          </figure>
         </div>
       </div>
     </section>
@@ -2539,7 +3056,7 @@ function privacyPage() {
         ${sectionHeader({
           eyebrow: "Rechtliches",
           title: "Datenschutz",
-          text: "Diese Datenschutzerklärung gilt für die Website ${site.domain}. Stand: 17. Juni 2026.",
+          text: "Diese Datenschutzerklärung gilt für die Website ${site.domain}. Stand: 1. August 2026.",
           headingLevel: 1
         })}
         <div class="legal-grid legal-grid--intro">
@@ -2560,6 +3077,7 @@ function privacyPage() {
               <li>Die auf der Website verwendeten Schriftarten werden lokal bereitgestellt.</li>
               <li>Ihre Einwilligungsauswahl wird lokal im Browser unter <code>campdoerfl-consent</code> gespeichert.</li>
               <li>YouTube-Inhalte werden erst nach Ihrer Freigabe geladen und können danach im sichtbaren Bereich automatisch und stumm starten.</li>
+              <li>Die PLZ-Umkreissuche im Triathlon- und Laufkalender sendet Ihre Eingabe erst nach aktivem Start der Suche an den Geokodierungsdienst Photon von komoot.</li>
               <li>Das Kontaktformular dieser Website übermittelt Ihre Angaben an den Formular-Dienst FormSubmit, der die Nachricht an ${site.email} weiterleitet.</li>
             </ul>
           </article>
@@ -2600,18 +3118,26 @@ function privacyPage() {
         </article>
 
         <article class="legal-card" data-reveal>
-          <h2>5. Externe Links</h2>
+          <h2>5. PLZ-Umkreissuche mit Photon</h2>
+          <p>Im Triathlon- und Laufkalender können Sie eine Postleitzahl eingeben, um Veranstaltungen in einem ausgewählten Radius zu finden. Erst wenn Sie die Suche aktiv starten, wird die eingegebene Postleitzahl zusammen mit dem ausgewählten Land an die öffentliche Photon-Schnittstelle unter <code>photon.komoot.io</code> übertragen. Photon ist ein Open-Source-Geokodierungsdienst auf Basis von OpenStreetMap-Daten und wird von der komoot GmbH bereitgestellt.</p>
+          <p>Bei der Verbindung verarbeitet der Anbieter technisch bedingt auch Verbindungsdaten wie Ihre IP-Adresse, Browserinformationen und den Zeitpunkt der Anfrage. Camp Dörfl speichert die eingegebene Postleitzahl nicht und erstellt daraus kein Nutzerprofil.</p>
+          <p><span class="legal-label">Zweck:</span> Bereitstellung der von Ihnen ausgelösten Umkreissuche. <span class="legal-label">Rechtsgrundlage:</span> Art. 6 Abs. 1 lit. f DSGVO.</p>
+          <p><a href="https://www.komoot.com/de-de/privacy" target="_blank" rel="noopener noreferrer">Datenschutzrichtlinie von komoot</a></p>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <h2>6. Externe Links</h2>
           <p>Diese Website verlinkt auf externe Angebote, insbesondere Instagram, YouTube und Partner-Websites. Wenn Sie einen solchen Link anklicken, verlassen Sie diese Website. Ab diesem Zeitpunkt gilt ausschließlich die Datenschutzerklärung des jeweiligen Anbieters.</p>
         </article>
 
         <article class="legal-card" data-reveal>
-          <h2>6. Speicherdauer</h2>
+          <h2>7. Speicherdauer</h2>
           <p>Personenbezogene Daten werden nur so lange gespeichert, wie dies für die jeweiligen Zwecke erforderlich ist oder gesetzliche Aufbewahrungspflichten bestehen.</p>
           <p>Technische Verbindungsdaten werden nur im für Betrieb, Sicherheit und Fehleranalyse erforderlichen Umfang verarbeitet. Inhalte aus der Kontaktaufnahme speichere ich nur so lange, wie dies zur Bearbeitung Ihrer Anfrage oder zur Erfüllung gesetzlicher Pflichten nötig ist.</p>
         </article>
 
         <article class="legal-card" data-reveal>
-          <h2>7. Ihre Rechte</h2>
+          <h2>8. Ihre Rechte</h2>
           <ul class="legal-list">
             <li>Recht auf Auskunft nach Art. 15 DSGVO</li>
             <li>Recht auf Berichtigung nach Art. 16 DSGVO</li>
@@ -2628,16 +3154,16 @@ function privacyPage() {
     <section class="section">
       <div class="section-shell legal-stack">
         <article class="legal-card" data-reveal>
-          <h2>8. Beschwerderecht bei einer Aufsichtsbehörde</h2>
+          <h2>9. Beschwerderecht bei einer Aufsichtsbehörde</h2>
           <p>Sie haben das Recht, sich bei einer Datenschutz-Aufsichtsbehörde über die Verarbeitung Ihrer personenbezogenen Daten zu beschweren. Für private Anbieter in Bayern ist regelmäßig das Bayerische Landesamt für Datenschutzaufsicht (BayLDA) zuständig.</p>
           <p><a href="https://www.lda.bayern.de/de/index.html" target="_blank" rel="noopener noreferrer">www.lda.bayern.de</a></p>
         </article>
         <article class="legal-card" data-reveal>
-          <h2>9. Keine Pflicht zur Bereitstellung</h2>
+          <h2>10. Keine Pflicht zur Bereitstellung</h2>
           <p>Sie sind nicht verpflichtet, mir personenbezogene Daten bereitzustellen. Ohne bestimmte Angaben kann ich Ihre Anfrage jedoch gegebenenfalls nicht oder nicht vollständig bearbeiten.</p>
         </article>
         <article class="legal-card" data-reveal>
-          <h2>10. Aktueller Geltungsbereich</h2>
+          <h2>11. Aktueller Geltungsbereich</h2>
           <p>Diese Datenschutzerklärung wurde auf das aktuell erkennbare technische Setup dieser Website abgestimmt. Wenn künftig weitere Dienste, Tracking- oder Analyse-Tools eingebunden werden, muss diese Erklärung vor deren Einsatz entsprechend aktualisiert werden.</p>
           <p class="legal-note">Ergänzende Hinweise zur Einwilligungslogik finden Sie auf der Seite <a href="/cookies/">Cookies & lokale Speicherungen</a>.</p>
         </article>
@@ -3203,10 +3729,10 @@ function partnerPage() {
             <a class="button button--secondary-light" href="/events/"><span>Events ansehen</span><span aria-hidden="true">&rarr;</span></a>
             <div class="partner-hero__logos" aria-label="Aktuelle Partner">
               <a class="partner-hero__logo" href="https://www.xxlnutrition.com/" target="_blank" rel="sponsored noopener noreferrer" aria-label="XXL Nutrition öffnen">
-                <img src="/assets/images/partner-xxl-nutrition-logo.png" alt="XXL Nutrition"${imageLoadingAttributes()}>
+                <img src="/assets/images/partner-xxl-nutrition-logo.png" alt=""${imageLoadingAttributes()}>
               </a>
               <a class="partner-hero__logo partner-hero__logo--aeke" href="https://eu.aeke.com/products/buy-aeke-k1?sca_ref=11019964.wKUJzkQCK3" target="_blank" rel="sponsored noopener noreferrer" aria-label="AEKE öffnen">
-                <img src="/assets/images/partner-aeke-logo.png" alt="AEKE"${imageLoadingAttributes()}>
+                <img src="/assets/images/partner-aeke-logo.png" alt=""${imageLoadingAttributes()}>
               </a>
             </div>
           </div>
@@ -3217,8 +3743,8 @@ function partnerPage() {
           </dl>
         </div>
         <div class="ff-hero__showcase ff-hero__showcase--partner" data-reveal>
-          <figure class="partner-hero__visual" aria-hidden="true">
-            <img src="/assets/images/partners-hero-banner.svg" alt="Partner und Marken von Camp Dörfl"${imageLoadingAttributes()}>
+          <figure class="partner-hero__visual partner-hero__visual--portrait">
+            <img src="/assets/images/partner-hero-dominik-gym.webp" alt="Dominik Dörfl im Fitnessstudio als Ansprechpartner für Partnerschaften"${imageLoadingAttributes({ eager: true })}>
           </figure>
         </div>
       </div>
@@ -3229,15 +3755,15 @@ function partnerPage() {
         <div class="premium-sponsor-stage__intro" data-reveal>
           ${sectionHeader({
             eyebrow: "Partner im Performance System",
-            title: "Premium Sponsoren im Camp.",
+            title: "Premium Partner im Camp",
             text:
-              "XXL Nutrition und AEKE ergänzen das Camp Dörfl Performance System mit Produkten, die im Training, in der Regeneration und im Alltag echten Mehrwert schaffen."
+              "XXL Nutrition, AEKE, Trueformance und Clever Fit Nürnberg-Süd ergänzen das Camp Dörfl Performance System mit starken Produkten, Trainingslösungen und gemeinsamer Performance-Ausrichtung."
           })}
         </div>
         <div class="premium-sponsor-stage__grid" aria-label="Premium Sponsoren">
           <a class="premium-sponsor-card premium-sponsor-card--xxl" href="https://www.xxlnutrition.com/de" target="_blank" rel="sponsored noopener noreferrer" data-reveal>
             <span class="premium-sponsor-card__logo">
-              <img src="/assets/images/partner-xxl-nutrition-logo.png" alt="XXL Nutrition"${imageLoadingAttributes()}>
+              <img src="/assets/images/partner-xxl-nutrition-logo.png" alt=""${imageLoadingAttributes()}>
             </span>
             <span class="premium-sponsor-card__copy">
               <strong>XXL Nutrition</strong>
@@ -3247,13 +3773,46 @@ function partnerPage() {
           </a>
           <a class="premium-sponsor-card premium-sponsor-card--aeke" href="https://www.aeke.com" target="_blank" rel="sponsored noopener noreferrer" data-reveal>
             <span class="premium-sponsor-card__logo">
-              <img src="/assets/images/partner-aeke-logo.png" alt="AEKE"${imageLoadingAttributes()}>
+              <img src="/assets/images/partner-aeke-logo.png" alt=""${imageLoadingAttributes()}>
             </span>
             <span class="premium-sponsor-card__copy">
               <strong>AEKE</strong>
               <span>Smarte Trainingshardware für präzise Bewegung und messbare Entwicklung.</span>
             </span>
             <span class="premium-sponsor-card__action">Zur Website <b aria-hidden="true">→</b></span>
+          </a>
+          <a class="premium-sponsor-card premium-sponsor-card--trueformance" href="https://www.trueformance.de" target="_blank" rel="sponsored noopener noreferrer" data-reveal>
+            <span class="premium-sponsor-card__logo">
+              <img src="/assets/images/partner-trueformance-logo.png" alt=""${imageLoadingAttributes()}>
+            </span>
+            <span class="premium-sponsor-card__copy">
+              <span class="premium-sponsor-card__tier">Gold Partner</span>
+              <strong>Trueformance</strong>
+              <span>Gold Partner von Camp Dörfl für gemeinsame Performance- und Markenprojekte.</span>
+            </span>
+            <span class="premium-sponsor-card__action">Zur Website <b aria-hidden="true">→</b></span>
+          </a>
+          <a class="premium-sponsor-card premium-sponsor-card--clever-fit" href="https://www.clever-fit.com/de/fitnessstudio/nuernberg-sued/" target="_blank" rel="sponsored noopener noreferrer" data-reveal>
+            <span class="premium-sponsor-card__logo">
+              <img src="/assets/images/partner-clever-fit-nuernberg-sued.jpg" alt=""${imageLoadingAttributes()}>
+            </span>
+            <span class="premium-sponsor-card__copy">
+              <strong>Clever Fit Nürnberg-Süd</strong>
+              <span>Kraft-, Ausdauer- und Functional Training mit Trainingsbetreuung in Nürnberg-Süd.</span>
+            </span>
+            <span class="premium-sponsor-card__action">Studio ansehen <b aria-hidden="true">→</b></span>
+          </a>
+        </div>
+        <div class="basis-partner-stage" data-reveal>
+          <div class="basis-partner-stage__intro">
+            <p class="eyebrow">Basis Partner</p>
+            <h3>Verbunden in Bewegung.</h3>
+            <p>Partner für digitale Aktivitäten, Routen und gemeinsame sportliche Herausforderungen.</p>
+          </div>
+          <a class="basis-partner-card basis-partner-card--strava" href="https://strava.app.link/ajkmFixCe5b" target="_blank" rel="sponsored noopener noreferrer">
+            <span class="basis-partner-card__logo"><img src="/assets/images/partner-strava.png" alt=""${imageLoadingAttributes()}></span>
+            <span class="basis-partner-card__copy"><small>Basis Partner</small><strong>Strava</strong><span>Aktivitäten aufzeichnen, Routen entdecken und sportliche Fortschritte teilen.</span></span>
+            <span class="basis-partner-card__action" aria-hidden="true">↗</span>
           </a>
         </div>
       </div>
@@ -3273,13 +3832,26 @@ function partnerPage() {
 
     <section class="section section--muted">
       <div class="section-shell section-shell--partner-activation">
-        ${sectionHeader({
-          eyebrow: "Kooperationsfelder",
-          title: "So kann Zusammen<wbr>arbeit konkret aussehen.",
-          text:
-            "Je nach Marke, Ziel und Format kann die Zusammenarbeit live, digital oder in einer Verbindung aus beidem aufgebaut werden."
-        })}
-        ${summaryRows(partnerActivationRows)}
+        <div class="partner-activation-layout">
+          <div class="partner-activation-layout__content">
+            ${sectionHeader({
+              eyebrow: "Kooperationsfelder",
+              title: "So kann Zusammen<wbr>arbeit konkret aussehen.",
+              text:
+                "Je nach Marke, Ziel und Format kann die Zusammenarbeit live, digital oder in einer Verbindung aus beidem aufgebaut werden."
+            })}
+            ${summaryRows(partnerActivationRows)}
+          </div>
+          <aside class="partner-activation-video" data-reveal aria-label="Instagram Video zur Zusammenarbeit mit AEKE">
+            <iframe
+              src="https://www.instagram.com/p/DbdIzA1Iz-k/embed/"
+              title="Instagram Video: AEKE im Einsatz bei Camp Dörfl"
+              loading="lazy"
+              allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+          </aside>
+        </div>
       </div>
     </section>
 
@@ -3414,6 +3986,42 @@ function contactPage() {
 }
 
 function personalTrainingCostPage() {
+  const priceCards = [
+    {
+      tag: "Flexibler Einstieg",
+      title: "Einzelsession",
+      price: "120 € / 150 €<small>inkl. 2D-Körperanalyse</small>",
+      text:
+        "Für einen gezielten Trainingsimpuls, Technik-Feedback oder eine persönliche Standortbestimmung ohne Kartenbindung.",
+      items: ["120 € ohne 2D-Körperanalyse", "150 € inklusive 2D-Körperanalyse"]
+    },
+    {
+      tag: "Kontinuität",
+      title: "5er-Karte",
+      price: "500 €",
+      text:
+        "Für mehrere aufeinander aufbauende Termine und mehr Verbindlichkeit über einen überschaubaren Zeitraum.",
+      items: ["5 persönliche Sessions", "Entspricht 100 € pro Session"]
+    },
+    {
+      tag: "Bester Kartenwert",
+      title: "10er-Karte",
+      price: "800 €",
+      text:
+        "Für regelmäßige persönliche Trainingssteuerung und eine längerfristige, verlässliche Zusammenarbeit.",
+      items: ["10 persönliche Sessions", "Entspricht 80 € pro Session"],
+      featured: true
+    },
+    {
+      tag: "Laufende Führung",
+      title: "Premium Begleitung",
+      price: "ab 200 €<small>monatlich</small>",
+      text:
+        "Für ein abgestimmtes System aus Training, Ernährung, Analyse, App und laufender Anpassung.",
+      items: ["Persönliche laufende Begleitung", "Umfang passend zu Ziel und Alltag"]
+    }
+  ];
+
   const costFactorCards = [
     {
       detail: "Betreuungstiefe",
@@ -3445,17 +4053,17 @@ function personalTrainingCostPage() {
     {
       title: "Einzelsessions",
       text:
-        "Sinnvoll, wenn du vor allem Technik, Übungsauswahl oder einen konkreten Trainingsimpuls brauchst und bereits viel Eigenstruktur mitbringst."
+        "Für 120 Euro oder 150 Euro inklusive 2D-Körperanalyse – sinnvoll, wenn du Technik, Übungsauswahl oder einen konkreten Trainingsimpuls brauchst."
     },
     {
       title: "5er- oder 10er-Karten",
       text:
-        "Gut für Menschen, die über mehrere Termine Stabilität aufbauen wollen, ohne direkt in ein umfassendes Premium-Setup zu gehen."
+        "Die 5er-Karte kostet 500 Euro, die 10er-Karte 800 Euro. Beide passen zu Menschen, die über mehrere Termine Stabilität aufbauen wollen."
     },
     {
       title: "Premium Begleitung",
       text:
-        "Die stärkste Lösung, wenn Training, Ernährung, Analyse, App und laufende Anpassung zusammenarbeiten sollen und Fortschritt sauber geführt werden muss."
+        "Ab 200 Euro monatlich die stärkste Lösung, wenn Training, Ernährung, Analyse, App und laufende Anpassung zusammenarbeiten sollen."
     }
   ];
 
@@ -3468,9 +4076,9 @@ function personalTrainingCostPage() {
 
   const pricingFaq = [
     {
-      question: "Warum steht hier kein fixer Preis für Personal Training in Nürnberg?",
+      question: "Was kostet Personal Training bei Camp Dörfl?",
       answer:
-        "Weil ein fairer Preis vom sinnvollen Setup abhängt: Einzelsession, Karte oder Premium Begleitung haben unterschiedliche Aufgaben und erzeugen einen sehr unterschiedlichen Betreuungsaufwand."
+        "Eine Einzelsession kostet 120 Euro; inklusive 2D-Körperanalyse sind es 150 Euro. Die 5er-Karte kostet 500 Euro, die 10er-Karte 800 Euro. Die Premium Begleitung startet ab 200 Euro monatlich."
     },
     {
       question: "Ist günstiger immer die bessere Einstiegsoption?",
@@ -3485,7 +4093,7 @@ function personalTrainingCostPage() {
     {
       question: "Wie bekomme ich eine konkrete Preiseinschätzung?",
       answer:
-        "Am schnellsten über eine kurze Anfrage. Dann lässt sich sauber einordnen, ob Einzelsessions, Karten oder Premium Begleitung für deine Ziele und deinen Kalender sinnvoll sind."
+        "Die Grundpreise stehen direkt in der Übersicht. Bei der Premium Begleitung lässt sich über eine kurze Anfrage klären, welcher monatliche Umfang zu deinen Zielen und deinem Kalender passt."
     }
   ];
 
@@ -3511,6 +4119,20 @@ function personalTrainingCostPage() {
           <div><dt>Analyse</dt><dd>vor dem Start</dd></div>
           <div><dt>App</dt><dd>optional integriert</dd></div>
         </dl>
+      </div>
+    </section>
+
+    <section class="section section--pricing-overview" id="preise">
+      <div class="section-shell section-shell--wide">
+        ${sectionHeader({
+          eyebrow: "Preise auf einen Blick",
+          title: "Wähle den Rahmen, der zu deinem Ziel passt.",
+          text:
+            "Transparent vom einzelnen Termin bis zur laufenden Premium Begleitung. Für die genaue Einordnung deines Bedarfs kannst du direkt eine persönliche Anfrage senden.",
+          align: "center"
+        })}
+        ${pricingCards(priceCards)}
+        <p class="pricing-overview__note">Der genaue Leistungsumfang der Premium Begleitung richtet sich nach dem individuell vereinbarten Betreuungsrahmen.</p>
       </div>
     </section>
 
@@ -3800,6 +4422,1373 @@ function gesundheitstagNuernbergPage() {
   });
 }
 
+function bodybuildingCompetitionCard(event) {
+  return `
+    <article class="bbcal-event${event.past ? " bbcal-event--past" : ""}" data-bodybuilding-event>
+      <time class="bbcal-event__date" datetime="${event.date}">${event.label}</time>
+      <div class="bbcal-event__body">
+        <span class="bbcal-event__type">${event.type}</span>
+        <h3>${event.name}</h3>
+        <p><span aria-hidden="true">⌖</span>${event.location}</p>
+      </div>
+      <div class="bbcal-event__meta">
+        <span class="bbcal-weeks-out" data-weeks-out data-event-date="${event.date}" aria-label="Vorbereitungszeit wird berechnet"><strong>–</strong><small>Weeks out</small></span>
+        <span class="bbcal-event__status">${event.past ? "Ausgetragen" : "Bestätigt"}</span>
+      </div>
+    </article>
+  `;
+}
+
+function appTrafficPromo({ eyebrow, text, ref }) {
+  return `
+    <section class="section app-traffic-promo" id="camp-doerfl-app" aria-label="Camp Dörfl App">
+      <div class="section-shell section-shell--wide">
+        <article class="app-traffic-promo__card" data-reveal>
+          <figure class="app-traffic-promo__media">
+            <img src="/assets/images/home-app-banner-coaching.webp" alt="Dominik Dörfl zeigt auf seinem Smartphone die Camp Dörfl App im Training"${imageLoadingAttributes()}>
+            <figcaption><span>Camp Dörfl App</span><strong>Training. Ernährung. Fortschritt.</strong></figcaption>
+          </figure>
+          <div class="app-traffic-promo__content">
+            <p class="eyebrow">${eyebrow}</p>
+            <h2>Plane dein Training.<br><span>Mit der Camp Dörfl App.</span></h2>
+            <p>${text}</p>
+            <ul aria-label="Funktionen der Camp Dörfl App">
+              <li><span aria-hidden="true">01</span><strong>Individueller Trainingsplan</strong></li>
+              <li><span aria-hidden="true">02</span><strong>Ernährung im Blick</strong></li>
+              <li><span aria-hidden="true">03</span><strong>Fortschritt &amp; Check-ins</strong></li>
+            </ul>
+            <a class="app-traffic-promo__action" href="/app/?ref=${ref}">
+              <span><small>Jetzt 7 Tage kostenlos testen</small><strong>Camp Dörfl App entdecken</strong></span>
+              <b aria-hidden="true">→</b>
+            </a>
+          </div>
+        </article>
+      </div>
+    </section>
+  `;
+}
+
+function bodybuildingCalendarPage() {
+  const allEvents = bodybuildingCalendarSources.flatMap((source) =>
+    source.events.map((event) => ({ ...event, source }))
+  );
+  const upcomingEvents = allEvents
+    .filter((event) => !event.past)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  const pastEvents = allEvents.filter((event) => event.past);
+  const nextEvents = upcomingEvents.slice(0, 4);
+  const sourceNavigation = bodybuildingCalendarSources
+    .map(
+      (source) => `
+        <a class="bbcal-source-link" href="#${source.id}">
+          <span>${source.number}</span>
+          <strong>${source.name}</strong>
+          <small>${source.events.filter((event) => !event.past).length} kommende Termine</small>
+          <b aria-hidden="true">↓</b>
+        </a>
+      `
+    )
+    .join("");
+  const calendarSections = bodybuildingCalendarSources
+    .map((source) => {
+      const upcoming = source.events.filter((event) => !event.past);
+      const completed = source.events.filter((event) => event.past);
+
+      return `
+        <section class="bbcal-federation" id="${source.id}" data-reveal>
+          <header class="bbcal-federation__header">
+            <span class="bbcal-federation__number">${source.number}</span>
+            <div>
+              <p class="eyebrow">${source.descriptor}</p>
+              <h2>${source.name}</h2>
+              <p>${source.note}</p>
+            </div>
+            <a href="${source.sourceUrl}" target="_blank" rel="noopener noreferrer">
+              <span>Offizielle Quelle</span><span aria-hidden="true">↗</span>
+            </a>
+          </header>
+          <div class="bbcal-event-list">
+            ${upcoming.map(bodybuildingCompetitionCard).join("")}
+          </div>
+          ${
+            completed.length
+              ? `<details class="bbcal-archive">
+                  <summary><span>Bereits ausgetragen in 2026</span><strong>${completed.length} Termine</strong></summary>
+                  <div class="bbcal-event-list bbcal-event-list--archive">
+                    ${completed.map(bodybuildingCompetitionCard).join("")}
+                  </div>
+                </details>`
+              : ""
+          }
+        </section>
+      `;
+    })
+    .join("");
+  const itemListSchema = {
+    "@type": "ItemList",
+    "@id": `${site.url}/bodybuilding-wettkaempfe-2026/#wettkampfkalender`,
+    name: "Bodybuilding Wettkämpfe 2026 in Deutschland",
+    numberOfItems: allEvents.length,
+    itemListElement: allEvents
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .map((event, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "SportsEvent",
+          name: `${event.name} – ${event.source.name}`,
+          startDate: event.date,
+          ...(event.endDate ? { endDate: event.endDate } : {}),
+          eventStatus: event.past
+            ? "https://schema.org/EventCompleted"
+            : "https://schema.org/EventScheduled",
+          location: {
+            "@type": "Place",
+            name: event.location
+          },
+          organizer: {
+            "@type": "Organization",
+            name: event.source.name,
+            url: event.source.sourceUrl
+          }
+        }
+      }))
+  };
+
+  const content = `
+    <section class="bbcal-hero">
+      <img class="bbcal-hero__image" src="/assets/images/dominik-bodybuilding-desert.webp" alt="Dominik Dörfl als Bodybuilder auf der Wettkampfbühne"${imageLoadingAttributes({ eager: true })}>
+      <div class="bbcal-hero__scrim" aria-hidden="true"></div>
+      <div class="section-shell bbcal-hero__inner">
+        <div class="bbcal-hero__copy">
+          <p class="eyebrow" data-reveal>Verbandsübergreifender Kalender · Deutschland</p>
+          <h1 data-reveal>Bodybuilding<br>Wettkämpfe <span>2026.</span></h1>
+          <p class="bbcal-hero__lead" data-reveal>Alle wichtigen Termine von sechs deutschen Bodybuilding-Verbänden – unabhängig zusammengeführt, übersichtlich sortiert und direkt mit den offiziellen Quellen verknüpft.</p>
+          <div class="bbcal-hero__actions" data-reveal>
+            <a class="button button--primary" href="#termine"><span>Alle Termine ansehen</span><span aria-hidden="true">↓</span></a>
+            <span class="bbcal-hero__updated">Geprüft am 1. August 2026</span>
+          </div>
+        </div>
+        <dl class="bbcal-hero__facts" data-reveal>
+          <div><dt>${bodybuildingCalendarSources.length}</dt><dd>Verbände</dd></div>
+          <div><dt>${upcomingEvents.length}</dt><dd>kommende Shows</dd></div>
+          <div><dt>${pastEvents.length}</dt><dd>bereits ausgetragen</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section bbcal-intro" id="termine">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-intro__head" data-reveal>
+          <div>
+            <p class="eyebrow">Ein Kalender. Sechs Systeme.</p>
+            <h2>Die Bühne kennt<br><span>keine Grenzen.</span></h2>
+          </div>
+          <div class="bbcal-intro__copy">
+            <p>Diese Übersicht stellt keinen Verband über einen anderen. Sie schafft genau das, was Athletinnen, Athleten, Coaches und Fans brauchen: einen gemeinsamen Blick auf das Wettkampfjahr.</p>
+            <p><strong>Wichtig:</strong> Terminänderungen, Klassen, Lizenzen, Qualifikationen und Anmeldeschlüsse immer zusätzlich beim jeweiligen Veranstalter prüfen.</p>
+          </div>
+        </div>
+        <nav class="bbcal-source-grid" aria-label="Direkt zu einem Verband" data-reveal>
+          ${sourceNavigation}
+        </nav>
+      </div>
+    </section>
+
+    <section class="section section--muted bbcal-next">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-section-heading" data-reveal>
+          <p class="eyebrow">Als Nächstes</p>
+          <h2>Die nächsten bestätigten Shows.</h2>
+        </div>
+        <div class="bbcal-next-grid">
+          ${nextEvents
+            .map(
+              (event, index) => `
+                <a href="#${event.source.id}" class="bbcal-next-card" data-reveal>
+                  <span class="bbcal-next-card__index">0${index + 1}</span>
+                  <span class="bbcal-weeks-out bbcal-weeks-out--next" data-weeks-out data-event-date="${event.date}" aria-label="Vorbereitungszeit wird berechnet"><strong>–</strong><small>Weeks out</small></span>
+                  <time datetime="${event.date}">${event.label}</time>
+                  <h3>${event.name}</h3>
+                  <p>${event.source.name} · ${event.location}</p>
+                  <span class="bbcal-next-card__arrow" aria-hidden="true">→</span>
+                </a>
+              `
+            )
+            .join("")}
+        </div>
+      </div>
+    </section>
+
+    <section class="section bbcal-directory">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-section-heading" data-reveal>
+          <p class="eyebrow">Wettkampfkalender 2026</p>
+          <h2>Alle Termine nach Verband.</h2>
+          <p>Bestätigte Termine laut den offiziellen Kalendern und Ergebnisarchiven der jeweiligen Verbände.</p>
+          <p class="bbcal-weeks-note"><span aria-hidden="true">↻</span><strong>Weeks Out aktualisiert sich täglich:</strong> So siehst du sofort, wie viel Vorbereitungszeit bis zur jeweiligen Show bleibt.</p>
+        </div>
+        <div class="bbcal-federations">
+          ${calendarSections}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted bbcal-method">
+      <div class="section-shell bbcal-method__grid">
+        <div data-reveal>
+          <p class="eyebrow">Redaktioneller Stand</p>
+          <h2>Unabhängig gesammelt.<br>Offiziell gegengeprüft.</h2>
+        </div>
+        <div class="bbcal-method__copy" data-reveal>
+          <p>Die Termine wurden am <strong>1. August 2026</strong> mit den offiziellen Veröffentlichungen der sechs Verbände abgeglichen. Bereits ausgetragene Shows bleiben sichtbar, damit die Seite das komplette Wettkampfjahr abbildet.</p>
+          <p>Camp Dörfl ist nicht Veranstalter dieser Wettkämpfe. Maßgeblich sind ausschließlich die Angaben des jeweiligen Verbandes. Fehlt ein Termin oder wurde etwas verschoben, genügt ein kurzer Hinweis.</p>
+          <a class="button button--secondary-light" href="${contactHref()}"><span>Änderung melden</span><span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    ${appTrafficPromo({
+      eyebrow: "Vom Wettkampftermin zur Vorbereitung",
+      text: "Der Show-Termin steht. Jetzt braucht deine Vorbereitung Struktur: Plane Training, Ernährung und regelmäßige Check-ins bis zu deinem Wettkampftag in einem klaren System.",
+      ref: "bodybuilding-kalender"
+    })}
+
+    <section class="section bbcal-faq">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Fragen zum Wettkampfjahr",
+          title: "Was Athleten vor der Anmeldung wissen sollten.",
+          text: "Die Übersicht ersetzt keine Ausschreibung – sie bringt dich schneller zur richtigen offiziellen Stelle."
+        })}
+        ${faq(bodybuildingCalendarFaq)}
+      </div>
+    </section>
+
+    ${ctaSection({
+      eyebrow: "Wettkampfvorbereitung",
+      title: "Eine Bühne ist nur der Termin. Die Form entsteht davor.",
+      text:
+        "Wenn Training, Ernährung, Posing und Peak Week sauber zusammenlaufen sollen, beginnt die Vorbereitung mit einem klaren System.",
+      primary: { label: "Vorbereitung anfragen", href: contactHref("premium-training") },
+      secondary: { label: "Personal Training ansehen", href: "/personal-trainer-nürnberg/" }
+    })}
+  `;
+
+  return layout({
+    path: "/bodybuilding-wettkaempfe-2026/",
+    title: "Bodybuilding Wettkämpfe 2026: Alle Termine & Verbände | Camp Dörfl",
+    description:
+      "Bodybuilding Wettkämpfe 2026 in einer unabhängigen Übersicht: Termine von NPC Germany, DBFV, GNBF, NAC, WFF/NABBA und PCA Germany.",
+    keywords: [
+      "Bodybuilding Wettkämpfe 2026",
+      "Bodybuilding Termine 2026",
+      "Bodybuilding Meisterschaften 2026",
+      "NPC Germany Termine 2026",
+      "DBFV Termine 2026",
+      "GNBF Wettkampf 2026",
+      "NAC Germany Termine 2026",
+      "PCA Germany 2026"
+    ],
+    bodyClass: "page-premium page-bodybuilding-calendar",
+    pageName: "Bodybuilding Wettkämpfe 2026",
+    pageType: "CollectionPage",
+    socialImage: "/assets/images/dominik-bodybuilding-desert.webp",
+    socialImageAlt: "Bodybuilding Wettkämpfe 2026 – verbandsübergreifender Kalender",
+    extraStructuredData: [
+      itemListSchema,
+      faqSchema("/bodybuilding-wettkaempfe-2026/", bodybuildingCalendarFaq)
+    ],
+    content
+  });
+}
+
+function boxingCompetitionCard(event) {
+  const status = event.past ? "Ausgetragen" : event.status || "Bestätigt";
+  return `
+    <article class="bbcal-event${event.past ? " bbcal-event--past" : ""}">
+      <time class="bbcal-event__date" datetime="${event.date}">${event.label}</time>
+      <div class="bbcal-event__body">
+        <span class="bbcal-event__type">${event.type}</span>
+        <h3>${event.name}</h3>
+        <p><span aria-hidden="true">⌖</span>${event.location}</p>
+      </div>
+      <span class="bbcal-event__status${event.status ? " bbcal-event__status--live" : ""}">${status}</span>
+    </article>
+  `;
+}
+
+function boxingCalendarPage() {
+  const allEntries = boxingCalendarSources.flatMap((source) =>
+    source.events.map((event) => ({ ...event, source }))
+  );
+  const uniqueEvents = [];
+  const seenEvents = new Set();
+  allEntries
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .forEach((event) => {
+      const fighters = event.name
+        .toLowerCase()
+        .split(" vs. ")
+        .sort()
+        .join(" vs. ");
+      const key = `${event.date}|${fighters}`;
+      if (!seenEvents.has(key)) {
+        seenEvents.add(key);
+        uniqueEvents.push(event);
+      }
+    });
+  const upcomingEvents = uniqueEvents.filter((event) => !event.past);
+  const pastEvents = uniqueEvents.filter((event) => event.past);
+  const nextEvents = upcomingEvents.slice(0, 4);
+
+  const navigationFor = (division) => boxingCalendarSources
+    .filter((source) => source.division === division)
+    .map(
+      (source) => `
+        <a class="bbcal-source-link" href="#${source.id}">
+          <span>${source.number}</span>
+          <strong>${source.shortName || source.name}</strong>
+          <small>${source.events.filter((event) => !event.past).length
+            ? `${source.events.filter((event) => !event.past).length} kommende Termine`
+            : "2026-Ergebnisse"}</small>
+          <b aria-hidden="true">↓</b>
+        </a>
+      `
+    )
+    .join("");
+
+  const sectionFor = (source) => {
+    const upcoming = source.events.filter((event) => !event.past);
+    const completed = source.events.filter((event) => event.past);
+    return `
+      <section class="bbcal-federation" id="${source.id}" data-reveal>
+        <header class="bbcal-federation__header">
+          <span class="bbcal-federation__number">${source.number}</span>
+          <div>
+            <p class="eyebrow">${source.descriptor}</p>
+            <h2>${source.name}</h2>
+            <p>${source.note}</p>
+          </div>
+          <a href="${source.sourceUrl}" target="_blank" rel="noopener noreferrer">
+            <span>Offizielle Quelle</span><span aria-hidden="true">↗</span>
+          </a>
+        </header>
+        ${
+          upcoming.length
+            ? `<div class="bbcal-event-list">${upcoming.map(boxingCompetitionCard).join("")}</div>`
+            : `<div class="boxcal-empty"><strong>Noch kein weiterer Termin veröffentlicht.</strong><span>Neue WBF-Ansetzungen ergänzen wir, sobald sie offiziell bestätigt sind.</span></div>`
+        }
+        ${
+          completed.length
+            ? `<details class="bbcal-archive">
+                <summary><span>Bereits ausgetragen in 2026</span><strong>${completed.length} Termine</strong></summary>
+                <div class="bbcal-event-list bbcal-event-list--archive">
+                  ${completed.map(boxingCompetitionCard).join("")}
+                </div>
+              </details>`
+            : ""
+        }
+      </section>
+    `;
+  };
+
+  const itemListSchema = {
+    "@type": "ItemList",
+    "@id": `${site.url}/boxen-wettkaempfe-2026/#boxkalender`,
+    name: "Boxen Wettkämpfe 2026 – Profi und Amateur",
+    numberOfItems: uniqueEvents.length,
+    itemListElement: uniqueEvents.map((event, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "SportsEvent",
+        name: `${event.name} – ${event.source.name}`,
+        startDate: event.date,
+        ...(event.endDate ? { endDate: event.endDate } : {}),
+        eventStatus: event.past
+          ? "https://schema.org/EventCompleted"
+          : "https://schema.org/EventScheduled",
+        location: { "@type": "Place", name: event.location },
+        organizer: {
+          "@type": "Organization",
+          name: event.source.name,
+          url: event.source.sourceUrl
+        }
+      }
+    }))
+  };
+
+  const professionalSections = boxingCalendarSources
+    .filter((source) => source.division === "profi")
+    .map(sectionFor)
+    .join("");
+  const amateurSections = boxingCalendarSources
+    .filter((source) => source.division === "amateur")
+    .map(sectionFor)
+    .join("");
+
+  const content = `
+    <section class="bbcal-hero boxcal-hero">
+      <img class="bbcal-hero__image" src="/assets/images/boxing-calendar-hero.png" alt="Leerer Boxring mit Boxhandschuhen vor einem großen Kampf"${imageLoadingAttributes({ eager: true })}>
+      <div class="bbcal-hero__scrim" aria-hidden="true"></div>
+      <div class="section-shell bbcal-hero__inner">
+        <div class="bbcal-hero__copy">
+          <p class="eyebrow" data-reveal>Unabhängiger Kalender · Profi & Amateur</p>
+          <h1 data-reveal>Boxen<br>Wettkämpfe <span>2026.</span></h1>
+          <p class="bbcal-hero__lead" data-reveal>Die wichtigsten Titelkämpfe, internationalen Turniere und Deutschen Meisterschaften – sauber getrennt nach Profi- und Amateurboxen.</p>
+          <div class="bbcal-hero__actions" data-reveal>
+            <a class="button button--primary" href="#termine"><span>Alle Termine ansehen</span><span aria-hidden="true">↓</span></a>
+            <span class="bbcal-hero__updated">Geprüft am 1. August 2026</span>
+          </div>
+        </div>
+        <dl class="bbcal-hero__facts" data-reveal>
+          <div><dt>${boxingCalendarSources.length}</dt><dd>Organisationen</dd></div>
+          <div><dt>${upcomingEvents.length}</dt><dd>kommende Events</dd></div>
+          <div><dt>2</dt><dd>Wettkampfsysteme</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section bbcal-intro" id="termine">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-intro__head" data-reveal>
+          <div>
+            <p class="eyebrow">Ein Sport. Zwei Systeme.</p>
+            <h2>Vom Verein bis<br><span>zum World Title.</span></h2>
+          </div>
+          <div class="bbcal-intro__copy">
+            <p>Profiboxen lebt von einzelnen Fight Cards und Titelorganisationen. Amateurboxen folgt Turnierstrukturen, Altersklassen und nationalen wie internationalen Meisterschaften.</p>
+            <p><strong>Wichtig:</strong> Vereinigungs-Kämpfe können bei mehreren Profi-Organisationen erscheinen. Kampfansetzungen, Austragungsorte und Übertragungen immer direkt an der offiziellen Quelle prüfen.</p>
+          </div>
+        </div>
+        <div class="boxcal-source-groups" data-reveal>
+          <section aria-labelledby="boxcal-profi-nav">
+            <div class="boxcal-source-groups__title"><span>01</span><h3 id="boxcal-profi-nav">Profiboxen</h3></div>
+            <nav class="bbcal-source-grid boxcal-source-grid--profi" aria-label="Profi-Organisationen">${navigationFor("profi")}</nav>
+          </section>
+          <section aria-labelledby="boxcal-amateur-nav">
+            <div class="boxcal-source-groups__title"><span>02</span><h3 id="boxcal-amateur-nav">Amateurboxen</h3></div>
+            <nav class="bbcal-source-grid boxcal-source-grid--amateur" aria-label="Amateur-Organisationen">${navigationFor("amateur")}</nav>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted bbcal-next">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-section-heading" data-reveal>
+          <p class="eyebrow">Als Nächstes</p>
+          <h2>Die nächsten bestätigten Kampftermine.</h2>
+        </div>
+        <div class="bbcal-next-grid">
+          ${nextEvents.map((event, index) => `
+            <a href="#${event.source.id}" class="bbcal-next-card" data-reveal>
+              <span class="bbcal-next-card__index">0${index + 1}</span>
+              <time datetime="${event.date}">${event.label}</time>
+              <h3>${event.name}</h3>
+              <p>${event.source.shortName || event.source.name} · ${event.location}</p>
+              <span class="bbcal-next-card__arrow" aria-hidden="true">→</span>
+            </a>`).join("")}
+        </div>
+      </div>
+    </section>
+
+    <section class="section bbcal-directory" id="boxkalender">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-section-heading" data-reveal>
+          <p class="eyebrow">Boxkalender 2026</p>
+          <h2>Profi. Titel. Fight Cards.</h2>
+          <p>Ausgewählte offiziell bestätigte Titelkämpfe der vier Profi-Organisationen. Die Pläne werden im Profiboxen fortlaufend ergänzt.</p>
+        </div>
+        <div class="boxcal-division boxcal-division--profi">
+          <div class="boxcal-division__marker" data-reveal><span>Professional</span><strong>01</strong></div>
+          <div class="bbcal-federations">${professionalSections}</div>
+        </div>
+
+        <div class="bbcal-section-heading boxcal-amateur-heading" data-reveal>
+          <p class="eyebrow">Olympisches Boxen</p>
+          <h2>Amateur. Turniere. Meisterschaften.</h2>
+          <p>Internationale World-Boxing-Events und die Deutschen Meisterschaften des DBV – nach Altersklassen und Zeitraum geordnet.</p>
+        </div>
+        <div class="boxcal-division boxcal-division--amateur">
+          <div class="boxcal-division__marker" data-reveal><span>Amateur</span><strong>02</strong></div>
+          <div class="bbcal-federations">${amateurSections}</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted bbcal-method">
+      <div class="section-shell bbcal-method__grid">
+        <div data-reveal>
+          <p class="eyebrow">Redaktioneller Stand</p>
+          <h2>Sauber getrennt.<br>Offiziell gegengeprüft.</h2>
+        </div>
+        <div class="bbcal-method__copy" data-reveal>
+          <p>Die Übersicht wurde am <strong>1. August 2026</strong> mit den offiziellen Kalendern, Kampfplänen und Ergebnisdiensten der sechs Organisationen abgeglichen. Mehrtägige Amateurturniere werden als ein Event gezählt.</p>
+          <p>Camp Dörfl ist weder Veranstalter noch Ticketanbieter. Da sich Profikämpfe kurzfristig verändern können, sind ausschließlich die jeweils verlinkten Originalquellen verbindlich.</p>
+          <a class="button button--secondary-light" href="${contactHref()}"><span>Änderung melden</span><span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    ${appTrafficPromo({
+      eyebrow: "Vom Kampftermin zur Vorbereitung",
+      text: "Baue Kraft, Kondition, Ernährung und Regeneration passend zu deinem Kampftermin auf – mit einem Trainingsplan, der deine Vorbereitung Woche für Woche klar führt.",
+      ref: "boxen-kalender"
+    })}
+
+    <section class="section bbcal-faq">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Fragen zum Boxjahr",
+          title: "Profi oder Amateur: Was vor dem Termin zählt.",
+          text: "Der Kalender schafft Orientierung. Ausschreibung, Startberechtigung, Tickets und Übertragung bleiben Sache der jeweiligen Organisation."
+        })}
+        ${faq(boxingCalendarFaq)}
+      </div>
+    </section>
+
+    ${ctaSection({
+      eyebrow: "Performance für den Ring",
+      title: "Der Termin steht. Die Leistungsfähigkeit entsteht davor.",
+      text:
+        "Kraft, Kondition, Körperkomposition und Regeneration brauchen eine Struktur, die zum Boxtraining und zum echten Alltag passt.",
+      primary: { label: "Performance anfragen", href: contactHref("premium-training") },
+      secondary: { label: "Personal Training ansehen", href: "/personal-trainer-nürnberg/" }
+    })}
+  `;
+
+  return layout({
+    path: "/boxen-wettkaempfe-2026/",
+    title: "Boxen Wettkämpfe 2026: Profi & Amateur Termine | Camp Dörfl",
+    description:
+      "Boxen Wettkämpfe 2026: aktuelle Profi-Titelkämpfe von WBA, WBC, WBF und WBO sowie Amateur-Termine von World Boxing und dem Deutschen Boxsport-Verband.",
+    keywords: [
+      "Boxen Wettkämpfe 2026",
+      "Boxen Termine 2026",
+      "Boxkämpfe 2026",
+      "Profiboxen 2026",
+      "Amateurboxen 2026",
+      "Deutsche Meisterschaft Boxen 2026",
+      "World Boxing Kalender 2026",
+      "WBA WBC WBO Kämpfe 2026"
+    ],
+    bodyClass: "page-premium page-bodybuilding-calendar page-boxing-calendar",
+    pageName: "Boxen Wettkämpfe 2026",
+    pageType: "CollectionPage",
+    socialImage: "/assets/images/boxing-calendar-hero.png",
+    socialImageAlt: "Boxen Wettkämpfe 2026 – Profi und Amateur im Überblick",
+    extraStructuredData: [
+      itemListSchema,
+      faqSchema("/boxen-wettkaempfe-2026/", boxingCalendarFaq)
+    ],
+    content
+  });
+}
+
+const calendarDateFormatter = new Intl.DateTimeFormat("de-DE", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: "Europe/Berlin"
+});
+const calendarMonthFormatter = new Intl.DateTimeFormat("de-DE", {
+  month: "long",
+  year: "numeric",
+  timeZone: "Europe/Berlin"
+});
+
+function calendarDateLabel(event) {
+  const start = calendarDateFormatter.format(new Date(`${event.date}T12:00:00Z`));
+  if (!event.endDate || event.endDate === event.date) return start;
+  const end = calendarDateFormatter.format(new Date(`${event.endDate}T12:00:00Z`));
+  return `${start} – ${end}`;
+}
+
+const triathlonCalendarFaq = [
+  {
+    question: "Wie funktioniert die Suche nach Postleitzahl und Radius?",
+    answer:
+      "Die eingegebene Postleitzahl wird in einen ungefähren Mittelpunkt umgewandelt. Anschließend berechnet die Seite die Luftlinien-Entfernung zu den hinterlegten Veranstaltungsorten und zeigt nur Treffer im gewählten Radius."
+  },
+  {
+    question: "Sind wirklich alle deutschen Triathlons 2026 enthalten?",
+    answer:
+      "Die Deutschland-Liste übernimmt alle 351 reinen Triathlon-Veranstaltungen, die im offiziellen DTU-Veranstaltungskalender für 2026 mit Ortskoordinaten geführt werden. Duathlon, Swim & Run und Aquathlon sind bewusst nicht enthalten."
+  },
+  {
+    question: "Wie vollständig ist der internationale Kalender?",
+    answer:
+      "Für Österreich, Schweiz, Spanien, Italien, Luxemburg, Belgien, die Niederlande und Frankreich bündelt die Seite bestätigte überregionale Rennen aus offiziellen Verbands-, IRONMAN-, Challenge-Family- und Europe-Triathlon-Kalendern. Lokale Vereinsrennen können je Land zusätzlich existieren."
+  },
+  {
+    question: "Sind Anmeldung und Termin verbindlich?",
+    answer:
+      "Nein. Ausschreibung, Startplätze, Strecken, Altersklassen und mögliche Terminänderungen müssen immer beim verlinkten Veranstalter oder Verband geprüft werden."
+  }
+];
+
+function triathlonEventCard(event) {
+  const past = event.date < "2026-08-01";
+  const location = [event.city, event.region].filter(Boolean).join(" · ");
+  return `
+    <article class="sportcal-event${past ? " sportcal-event--past" : ""}"
+      data-tri-event data-country="${event.country}" data-lat="${event.latitude}" data-lon="${event.longitude}"
+      data-date="${event.date}" data-name="${event.name.replaceAll('"', "&quot;")}">
+      <div class="sportcal-event__date">
+        <time datetime="${event.date}">${calendarDateLabel(event)}</time>
+        <span>${event.countryName}</span>
+      </div>
+      <div class="sportcal-event__body">
+        <span class="sportcal-event__type">${event.type}</span>
+        <h3>${event.name}</h3>
+        <p><span aria-hidden="true">⌖</span>${location}</p>
+      </div>
+      <div class="sportcal-event__meta">
+        <span class="sportcal-event__distance" data-event-distance hidden></span>
+        <span class="sportcal-event__status">${past ? "Ausgetragen" : "Bestätigt"}</span>
+        <a href="${event.url}" target="_blank" rel="noopener noreferrer" aria-label="Offizielle Quelle für ${event.name}">Quelle ↗</a>
+      </div>
+    </article>
+  `;
+}
+
+function triathlonCalendarPage() {
+  const allEvents = [...dtuTriathlonEvents2026, ...internationalTriathlonEvents2026]
+    .sort((a, b) => a.date.localeCompare(b.date) || a.name.localeCompare(b.name));
+  const upcomingEvents = allEvents.filter((event) => event.date >= "2026-08-01");
+  const pastEvents = allEvents.filter((event) => event.date < "2026-08-01");
+  const internationalCount = allEvents.filter((event) => event.country !== "DE").length;
+  const calendarGroupsFor = (eventList, archive = false) => {
+    const grouped = new Map();
+    eventList.forEach((event) => {
+      const monthKey = event.date.slice(0, 7);
+      if (!grouped.has(monthKey)) grouped.set(monthKey, []);
+      grouped.get(monthKey).push(event);
+    });
+    return [...grouped.entries()].map(([month, events]) => `
+      <section class="sportcal-month" data-tri-month${archive ? " data-calendar-archive-group" : ""}>
+        <div class="sportcal-month__heading">
+          <h3>${calendarMonthFormatter.format(new Date(`${month}-15T12:00:00Z`))}</h3>
+          <span data-tri-month-count>${events.length} Termine</span>
+        </div>
+        <div class="sportcal-event-list">
+          ${events.map(triathlonEventCard).join("")}
+        </div>
+      </section>
+    `).join("");
+  };
+  const calendarGroups = calendarGroupsFor(upcomingEvents);
+  const pastCalendarGroups = calendarGroupsFor(pastEvents, true);
+
+  const sourceLinks = [
+    ["Deutsche Triathlon Union", "351 deutsche Veranstaltungen", "https://www.triathlondeutschland.de/termine/veranstaltungskalender?select_date=2026&sport=48"],
+    ["IRONMAN Europe", "Lang- und Mitteldistanzen", "https://www.ironman.com/races"],
+    ["Challenge Family", "Europäische Rennserie", "https://www.challenge-family.com/challenge-family/race/europe/"],
+    ["Europe Triathlon", "Cups & Meisterschaften", "https://europe.triathlon.org/"],
+    ["Triathlon Austria", "Österreichischer Kalender", "https://www.triathlon-austria.at/de/service-termine"]
+  ].map(([name, description, url], index) => `
+    <a class="bbcal-source-link" href="${url}" target="_blank" rel="noopener noreferrer">
+      <span>0${index + 1}</span><strong>${name}</strong><small>${description}</small><b aria-hidden="true">↗</b>
+    </a>
+  `).join("");
+
+  const itemListSchema = {
+    "@type": "ItemList",
+    "@id": `${site.url}/triathlon-kalender-2026/#triathlonkalender`,
+    name: "Triathlon Kalender 2026 – Deutschland und Europa",
+    numberOfItems: allEvents.length,
+    itemListElement: allEvents.slice(0, 120).map((event, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "SportsEvent",
+        name: event.name,
+        startDate: event.date,
+        ...(event.endDate ? { endDate: event.endDate } : {}),
+        eventStatus: event.date < "2026-08-01" ? "https://schema.org/EventCompleted" : "https://schema.org/EventScheduled",
+        location: {
+          "@type": "Place",
+          name: event.city,
+          address: { "@type": "PostalAddress", addressCountry: event.country }
+        },
+        organizer: { "@type": "Organization", name: event.source, url: event.url }
+      }
+    }))
+  };
+
+  const content = `
+    <section class="bbcal-hero trical-hero">
+      <img class="bbcal-hero__image" src="/assets/images/home-hero-ironman-interview.webp" alt="Triathlet Dominik Dörfl im Zielbereich eines Langdistanz-Triathlons"${imageLoadingAttributes({ eager: true })}>
+      <div class="bbcal-hero__scrim" aria-hidden="true"></div>
+      <div class="section-shell bbcal-hero__inner">
+        <div class="bbcal-hero__copy">
+          <p class="eyebrow" data-reveal>Deutschland komplett · Europa ergänzt</p>
+          <h1 data-reveal>Triathlon<br>Kalender <span>2026.</span></h1>
+          <p class="bbcal-hero__lead" data-reveal>Finde deinen nächsten Start nach Postleitzahl, Radius und Land – oder entdecke den gesamten Kalender mit ${allEvents.length} bekannten Rennen.</p>
+          <div class="bbcal-hero__actions" data-reveal>
+            <a class="button button--primary" href="#triathlon-suche"><span>Rennen in meiner Nähe</span><span aria-hidden="true">↓</span></a>
+            <span class="bbcal-hero__updated">Geprüft am 1. August 2026</span>
+          </div>
+        </div>
+        <dl class="bbcal-hero__facts" data-reveal>
+          <div><dt>${dtuTriathlonEvents2026.length}</dt><dd>DTU-Termine</dd></div>
+          <div><dt>9</dt><dd>Länder</dd></div>
+          <div><dt>${upcomingEvents.length}</dt><dd>ab August</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section trical-search-section" id="triathlon-suche" data-tri-calendar>
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-intro__head trical-intro" data-reveal>
+          <div>
+            <p class="eyebrow">Dein persönlicher Rennfinder</p>
+            <h2>Wo willst du<br><span>an der Startlinie stehen?</span></h2>
+          </div>
+          <div class="bbcal-intro__copy">
+            <p>Land auswählen genügt. Für eine echte Umgebungssuche zusätzlich Postleitzahl und Radius eingeben – der Kalender zeigt danach nur passende Treffer.</p>
+            <p><strong>Ohne Filter</strong> bleibt der vollständige Kalender mit Deutschland, Österreich, Schweiz, Spanien, Italien, Luxemburg, Belgien, Niederlande und Frankreich sichtbar.</p>
+          </div>
+        </div>
+
+        <form class="trical-filter" data-tri-filter novalidate>
+          <label>
+            <span>Eigene Postleitzahl</span>
+            <input type="text" inputmode="numeric" autocomplete="postal-code" maxlength="10" placeholder="z. B. 90427" data-tri-postcode>
+          </label>
+          <label>
+            <span>Suchradius</span>
+            <select data-tri-radius>
+              <option value="20">20 km</option><option value="50" selected>50 km</option><option value="100">100 km</option><option value="300">300 km</option>
+            </select>
+          </label>
+          <label>
+            <span>Land</span>
+            <select data-tri-country>
+              <option value="" selected>Alle Länder</option><option value="DE">Deutschland</option><option value="AT">Österreich</option><option value="CH">Schweiz</option><option value="ES">Spanien</option><option value="IT">Italien</option><option value="LU">Luxemburg</option><option value="BE">Belgien</option><option value="NL">Niederlande</option><option value="FR">Frankreich</option>
+            </select>
+          </label>
+          <button class="button button--primary trical-filter__submit" type="submit"><span>Passende Rennen finden</span><span aria-hidden="true">→</span></button>
+          <button class="trical-filter__reset" type="button" data-tri-reset>Gesamten Kalender anzeigen</button>
+          <p class="trical-filter__privacy">Die PLZ wird nur für diese Suche an den OpenStreetMap-basierten Geodienst Photon übertragen.</p>
+        </form>
+
+        <div class="trical-results-head" aria-live="polite">
+          <div><strong data-tri-result-count>${allEvents.length}</strong><span data-tri-result-label> Termine im gesamten Kalender</span></div>
+          <p data-tri-status>Alle Länder und Entfernungen werden angezeigt.</p>
+        </div>
+        <div class="trical-no-results" data-tri-empty hidden>
+          <strong>In diesem Radius wurde kein Rennen gefunden.</strong>
+          <span>Erweitere den Radius, wähle ein anderes Land oder öffne den gesamten Kalender.</span>
+        </div>
+        <div class="sportcal-calendar" id="triathlonkalender">
+          ${calendarGroups}
+          ${pastEvents.length ? `<details class="calendar-past-archive" data-calendar-past-archive>
+            <summary><span><small>Archiv 2026</small><strong>Vergangene Triathlon-Termine</strong></span><b>${pastEvents.length} Rennen anzeigen</b></summary>
+            <div class="calendar-past-archive__content">${pastCalendarGroups}</div>
+          </details>` : ""}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted trical-sources">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-section-heading" data-reveal>
+          <p class="eyebrow">Offiziell gegengeprüft</p>
+          <h2>Die Quellen hinter dem Kalender.</h2>
+          <p>Deutschland basiert vollständig auf dem DTU-Kalender. Die ${internationalCount} internationalen Einträge bündeln bestätigte überregionale Rennen der führenden europäischen Serien und Verbände.</p>
+        </div>
+        <nav class="bbcal-source-grid trical-source-grid" aria-label="Offizielle Triathlon-Quellen">${sourceLinks}</nav>
+      </div>
+    </section>
+
+    ${appTrafficPromo({
+      eyebrow: "Vom Renntermin zum Trainingsplan",
+      text: "Verbinde Schwimmen, Radfahren, Laufen, Krafttraining und Regeneration in einem Wochenplan, der sich an deinem Zielrennen und deinem Alltag orientiert.",
+      ref: "triathlon-kalender"
+    })}
+
+    <section class="section bbcal-faq"><div class="section-shell">
+      ${sectionHeader({ eyebrow: "Fragen zum Rennkalender", title: "Schneller zum passenden Start.", text: "Was die Suche kann – und was du vor der Anmeldung direkt beim Veranstalter prüfen solltest." })}
+      ${faq(triathlonCalendarFaq)}
+    </div></section>
+
+    ${ctaSection({
+      eyebrow: "Triathlon Coaching",
+      title: "Der Wettkampf steht. Jetzt braucht die Vorbereitung ein System.",
+      text: "Training, Kraft, Ernährung und Renntaktik werden dann stark, wenn sie nicht nebeneinander laufen, sondern zusammenarbeiten.",
+      primary: { label: "Vorbereitung anfragen", href: contactHref("premium-training") },
+      secondary: { label: "Personal Training ansehen", href: "/personal-trainer-nürnberg/" }
+    })}
+  `;
+
+  return layout({
+    path: "/triathlon-kalender-2026/",
+    title: "Triathlon Kalender 2026: Termine nach PLZ & Radius | Camp Dörfl",
+    description: `Triathlon Kalender 2026 mit ${allEvents.length} Rennen: alle 351 DTU-Triathlons in Deutschland plus bestätigte Termine in acht europäischen Ländern. Suche nach PLZ, Radius und Land.`,
+    keywords: ["Triathlon Kalender 2026", "Triathlon Termine 2026", "Triathlon in meiner Nähe", "Triathlon Deutschland 2026", "Ironman Termine 2026", "Triathlon Österreich 2026"],
+    bodyClass: "page-premium page-bodybuilding-calendar page-triathlon-calendar",
+    pageName: "Triathlon Kalender 2026",
+    pageType: "CollectionPage",
+    socialImage: "/assets/images/home-hero-ironman-interview.webp",
+    socialImageAlt: "Triathlon Kalender 2026 mit Suche nach Postleitzahl und Radius",
+    extraStructuredData: [itemListSchema, faqSchema("/triathlon-kalender-2026/", triathlonCalendarFaq)],
+    content
+  });
+}
+
+const runningCategoryMeta = Object.freeze({
+  half: { label: "Halbmarathon", short: "21,1 km", number: "01" },
+  marathon: { label: "Marathon", short: "42,195 km", number: "02" },
+  mammut: { label: "Mammutmarsch", short: "30–100 km", number: "03" },
+  mega: { label: "Megamarsch", short: "25–100 km", number: "04" },
+  ultra: { label: "Ultra Running", short: "Jenseits des Marathons", number: "05" }
+});
+
+const runningCalendarFaq = [
+  {
+    question: "Wie funktioniert die Suche nach Postleitzahl und Radius?",
+    answer: "Die eingegebene Postleitzahl wird in einen ungefähren Mittelpunkt umgewandelt. Danach berechnet die Seite die Luftlinien-Entfernung zu allen hinterlegten Veranstaltungsorten und zeigt nur Läufe im ausgewählten Radius."
+  },
+  {
+    question: "Welche Läufe sind im Laufkalender 2026 enthalten?",
+    answer: "Die Übersicht bündelt die deutschen Halbmarathon- und Marathon-Termine des offiziellen DLV-Laufkalenders, die deutschen Ultra-Laufveranstaltungen der DUV sowie die offiziellen Saisonkalender von Mammutmarsch und Megamarsch."
+  },
+  {
+    question: "Kann ich gezielt nach einer Distanz oder einem Ort suchen?",
+    answer: "Ja. Neben Postleitzahl und Radius kannst du eine der fünf Kategorien auswählen und den Kalender zusätzlich nach Eventname, Ort oder Postleitzahl durchsuchen. Alle Filter lassen sich miteinander kombinieren."
+  },
+  {
+    question: "Sind Termine und Anmeldung verbindlich?",
+    answer: "Nein. Der Kalender dient der verbandsübergreifenden Orientierung. Terminänderungen, Strecken, Startplätze und Teilnahmebedingungen müssen immer über die direkt verlinkte offizielle Quelle geprüft werden."
+  }
+];
+
+function runningEventCard(event) {
+  const past = event.date < "2026-08-01";
+  const searchValue = [event.name, event.city, event.postalCode, event.distance, event.source]
+    .filter(Boolean).join(" ").replaceAll('"', "&quot;");
+  return `
+    <article class="sportcal-event${past ? " sportcal-event--past" : ""}"
+      data-run-event data-category="${event.category}" data-lat="${event.latitude}" data-lon="${event.longitude}"
+      data-date="${event.date}" data-search="${searchValue}">
+      <div class="sportcal-event__date">
+        <time datetime="${event.date}">${calendarDateLabel(event)}</time>
+        <span>${event.distance || runningCategoryMeta[event.category].short}</span>
+      </div>
+      <div class="sportcal-event__body">
+        <span class="sportcal-event__type">${event.type}</span>
+        <h3>${event.name}</h3>
+        <p><span aria-hidden="true">⌖</span>${event.postalCode ? `${event.postalCode} ` : ""}${event.city}</p>
+      </div>
+      <div class="sportcal-event__meta">
+        <span class="sportcal-event__distance" data-run-distance hidden></span>
+        <span class="sportcal-event__status">${past ? "Ausgetragen" : "Bestätigt"}</span>
+        <a href="${event.url}" target="_blank" rel="noopener noreferrer" aria-label="Offizielle Quelle für ${event.name}">Quelle ↗</a>
+      </div>
+    </article>`;
+}
+
+function runningCalendarPage() {
+  const categoryOrder = ["half", "marathon", "mammut", "mega", "ultra"];
+  const events = [...runningEvents2026].sort((a, b) => a.date.localeCompare(b.date) || a.name.localeCompare(b.name));
+  const categoryCounts = Object.fromEntries(categoryOrder.map((category) => [category, events.filter((event) => event.category === category).length]));
+  const upcomingEvents = events.filter((event) => event.date >= "2026-08-01");
+  const pastEvents = events.filter((event) => event.date < "2026-08-01");
+  const upcomingCount = upcomingEvents.length;
+
+  const categoryNavigation = categoryOrder.map((category) => {
+    const meta = runningCategoryMeta[category];
+    return `<a class="runcal-category-card" href="#lauf-${category}" data-reveal>
+      <span>${meta.number}</span><small>${meta.short}</small><strong>${meta.label}</strong><b>${categoryCounts[category]} Termine</b><i aria-hidden="true">↓</i>
+    </a>`;
+  }).join("");
+
+  const calendarGroups = categoryOrder.map((category) => {
+    const meta = runningCategoryMeta[category];
+    const categoryEvents = upcomingEvents.filter((event) => event.category === category);
+    if (!categoryEvents.length) return "";
+    return `<section class="sportcal-month runcal-group" id="lauf-${category}" data-run-group data-category="${category}">
+      <div class="sportcal-month__heading">
+        <div><small>${meta.number} · ${meta.short}</small><h3>${meta.label}</h3></div>
+        <span data-run-group-count>${categoryEvents.length} Termine</span>
+      </div>
+      <div class="sportcal-event-list">${categoryEvents.map(runningEventCard).join("")}</div>
+    </section>`;
+  }).join("");
+  const pastCalendarGroups = categoryOrder.map((category) => {
+    const meta = runningCategoryMeta[category];
+    const categoryEvents = pastEvents.filter((event) => event.category === category);
+    if (!categoryEvents.length) return "";
+    return `<section class="sportcal-month runcal-group" id="lauf-archiv-${category}" data-run-group data-category="${category}" data-calendar-archive-group>
+      <div class="sportcal-month__heading">
+        <div><small>${meta.number} · ${meta.short}</small><h3>${meta.label}</h3></div>
+        <span data-run-group-count>${categoryEvents.length} Termine</span>
+      </div>
+      <div class="sportcal-event-list">${categoryEvents.map(runningEventCard).join("")}</div>
+    </section>`;
+  }).join("");
+
+  const sources = [
+    ["DLV-Laufkalender", "Halbmarathon & Marathon", "https://www.laufen.de/index.php/laufkalender"],
+    ["DUV Ultramarathon", "Deutscher Ultra-Kalender", "https://statistik.d-u-v.org/calendar.php?year=2026&country=GER&Language=DE"],
+    ["Mammutmarsch", "Offizielle Saison 2026", "https://mammutmarsch.de/produkt-kategorie/event/"],
+    ["Megamarsch", "Offizielle Saison 2026", "https://www.megamarsch.de/"]
+  ].map(([name, description, url], index) => `<a class="bbcal-source-link" href="${url}" target="_blank" rel="noopener noreferrer">
+    <span>0${index + 1}</span><strong>${name}</strong><small>${description}</small><b aria-hidden="true">↗</b>
+  </a>`).join("");
+
+  const itemListSchema = {
+    "@type": "ItemList",
+    "@id": `${site.url}/laufkalender-2026/#laufkalender`,
+    name: "Laufkalender 2026 – Halbmarathon, Marathon, Märsche und Ultra Running",
+    numberOfItems: events.length,
+    itemListElement: events.slice(0, 150).map((event, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "SportsEvent",
+        name: event.name,
+        startDate: event.date,
+        ...(event.endDate ? { endDate: event.endDate } : {}),
+        eventStatus: event.date < "2026-08-01" ? "https://schema.org/EventCompleted" : "https://schema.org/EventScheduled",
+        location: {
+          "@type": "Place",
+          name: event.city,
+          address: { "@type": "PostalAddress", postalCode: event.postalCode || undefined, addressCountry: "DE" }
+        },
+        organizer: { "@type": "Organization", name: event.source, url: event.url }
+      }
+    }))
+  };
+
+  const content = `
+    <section class="bbcal-hero trical-hero runcal-hero">
+      <img class="bbcal-hero__image" src="/assets/images/home-hero-stadium-wide.webp" alt="Läufer und Moderator Dominik Dörfl im Stadion nach dem Zieleinlauf"${imageLoadingAttributes({ eager: true })}>
+      <div class="bbcal-hero__scrim" aria-hidden="true"></div>
+      <div class="section-shell bbcal-hero__inner">
+        <div class="bbcal-hero__copy">
+          <p class="eyebrow" data-reveal>Deutschland · fünf Laufwelten · eine Suche</p>
+          <h1 data-reveal>Laufkalender<br><span>2026.</span></h1>
+          <p class="bbcal-hero__lead" data-reveal>Halbmarathon, Marathon, Mammutmarsch, Megamarsch und Ultra Running – verbandsübergreifend gebündelt und individuell nach deiner Region filterbar.</p>
+          <div class="bbcal-hero__actions" data-reveal>
+            <a class="button button--primary" href="#lauf-suche"><span>Läufe in meiner Nähe</span><span aria-hidden="true">↓</span></a>
+            <span class="bbcal-hero__updated">Geprüft am 1. August 2026</span>
+          </div>
+        </div>
+        <dl class="bbcal-hero__facts" data-reveal>
+          <div><dt>${events.length}</dt><dd>Termine</dd></div><div><dt>5</dt><dd>Kategorien</dd></div><div><dt>${upcomingCount}</dt><dd>ab August</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section runcal-entry-section">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-intro__head trical-intro" data-reveal>
+          <div><p class="eyebrow">Dein Kalender. Deine Distanz.</p><h2>Fünf Wege<br><span>an die Startlinie.</span></h2></div>
+          <div class="bbcal-intro__copy"><p>Vom schnellen Halbmarathon bis zum Ultra-Abenteuer: Wähle zuerst deine Kategorie oder nutze direkt die persönliche Umkreissuche.</p><p><strong>Alle Bereiche bleiben unabhängig.</strong> Damit findest du auch Events außerhalb eines einzelnen Verbandes oder Veranstalters.</p></div>
+        </div>
+        <nav class="runcal-category-grid" aria-label="Laufkategorien">${categoryNavigation}</nav>
+      </div>
+    </section>
+
+    <section class="section trical-search-section runcal-search-section" id="lauf-suche" data-run-calendar>
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-intro__head trical-intro" data-reveal>
+          <div><p class="eyebrow">Individuelle Suche</p><h2>Welcher Lauf<br><span>passt zu dir?</span></h2></div>
+          <div class="bbcal-intro__copy"><p>Postleitzahl und Radius zeigen dir Läufe in deiner Nähe. Kategorie sowie Event- oder Ortsname grenzen die Liste noch genauer ein.</p><p><strong>Ohne Filter</strong> siehst du den vollständigen deutschen Kalender – sauber nach den fünf Laufwelten sortiert.</p></div>
+        </div>
+
+        <form class="trical-filter runcal-filter" data-run-filter novalidate>
+          <label><span>Eigene Postleitzahl</span><input type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="z. B. 90427" data-run-postcode></label>
+          <label><span>Suchradius</span><select data-run-radius><option value="20">20 km</option><option value="50" selected>50 km</option><option value="100">100 km</option><option value="300">300 km</option></select></label>
+          <label><span>Kategorie</span><select data-run-category><option value="" selected>Alle Laufwelten</option><option value="half">Halbmarathon</option><option value="marathon">Marathon</option><option value="mammut">Mammutmarsch</option><option value="mega">Megamarsch</option><option value="ultra">Ultra Running</option></select></label>
+          <label><span>Event oder Ort</span><input type="search" autocomplete="off" placeholder="z. B. Berlin oder Trail" data-run-query></label>
+          <button class="button button--primary trical-filter__submit" type="submit"><span>Passende Läufe finden</span><span aria-hidden="true">→</span></button>
+          <button class="trical-filter__reset" type="button" data-run-reset>Gesamten Kalender anzeigen</button>
+          <p class="trical-filter__privacy">Die PLZ wird nur bei einer Umkreissuche an den OpenStreetMap-basierten Geodienst Photon übertragen.</p>
+        </form>
+
+        <div class="trical-results-head" aria-live="polite">
+          <div><strong data-run-result-count>${events.length}</strong><span data-run-result-label> Termine im gesamten Kalender</span></div>
+          <p data-run-status>Alle Kategorien und Entfernungen werden angezeigt.</p>
+        </div>
+        <div class="trical-no-results" data-run-empty hidden><strong>Für diese Auswahl wurde kein Lauf gefunden.</strong><span>Erweitere den Radius, wähle eine andere Kategorie oder setze die Suche zurück.</span></div>
+        <div class="sportcal-calendar runcal-calendar" id="laufkalender">
+          ${calendarGroups}
+          ${pastEvents.length ? `<details class="calendar-past-archive" data-calendar-past-archive>
+            <summary><span><small>Archiv 2026</small><strong>Vergangene Lauf-Termine</strong></span><b>${pastEvents.length} Läufe anzeigen</b></summary>
+            <div class="calendar-past-archive__content">${pastCalendarGroups}</div>
+          </details>` : ""}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted trical-sources">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-section-heading" data-reveal><p class="eyebrow">Verbandsübergreifend geprüft</p><h2>Vier offizielle Kalender. Eine Übersicht.</h2><p>DLV, DUV, Mammutmarsch und Megamarsch bilden die Grundlage. Anmeldung, Änderungen und Teilnahmebedingungen bleiben über jede Veranstaltung direkt erreichbar.</p></div>
+        <nav class="bbcal-source-grid trical-source-grid runcal-source-grid" aria-label="Offizielle Laufkalender-Quellen">${sources}</nav>
+      </div>
+    </section>
+
+    ${appTrafficPromo({
+      eyebrow: "Vom Laufziel zum Wochenplan",
+      text: "Plane Lauftraining, ergänzende Kraft, Ernährung und Erholung passend zu deiner Distanz – vom ersten Halbmarathon bis zum nächsten Ultra-Abenteuer.",
+      ref: "laufkalender"
+    })}
+
+    <section class="section bbcal-faq"><div class="section-shell">
+      ${sectionHeader({ eyebrow: "Fragen zum Laufkalender", title: "Schneller zum passenden Event.", text: "Was die individuelle Suche kann – und was du vor der Anmeldung prüfen solltest." })}
+      ${faq(runningCalendarFaq)}
+    </div></section>
+
+    ${ctaSection({
+      eyebrow: "Ausdauer & Performance",
+      title: "Das Ziel steht. Jetzt braucht die Vorbereitung Struktur.",
+      text: "Kraft, Lauftraining, Ernährung und Regeneration werden dann stark, wenn sie als ein System zusammenarbeiten.",
+      primary: { label: "Vorbereitung anfragen", href: contactHref("premium-training") },
+      secondary: { label: "Personal Training ansehen", href: "/personal-trainer-nürnberg/" }
+    })}
+  `;
+
+  return layout({
+    path: "/laufkalender-2026/",
+    title: "Laufkalender 2026: Läufe nach PLZ & Radius | Camp Dörfl",
+    description: `Laufkalender 2026 mit ${events.length} deutschen Terminen: Halbmarathon, Marathon, Mammutmarsch, Megamarsch und Ultra Running. Suche nach PLZ, Radius, Ort und Kategorie.`,
+    keywords: ["Laufkalender 2026", "Läufe 2026 Deutschland", "Halbmarathon 2026", "Marathon 2026", "Mammutmarsch 2026", "Megamarsch 2026", "Ultralauf 2026", "Lauf in meiner Nähe"],
+    bodyClass: "page-premium page-bodybuilding-calendar page-triathlon-calendar page-running-calendar",
+    pageName: "Laufkalender 2026",
+    pageType: "CollectionPage",
+    socialImage: "/assets/images/home-hero-stadium-wide.webp",
+    socialImageAlt: "Laufkalender 2026 mit Suche nach Postleitzahl, Radius und Kategorie",
+    extraStructuredData: [itemListSchema, faqSchema("/laufkalender-2026/", runningCalendarFaq)],
+    content
+  });
+}
+
+const golfCalendarFaq = [
+  { question: "Welche Golfturniere sind für normale Clubspieler zugänglich?", answer: "Das hängt von Ausschreibung, Handicap-Index, Clubmitgliedschaft und Meldefrist ab. Der zentrale DGV-Turnierkalender bündelt Club-, Landesverbands- und DGV-Turniere und führt zur jeweiligen Anmeldung." },
+  { question: "Wo finde ich Turniere meines Landesgolfverbandes?", answer: "Die Seite verlinkt alle zwölf Landesgolfverbände. Viele regionale Meisterschaften und offene Turniere erscheinen zusätzlich im zentralen Turnierkalender auf Golf.de." },
+  { question: "Was enthält das Profi-Portal?", answer: "Das Profi-Portal bündelt Deutschland-Stopps internationaler Touren, die Pro Golf Tour sowie Turniere und Pro Days der PGA of Germany. Teilnahmebedingungen stehen jeweils beim Veranstalter." },
+  { question: "Sind Termine und Startberechtigungen verbindlich?", answer: "Nein. Diese Übersicht dient der Orientierung. Ausschreibung, Startberechtigung, Nenngeld, Meldeschluss und mögliche Änderungen sind ausschließlich an der offiziellen Quelle verbindlich." }
+];
+
+function golfEventCard(event) {
+  const past = event.date < "2026-08-01";
+  return `
+    <a class="golfcal-event${past ? " golfcal-event--past" : ""}" href="${event.url}" target="_blank" rel="noopener noreferrer">
+      <time datetime="${event.date}">${calendarDateLabel(event)}</time>
+      <span class="golfcal-event__type">${event.type}</span>
+      <h3>${event.name}</h3>
+      <p><span aria-hidden="true">⌖</span>${event.location}</p>
+      <span class="golfcal-event__link">Details & Quelle <b aria-hidden="true">↗</b></span>
+    </a>`;
+}
+
+function golfCalendarPage() {
+  const amateurEvents = golfEvents2026.filter((event) => event.portal === "Amateur" && event.date >= "2026-08-01");
+  const amateurPastEvents = golfEvents2026.filter((event) => event.portal === "Amateur" && event.date < "2026-08-01");
+  const professionalEvents = golfEvents2026.filter((event) => event.portal === "Profi" && event.date >= "2026-08-01");
+  const professionalPastEvents = golfEvents2026.filter((event) => event.portal === "Profi" && event.date < "2026-08-01");
+  const itemListSchema = {
+    "@type": "ItemList",
+    "@id": `${site.url}/golfturniere-2026/#turnierkalender`,
+    name: "Golfturniere 2026 in Deutschland – Amateur und Profi",
+    numberOfItems: golfEvents2026.length,
+    itemListElement: golfEvents2026.map((event, index) => ({
+      "@type": "ListItem", position: index + 1, item: {
+        "@type": "SportsEvent", name: event.name, startDate: event.date,
+        ...(event.endDate ? { endDate: event.endDate } : {}),
+        eventStatus: event.date < "2026-08-01" ? "https://schema.org/EventCompleted" : "https://schema.org/EventScheduled",
+        location: { "@type": "Place", name: event.location }, url: event.url
+      }
+    }))
+  };
+
+  const content = `
+    <section class="bbcal-hero golfcal-hero">
+      <div class="golfcal-hero__graphic"><img src="/assets/images/golfturniere-hero.png" alt="Golfplatz in den Bergen mit Clubhaus, See und Grün im Abendlicht"${imageLoadingAttributes({ eager: true })}></div>
+      <div class="bbcal-hero__scrim" aria-hidden="true"></div>
+      <div class="section-shell bbcal-hero__inner">
+        <div class="bbcal-hero__copy">
+          <p class="eyebrow" data-reveal>Offene Turniere · Verbände · Profi-Portal</p>
+          <h1 data-reveal>Golfturniere<br><span>2026.</span></h1>
+          <p class="bbcal-hero__lead" data-reveal>Ein zentraler Einstieg in deutsche Amateur-, Verbands- und Profi-Turniere – mit allen zwölf Landesgolfverbänden und direkten offiziellen Quellen.</p>
+          <div class="bbcal-hero__actions" data-reveal>
+            <a class="button button--primary" href="#turnierkalender"><span>Turniere ansehen</span><span aria-hidden="true">↓</span></a>
+            <span class="bbcal-hero__updated">Geprüft am 1. August 2026</span>
+          </div>
+        </div>
+        <dl class="bbcal-hero__facts" data-reveal>
+          <div><dt>12</dt><dd>Landesverbände</dd></div><div><dt>2</dt><dd>Portale</dd></div><div><dt>${golfEvents2026.length}</dt><dd>Leittermine</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section golfcal-intro" id="turnierkalender">
+      <div class="section-shell section-shell--wide">
+        <div class="golfcal-intro-layout">
+          <div class="golfcal-intro-visual" data-reveal>
+            <figure class="golfcal-intro-image">
+              <img src="/assets/images/golfturniere-schlaeger.jpg" alt="Detailaufnahme hochwertiger Golfschläger in einer Golftasche"${imageLoadingAttributes()}>
+              <figcaption><span>Equipment & Präzision</span><strong>Bereit für die nächste Runde.</strong></figcaption>
+            </figure>
+            <figure class="golfcal-intro-person">
+              <img src="/assets/images/golfturniere-dominik.jpg" alt="Dominik Dörfl auf dem Golfplatz"${imageLoadingAttributes()}>
+              <figcaption>Performance auf dem Platz</figcaption>
+            </figure>
+          </div>
+          <div class="golfcal-intro-content">
+            <div class="bbcal-intro__head" data-reveal>
+              <div><p class="eyebrow">Ein Sport. Zwei Einstiege.</p><h2>Vom offenen Turnier<br><span>bis zur Tour.</span></h2></div>
+              <div class="bbcal-intro__copy"><p>Für Clubspieler führen DGV, Landesverbände und Clubs zu Ausschreibungen und Anmeldung. Profis finden Deutschland-Stopps internationaler Touren, Pro Golf Tour und PGA-of-Germany-Termine in einem eigenen Bereich.</p><p><strong>Wichtig:</strong> Ob ein Turnier offen ist, entscheidet immer die Ausschreibung – insbesondere Handicap, Altersklasse, Clubstatus und Meldeschluss.</p></div>
+            </div>
+            <div class="golfcal-portals" data-reveal>
+              <a href="#amateur"><span>01</span><small>Für Club- & Leistungsspieler</small><strong>Amateur & Verband</strong><b aria-hidden="true">↓</b></a>
+              <a href="#profis"><span>02</span><small>Touren & PGA of Germany</small><strong>Profi-Portal</strong><b aria-hidden="true">↓</b></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted golfcal-events" id="amateur">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-section-heading" data-reveal><p class="eyebrow">Amateur & Verband</p><h2>Deutsche Meisterschaften und offene Wege.</h2><p>Ausgewählte DGV-Leittermine. Weitere Club- und Landesverbandsturniere findest du über den offiziellen Gesamtkalender und die zwölf Regionalverbände.</p></div>
+        <div class="golfcal-official-link"><div><span>Offizieller Gesamtkalender</span><strong>DGV, Landesverbände und Clubs</strong><p>Mit Region, Altersklasse, Turnierart und direkter Anmeldung.</p></div><a class="button button--primary" href="https://www.golf.de/sport/turnierkalender.html" target="_blank" rel="noopener noreferrer"><span>Golf.de Kalender öffnen</span><span aria-hidden="true">↗</span></a></div>
+        <div class="golfcal-event-grid">${amateurEvents.map(golfEventCard).join("")}</div>
+        ${amateurPastEvents.length ? `<details class="calendar-past-archive calendar-past-archive--golf">
+          <summary><span><small>Archiv 2026</small><strong>Vergangene Amateur-Turniere</strong></span><b>${amateurPastEvents.length} Turniere anzeigen</b></summary>
+          <div class="calendar-past-archive__content"><div class="golfcal-event-grid">${amateurPastEvents.map(golfEventCard).join("")}</div></div>
+        </details>` : ""}
+      </div>
+    </section>
+
+    <section class="section golfcal-associations">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-section-heading" data-reveal><p class="eyebrow">Alle regionalen Verbände</p><h2>Zwölf Landesgolfverbände.<br>Ein direkter Zugang.</h2><p>Regionalmeisterschaften, Mannschaftswettbewerbe, Jugendserien und offene Turniere werden je Landesverband veröffentlicht.</p></div>
+        <div class="golfcal-association-grid">
+          ${golfAssociations.map((association) => `<a href="${association.url}" target="_blank" rel="noopener noreferrer"><span>${association.number}</span><small>${association.area}</small><strong>${association.name}</strong><b aria-hidden="true">↗</b></a>`).join("")}
+        </div>
+        <p class="golfcal-association-note">Verbandsübersicht gegengeprüft über den <a href="https://serviceportal.dgv-intranet.de/verband/partner-verbaende/landesgolfverbaende.cfm" target="_blank" rel="noopener noreferrer">Deutschen Golf Verband ↗</a></p>
+      </div>
+    </section>
+
+    <section class="section section--dark golfcal-pro" id="profis">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-section-heading" data-reveal><p class="eyebrow">Profi-Portal Deutschland</p><h2>Tourgolf, Pro Golf Tour<br>und PGA-Termine.</h2><p>Die wichtigsten bestätigten Deutschland-Stopps und berufsbezogenen Turniere für Professionals.</p></div>
+        <div class="golfcal-event-grid golfcal-event-grid--pro">${professionalEvents.map(golfEventCard).join("")}</div>
+        ${professionalPastEvents.length ? `<details class="calendar-past-archive calendar-past-archive--dark">
+          <summary><span><small>Archiv 2026</small><strong>Vergangene Profi-Turniere</strong></span><b>${professionalPastEvents.length} Turniere anzeigen</b></summary>
+          <div class="calendar-past-archive__content"><div class="golfcal-event-grid golfcal-event-grid--pro">${professionalPastEvents.map(golfEventCard).join("")}</div></div>
+        </details>` : ""}
+        <div class="golfcal-pro-links">
+          <a href="https://www.pga.de/turnierkalender/articles/turnierkalender?year=2026" target="_blank" rel="noopener noreferrer"><span>PGA of Germany</span><strong>Turnierkalender 2026</strong><b>↗</b></a>
+          <a href="https://www.progolftour.de/" target="_blank" rel="noopener noreferrer"><span>Development Tour</span><strong>Pro Golf Tour</strong><b>↗</b></a>
+          <a href="https://www.golf.de/news/artikel/tour-termine-2026-major-highlights-und-deutschland-stopps-im-ueberblick.html" target="_blank" rel="noopener noreferrer"><span>Tourübersicht</span><strong>Deutschland-Stopps 2026</strong><b>↗</b></a>
+        </div>
+      </div>
+    </section>
+
+    ${appTrafficPromo({
+      eyebrow: "Vom Turnier zur Athletikplanung",
+      text: "Ergänze dein Spiel durch planbare Athletik, Mobilität, Ernährung und Regeneration – damit Leistung und Konzentration auch auf den letzten Löchern stabil bleiben.",
+      ref: "golfturniere-kalender"
+    })}
+
+    <section class="section bbcal-faq"><div class="section-shell">
+      ${sectionHeader({ eyebrow: "Fragen zum Turnierjahr", title: "Vom Kalender zur Startzeit.", text: "Die wichtigsten Unterschiede zwischen offenem Turnier, Verbandsmeisterschaft und Profi-Event." })}
+      ${faq(golfCalendarFaq)}
+    </div></section>
+
+    <section class="section golfcal-performance-cta">
+      <div class="section-shell section-shell--wide golfcal-performance-cta__inner">
+        <figure data-reveal><img src="/assets/images/golfturniere-creators-cup.jpg" alt="Dominik Dörfl beim Creators Golf Cup auf dem Grün"${imageLoadingAttributes()}></figure>
+        <div class="golfcal-performance-cta__copy" data-reveal>
+          <p class="eyebrow">Performance für Golfer</p>
+          <h2>Mehr Stabilität.<br>Mehr Kontrolle.<br><span>Mehr Länge, die bleibt.</span></h2>
+          <p>Athletik, Beweglichkeit und Belastbarkeit schaffen die Basis, damit Technik auch unter Druck abrufbar bleibt.</p>
+          <div class="golfcal-performance-cta__actions">
+            <a class="button button--primary" href="${contactHref("premium-training")}"><span>Golf-Performance anfragen</span><span aria-hidden="true">→</span></a>
+            <a class="button button--secondary" href="/personal-trainer-nürnberg/"><span>Personal Training ansehen</span><span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+
+  return layout({
+    path: "/golfturniere-2026/",
+    title: "Golfturniere 2026: Amateur, Verbände & Profi-Portal | Camp Dörfl",
+    description: "Golfturniere 2026 in Deutschland: DGV-Meisterschaften, alle zwölf Landesgolfverbände, offene Turnierwege und ein eigenes Profi-Portal mit Tour- und PGA-Terminen.",
+    keywords: ["Golfturniere 2026", "Golf Turnierkalender 2026", "offene Golfturniere Deutschland", "DGV Turniere 2026", "Golf Profi Turniere Deutschland 2026"],
+    bodyClass: "page-premium page-bodybuilding-calendar page-golf-calendar",
+    pageName: "Golfturniere 2026",
+    pageType: "CollectionPage",
+    socialImage: "/assets/images/golfturniere-hero.png",
+    socialImageAlt: "Golfturniere 2026 – Amateur, Verbände und Profi-Portal",
+    extraStructuredData: [itemListSchema, faqSchema("/golfturniere-2026/", golfCalendarFaq)],
+    content
+  });
+}
+
+function sportSpotFinderPage() {
+  const sportSpotConfig = JSON.stringify({ categories: sportSpotCategories }).replace(/</g, "\\u003c");
+  const popularCategories = sportSpotCategories.filter((category) => popularSportSpotCategoryIds.includes(category.id));
+  const additionalCategories = sportSpotCategories.filter((category) => !popularSportSpotCategoryIds.includes(category.id));
+  const orderedCategories = [...popularCategories, ...additionalCategories];
+  const categoryButton = (category) => {
+    const popular = popularSportSpotCategoryIds.includes(category.id);
+    return `
+    <button class="spot-category${popular ? " spot-category--popular" : " spot-category--additional"}" type="button" data-spot-category="${category.id}"${popular ? "" : " data-spot-category-additional hidden"} aria-pressed="false">
+      <span class="spot-category__icon" aria-hidden="true">${category.icon}</span>
+      <span>${category.label}</span>
+      ${popular ? '<small>Beliebt</small>' : ""}
+    </button>
+  `;
+  };
+
+  const content = `
+    <section class="spot-hero">
+      <div class="section-shell section-shell--wide spot-hero__inner">
+        <div class="spot-hero__copy" data-reveal>
+          <p class="eyebrow">Sport in deiner Nähe</p>
+          <h1>Finde deinen nächsten <span>Sport Spot.</span></h1>
+          <p>Von Fitnessstudio bis Outdoor Court: Suche Sportstätten in ganz Deutschland nach Ort, Entfernung und Sportart.</p>
+          <div class="spot-hero__proof" aria-label="Vorteile der Sportsuche">
+            <span>20 Sportkategorien</span><span>Deutschlandweit</span><span>Karte & Liste</span>
+          </div>
+        </div>
+        <form class="spot-search" id="sportspot-suche" data-spot-search aria-label="Sport Spot Suche">
+          <div class="spot-search__heading">
+            <span>01</span>
+            <div><small>Dein Suchgebiet</small><strong>Wo möchtest du trainieren?</strong></div>
+          </div>
+          <label class="spot-field spot-field--place">
+            <span>PLZ oder Ort</span>
+            <input type="search" name="place" placeholder="z. B. 90427 oder Nürnberg" autocomplete="postal-code" required minlength="2">
+          </label>
+          <label class="spot-field spot-field--sport">
+            <span>Sportart</span>
+            <select name="sport" aria-label="Sportart auswählen" required>
+              <option value="" selected disabled>Sportart auswählen</option>
+              <optgroup label="Beliebte Sportarten">
+                ${popularCategories.map((category) => `<option value="${category.id}">${category.label}</option>`).join("")}
+              </optgroup>
+              <optgroup label="Weitere Sportarten">
+                ${additionalCategories.map((category) => `<option value="${category.id}">${category.label}</option>`).join("")}
+              </optgroup>
+            </select>
+          </label>
+          <label class="spot-field">
+            <span>Umkreis</span>
+            <select name="radius" aria-label="Suchradius">
+              <option value="25">25 km</option>
+              <option value="50" selected>50 km</option>
+              <option value="100">100 km</option>
+              <option value="200">200 km</option>
+            </select>
+          </label>
+          <button class="button button--primary spot-search__submit" type="submit"><span>Sport Spots finden</span><span aria-hidden="true">→</span></button>
+          <p class="spot-search__note">Die Suche nutzt frei zugängliche Kartendaten. Angaben bitte vor dem Besuch beim Anbieter prüfen.</p>
+        </form>
+      </div>
+    </section>
+
+    <section class="section spot-categories" id="sportart">
+      <div class="section-shell section-shell--wide">
+        <div class="spot-section-head" data-reveal>
+          <div><p class="eyebrow">Was suchst du?</p><h2>Wähle deine Sportart.</h2></div>
+          <p>Starte mit den beliebtesten Kategorien oder öffne die gesamte Auswahl. Du kannst jederzeit wechseln.</p>
+        </div>
+        <div class="spot-category-grid" id="sportarten-auswahl" data-spot-category-grid>
+          ${orderedCategories.map(categoryButton).join("")}
+        </div>
+        <button class="spot-category-toggle" type="button" data-spot-category-toggle aria-controls="sportarten-auswahl" aria-expanded="false"><span>Weitere ${additionalCategories.length} Sportarten anzeigen</span><span aria-hidden="true">↓</span></button>
+      </div>
+    </section>
+
+    <section class="section section--muted spot-discovery" id="ergebnisse">
+      <div class="section-shell section-shell--wide">
+        <div class="spot-results-head" data-reveal>
+          <div><p class="eyebrow">Sport in meiner Nähe entdecken</p><h2>Deine Umgebung. Deine Möglichkeiten.</h2></div>
+          <div class="spot-results-count" aria-live="polite"><strong data-spot-count>–</strong><span data-spot-count-label>Sport Spots</span></div>
+        </div>
+
+        <div class="spot-results-layout">
+          <div class="spot-map" data-spot-map aria-label="Kartenansicht der Sportstätten">
+            <div class="spot-map__tiles" data-spot-map-tiles aria-hidden="true"></div>
+            <div class="spot-map__grid" aria-hidden="true"></div>
+            <div class="spot-map__pins" data-spot-map-pins></div>
+            <div class="spot-map__empty" data-spot-map-empty>
+              <span>DE</span><strong>Deine Karte startet hier.</strong><p>Ort eingeben, Sportart wählen und passende Spots entdecken.</p>
+            </div>
+            <div class="spot-map__badge"><span aria-hidden="true">◎</span><span data-spot-map-label>Deutschland</span></div>
+            <div class="spot-map__attribution" data-spot-attribution hidden>Kartendaten © OpenStreetMap-Mitwirkende</div>
+          </div>
+
+          <div class="spot-results-panel">
+            <div class="spot-results-status" data-spot-status role="status">
+              <span class="spot-results-status__mark" aria-hidden="true">01</span>
+              <div><strong>Bereit für deine Suche</strong><p>Gib oben eine Postleitzahl oder einen Ort ein. Die passenden Sportstätten erscheinen hier und auf der Karte.</p></div>
+            </div>
+            <div class="spot-result-list" data-spot-results></div>
+            <div class="spot-results-actions" data-spot-results-actions hidden>
+              <button class="spot-load-more" type="button" data-spot-load-more>Weitere Spots anzeigen</button>
+              <a href="#sportspot-suche">Suche ändern ↑</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section spot-nearby">
+      <div class="section-shell section-shell--wide">
+        <div class="spot-section-head" data-reveal>
+          <div><p class="eyebrow">Direkt loslegen</p><h2>Sportmöglichkeiten, die zu deinem Alltag passen.</h2></div>
+          <p>Entdecke Orte für eine spontane Einheit draußen oder finde das passende Trainingsangebot mit Ausstattung und Betreuung.</p>
+        </div>
+        <div class="spot-nearby-grid">
+          <button class="spot-nearby-card spot-nearby-card--outdoor" type="button" data-spot-shortcut="outdoor">
+            <span class="spot-nearby-card__number">01</span><small>Draußen trainieren</small><strong>Outdoor Training Möglichkeiten</strong><p>Fitnessparks, Calisthenics-Anlagen und frei zugängliche Trainingsflächen in deiner Umgebung.</p><span class="spot-nearby-card__action">Outdoor Spots entdecken →</span>
+          </button>
+          <button class="spot-nearby-card spot-nearby-card--gym" type="button" data-spot-shortcut="fitness">
+            <span class="spot-nearby-card__number">02</span><small>Training mit Ausstattung</small><strong>Gyms und ähnliche Angebote</strong><p>Fitnessstudios, Sportzentren und Functional-Training-Spots passend zu deinem Suchgebiet.</p><span class="spot-nearby-card__action">Gyms entdecken →</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    ${appTrafficPromo({
+      eyebrow: "Vom Sport Spot zum Trainingsplan",
+      text: "Der passende Ort ist gefunden. Jetzt planst du Einheiten, Ernährung und Fortschritt in einem System – damit aus einzelnen Workouts eine klare Entwicklung wird.",
+      ref: "sport-spot-finder"
+    })}
+
+    <section class="spot-how">
+      <div class="section-shell section-shell--wide">
+        <div><p class="eyebrow">So einfach geht's</p><h2>Drei Angaben. Ein passender Spot.</h2></div>
+        <ol><li><span>01</span><strong>Ort festlegen</strong><p>PLZ oder Stadt und gewünschten Umkreis eingeben.</p></li><li><span>02</span><strong>Sportart wählen</strong><p>Eine von 20 großen Kategorien auswählen.</p></li><li><span>03</span><strong>Spot entdecken</strong><p>Ergebnisse auf Karte und in der übersichtlichen Liste vergleichen.</p></li></ol>
+      </div>
+    </section>
+    <script id="sportspot-config" type="application/json">${sportSpotConfig}</script>
+  `;
+
+  return layout({
+    path: "/sport-spot-finden/",
+    title: "Sport Spot finden: Sportstätten in deiner Nähe | Camp Dörfl",
+    description: "Finde Fitnessstudios, Schwimmbäder, Padel-, Tennis- und Fußballplätze sowie viele weitere Sportstätten nach Ort, Umkreis und Sportart auf der Karte.",
+    keywords: ["Sportstätte in der Nähe", "Fitnessstudio finden", "Sportplatz finden", "Sport in meiner Nähe", "Padel Platz in der Nähe", "Outdoor Training in der Nähe"],
+    bodyClass: "page-premium page-sport-spots",
+    pageName: "Sport Spot finden",
+    pageType: "SearchResultsPage",
+    socialImageAlt: "Sport Spot finden – Sportstätten in deiner Nähe",
+    content
+  });
+}
+
 export const pages = [
   { route: "/", render: homePage },
   { route: "/app/", render: appPage },
@@ -3809,6 +5798,12 @@ export const pages = [
   { route: "/firmenfitness/", render: firmenfitnessPage },
   { route: "/events/", render: eventsPage },
   { route: "/partner/", render: partnerPage },
+  { route: "/bodybuilding-wettkaempfe-2026/", render: bodybuildingCalendarPage },
+  { route: "/boxen-wettkaempfe-2026/", render: boxingCalendarPage },
+  { route: "/triathlon-kalender-2026/", render: triathlonCalendarPage },
+  { route: "/laufkalender-2026/", render: runningCalendarPage },
+  { route: "/golfturniere-2026/", render: golfCalendarPage },
+  { route: "/sport-spot-finden/", render: sportSpotFinderPage },
   { route: "/executive-performance/", render: executivePerformancePage },
   { route: "/erfolge-im-team/", render: teamSuccessPage },
   { route: "/ueber-dominik/", render: ueberDominikPage },

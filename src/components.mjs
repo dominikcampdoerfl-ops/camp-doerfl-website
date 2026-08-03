@@ -32,7 +32,7 @@ export function imageLoadingAttributes({ eager = false } = {}) {
 }
 
 function brandLogo() {
-  return `<span class="brand__mark"><img class="brand__logo" src="${brandLogoPath}" alt="Camp Dörfl Logo"></span>`;
+  return `<span class="brand__mark"><img class="brand__logo" src="${brandLogoPath}" alt=""></span>`;
 }
 
 function socialPlatformFromUrl(url = "") {
@@ -55,7 +55,7 @@ function socialIconImage(platform) {
 
   if (!icon) return "";
 
-  return `<img class="social-link__icon" src="${icon.src}" alt="${icon.label} Icon">`;
+  return `<img class="social-link__icon" src="${icon.src}" alt="">`;
 }
 
 export function socialIconLink(url, { className = "", label, iconOnly = true } = {}) {
@@ -324,7 +324,7 @@ export function mediaProgramGrid(items) {
           (item) => `
             <a class="media-program-card" href="${item.href}" data-reveal>
               <div class="media-program-card__image ${item.imageMode ? `media-program-card__image--${item.imageMode}` : ""}">
-                <img src="${item.image}" alt="${item.title}"${imageLoadingAttributes()}${item.imagePosition ? ` style="object-position: ${item.imagePosition};"` : ""}>
+                <img src="${item.image}" alt="${item.alt || item.title}"${imageLoadingAttributes()}${item.imagePosition ? ` style="object-position: ${item.imagePosition};"` : ""}>
               </div>
               <div class="media-program-card__body">
                 <div class="media-program-card__top">
@@ -362,7 +362,7 @@ export function proofMosaic(items) {
           (item) => `
             <article class="proof-mosaic__card" data-reveal>
               <div class="proof-mosaic__image">
-                <img src="${item.image}" alt="${item.title}"${imageLoadingAttributes()}>
+                <img src="${item.image}" alt="${item.alt || item.title}"${imageLoadingAttributes()}>
               </div>
               <div class="proof-mosaic__body">
                 <h3>${item.title}</h3>
@@ -444,15 +444,18 @@ export function featureGrid(items, modifier = "") {
   return `
     <div class="feature-grid ${modifier}">
       ${items
-        .map(
-          (item) => `
-            <article class="feature-card" data-reveal>
+        .map((item) => {
+          const tag = item.href ? "a" : "article";
+          const href = item.href ? ` href="${item.href}"` : "";
+          return `
+            <${tag} class="feature-card"${href} data-reveal>
               ${item.detail ? `<span class="feature-card__detail">${item.detail}</span>` : ""}
               <h3>${item.title}</h3>
               <p>${item.text}</p>
-            </article>
-          `
-        )
+              ${item.ctaLabel ? `<span class="feature-card__cta"><span>${item.ctaLabel}</span><span class="feature-card__cta-arrow" aria-hidden="true">&rarr;</span></span>` : ""}
+            </${tag}>
+          `;
+        })
         .join("")}
     </div>
   `;
@@ -778,18 +781,32 @@ export function contactForm() {
 }
 
 function navbar(activePath) {
-  const primaryNavItems = navItems.filter((item) => item.href !== "/kontakt/" && item.href !== "/app/");
+  const primaryNavOrder = [
+    "/",
+    "/personal-trainer-nürnberg/",
+    "/firmenfitness/",
+    "/events/",
+    "/partner/"
+  ];
+  const primaryNavItems = primaryNavOrder
+    .map((href) => navItems.find((item) => item.href === href))
+    .filter(Boolean);
   const appItem = navItems.find((item) => item.href === "/app/");
   const contactItem = navItems.find((item) => item.href === "/kontakt/");
   const navSocials = socialProfileUrls();
-  const desktopSocialMarkup = navSocials.length ? socialIconLinks(navSocials, { className: "social-link--chip social-link--nav" }) : "";
   const mobileSocialMarkup = navSocials.length ? socialIconLinks(navSocials, { className: "social-link--chip social-link--nav-menu" }) : "";
   const mobileNavItems = [...primaryNavItems, ...(appItem ? [appItem] : []), ...(contactItem ? [contactItem] : [])];
-  const renderMobileNavItem = (item) => `
-    <a class="site-nav__entry${activePath === item.href ? " is-active" : ""}" href="${item.href}" ${activePath === item.href ? 'aria-current="page"' : ""}>
+  const desktopLabels = {
+    "/personal-trainer-nürnberg/": "Personal Training"
+  };
+  const renderNavItem = (item) => `
+    <a class="site-nav__entry${item.href === "/app/" || item.href === "/kontakt/" ? " site-nav__entry--supplemental" : ""}${activePath === item.href ? " is-active" : ""}" href="${item.href}" ${activePath === item.href ? 'aria-current="page"' : ""}>
       <span class="site-nav__entry-main">
         <span class="site-nav__entry-icon">${uiIcon(navIconForHref(item.href))}</span>
-        <span class="site-nav__entry-label">${item.label}</span>
+        <span class="site-nav__entry-label">
+          <span class="site-nav__label-desktop">${desktopLabels[item.href] || item.label}</span>
+          <span class="site-nav__label-mobile">${item.label}</span>
+        </span>
       </span>
       <span class="site-nav__entry-arrow" aria-hidden="true">&rsaquo;</span>
     </a>
@@ -810,19 +827,22 @@ function navbar(activePath) {
           ${brandLogo()}
           <span><span class="brand__name">Camp Dörfl</span><small>Performance System</small></span>
         </a>
+        ${languageSwitcher("language-switcher--mobile")}
         <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">
           <span></span><span></span><span></span>
           <span class="nav-toggle__label">Menü</span>
         </button>
-        ${languageSwitcher("language-switcher--mobile")}
-        <nav class="site-nav" id="site-nav" data-site-nav>
+        <nav class="site-nav" id="site-nav" data-site-nav aria-label="Hauptnavigation">
           <div class="site-nav__overlay">
-            <div class="site-nav__brand-block" aria-hidden="true">
+            <div class="site-nav__brand-block">
               <span class="site-nav__brand-mark">${brandLogo()}</span>
-              <span class="site-nav__brand-copy"><span class="site-nav__brand-name">Camp Dörfl</span><small>Performance System</small></span>
+              <span class="site-nav__brand-copy">
+                <span class="site-nav__brand-name">Was möchtest du erreichen?</span>
+                <small>Training, Team oder Performance System</small>
+              </span>
             </div>
             <div class="site-nav__list">
-              ${mobileNavItems.map((item) => renderMobileNavItem(item)).join("")}
+              ${mobileNavItems.map((item) => renderNavItem(item)).join("")}
             </div>
             ${
               mobileSocialMarkup
@@ -836,7 +856,8 @@ function navbar(activePath) {
         </nav>
         <div class="nav-extras">
           ${languageSwitcher("language-switcher--desktop")}
-          ${desktopSocialMarkup ? `<div class="nav-socials" role="group" aria-label="Social Media">${desktopSocialMarkup}</div>` : ""}
+          ${appItem ? `<a class="nav-action nav-action--app${activePath === appItem.href ? " is-active" : ""}" href="${appItem.href}" ${activePath === appItem.href ? 'aria-current="page"' : ""}>App</a>` : ""}
+          ${contactItem ? `<a class="nav-action nav-action--contact${activePath === contactItem.href ? " is-active" : ""}" href="${contactItem.href}" ${activePath === contactItem.href ? 'aria-current="page"' : ""}><span>Kontakt</span><span aria-hidden="true">&nearr;</span></a>` : ""}
         </div>
       </div>
     </header>
@@ -846,34 +867,44 @@ function navbar(activePath) {
 function footer() {
   const footerNavItems = [
     ...navItems,
+    { label: "Personal Training Kosten", href: "/personal-training-kosten-nuernberg/" },
     { label: "Executive Performance", href: "/executive-performance/" },
     { label: "Über Dominik", href: "/ueber-dominik/" },
-    { label: "Erfolge im Team", href: "/erfolge-im-team/" }
+    { label: "Erfolge im Team", href: "/erfolge-im-team/" },
+    { label: "Bodybuilding Wettkämpfe 2026", href: "/bodybuilding-wettkaempfe-2026/" },
+    { label: "Boxen Wettkämpfe 2026", href: "/boxen-wettkaempfe-2026/" },
+    { label: "Triathlon Kalender 2026", href: "/triathlon-kalender-2026/" },
+    { label: "Laufkalender 2026", href: "/laufkalender-2026/" },
+    { label: "Golfturniere 2026", href: "/golfturniere-2026/" },
+    { label: "Sport Spot finden", href: "/sport-spot-finden/" }
   ];
 
   return `
     <footer class="site-footer">
       <div class="section-shell footer-grid">
-        <div>
+        <div class="footer-panel footer-brand-panel">
           <a class="brand brand--footer" href="/">
             ${brandLogo()}
             <span><span class="brand__name">Camp Dörfl</span><small>Performance System</small></span>
           </a>
           <p>Performance System für Personal Training, Premium Personal Training, Firmenfitness, Events und die Camp Dörfl App.</p>
+          <a class="footer-primary-link" href="/kontakt/"><span>Anfrage starten</span><span aria-hidden="true">&nearr;</span></a>
         </div>
-        <div>
+        <div class="footer-panel footer-nav-panel">
           <h2>Navigation</h2>
-          ${footerNavItems.map((item) => `<a href="${item.href}">${item.label}</a>`).join("")}
+          <div class="footer-nav-links">
+            ${footerNavItems.map((item) => `<a href="${item.href}">${item.label}</a>`).join("")}
+          </div>
         </div>
-        <div>
+        <div class="footer-panel footer-contact-panel">
           <h2>Kontakt</h2>
-          <a href="mailto:${site.email}">${site.email}</a>
+          <a class="footer-email" href="mailto:${site.email}">${site.email}</a>
+          <span class="footer-location">${site.location}</span>
           ${socialIconLinks(socialProfileUrls(), { className: "social-link--chip social-link--footer" })}
-          <span>${site.location}</span>
         </div>
       </div>
       <div class="footer-bottom section-shell">
-        <span>© ${new Date().getFullYear()} Camp Dörfl</span>
+        <span class="footer-copyright">© ${new Date().getFullYear()} Camp Dörfl</span>
         <div class="footer-bottom__links">
           <a href="/impressum/">Impressum</a>
           <a href="/datenschutz/">Datenschutz</a>
@@ -882,8 +913,8 @@ function footer() {
           <a href="/barrierefreiheit/">Barrierefreiheit</a>
           <a href="/datenschutzformular-app/">Datenschutzformular App</a>
           <button class="footer-link-button" type="button" data-open-consent>Cookie-Einstellungen</button>
-          <span>Performance für Training, Ernährung, Gesundheit und Community.</span>
         </div>
+        <span class="footer-bottom__claim">Performance für Training, Ernährung, Gesundheit und Community.</span>
       </div>
     </footer>
   `;
@@ -1127,7 +1158,7 @@ export function layout({
 	    <link rel="icon" href="${brandLogoPath}">
 	    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/camp-doerfl-logo.png">
 	    <link rel="stylesheet" href="/assets/styles.css">
-	    <link rel="stylesheet" href="/assets/mobile-overrides.css">
+	    <link rel="stylesheet" href="/assets/mobile-overrides.css?v=20260802-9">
 	    <script type="application/ld+json">${JSON.stringify(structuredData)}</script>
   </head>
   <body${bodyClass ? ` class="${bodyClass}"` : ""}>
