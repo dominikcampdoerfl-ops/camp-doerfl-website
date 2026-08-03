@@ -1538,6 +1538,102 @@ html body.page-premium.page-events main .event-reference-band__intro h2 {
   }
 }
 
+/* Team results: clearer premium medal hierarchy and calmer scanning. */
+html body.page-premium.page-team main .coach-success__results li {
+  grid-template-columns: 46px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  min-height: 68px;
+  margin-bottom: 10px;
+  padding: 12px 16px;
+  border-color: rgba(255, 255, 255, 0.11);
+  border-radius: 10px;
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.025));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  font-size: 0.96rem;
+}
+
+html body.page-premium.page-team main .coach-success__place {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-width: 1px;
+  border-radius: 14px;
+  color: #fffdf8;
+  background: linear-gradient(145deg, #282a30, #121318);
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  font-family: var(--font-sans);
+  font-size: 0.98rem;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  text-shadow: none;
+}
+
+html body.page-premium.page-team main .coach-success__place::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+html body.page-premium.page-team main .coach-success__place--1 {
+  color: #241a07;
+  border-color: #f5d778;
+  background: linear-gradient(145deg, #fff0a8 0%, #d9ad43 58%, #9d6d16 100%);
+  box-shadow:
+    0 9px 22px rgba(190, 139, 33, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+html body.page-premium.page-team main .coach-success__place--2 {
+  color: #20252c;
+  border-color: #e5e9ee;
+  background: linear-gradient(145deg, #ffffff 0%, #c6ccd4 56%, #858f9b 100%);
+  box-shadow:
+    0 9px 22px rgba(151, 162, 176, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.88);
+}
+
+html body.page-premium.page-team main .coach-success__place--3 {
+  color: #2a1408;
+  border-color: #e7a46f;
+  background: linear-gradient(145deg, #f2c199 0%, #b86d3d 56%, #714022 100%);
+  box-shadow:
+    0 9px 22px rgba(170, 91, 43, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+html body.page-premium.page-team main .coach-success__results li > span:last-child {
+  color: rgba(255, 253, 248, 0.88) !important;
+  font-weight: 500;
+  line-height: 1.42;
+}
+
+@media (max-width: 620px) {
+  html body.page-premium.page-team main .coach-success__results li {
+    grid-template-columns: 42px minmax(0, 1fr);
+    min-height: 62px;
+    padding: 10px 12px;
+  }
+
+  html body.page-premium.page-team main .coach-success__place {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+  }
+
+  html body.page-premium.page-team main .coach-success__place::after {
+    inset: 3px;
+    border-radius: 9px;
+  }
+}
+
 /* ============================================================
    HOME IN LIGHT — a warm, editorial continuation of the Google
    review panel. The photo hero remains cinematic for legibility;
