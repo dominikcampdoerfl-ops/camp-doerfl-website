@@ -6,9 +6,10 @@ export const site = {
   email: "dominik@campdoerfl.de",
   phone: "+4915561562648",
   instagram: "https://www.instagram.com/dominik.doerfl/",
-  facebook: "https://www.facebook.com/dominik.dorfl/?locale=de_DE",
+  facebook: "https://www.facebook.com/dominikdoerfl/",
   linkedin: "https://de.linkedin.com/in/dominik-dörfl-328445211",
   spotify: "https://open.spotify.com/show/4J0iYTYCdGDuhwkLsXxNo8",
+  youtube: "https://www.youtube.com/channel/UCBLcnaZJr_aZ0BY93tizwQg",
   location: "Nürnberg",
   streetAddress: "Kraftshofer Hauptstraße 154",
   postalCode: "90427",
@@ -312,7 +313,7 @@ export const landingStartCards = [
 export const achievements = [
   { value: "Ex Profi Athlet", label: "auf europäischem Spitzenlevel" },
   { value: "2x Deutscher Meister", label: "Bodybuilding und Powerlifting" },
-  { value: "Ironman", label: "Finisher" },
+  { value: "Ironman 70.3", label: "Finisher" },
   { value: "8848 hm", label: "zu Fuß hoch und runter in 15 Stunden" },
   { value: "270 km", label: "Radtour innerhalb von 24 Stunden" },
   { value: "Top-Athleten", label: "Coaching von Olympia-Athleten, Meistern und internationalen Platzierungen" }

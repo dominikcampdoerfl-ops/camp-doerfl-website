@@ -945,7 +945,7 @@ function homePage() {
           <div><dt>Fitness Trainer</dt><dd>ausgebildet & zertifiziert</dd></div>
           <div><dt>Profi Athlet</dt><dd>Fitness &amp; Bodybuilding</dd></div>
           <div><dt>2×</dt><dd>Deutscher Meister</dd></div>
-          <div><dt>Ironman</dt><dd>Finisher</dd></div>
+          <div><dt>Ironman 70.3</dt><dd>Finisher</dd></div>
         </dl>
       </div>
     </section>
@@ -1108,7 +1108,7 @@ function appPage() {
           <p class="ff-hero__lead" data-reveal>
             Die Fitness App von Camp Dörfl verbindet deinen Trainingsplan, Ernährung, praktische Alltagstools, Community und persönliche Begleitung in einem professionellen System.
           </p>
-          <p class="ff-hero__support" data-reveal>10 Jahre Erfahrung. 13 Deutsche-Meister-Titel. Eine Vision: dich immer weiterzuentwickeln.</p>
+          <p class="ff-hero__support" data-reveal>Über 25 Jahre Leistungssport, davon rund 10 Jahre als Coach. 13 Deutsche-Meister-Titel im Team. Eine Vision: dich immer weiterzuentwickeln.</p>
           <div class="ff-hero__actions" data-reveal>
             <a class="app-store-symbol app-store-symbol--apple" href="https://apps.apple.com/de/app/camp-d%C3%B6rfl/id6767655689" target="_blank" rel="noopener noreferrer" aria-label="Camp Dörfl App im Apple App Store öffnen" title="Im Apple App Store öffnen">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.58 9.05 7.3c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.1l.02-.01zM12.03 7.25C11.88 5.02 13.69 3.18 15.77 3c.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
@@ -2330,7 +2330,7 @@ function ueberDominikPage() {
           <p class="ff-hero__eyebrow" data-reveal>Die Person hinter Camp Dörfl</p>
           <h1 class="ff-hero__title" data-reveal>Dominik.<br>Dörfl.<br><span>Performance gelebt.</span></h1>
           <p class="ff-hero__lead" data-reveal>
-            Ex-Profi-Athlet, zweifacher Deutscher Meister, Ironman-Finisher, Coach von Top-Athleten und Unternehmer aus Nürnberg. Camp Dörfl ist die Summe dieser Erfahrung.
+            Ex-Profi-Athlet, zweifacher Deutscher Meister, Ironman-70.3-Finisher, Coach von Top-Athleten und Unternehmer aus Nürnberg. Camp Dörfl ist die Summe dieser Erfahrung.
           </p>
           <p class="ff-hero__support" data-reveal>
             Was hier vermittelt wird, ist nicht aus Büchern abgeleitet, sondern auf der Bühne, im Wettkampf und im Coaching-Alltag selbst durchlebt.
@@ -2429,7 +2429,7 @@ function ueberDominikPage() {
     path: "/ueber-dominik/",
     title: "Über Dominik Dörfl | Camp Dörfl Nürnberg",
     description:
-      "Über Dominik Dörfl: Unternehmer, Ex-Profi-Athlet, Deutscher Meister, Ironman-Finisher und Coach aus Nürnberg – die Person und Erfahrung hinter Camp Dörfl.",
+      "Über Dominik Dörfl: Unternehmer, Ex-Profi-Athlet, Deutscher Meister, Ironman-70.3-Finisher und Coach aus Nürnberg – die Person und Erfahrung hinter Camp Dörfl.",
     keywords: ["Dominik Dörfl", "Camp Dörfl Gründer", "Ex-Profi Athlet Nürnberg", "Coach und Moderator Nürnberg"],
     bodyClass: "page-premium page-about",
     pageType: "AboutPage",
