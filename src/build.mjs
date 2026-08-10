@@ -307,6 +307,7 @@ ${sitemapPages
   await writeFile(
     join(dist, "robots.txt"),
     `User-agent: *
+Content-Signal: search=yes, ai-input=yes, ai-train=no
 Allow: /
 
 Sitemap: ${site.url}/sitemap.xml
