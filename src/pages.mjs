@@ -945,7 +945,7 @@ function homePage() {
           <div><dt>Fitness Trainer</dt><dd>ausgebildet & zertifiziert</dd></div>
           <div><dt>Profi Athlet</dt><dd>Fitness &amp; Bodybuilding</dd></div>
           <div><dt>2×</dt><dd>Deutscher Meister</dd></div>
-          <div><dt>Ironman</dt><dd>Finisher</dd></div>
+          <div><dt>Ironman 70.3</dt><dd>Finisher</dd></div>
         </dl>
       </div>
     </section>
@@ -2330,7 +2330,7 @@ function ueberDominikPage() {
           <p class="ff-hero__eyebrow" data-reveal>Die Person hinter Camp Dörfl</p>
           <h1 class="ff-hero__title" data-reveal>Dominik.<br>Dörfl.<br><span>Performance gelebt.</span></h1>
           <p class="ff-hero__lead" data-reveal>
-            Ex-Profi-Athlet, zweifacher Deutscher Meister, Ironman-Finisher, Coach von Top-Athleten und Unternehmer aus Nürnberg. Camp Dörfl ist die Summe dieser Erfahrung.
+            Ex-Profi-Athlet, zweifacher Deutscher Meister, Ironman-70.3-Finisher, Coach von Top-Athleten und Unternehmer aus Nürnberg. Camp Dörfl ist die Summe dieser Erfahrung.
           </p>
           <p class="ff-hero__support" data-reveal>
             Was hier vermittelt wird, ist nicht aus Büchern abgeleitet, sondern auf der Bühne, im Wettkampf und im Coaching-Alltag selbst durchlebt.
@@ -2429,7 +2429,7 @@ function ueberDominikPage() {
     path: "/ueber-dominik/",
     title: "Über Dominik Dörfl | Camp Dörfl Nürnberg",
     description:
-      "Über Dominik Dörfl: Unternehmer, Ex-Profi-Athlet, Deutscher Meister, Ironman-Finisher und Coach aus Nürnberg – die Person und Erfahrung hinter Camp Dörfl.",
+      "Über Dominik Dörfl: Unternehmer, Ex-Profi-Athlet, Deutscher Meister, Ironman-70.3-Finisher und Coach aus Nürnberg – die Person und Erfahrung hinter Camp Dörfl.",
     keywords: ["Dominik Dörfl", "Camp Dörfl Gründer", "Ex-Profi Athlet Nürnberg", "Coach und Moderator Nürnberg"],
     bodyClass: "page-premium page-about",
     pageType: "AboutPage",
