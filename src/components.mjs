@@ -20,6 +20,10 @@ const socialPlatformIcons = {
   spotify: {
     label: "Spotify",
     src: "/assets/images/social-spotify.png"
+  },
+  youtube: {
+    label: "YouTube",
+    src: "/assets/images/social-youtube.svg"
   }
 };
 
@@ -42,12 +46,13 @@ function socialPlatformFromUrl(url = "") {
   if (normalized.includes("facebook.com") || normalized.includes("fb.com")) return "facebook";
   if (normalized.includes("linkedin.com")) return "linkedin";
   if (normalized.includes("spotify.com")) return "spotify";
+  if (normalized.includes("youtube.com") || normalized.includes("youtu.be")) return "youtube";
 
   return null;
 }
 
 function socialProfileUrls() {
-  return [site.instagram, site.facebook, site.linkedin, site.spotify].filter(Boolean);
+  return [site.instagram, site.facebook, site.linkedin, site.spotify, site.youtube].filter(Boolean);
 }
 
 function socialIconImage(platform) {
