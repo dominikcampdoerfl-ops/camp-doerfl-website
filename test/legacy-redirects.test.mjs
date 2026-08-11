@@ -66,6 +66,7 @@ test("semantic exceptions win over their broader legacy groups", async () => {
     ["/athletenbereich/bodybuilding-wettkaempfe-2023/", "/bodybuilding-wettkaempfe-2026/"],
     ["/personal-training-in-nuernberg/xxl-nutrition/", "/partner/"],
     ["/personal-trainer-nuernberg/", "/personal-trainer-nürnberg/"],
+    ["/personal-trainer-nuernberg/dein-gym-in-nuernberg/", "/personal-trainer-nürnberg/"],
     ["/firmenfitness-aus-nuernberg/gesundheitstag/", "/gesundheitstag-nuernberg/"],
     ["/fuer-unternehmen/gesundheitstag/", "/gesundheitstag-nuernberg/"],
     ["/preise-und-leistungen/", "/personal-training-kosten-nuernberg/"],

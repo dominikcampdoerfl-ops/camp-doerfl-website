@@ -428,11 +428,11 @@ export const contactTopicConfigs = [
     slug: "firmenfitness",
     cardTag: "Unternehmen",
     cardTitle: "Firmenfitness",
-    cardText: "Für Gesundheitstage, Performance Checks, Vorträge und Aktivierungen mit Substanz.",
+    cardText: "Für deutschlandweite Gesundheitstage, Ernährungsvorträge und Team-Aktivierungen mit Substanz.",
     guideTitle: "Klare Firmenanfrage statt losem Gesundheitsprogramm.",
     guideText:
       "Hilfreich sind Zielgruppe, gewünschtes Format und der Rahmen im Unternehmen. So kann schnell eingeordnet werden, was intern wirklich Sinn macht und sauber umsetzbar ist.",
-    guidePoints: ["Zielgruppe im Unternehmen", "Gewünschtes Format", "Ort, Größe und Timing"],
+    guidePoints: ["Zielgruppe und Berufsfeld", "Gewünschtes Format", "Ort, Größe und Timing"],
     messageLabel: "Was soll das Format im Unternehmen konkret bewirken?",
     messagePlaceholder: "Beschreibe kurz Anlass, Zielgruppe und was Mitarbeitende oder das Unternehmen aus dem Format mitnehmen sollen.",
     fields: [
@@ -446,13 +446,19 @@ export const contactTopicConfigs = [
         type: "select",
         name: "corporate_format",
         label: "Welches Format ist interessant?",
-        options: ["Noch offen", "Gesundheitstag", "Performance Check", "Vortrag", "Team-Aktivierung", "Kombination aus mehreren Modulen"]
+        options: ["Noch offen", "Gesundheitstag mit InBody und Beratung", "Ernährungsvortrag passend zum Berufsfeld", "Bewegungsimpuls und Team-Aktivierung", "Kombination aus mehreren Angeboten"]
       },
       {
         type: "text",
         name: "corporate_location",
         label: "Wo soll es stattfinden?",
-        placeholder: "z. B. direkt im Unternehmen, in Nürnberg oder extern"
+        placeholder: "z. B. direkt im Unternehmen in Hamburg, Berlin, Nürnberg oder bundesweit an mehreren Standorten"
+      },
+      {
+        type: "text",
+        name: "corporate_timing",
+        label: "Wann soll das Format stattfinden?",
+        placeholder: "z. B. Oktober 2026, Q1 2027 oder noch offen"
       }
     ]
   },

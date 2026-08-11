@@ -1,8 +1,18 @@
 export const contactTopics = Object.freeze([
   Object.freeze({
+    key: "bodybuilding-coaching",
+    label: "Bodybuilding Coaching & Wettkampfvorbereitung",
+    aliases: Object.freeze(["bodybuilding", "wettkampfvorbereitung", "contest-prep", "bodybuilding-coach"])
+  }),
+  Object.freeze({
     key: "premium-training",
     label: "Premium Personal Training",
     aliases: Object.freeze(["premium-personal-training", "personal-training", "personal-coaching"])
+  }),
+  Object.freeze({
+    key: "koerperanalyse",
+    label: "Körperanalyse & InBody",
+    aliases: Object.freeze(["körperanalyse", "inbody", "bia-messung", "koerperanalyse-nuernberg"])
   }),
   Object.freeze({
     key: "executive-performance",

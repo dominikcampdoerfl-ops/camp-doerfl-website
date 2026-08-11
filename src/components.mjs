@@ -769,14 +769,48 @@ export function contactForm() {
       </label>
       <div class="form-footer form-footer--contact form-footer--contact-simple">
         <p class="contact-form__note">
-          Deine Nachricht wird direkt an ${site.email} gesendet.
+          Unverbindlich anfragen. Deine Nachricht geht direkt an Dominik – ohne Callcenter und ohne Umwege.
         </p>
         <div class="contact-form__actions contact-form__actions--single">
-          <button class="button button--primary" type="submit"><span>Nachricht absenden</span><span aria-hidden="true">&rarr;</span></button>
+          <button class="button button--primary" type="submit"><span>Unverbindlich anfragen</span><span aria-hidden="true">&rarr;</span></button>
         </div>
         <p class="contact-form__status" data-contact-status aria-live="polite"></p>
       </div>
     </form>
+  `;
+}
+
+const inquiryByPath = Object.freeze({
+  "/": { topic: "", label: "Beratung anfragen" },
+  "/personal-trainer-nürnberg/": { topic: "premium-training", label: "Training anfragen" },
+  "/personal-training-kosten-nuernberg/": { topic: "premium-training", label: "Training anfragen" },
+  "/koerperanalyse-nuernberg/": { topic: "koerperanalyse", label: "Analyse anfragen" },
+  "/executive-performance/": { topic: "executive-performance", label: "Platz anfragen" },
+  "/firmenfitness/": { topic: "firmenfitness", label: "Firmenfitness anfragen" },
+  "/gesundheitstag-nuernberg/": { topic: "firmenfitness", label: "Gesundheitstag anfragen" },
+  "/events/": { topic: "events", label: "Event anfragen" },
+  "/app/": { topic: "app", label: "App-Zugang anfragen" },
+  "/partner/": { topic: "kooperation", label: "Kooperation anfragen" },
+  "/ueber-dominik/": { topic: "premium-training", label: "Zusammenarbeit anfragen" },
+  "/erfolge-im-team/": { topic: "premium-training", label: "Coaching anfragen" }
+});
+
+function inquiryForPath(path) {
+  const inquiry = inquiryByPath[path];
+  return inquiry ? { ...inquiry, href: contactHref(inquiry.topic) } : null;
+}
+
+function mobileInquiryBar(path) {
+  const inquiry = inquiryForPath(path);
+  if (!inquiry) return "";
+
+  return `
+    <aside class="mobile-inquiry-bar" aria-label="Direkte Anfrage">
+      <a href="${inquiry.href}">
+        <span class="mobile-inquiry-bar__copy"><small>Unverbindlich · persönlich</small><strong>${inquiry.label}</strong></span>
+        <span class="mobile-inquiry-bar__arrow" aria-hidden="true">&rarr;</span>
+      </a>
+    </aside>
   `;
 }
 
@@ -793,16 +827,26 @@ function navbar(activePath) {
     .filter(Boolean);
   const appItem = navItems.find((item) => item.href === "/app/");
   const contactItem = navItems.find((item) => item.href === "/kontakt/");
+  const inquiry = inquiryForPath(activePath);
+  const contextualContactItem = contactItem
+    ? {
+        ...contactItem,
+        href: inquiry?.href || contactItem.href,
+        label: inquiry?.label || "Beratung anfragen",
+        iconHref: contactItem.href,
+        isContact: true
+      }
+    : null;
   const navSocials = socialProfileUrls();
   const mobileSocialMarkup = navSocials.length ? socialIconLinks(navSocials, { className: "social-link--chip social-link--nav-menu" }) : "";
-  const mobileNavItems = [...primaryNavItems, ...(appItem ? [appItem] : []), ...(contactItem ? [contactItem] : [])];
+  const mobileNavItems = [...primaryNavItems, ...(appItem ? [appItem] : []), ...(contextualContactItem ? [contextualContactItem] : [])];
   const desktopLabels = {
-    "/personal-trainer-nürnberg/": "Personal Training"
+    "/personal-trainer-nürnberg/": "Personal Trainer Nürnberg"
   };
   const renderNavItem = (item) => `
-    <a class="site-nav__entry${item.href === "/app/" || item.href === "/kontakt/" ? " site-nav__entry--supplemental" : ""}${activePath === item.href ? " is-active" : ""}" href="${item.href}" ${activePath === item.href ? 'aria-current="page"' : ""}>
+    <a class="site-nav__entry${item.href === "/app/" || item.isContact ? " site-nav__entry--supplemental" : ""}${activePath === item.href ? " is-active" : ""}" href="${item.href}" ${activePath === item.href ? 'aria-current="page"' : ""}>
       <span class="site-nav__entry-main">
-        <span class="site-nav__entry-icon">${uiIcon(navIconForHref(item.href))}</span>
+        <span class="site-nav__entry-icon">${uiIcon(navIconForHref(item.iconHref || item.href))}</span>
         <span class="site-nav__entry-label">
           <span class="site-nav__label-desktop">${desktopLabels[item.href] || item.label}</span>
           <span class="site-nav__label-mobile">${item.label}</span>
@@ -857,7 +901,7 @@ function navbar(activePath) {
         <div class="nav-extras">
           ${languageSwitcher("language-switcher--desktop")}
           ${appItem ? `<a class="nav-action nav-action--app${activePath === appItem.href ? " is-active" : ""}" href="${appItem.href}" ${activePath === appItem.href ? 'aria-current="page"' : ""}>App</a>` : ""}
-          ${contactItem ? `<a class="nav-action nav-action--contact${activePath === contactItem.href ? " is-active" : ""}" href="${contactItem.href}" ${activePath === contactItem.href ? 'aria-current="page"' : ""}><span>Kontakt</span><span aria-hidden="true">&nearr;</span></a>` : ""}
+          ${contextualContactItem ? `<a class="nav-action nav-action--contact${activePath === "/kontakt/" ? " is-active" : ""}" href="${contextualContactItem.href}" ${activePath === "/kontakt/" ? 'aria-current="page"' : ""}><span>Anfragen</span><span aria-hidden="true">&nearr;</span></a>` : ""}
         </div>
       </div>
     </header>
@@ -867,6 +911,8 @@ function navbar(activePath) {
 function footer() {
   const footerNavItems = [
     ...navItems,
+    { label: "Körperanalyse Nürnberg", href: "/koerperanalyse-nuernberg/" },
+    { label: "Gesundheitstag Nürnberg", href: "/gesundheitstag-nuernberg/" },
     { label: "Personal Training Kosten", href: "/personal-training-kosten-nuernberg/" },
     { label: "Executive Performance", href: "/executive-performance/" },
     { label: "Über Dominik", href: "/ueber-dominik/" },
@@ -995,11 +1041,13 @@ export function layout({
   robots = defaultRobotsContent,
   pageName = "",
   pageType = "WebPage",
+  dateModified = "",
   socialImage = defaultSocialImage,
   socialImageAlt = "Camp Dörfl Performance System in Nürnberg",
   extraStructuredData = []
 }) {
   const canonicalPath = path === "/" ? "/" : path;
+  const hasMobileInquiry = Boolean(inquiryForPath(path));
   const canonical = `${site.url}${canonicalPath}`;
   const allKeywords = (keywords.length ? keywords : site.keywords).join(", ");
   const sameAs = socialProfileUrls();
@@ -1118,6 +1166,7 @@ export function layout({
         url: canonical,
         description,
         inLanguage: "de-DE",
+        ...(dateModified ? { dateModified } : {}),
         isPartOf: { "@id": websiteId },
         about: { "@id": businessId },
         primaryImageOfPage: {
@@ -1158,17 +1207,18 @@ export function layout({
 	    <link rel="icon" href="${brandLogoPath}">
 	    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/camp-doerfl-logo.png">
 	    <link rel="stylesheet" href="/assets/styles.css?v=20260804-2">
-	    <link rel="stylesheet" href="/assets/mobile-overrides.css?v=20260804-2">
+	    <link rel="stylesheet" href="/assets/mobile-overrides.css?v=20260811-2">
 	    <script type="application/ld+json">${JSON.stringify(structuredData)}</script>
   </head>
-  <body${bodyClass ? ` class="${bodyClass}"` : ""}>
+  <body${bodyClass || hasMobileInquiry ? ` class="${[bodyClass, hasMobileInquiry ? "has-mobile-inquiry-bar" : ""].filter(Boolean).join(" ")}"` : ""}>
     ${navbar(path)}
     <main id="main">
       ${content}
     </main>
     ${footer()}
+    ${mobileInquiryBar(path)}
     ${consentManager()}
-    <script type="module" src="/assets/main.js?v=20260804-2"></script>
+    <script type="module" src="/assets/main.js?v=20260810-1"></script>
   </body>
 </html>`;
 }

@@ -342,7 +342,7 @@ ${sitemapPages
     .map(
       (page) => `  <url>
     <loc>${site.url}${page.route}</loc>
-    <changefreq>weekly</changefreq>
+${page.lastModified ? `    <lastmod>${page.lastModified}</lastmod>\n` : ""}    <changefreq>weekly</changefreq>
     <priority>${page.route === "/" ? "1.0" : "0.8"}</priority>
   </url>`
     )
@@ -352,13 +352,95 @@ ${sitemapPages
   await writeFile(join(dist, "sitemap.xml"), sitemap, "utf8");
   await writeFile(
     join(dist, "robots.txt"),
-    `User-agent: *
+    `# AI search, live retrieval and model crawlers are explicitly welcome.
+# Public pages remain governed by their page-level robots meta tags.
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: *
 Allow: /
 
 Sitemap: ${site.url}/sitemap.xml
+# AI site guide: ${site.url}/llms.txt
 `,
     "utf8"
   );
+
+  const llmsTxt = `# ${site.name}
+
+> ${site.description}
+
+Camp Dörfl is a public German-language website for personal training, body analysis, corporate fitness, events and the Camp Dörfl App in Nürnberg. AI search engines, assistants and retrieval systems may crawl, quote and link to the public content.
+
+## Core services
+
+- [Home](${site.url}/): Overview of Camp Dörfl and all services
+- [Körperanalyse Nürnberg](${site.url}/koerperanalyse-nuernberg/): 2D body analysis, InBody BIA measurement and personal evaluation
+- [Personal Trainer Nürnberg](${site.url}/personal-trainer-nürnberg/): Premium personal training and coaching
+- [Firmenfitness deutschlandweit](${site.url}/firmenfitness/): Germany-wide corporate health days, InBody consultation, workplace-specific nutrition talks and team activation
+- [Gesundheitstag Nürnberg](${site.url}/gesundheitstag-nuernberg/): Health-day formats for companies
+- [Events](${site.url}/events/): Event moderation and performance formats
+- [Camp Dörfl App](${site.url}/app/): Training, nutrition and progress tracking
+- [About Dominik Dörfl](${site.url}/ueber-dominik/): Coach, athlete and moderator profile
+- [Contact](${site.url}/kontakt/): Enquiries and contact options
+
+## Discovery
+
+- [XML sitemap](${site.url}/sitemap.xml)
+- Canonical public URL: ${site.url}/
+- Primary language: German (de-DE)
+- Service area: Nürnberg, Fürth and Erlangen, Germany
+`;
+
+  await writeFile(join(dist, "llms.txt"), llmsTxt, "utf8");
 
   const securityTxtExpires = new Date(Date.now() + oneYearInMilliseconds)
     .toISOString()

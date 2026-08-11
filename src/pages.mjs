@@ -26,6 +26,7 @@ import {
   socialButtonLabel,
   socialIconLink,
   socialIconLinks,
+  stepGrid,
   summaryRows,
   timelineList,
   transformationGrid
@@ -39,7 +40,7 @@ import {
 } from "./sports-calendar-data.mjs";
 import { popularSportSpotCategoryIds, sportSpotCategories } from "./sport-spots-data.mjs";
 
-function serviceSchema({ path, name, serviceType, description }) {
+function serviceSchema({ path, name, serviceType, description, areaServed }) {
   return {
     "@type": "Service",
     "@id": `${site.url}${path}#service`,
@@ -47,7 +48,7 @@ function serviceSchema({ path, name, serviceType, description }) {
     serviceType,
     description,
     provider: { "@id": `${site.url}/#business` },
-    areaServed: [
+    areaServed: areaServed || [
       { "@type": "City", name: "Nürnberg" },
       { "@type": "City", name: "Fürth" },
       { "@type": "City", name: "Erlangen" }
@@ -186,6 +187,49 @@ function corporateModuleShowcase(items) {
       </div>
     </div>
   `;
+}
+
+function corporateOfferShowcase(items) {
+  const [featured, ...supporting] = items;
+  const points = (item) => `
+    <ul class="corporate-offer-card__points" aria-label="${item.detail} Leistungen">
+      ${item.points.map((point) => `<li>${point}</li>`).join("")}
+    </ul>`;
+
+  return `
+    <div class="corporate-offer-showcase" aria-label="Drei Firmenfitness-Angebote">
+      <article class="corporate-offer-card corporate-offer-card--featured" data-reveal>
+        <figure class="corporate-offer-card__media">
+          <img src="${featured.image}" alt="${featured.alt}" style="object-position:${featured.imagePosition || "center"}"${imageLoadingAttributes()}>
+          <span class="corporate-offer-card__media-label">${featured.detail}</span>
+        </figure>
+        <div class="corporate-offer-card__body">
+          <div class="corporate-offer-card__meta"><span>${featured.number}</span><small>Firmenfitness-Angebot</small></div>
+          <h3>${featured.shortTitle || featured.title}</h3>
+          <p>${featured.text}</p>
+          ${points(featured)}
+        </div>
+      </article>
+      <div class="corporate-offer-showcase__stack">
+        ${supporting
+          .map(
+            (item) => `
+              <article class="corporate-offer-card corporate-offer-card--compact" data-reveal>
+                <figure class="corporate-offer-card__media">
+                  <img src="${item.image}" alt="${item.alt}" style="object-position:${item.imagePosition || "center"}"${imageLoadingAttributes()}>
+                  <span class="corporate-offer-card__media-label">${item.detail}</span>
+                </figure>
+                <div class="corporate-offer-card__body">
+                  <div class="corporate-offer-card__meta"><span>${item.number}</span><small>Firmenfitness-Angebot</small></div>
+                  <h3>${item.shortTitle || item.title}</h3>
+                  <p>${item.text}</p>
+                  ${points(item)}
+                </div>
+              </article>`
+          )
+          .join("")}
+      </div>
+    </div>`;
 }
 
 function corporateOutcomeShowcase(items) {
@@ -343,6 +387,11 @@ const coachingFaq = [
     question: "Was macht das Training anders als Standardprogramme?",
     answer:
       "Es plant echte Wochen mit ein. Training, Ernährung, Alltagsbelastung, Personal Trainings und Analysen werden auf deinen Kalender abgestimmt."
+  },
+  {
+    question: "Wo findet das Personal Training in Nürnberg statt?",
+    answer:
+      "Der persönliche Ausgangspunkt ist Camp Dörfl in Nürnberg. Je nach Ziel und vereinbartem Format werden Training, Analyse und Beratung passend geplant; auch Anfragen aus Fürth und Erlangen sind möglich."
   }
 ];
 
@@ -358,9 +407,14 @@ const corporateFaq = [
       "Der Aufwand richtet sich nach Teamgröße, Modulen, Dauer und gewünschter Betreuung vor Ort. Nach einer kurzen Anfrage lässt sich schnell einschätzen, welches Format fachlich und wirtschaftlich sinnvoll ist."
   },
   {
+    question: "Welche drei Firmenfitness-Angebote gibt es?",
+    answer:
+      "Camp Dörfl bietet Gesundheitstage mit InBody-Körperanalyse und Beratung, berufsfeldbezogene Ernährungsvorträge sowie aktive Bewegungs- und Teamimpulse an. Die Formate können einzeln gebucht oder sinnvoll kombiniert werden."
+  },
+  {
     question: "Wie läuft ein Gesundheitstag mit Camp Dörfl ab?",
     answer:
-      "Zuerst werden Mitarbeitende über 2D-Technik und InBody ausgewertet. Danach folgt die direkte, verständliche Beratung mit klaren Empfehlungen für Alltag, Ernährung und Routinen."
+      "Die Teilnehmenden werden mit InBody und auf Wunsch mit ergänzender 2D-Technik analysiert. Direkt danach folgt eine persönliche, verständliche Beratung mit konkreten Empfehlungen für Ernährung, Bewegung und gesundheitsfördernde Routinen."
   },
   {
     question: "Für wie viele Mitarbeitende kann Firmenfitness geplant werden?",
@@ -368,14 +422,19 @@ const corporateFaq = [
       "Sowohl kleinere Teams als auch größere Gesundheitstage sind möglich. Die Organisation wird so geplant, dass Teilnehmerzahl, Taktung und Beratungsqualität zusammenpassen."
   },
   {
-    question: "Kann die Beratung an das Berufsmodell angepasst werden?",
+    question: "Wird der Ernährungsvortrag an das Berufsfeld angepasst?",
     answer:
-      "Ja. Genau das ist ein zentraler Punkt des Formats: Empfehlungen werden an Schichtmodell, Büroalltag, körperliche Arbeit oder Führungsverantwortung angepasst."
+      "Ja. Der Vortrag ‚Warum Dranbleiben für unsere Gesundheit kein Nice-to-have ist‘ wird auf Arbeitsrealität, Schichtmodell, Büroalltag, körperliche Belastung oder Führungsverantwortung zugeschnitten. Ernährung und Sportintegration werden dadurch konkret statt allgemein."
   },
   {
     question: "Wie viel Abstimmung braucht das intern im Unternehmen?",
     answer:
       "So wenig wie möglich und so viel wie nötig. Camp Dörfl hilft dabei, Organisation, Kommunikation und Durchführung klar zu strukturieren, damit das Format intern leicht organisierbar bleibt."
+  },
+  {
+    question: "Wo bietet Camp Dörfl Firmenfitness an?",
+    answer:
+      "Camp Dörfl hat seinen Ausgangspunkt in Nürnberg und bietet Gesundheitstage, Vorträge und Team-Aktivierungen deutschlandweit direkt in Unternehmen und öffentlichen Einrichtungen an."
   }
 ];
 
@@ -562,33 +621,36 @@ const homeStoryRows = [
 const corporateModuleCards = [
   {
     number: "01",
-    detail: "Analyse",
-    title: "2D-Technik und InBody als starker Startpunkt",
+    detail: "Gesundheitstag",
+    title: "Gesundheitstag mit InBody und Beratung",
+    shortTitle: "Gesundheitstag mit InBody",
     text:
-      "Mitarbeitende bekommen eine präzise Standortbestimmung. Körperdaten werden sichtbar, verständlich und professionell eingeordnet.",
-    points: ["sichtbarer Startpunkt", "saubere Datengrundlage", "professionell erklärt"],
+      "Mitarbeitende erhalten eine fundierte InBody-Körperanalyse und direkt im Anschluss eine persönliche Einordnung ihrer Ergebnisse. So wird Gesundheit sichtbar, verständlich und konkret handlungsfähig.",
+    points: ["InBody-Körperanalyse", "persönliche Auswertung", "konkrete nächste Schritte"],
     image: "/assets/images/dominik-coaching-bikeerg.webp",
     alt: "Dominik Dörfl erläutert eine Körperanalyse im Rahmen eines Firmenfitness-Angebots",
     imagePosition: "center 36%"
   },
   {
     number: "02",
-    detail: "Beratung",
-    title: "Individuelle Einordnung vom Profi",
+    detail: "Vortrag",
+    title: "Ernährung verstehen. Im Beruf dranbleiben.",
+    shortTitle: "Ernährung im Berufsalltag",
     text:
-      "Nach der Messung folgt die Beratung: Ernährung, Bewegung und Routinen werden passend zum Arbeitsmodell erklärt.",
-    points: ["alltagstaugliche Empfehlungen", "Ernaehrung & Routinen", "zum Berufsmodell passend"],
+      "Der Vortrag ‚Warum Dranbleiben für unsere Gesundheit kein Nice-to-have ist‘ verbindet gesunde Ernährung mit realistischen Möglichkeiten, Sport in das jeweilige Berufsfeld zu integrieren.",
+    points: ["berufsfeldbezogene Inhalte", "Ernährung ohne Dogmen", "Sport realistisch integrieren"],
     image: "/assets/images/dominik-athlete-nutrition.webp",
     alt: "Dominik Dörfl bei einer persönlichen Beratung zu Ernährung und Leistungsfähigkeit",
     imagePosition: "center 24%"
   },
   {
     number: "03",
-    detail: "Umsetzung",
-    title: "Einfaches Format, starke Wirkung",
+    detail: "Aktivierung",
+    title: "Bewegungsimpuls und Team-Aktivierung",
+    shortTitle: "Bewegung &amp; Team-Aktivierung",
     text:
-      "Das Angebot ist leicht in Unternehmen integrierbar und hat sich bereits mehrfach in kurzer Zeit erfolgreich verkauft.",
-    points: ["leicht intern organisierbar", "direkt nutzbar im Team"],
+      "Ein aktives Format, das Bewegung direkt erlebbar macht und an Arbeitsumfeld, Zeitfenster und Gruppe angepasst wird. Eigenständig buchbar oder als Praxisbaustein zu Analyse und Vortrag.",
+    points: ["direkt im Unternehmen", "an Belastung und Team angepasst", "einzeln oder kombinierbar"],
     image: "/assets/images/dominik-athlete-bike-yellow.webp",
     alt: "Dominik Dörfl im Radtrikot neben seinem Zeitfahrrad auf einer Landstraße",
     imagePosition: "center 20%"
@@ -1004,6 +1066,102 @@ const bodybuildingCalendarSources = [
       { date: "2026-10-03", label: "3. Oktober 2026", name: "PCA German Championships", location: "Stadt- und Kongresshalle Vallendar", type: "German Championships" },
       { date: "2026-05-09", label: "9. Mai 2026", name: "PCA German Open", location: "Kongresshalle Vallendar", type: "German Open", past: true }
     ]
+  },
+  {
+    id: "ifbb-pro-league",
+    number: "07",
+    name: "IFBB Professional League",
+    descriptor: "IFBB Pro League · internationale Profi-Shows",
+    sourceUrl: "https://www.ifbbpro.com/schedule/",
+    sourceLabel: "Offizieller IFBB-Pro-League-Kalender",
+    scope: "international",
+    note: "Ausgewählte kommende Profi-Shows, pro Veranstaltung zusammengeführt. Der offizielle Kalender listet zusätzlich alle Starts nach Division und Masters-Klasse.",
+    events: [
+      { date: "2026-08-14", endDate: "2026-08-15", label: "14.–15. August 2026", name: "Texas Pro", location: "Irving, Texas, USA", type: "IFBB Pro League" },
+      { date: "2026-08-22", endDate: "2026-08-23", label: "22.–23. August 2026", name: "Austrian Oak Pro", location: "Österreich", type: "IFBB Pro League" },
+      { date: "2026-08-22", label: "22. August 2026", name: "Rising Phoenix Pro", location: "Phoenix, Arizona, USA", type: "IFBB Pro League" },
+      { date: "2026-08-22", endDate: "2026-08-23", label: "22.–23. August 2026", name: "Asian Pro Championships", location: "Südkorea", type: "IFBB Pro League" },
+      { date: "2026-08-30", label: "30. August 2026", name: "Alina Popa Classic Pro", location: "Rumänien", type: "IFBB Pro League" },
+      { date: "2026-09-06", label: "6. September 2026", name: "Pro Masters World Championships", location: "Pittsburgh, Pennsylvania, USA", type: "IFBB Pro League Masters" },
+      { date: "2026-09-13", label: "13. September 2026", name: "Europa Pro Championships", location: "Offenbach, Deutschland", type: "IFBB Pro League" },
+      { date: "2026-09-24", endDate: "2026-09-27", label: "24.–27. September 2026", name: "Olympia 2026", location: "Las Vegas, Nevada, USA", type: "IFBB Pro League" },
+      { date: "2026-10-02", endDate: "2026-10-03", label: "2.–3. Oktober 2026", name: "France Pro", location: "Frankreich", type: "IFBB Pro League" },
+      { date: "2026-10-10", label: "10. Oktober 2026", name: "EVLS Prague Pro", location: "Prag, Tschechien", type: "IFBB Pro League" },
+      { date: "2026-10-17", label: "17. Oktober 2026", name: "UK Pro", location: "Vereinigtes Königreich", type: "IFBB Pro League" },
+      { date: "2026-10-25", label: "25. Oktober 2026", name: "Slovakia Pro", location: "Slowakei", type: "IFBB Pro League" },
+      { date: "2026-10-31", endDate: "2026-11-01", label: "31. Oktober–1. November 2026", name: "Poland Pro", location: "Polen", type: "IFBB Pro League" },
+      { date: "2026-11-07", endDate: "2026-11-08", label: "7.–8. November 2026", name: "Romania Muscle Fest Pro", location: "Rumänien", type: "IFBB Pro League" },
+      { date: "2026-11-13", endDate: "2026-11-15", label: "13.–15. November 2026", name: "Ben Weider Natural Pro", location: "Alexandria, Virginia, USA", type: "IFBB Pro League Natural" },
+      { date: "2026-11-21", endDate: "2026-11-22", label: "21.–22. November 2026", name: "Atlantic Coast Pro", location: "Fort Lauderdale, Florida, USA", type: "IFBB Pro League" },
+      { date: "2026-11-29", label: "29. November 2026", name: "Spain Pro", location: "Spanien", type: "IFBB Pro League" },
+      { date: "2026-12-05", endDate: "2026-12-06", label: "5.–6. Dezember 2026", name: "Saudi Arabia Pro", location: "Riad, Saudi-Arabien", type: "IFBB Pro League" }
+    ]
+  },
+  {
+    id: "npc-worldwide",
+    number: "08",
+    name: "NPC Worldwide",
+    descriptor: "Internationale Regionals · Pro Qualifier",
+    sourceUrl: "https://www.ifbbpro.com/npc-worldwide/schedule/",
+    sourceLabel: "Offizieller NPC-Worldwide-Kalender",
+    scope: "international",
+    note: "Kommende internationale Pro Qualifier mit direktem Weg zur IFBB Pro Card. Regionals und weitere Ländertermine stehen im verlinkten vollständigen Live-Kalender.",
+    events: [
+      { date: "2026-08-14", endDate: "2026-08-16", label: "14.–16. August 2026", name: "Sud Americano Argentina Pro Qualifier", location: "Buenos Aires, Argentinien", type: "NPC Worldwide Pro Qualifier" },
+      { date: "2026-08-15", endDate: "2026-08-16", label: "15.–16. August 2026", name: "Pharlabs Mexico Grand Battle Pro Qualifier", location: "Monterrey, Mexiko", type: "NPC Worldwide Pro Qualifier" },
+      { date: "2026-08-22", endDate: "2026-08-23", label: "22.–23. August 2026", name: "Austrian Oak Pro Qualifier", location: "Wien, Österreich", type: "NPC Worldwide Pro Qualifier" },
+      { date: "2026-08-22", endDate: "2026-08-23", label: "22.–23. August 2026", name: "World of Monsterzym Asian Pro Qualifier", location: "Seoul, Südkorea", type: "NPC Worldwide Pro Qualifier" },
+      { date: "2026-09-01", label: "1. September 2026", name: "Algeria Pro Qualifier", location: "Algerien", type: "NPC Worldwide Pro Qualifier" },
+      { date: "2026-09-05", endDate: "2026-09-06", label: "5.–6. September 2026", name: "Italy Pro Qualifier", location: "Mailand, Italien", type: "NPC Worldwide Pro Qualifier" },
+      { date: "2026-09-05", endDate: "2026-09-06", label: "5.–6. September 2026", name: "Asian Masters Pro Qualifier", location: "Hongkong, China", type: "NPC Worldwide Pro Qualifier" },
+      { date: "2026-09-05", endDate: "2026-09-06", label: "5.–6. September 2026", name: "World of Monsterzym Natural Pro Qualifier", location: "Seoul, Südkorea", type: "NPC Worldwide Natural Pro Qualifier" },
+      { date: "2026-09-06", label: "6. September 2026", name: "AGP Philippines Pro Qualifier", location: "Manila, Philippinen", type: "NPC Worldwide Pro Qualifier" },
+      { date: "2026-09-11", endDate: "2026-09-12", label: "11.–12. September 2026", name: "Iraq Pro Qualifier", location: "Kirkuk, Irak", type: "NPC Worldwide Pro Qualifier" },
+      { date: "2026-09-11", endDate: "2026-09-12", label: "11.–12. September 2026", name: "Amateur Olympia Latin America", location: "Santo Domingo, Dominikanische Republik", type: "NPC Worldwide Pro Qualifier" },
+      { date: "2026-09-12", label: "12. September 2026", name: "Huanji China Pro Qualifier", location: "Xi’an, China", type: "NPC Worldwide Pro Qualifier" },
+      { date: "2026-09-12", endDate: "2026-09-13", label: "12.–13. September 2026", name: "European Pro Qualifier", location: "Offenbach, Deutschland", type: "NPC Worldwide Pro Qualifier" },
+      { date: "2026-09-17", endDate: "2026-09-20", label: "17.–20. September 2026", name: "Turkey Pro Qualifier", location: "Izmir, Türkei", type: "NPC Worldwide Pro Qualifier" },
+      { date: "2026-09-20", label: "20. September 2026", name: "GASP Classic Sweden Pro Qualifier", location: "Södertälje, Schweden", type: "NPC Worldwide Pro Qualifier" },
+      { date: "2026-09-22", endDate: "2026-09-23", label: "22.–23. September 2026", name: "Amateur Olympia Las Vegas", location: "Las Vegas, Nevada, USA", type: "NPC Worldwide Pro Qualifier" },
+      { date: "2026-09-26", endDate: "2026-09-27", label: "26.–27. September 2026", name: "Amateur Olympia South Korea", location: "Seoul, Südkorea", type: "NPC Worldwide Pro Qualifier" },
+      { date: "2026-10-03", label: "3. Oktober 2026", name: "Toulouse Pro Qualifier", location: "Toulouse-Labège, Frankreich", type: "NPC Worldwide Pro Qualifier" },
+      { date: "2026-10-03", label: "3. Oktober 2026", name: "Canadian National Pro Qualifier", location: "Toronto, Kanada", type: "NPC Worldwide Pro Qualifier" },
+      { date: "2026-10-10", label: "10. Oktober 2026", name: "EVLS Prague Pro Qualifier", location: "Prag, Tschechien", type: "NPC Worldwide Pro Qualifier" }
+    ]
+  },
+  {
+    id: "ifbb-international",
+    number: "09",
+    name: "IFBB International",
+    descriptor: "Offizieller internationaler IFBB-Kalender",
+    sourceUrl: "https://ifbb.com/wp-content/uploads/2026/05/calendar-2026-1.pdf",
+    sourceLabel: "Offizieller IFBB-Kalender 2026",
+    scope: "international",
+    note: "Internationale IFBB-Meisterschaften, Cups, Diamond Cups und Mr.-Universe-Termine aus dem offiziellen Kalenderstand vom 21. Mai 2026.",
+    events: [
+      { date: "2026-08-15", endDate: "2026-08-16", label: "15.–16. August 2026", name: "Miss & Mister America IFBB Cup", location: "Guayaquil, Ecuador", type: "IFBB International" },
+      { date: "2026-08-27", endDate: "2026-08-30", label: "27.–30. August 2026", name: "Istanbul Fitness Expo & World Fitness Sport Games", location: "Istanbul, Türkei", type: "IFBB International" },
+      { date: "2026-08-27", endDate: "2026-08-31", label: "27.–31. August 2026", name: "Central American & Caribbean Championships", location: "Guatemala", type: "IFBB International" },
+      { date: "2026-09-04", endDate: "2026-09-06", label: "4.–6. September 2026", name: "Mr Universe Lebanon", location: "Beirut, Libanon", type: "IFBB International" },
+      { date: "2026-09-04", endDate: "2026-09-06", label: "4.–6. September 2026", name: "Mr Universe Switzerland", location: "Schweiz", type: "IFBB International" },
+      { date: "2026-09-04", endDate: "2026-09-06", label: "4.–6. September 2026", name: "IFBB Fitlap Cup", location: "Tallinn, Estland", type: "IFBB International" },
+      { date: "2026-09-12", endDate: "2026-09-13", label: "12.–13. September 2026", name: "IFBB Mr Universe Austria", location: "Österreich", type: "IFBB International" },
+      { date: "2026-09-12", label: "12. September 2026", name: "IFBB Diamond Cup Prague", location: "Prag, Tschechien", type: "IFBB International" },
+      { date: "2026-09-15", endDate: "2026-09-18", label: "15.–18. September 2026", name: "IFBB West Asian Championships", location: "Jerewan, Armenien", type: "IFBB International" },
+      { date: "2026-09-17", endDate: "2026-09-20", label: "17.–20. September 2026", name: "IFBB South American Championships", location: "Buenos Aires, Argentinien", type: "IFBB International" },
+      { date: "2026-09-18", endDate: "2026-09-20", label: "18.–20. September 2026", name: "IFBB Diamond Cup Luxembourg", location: "Luxemburg", type: "IFBB International" },
+      { date: "2026-09-30", endDate: "2026-10-05", label: "30. September–5. Oktober 2026", name: "IFBB World Men’s & Women’s Championships", location: "Ajman, Vereinigte Arabische Emirate", type: "IFBB Weltmeisterschaft" },
+      { date: "2026-10-10", label: "10. Oktober 2026", name: "IFBB Mr Universe Canarias", location: "Teneriffa, Spanien", type: "IFBB International" },
+      { date: "2026-10-16", endDate: "2026-10-17", label: "16.–17. Oktober 2026", name: "IFBB Diamond Cup Skopje", location: "Skopje, Nordmazedonien", type: "IFBB International" },
+      { date: "2026-10-16", endDate: "2026-10-17", label: "16.–17. Oktober 2026", name: "IFBB World Fitness Cup", location: "Bratislava, Slowakei", type: "IFBB International" },
+      { date: "2026-10-25", endDate: "2026-10-27", label: "25.–27. Oktober 2026", name: "IFBB Mediterranean Championships", location: "Santorini, Griechenland", type: "IFBB International" },
+      { date: "2026-11-05", endDate: "2026-11-08", label: "5.–8. November 2026", name: "IFBB Asian Championships", location: "Bangkok, Thailand", type: "IFBB International" },
+      { date: "2026-11-12", endDate: "2026-11-15", label: "12.–15. November 2026", name: "IFBB African Championships", location: "Alexandria, Ägypten", type: "IFBB International" },
+      { date: "2026-11-13", endDate: "2026-11-15", label: "13.–15. November 2026", name: "IFBB Diamond Cup Cancun", location: "Cancún, Mexiko", type: "IFBB International" },
+      { date: "2026-11-27", endDate: "2026-11-28", label: "27.–28. November 2026", name: "Mr Universe Verona", location: "Verona, Italien", type: "IFBB International" },
+      { date: "2026-12-05", endDate: "2026-12-06", label: "5.–6. Dezember 2026", name: "IFBB Mr Universe Portugal", location: "Póvoa, Portugal", type: "IFBB International" },
+      { date: "2026-12-12", endDate: "2026-12-13", label: "12.–13. Dezember 2026", name: "Mr Universe Roma", location: "Pomezia, Italien", type: "IFBB International" }
+    ]
   }
 ];
 
@@ -1032,6 +1190,26 @@ const bodybuildingCalendarFaq = [
     question: "Sind die Termine garantiert?",
     answer:
       "Nein. Die Übersicht wird redaktionell aus offiziellen Verbandsquellen zusammengetragen. Verbindlich ist immer die aktuelle Veröffentlichung des jeweiligen Verbandes oder Veranstalters."
+  },
+  {
+    question: "Welche Frauenklassen gibt es bei Bodybuilding-Wettkämpfen?",
+    answer:
+      "Je nach Verband werden unter anderem Bikini, Wellness, Figure, Women's Physique und Frauen-Bodybuilding angeboten. Bezeichnungen, Größenklassen, Gewichtslimits und Voraussetzungen unterscheiden sich; verbindlich ist die Ausschreibung des jeweiligen Veranstalters."
+  },
+  {
+    question: "Wann fand die Bodybuilding-Weltmeisterschaft 2026 in Riga statt?",
+    answer:
+      "Die in diesem Kalender geführte NAC-Weltmeisterschaft 2026 fand am 6. Juni 2026 in Riga, Lettland, statt. Der Termin bleibt als bereits ausgetragener Wettkampf im Jahresarchiv sichtbar."
+  },
+  {
+    question: "Was ist der Unterschied zwischen IFBB, IFBB Pro League und NPC Worldwide?",
+    answer:
+      "Die IFBB Professional League führt professionelle Wettbewerbe wie Olympia-Qualifikationsshows. NPC Worldwide organisiert internationale Regionals und Pro Qualifier auf dem Weg zur IFBB Pro Card. Die IFBB veröffentlicht einen eigenen internationalen Meisterschafts-, Cup- und Mr.-Universe-Kalender. Deshalb werden die drei Systeme hier getrennt dargestellt."
+  },
+  {
+    question: "Sind alle Klassen einer IFBB-Pro-Show einzeln aufgeführt?",
+    answer:
+      "Nein. Damit eine Veranstaltung nicht mehrfach erscheint, wird jede ausgewählte Pro-Show einmal als Termin geführt. Welche Divisionen und Masters-Klassen tatsächlich angeboten werden, steht im verlinkten offiziellen IFBB-Pro-League-Kalender."
   }
 ];
 
@@ -1109,8 +1287,40 @@ const boxingCalendarSources = [
     ]
   },
   {
-    id: "world-boxing",
+    id: "ibf",
     number: "05",
+    division: "profi",
+    name: "IBF",
+    descriptor: "International Boxing Federation",
+    sourceUrl: "https://www.ibf-usba-boxing.com/schedule/",
+    note: "Kommende IBF-Eliminator sowie internationale und regionale Titelkämpfe aus dem offiziellen IBF-Kampfplan.",
+    events: [
+      { date: "2026-09-12", label: "12. September 2026", name: "Regie Suganob vs. Sivenathi Nontshinga", location: "Bohol · Philippinen", type: "Halbfliegengewicht · IBF Eliminator #1" },
+      { date: "2026-09-12", label: "12. September 2026", name: "Datu Adam vs. Oky Akbar", location: "Bohol · Philippinen", type: "Superbantamgewicht · IBF Asia" },
+      { date: "2026-09-12", label: "12. September 2026", name: "Sol Cudos vs. Mercedes Rocio Reyna", location: "Buenos Aires · Argentinien", type: "Atomgewicht · IBF Latino Female" },
+      { date: "2026-09-12", label: "12. September 2026", name: "Leonard Pores III vs. Andika D'Golden Boy", location: "Bohol · Philippinen", type: "Fliegengewicht · IBF Pan Pacific" },
+      { date: "2026-09-12", label: "12. September 2026", name: "Reymart Tagacanao vs. Chunlin Kuang", location: "Bohol · Philippinen", type: "Superfliegengewicht · IBF Asia" },
+      { date: "2026-09-19", label: "19. September 2026", name: "Shabaz Masoud vs. Ckari Mansilla", location: "Manchester · Großbritannien", type: "Federgewicht · IBF Intercontinental" },
+      { date: "2026-10-03", label: "3. Oktober 2026", name: "Stan Surmacz vs. Alexis Barriere", location: "Montreal · Kanada", type: "Schwergewicht · IBF North American" },
+      { date: "2026-10-03", label: "3. Oktober 2026", name: "Mea Motu vs. Mariah Turner", location: "Auckland · Neuseeland", type: "Federgewicht · IBF Intercontinental Female" }
+    ]
+  },
+  {
+    id: "bdb",
+    number: "06",
+    division: "profi",
+    name: "Bund Deutscher Berufsboxer",
+    shortName: "BDB",
+    descriptor: "Profiboxen · Deutschland",
+    sourceUrl: "https://www.bund-deutscher-berufsboxer.de/termine/",
+    note: "Der BDB ist der deutsche Dachverband für Berufsboxerinnen und Berufsboxer. Seine offizielle Terminseite ist verlinkt; aktuell sind dort noch keine belastbaren 2026-Ansetzungen veröffentlicht.",
+    emptyTitle: "Noch kein offizieller 2026-Termin veröffentlicht.",
+    emptyText: "Sobald der BDB seinen Veranstaltungskalender aktualisiert, werden bestätigte Kampftage hier ergänzt.",
+    events: []
+  },
+  {
+    id: "world-boxing",
+    number: "07",
     division: "amateur",
     name: "World Boxing",
     descriptor: "Olympisches Boxen · International",
@@ -1131,7 +1341,7 @@ const boxingCalendarSources = [
   },
   {
     id: "dbv",
-    number: "06",
+    number: "08",
     division: "amateur",
     name: "Deutscher Boxsport-Verband",
     shortName: "DBV",
@@ -1159,6 +1369,11 @@ const boxingCalendarFaq = [
     question: "Warum taucht ein Profikampf bei mehreren Verbänden auf?",
     answer:
       "Bei einem Vereinigungs- oder Undisputed-Kampf können Titel mehrerer Organisationen gleichzeitig auf dem Spiel stehen. Deshalb kann derselbe Kampf etwa bei WBA, WBC und WBO geführt werden."
+  },
+  {
+    question: "Was ist der Unterschied zwischen IBF und BDB?",
+    answer:
+      "Die IBF ist eine internationale Titelorganisation mit Welt-, Eliminator- und Regionaltiteln. Der Bund Deutscher Berufsboxer (BDB) ist der deutsche Dachverband für Berufsboxerinnen und Berufsboxer und beaufsichtigt lizenzierte Profiboxveranstaltungen in Deutschland."
   },
   {
     question: "Wo finde ich Tickets und Übertragungen?",
@@ -1613,22 +1828,75 @@ function homePage() {
       </div>
     </section>
 
+    <section class="section section--muted home-search-paths" aria-labelledby="home-search-paths-title">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Direkt zum passenden Angebot",
+          title: "Was suchst du in Nürnberg?",
+          text:
+            "Wähle deinen konkreten Einstieg – vom persönlichen Coaching über die Körperanalyse bis zum Gesundheitstag für Unternehmen.",
+          align: "center"
+        }).replace("<h2", '<h2 id="home-search-paths-title"')}
+        ${featureGrid(
+          [
+            {
+              detail: "1:1 Coaching",
+              title: "Personal Trainer Nürnberg",
+              text: "Individuelles Training, Ernährung und persönliche Führung für ambitionierte Ziele.",
+              href: "/personal-trainer-nürnberg/",
+              ctaLabel: "Personal Training ansehen"
+            },
+            {
+              detail: "2D · InBody · BIA",
+              title: "Körperanalyse Nürnberg",
+              text: "Körperzusammensetzung messen, Ergebnisse verstehen und klare nächste Schritte ableiten.",
+              href: "/koerperanalyse-nuernberg/",
+              ctaLabel: "Körperanalyse ansehen"
+            },
+            {
+              detail: "Für Unternehmen",
+              title: "Gesundheitstag Nürnberg",
+              text: "Ein erlebbarer Gesundheitstag mit Analyse, Aktivierung und persönlicher Einordnung.",
+              href: "/gesundheitstag-nuernberg/",
+              ctaLabel: "Gesundheitstag ansehen"
+            },
+            {
+              detail: "Preise & Formate",
+              title: "Personal Training Kosten",
+              text: "Leistungsumfang, Modelle und Investition für Personal Training transparent einordnen.",
+              href: "/personal-training-kosten-nuernberg/",
+              ctaLabel: "Kosten ansehen"
+            },
+            {
+              detail: "Events · Bühne · Interviews",
+              title: "Moderator Nürnberg",
+              text: "Professionelle Moderation für Business-, Sport- und Bühnenformate mit Präsenz und Timing.",
+              href: "/events/",
+              ctaLabel: "Moderation ansehen"
+            }
+          ],
+          "feature-grid--search-paths"
+        )}
+      </div>
+    </section>
+
     ${ctaSection({
       eyebrow: "Nächster Schritt",
-      title: "Starte mit dem Bereich, der gerade zu dir passt.",
+      title: "Lass uns dein Ziel kurz einordnen.",
       text:
-        "Eine kurze Anfrage reicht. Danach klären wir, ob Premium Personal Training, Firmenfitness, Events oder die App der richtige Einstieg ist.",
-      primary: { label: "Anfrage starten", href: contactHref() }
+        "Schreib kurz, was du erreichen möchtest. Dominik antwortet persönlich und klärt unverbindlich, welcher Einstieg für dich sinnvoll ist.",
+      primary: { label: "Unverbindlich anfragen", href: contactHref() }
     })}
   `;
 
   return layout({
     path: "/",
     bodyClass: "page-premium page-home-reboot",
-    title: "Camp Dörfl | Performance & Personal Training Nürnberg",
+    title: "Camp Dörfl | Performance System Nürnberg",
     description:
-      "Camp Dörfl in Nürnberg bündelt Premium Personal Training, Firmenfitness, Event-Moderation und App-Struktur in einem klaren Performance-System.",
+      "Camp Dörfl ist das Performance System von Dominik Dörfl in Nürnberg – für persönliche Leistungsentwicklung, Firmenfitness, Event-Moderation und die Camp Dörfl App.",
     pageName: "Camp Dörfl",
+    dateModified: "2026-08-10",
     socialImage: "/assets/images/home-hero-ironman-interview-social.jpg",
     socialImageAlt: "Dominik Dörfl als Ironman-Finisher im Stadion",
     keywords: [
@@ -1709,6 +1977,38 @@ function appPage() {
       </div>
     </section>
 
+    <section class="section section--muted corporate-cases-section">
+      <div class="section-shell section-shell--wide">
+        ${sectionHeader({
+          eyebrow: "Aus der Praxis",
+          title: "Gesundheit für unterschiedliche Arbeitswelten.",
+          text:
+            "Nicht jedes Team braucht dieselben Beispiele. Entscheidend ist, dass Ernährung, Bewegung und Gesundheit an die tatsächliche Belastung im Beruf anschließen.",
+          align: "center"
+        })}
+        <div class="corporate-case-grid">
+          <article class="corporate-case-card" data-reveal>
+            <span class="corporate-case-card__sector">Kommune · Pflege &amp; Gesundheit</span>
+            <h3>Stadt Nürnberg</h3>
+            <p>Gesundheitskommunikation für Mitarbeitende aus Pflege- und Gesundheitsamt – verständlich, praxisnah und mit Blick auf anspruchsvolle Arbeitsbedingungen.</p>
+            <ul><li>Ernährung im fordernden Berufsalltag</li><li>Bewegung trotz knapper Zeitfenster</li><li>Dranbleiben als Gesundheitsfaktor</li></ul>
+          </article>
+          <article class="corporate-case-card corporate-case-card--accent" data-reveal>
+            <span class="corporate-case-card__sector">Industrie · Produktion</span>
+            <h3>Neunkirchener Achsenfabrik</h3>
+            <p>Ein Format für ein industrielles Arbeitsumfeld, in dem körperliche Belastung, Schichtrealität und alltagstaugliche Ernährung gemeinsam betrachtet werden.</p>
+            <ul><li>passend zur Arbeitsrealität</li><li>konkrete Ernährungsimpulse</li><li>Sport sinnvoll integrieren</li></ul>
+          </article>
+          <article class="corporate-case-card" data-reveal>
+            <span class="corporate-case-card__sector">Gebäudetechnik · Service</span>
+            <h3>Caverion GmbH</h3>
+            <p>Gesundheitsimpulse für eine Arbeitswelt zwischen Technik, Service, wechselnden Einsatzorten und Büro – ohne pauschale Standardempfehlungen.</p>
+            <ul><li>berufsfeldbezogener Vortrag</li><li>Ernährung realistisch planen</li><li>Bewegung flexibel denken</li></ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <section class="section">
       <div class="section-shell">
         ${sectionHeader({
@@ -1767,12 +2067,32 @@ function personalCoachingPage() {
         </p>
         <div class="ff-hero__actions" data-reveal>
           <a class="button button--primary" href="${contactHref("premium-training")}"><span>Beratung anfragen</span><span aria-hidden="true">&rarr;</span></a>
-          <a class="button button--secondary-light" href="/app/"><span>App dazu ansehen</span><span aria-hidden="true">&rarr;</span></a>
+          <a class="button button--secondary-light" href="/koerperanalyse-nuernberg/"><span>Körperanalyse ansehen</span><span aria-hidden="true">&rarr;</span></a>
         </div>
         <dl class="ff-hero__facts" data-reveal aria-label="Leistungsbausteine im Premium Personal Training">
           <div><dt>1:1</dt><dd>Persönliche Führung</dd></div>
           <div><dt>2D</dt><dd>Analyse & InBody</dd></div>
           <div><dt>App</dt><dd>Check-ins & Steuerung</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="pt-authority" aria-labelledby="pt-authority-title">
+      <div class="section-shell section-shell--wide pt-authority__grid">
+        <div class="pt-authority__copy" data-reveal>
+          <p class="eyebrow">Erfahrung & nachweisbare Resultate</p>
+          <h2 id="pt-authority-title">Warum Dominik Dörfl als Personal Trainer in Nürnberg?</h2>
+          <p>Weil persönliche Erfahrung, dokumentierte Coaching-Erfolge und echte Kundenstimmen zusammenkommen: nicht als Werbeversprechen, sondern öffentlich nachvollziehbar.</p>
+          <div class="pt-authority__links">
+            <a href="/erfolge-im-team/">Alle Coaching-Erfolge ansehen <span aria-hidden="true">→</span></a>
+            <a href="/ueber-dominik/">Dominik Dörfl kennenlernen <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+        <dl class="pt-authority__facts" data-reveal aria-label="Erfahrung und Referenzen von Personal Trainer Dominik Dörfl">
+          <div><dt>10+</dt><dd>Jahre Coaching-Erfahrung</dd></div>
+          <div><dt>13</dt><dd>Deutsche Meistertitel im betreuten Team</dd></div>
+          <div><dt>${coachSuccessStats.placements}</dt><dd>dokumentierte Wettkampfplatzierungen</dd></div>
+          <div><dt>5,0</dt><dd>Sterne aus 34 Google-Bewertungen</dd></div>
         </dl>
       </div>
     </section>
@@ -1936,6 +2256,25 @@ function personalCoachingPage() {
       </div>
     </section>
 
+    <section class="section section--muted">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Vor Ort in der Metropolregion",
+          title: "Personal Training für Nürnberg, Fürth und Erlangen.",
+          text:
+            "Der persönliche Ausgangspunkt liegt in Nürnberg. Auch Kundinnen und Kunden aus Fürth, Erlangen und der Metropolregion nutzen die Kombination aus 1:1 Training, Körperanalyse, Ernährungsstruktur und App-Begleitung."
+        })}
+        ${featureGrid(
+          [
+            { detail: "Nürnberg", title: "Persönlich und direkt", text: "Training, Analyse und Beratung werden individuell auf Ausgangslage, Alltag und Ziel abgestimmt." },
+            { detail: "Fürth & Erlangen", title: "Kurze Wege, klare Struktur", text: "Das Coaching verbindet persönliche Termine mit digitaler Planung und laufender Anpassung." },
+            { detail: "Metropolregion", title: "Mehr als eine Einzelstunde", text: "Körperanalyse, Training, Ernährung und Fortschrittskontrolle greifen in einem System zusammen." }
+          ],
+          "feature-grid--local-service"
+        )}
+      </div>
+    </section>
+
     <section class="section">
       <div class="section-shell">
         ${sectionHeader({
@@ -1960,11 +2299,13 @@ function personalCoachingPage() {
 
   return layout({
     path: "/personal-trainer-nürnberg/",
-    title: "Personal Trainer Nürnberg | 1:1 Coaching & Ernährung | Camp Dörfl",
+    title: "Personal Trainer Nürnberg | Dominik Dörfl – echte Erfolge",
     description:
-      "Personal Trainer Nürnberg: 1:1 Coaching mit Training, 2D-Körperanalyse, InBody, Ernährungsplan und persönlicher App-Begleitung bei Camp Dörfl.",
+      "Personal Trainer Nürnberg: über 10 Jahre Erfahrung, 13 Deutsche Meistertitel im betreuten Team und 126 Platzierungen. 1:1 Coaching mit Dominik Dörfl.",
     keywords: ["Personal Trainer Nürnberg", "Personal Training Nürnberg", "Premium Personal Training Nürnberg", "1:1 Personal Training Nürnberg", "Ernährungscoaching Nürnberg"],
     bodyClass: "page-premium page-coaching",
+    pageName: "Personal Trainer Nürnberg",
+    dateModified: "2026-08-11",
     socialImage: "/assets/images/premium-training-hero-wide-social.jpg",
     socialImageAlt: "Dominik Dörfl beim Personal Training mit einem Kunden in Nürnberg",
     extraStructuredData: [
@@ -1975,6 +2316,30 @@ function personalCoachingPage() {
         description:
           "Persönlich geführtes Personal Training in Nürnberg mit Analyse, Ernährungsplanung, App und laufender Anpassung."
       }),
+      {
+        "@type": "Person",
+        "@id": `${site.url}/#person`,
+        name: "Dominik Dörfl",
+        url: `${site.url}/ueber-dominik/`,
+        jobTitle: "Personal Trainer in Nürnberg",
+        award: [
+          "Zweifacher Deutscher Meister im Bodybuilding und Powerlifting",
+          "Coach eines Teams mit 13 Deutschen Meistertiteln",
+          "Coach einer IFBB Pro Card 2026"
+        ],
+        knowsAbout: [
+          "Personal Training",
+          "Krafttraining",
+          "Bodybuilding",
+          "Ernährungsplanung",
+          "Körperanalyse",
+          "Wettkampfvorbereitung"
+        ],
+        subjectOf: [
+          { "@type": "WebPage", "@id": `${site.url}/erfolge-im-team/#webpage` },
+          { "@type": "WebPage", "@id": `${site.url}/erfolge-im-team/guenter-preis/#webpage` }
+        ]
+      },
       faqSchema("/personal-trainer-nürnberg/", coachingFaq),
       videoObjectSchema({
         path: "/personal-trainer-nürnberg/",
@@ -2034,29 +2399,46 @@ function firmenfitnessPage() {
       <img class="ff-hero__img" src="/assets/images/firmenfitness-hero-wide.webp" srcset="/assets/images/firmenfitness-hero-wide-960.webp 960w, /assets/images/firmenfitness-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl im Firmenfitness-Kontext mit Analyse und Beratung für Unternehmen"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
-          <p class="ff-hero__eyebrow" data-reveal>Gesundheitstage · Performance Checks</p>
-          <h1 class="ff-hero__title" data-reveal>Firmenfitness <br><span>in Nürnberg.</span></h1>
+          <p class="ff-hero__eyebrow" data-reveal>Aus Nürnberg · Deutschlandweit im Einsatz</p>
+          <h1 class="ff-hero__title" data-reveal>Firmenfitness. <br><span>Deutschlandweit.</span></h1>
           <p class="ff-hero__lead" data-reveal>
-            Firmenfitness in Nürnberg mit 2D-Analyse, InBody, individueller Beratung und Formaten, die für Mitarbeitende verständlich und für Unternehmen leicht organisierbar bleiben.
+            Gesundheitstage mit InBody-Körperanalyse, berufsfeldbezogene Ernährungsvorträge und aktive Team-Impulse – direkt bei Ihnen im Unternehmen, in Nürnberg und in ganz Deutschland.
           </p>
           <p class="ff-hero__support" data-reveal>
-            Gesundheitstage, Performance Checks und Vorträge werden so aufgebaut, dass sie professionell wirken, verständlich bleiben und organisatorisch sauber laufen.
+            Drei klare Angebote, individuell an Mitarbeitende, Arbeitsrealität und Standort angepasst. Professionell geplant, verständlich vermittelt und organisatorisch sauber umgesetzt.
           </p>
           <div class="ff-hero__actions" data-reveal>
             <a class="button button--primary" href="${contactHref("firmenfitness")}"><span>Firmenfitness anfragen</span><span aria-hidden="true">&rarr;</span></a>
-            <a class="button button--secondary-light" href="/events/"><span>Events ansehen</span><span aria-hidden="true">&rarr;</span></a>
+            <a class="button button--secondary-light" href="/gesundheitstag-nuernberg/"><span>Gesundheitstag ansehen</span><span aria-hidden="true">&rarr;</span></a>
           </div>
           <div class="premium-proof-pills ff-hero__pills" data-reveal>
-            <span>Gesundheitstage</span>
-            <span>Performance Checks</span>
-            <span>Vorträge</span>
+            <span>InBody &amp; Beratung</span>
+            <span>Ernährungsvortrag</span>
             <span>Team-Aktivierung</span>
+            <span>Deutschlandweit</span>
           </div>
           <dl class="ff-hero__facts" data-reveal aria-label="Firmenfitness-Module">
-            <div><dt>2-D</dt><dd>Körperanalyse</dd></div>
-            <div><dt>Beratung</dt><dd>vom Profi</dd></div>
-            <div><dt>vor Ort</dt><dd>im Unternehmen</dd></div>
+            <div><dt>3</dt><dd>klare Angebote</dd></div>
+            <div><dt>InBody</dt><dd>mit Beratung</dd></div>
+            <div><dt>DE</dt><dd>bundesweit vor Ort</dd></div>
           </dl>
+      </div>
+    </section>
+
+    <section class="section corporate-offers-section" id="angebote">
+      <div class="section-shell section-shell--wide">
+        ${sectionHeader({
+          eyebrow: "Drei Angebote",
+          title: "Firmenfitness, die zur Arbeitsrealität passt.",
+          text:
+            "Gesundheit wird dann relevant, wenn Mitarbeitende verstehen, was sie konkret tun können. Deshalb verbindet jedes Angebot fachliche Substanz mit einer Umsetzung, die zum jeweiligen Berufsfeld passt.",
+          align: "center"
+        })}
+        ${corporateOfferShowcase(corporateModuleCards)}
+        <div class="corporate-offers-cta" data-reveal>
+          <p><strong>Noch nicht sicher, welches Angebot passt?</strong> Die drei Formate können einzeln geplant oder als Gesundheitstag sinnvoll kombiniert werden.</p>
+          <a class="button button--primary" href="${contactHref("firmenfitness")}"><span>Passendes Format anfragen</span><span aria-hidden="true">&rarr;</span></a>
+        </div>
       </div>
     </section>
 
@@ -2080,9 +2462,9 @@ function firmenfitnessPage() {
       <div class="section-shell section-shell--wide corporate-reference-band" data-reveal>
         <div class="corporate-reference-band__copy">
           <p class="eyebrow">Referenzen Firmenfitness</p>
-          <h2>Firmenfitness in Nürnberg: Gesundheitstage professionell umgesetzt.</h2>
+          <h2>Erfahrung aus Kommune, Industrie und Gebäudetechnik.</h2>
           <p>
-            Von Unternehmen bis Bildungseinrichtung: Analyse, InBody und individuelle Beratung kommen dort zum Einsatz, wo Gesundheit hochwertig, verständlich und wirksam vermittelt werden soll.
+            Camp Dörfl hat Gesundheitsformate unter anderem für die Stadt Nürnberg im Pflege- und Gesundheitsamt, die Neunkirchener Achsenfabrik und die Caverion GmbH umgesetzt. Dazu kommen weitere Einsätze in Unternehmen, Bildung und öffentlichem Umfeld.
           </p>
         </div>
         <div class="corporate-reference-band__logos" aria-label="Referenzen Firmenfitness">
@@ -2112,18 +2494,18 @@ function firmenfitnessPage() {
         <div class="editorial-stage__copy" data-reveal>
           ${sectionHeader({
             eyebrow: "Warum Camp Dörfl",
-            title: "Gesundheitstage, die intern verständlich und hochwertig wirken.",
+            title: "Warum Dranbleiben kein Nice-to-have ist.",
             text:
-              "Camp Dörfl übersetzt Gesundheitsdaten, Aktivierung und Beratung so, dass Mitarbeitende ihren Status verstehen und Unternehmen ein professionell kommunizierbares Format bekommen."
+              "Gesundheit konkurriert im Arbeitsalltag jeden Tag mit Zeitdruck, Schichtplänen und Belastung. Camp Dörfl übersetzt Ernährung und Bewegung deshalb in konkrete Möglichkeiten für das jeweilige Berufsfeld."
           })}
           <div class="summary-rows summary-rows--compact">
             <article class="summary-row">
-              <h3>Gesundheit wird konkret</h3>
-              <p>Mitarbeitende sehen nicht nur Zahlen, sondern verstehen direkt, was Analyse, InBody und Beratung für ihren Alltag bedeuten.</p>
+              <h3>Inhalte passend zum Berufsfeld</h3>
+              <p>Pflege, Verwaltung, Industrie, technischer Außendienst oder Büroarbeit stellen unterschiedliche Anforderungen. Vortrag und Beratung greifen genau diese Realität auf.</p>
             </article>
             <article class="summary-row">
-              <h3>Format mit Außenwirkung</h3>
-              <p>Für Unternehmen entsteht ein Gesundheitstag, der hochwertig wirkt, intern leichter vermittelbar ist und organisatorisch realistisch bleibt.</p>
+              <h3>Wissen wird umsetzbar</h3>
+              <p>Gesunde Ernährung und Sport werden nicht als Idealbild erklärt, sondern als realistische Entscheidungen, die auch in volle Arbeitstage passen.</p>
             </article>
           </div>
         </div>
@@ -2155,6 +2537,59 @@ function firmenfitnessPage() {
       </div>
     </section>
 
+    <section class="section corporate-reach-section">
+      <div class="section-shell section-shell--wide">
+        ${sectionHeader({
+          eyebrow: "Deutschlandweit vor Ort",
+          title: "Ein Standort oder mehrere. Ein klares System.",
+          text:
+            "Camp Dörfl kommt direkt in Ihr Unternehmen – von Nürnberg bis Hamburg, Berlin, Köln oder München. Umfang, Taktung und Aufbau werden an Teamgröße, Räumlichkeiten und mehrere Standorte angepasst.",
+          align: "center"
+        })}
+        <div class="corporate-scale-grid">
+          <article data-reveal><span>Bis 25</span><h3>Kompaktes Teamformat</h3><p>Persönlich, fokussiert und mit ausreichend Zeit für individuelle Fragen oder Auswertungen.</p></article>
+          <article data-reveal><span>25–100</span><h3>Getakteter Gesundheitstag</h3><p>Klare Zeitfenster, verlässlicher Teilnehmerfluss und kombinierbare Analyse-, Beratungs- und Vortragsmodule.</p></article>
+          <article data-reveal><span>100+</span><h3>Größerer Aktionstag</h3><p>Strukturierte Planung für größere Belegschaften, mehrere Gruppen oder ein Format mit verschiedenen Stationen.</p></article>
+          <article data-reveal><span>Multi-Site</span><h3>Mehrere Standorte</h3><p>Einheitliche Gesundheitskommunikation mit einem Ablauf, der deutschlandweit reproduzierbar und trotzdem standortgerecht bleibt.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted corporate-process-section">
+      <div class="section-shell section-shell--wide corporate-process-layout">
+        <div class="corporate-process-copy" data-reveal>
+          <p class="eyebrow">Von der Anfrage bis zum Einsatztag</p>
+          <h2>Intern leicht zu planen. Vor Ort professionell geführt.</h2>
+          <p>Sie liefern den organisatorischen Rahmen. Camp Dörfl entwickelt daraus ein Format, das zu Zielgruppe, Berufsfeld und gewünschter Wirkung passt.</p>
+          <a class="button button--primary" href="${contactHref("firmenfitness")}"><span>Rahmen kurz einordnen</span><span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <ol class="corporate-process-list" aria-label="Ablauf einer Firmenfitness-Anfrage">
+          <li data-reveal><span>01</span><div><h3>Ziel und Zielgruppe klären</h3><p>Berufsfeld, Mitarbeiterzahl, Standort und gewünschte Wirkung werden kurz eingeordnet.</p></div></li>
+          <li data-reveal><span>02</span><div><h3>Angebot zusammenstellen</h3><p>Gesundheitstag, Vortrag, Aktivierung oder eine passende Kombination werden konkret geplant.</p></div></li>
+          <li data-reveal><span>03</span><div><h3>Teilnehmerfluss vorbereiten</h3><p>Zeitfenster, Räume, interne Kommunikation und benötigte Ausstattung werden sauber abgestimmt.</p></div></li>
+          <li data-reveal><span>04</span><div><h3>Deutschlandweit durchführen</h3><p>Camp Dörfl übernimmt das Format vor Ort und führt Mitarbeitende verständlich durch Inhalte, Analyse und Umsetzung.</p></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section corporate-decision-section">
+      <div class="section-shell section-shell--wide">
+        ${sectionHeader({
+          eyebrow: "Für Entscheider",
+          title: "Was HR und Geschäftsführung vorab wissen müssen.",
+          text:
+            "Ein gutes Gesundheitsformat muss fachlich überzeugen und intern funktionieren. Deshalb werden Wirkung, Organisation und Kostenrahmen von Beginn an gemeinsam gedacht.",
+          align: "center"
+        })}
+        <div class="corporate-decision-grid">
+          <article data-reveal><span>01</span><h3>Der Umfang bleibt planbar</h3><p>Der Preis richtet sich transparent nach Format, Teilnehmerzahl, Dauer, Standort und Kombination der Angebote.</p></article>
+          <article data-reveal><span>02</span><h3>Der Aufwand bleibt überschaubar</h3><p>Benötigte Räume, Zeitfenster und interne Vorbereitung werden vorab in einer klaren Checkliste zusammengefasst.</p></article>
+          <article data-reveal><span>03</span><h3>Die Inhalte passen zur Belegschaft</h3><p>Beispiele und Handlungsempfehlungen orientieren sich an Berufsfeld, Schichtmodell und tatsächlichen Belastungen.</p></article>
+          <article data-reveal><span>04</span><h3>Das Angebot ist skalierbar</h3><p>Vom kompakten Team bis zu mehreren Standorten wird das Format an die gewünschte Reichweite angepasst.</p></article>
+        </div>
+      </div>
+    </section>
+
     <section class="section section--muted">
       <div class="section-shell">
         ${sectionHeader({
@@ -2171,7 +2606,7 @@ function firmenfitnessPage() {
       eyebrow: "Firmenfitness",
       title: "Planen Sie Firmenfitness mit klarer Struktur.",
       text:
-        "Camp Dörfl entwickelt Formate für Unternehmen, die Gesundheit, Performance und Teamkultur professionell verbinden wollen.",
+        "Nennen Sie uns Berufsfeld, Mitarbeiterzahl, Standort und Wunschformat. Sie erhalten eine klare Einschätzung, welches Firmenfitness-Angebot fachlich und organisatorisch passt.",
       primary: { label: "Firmenfitness anfragen", href: contactHref("firmenfitness") },
       secondary: { label: "Zur Startseite", href: "/" }
     })}
@@ -2179,20 +2614,22 @@ function firmenfitnessPage() {
 
   return layout({
     path: "/firmenfitness/",
-    title: "Firmenfitness Nürnberg | Gesundheitstage & BGM | Camp Dörfl",
+    title: "Firmenfitness Nürnberg & deutschlandweit | Camp Dörfl",
     description:
-      "Firmenfitness in Nürnberg mit Gesundheitstagen, 2D-Analyse, InBody und individueller Beratung für Unternehmen von Camp Dörfl.",
-    keywords: ["Firmenfitness Nürnberg", "Gesundheitstag Nürnberg", "BGM Nürnberg", "Betriebliche Gesundheitsförderung Nürnberg"],
+      "Firmenfitness aus Nürnberg, deutschlandweit: Gesundheitstage mit InBody, persönliche Beratung, Ernährungsvorträge und Team-Aktivierung für Unternehmen.",
+    keywords: ["Firmenfitness deutschlandweit", "Firmenfitness Nürnberg", "Gesundheitstag Unternehmen", "Ernährungsvortrag Unternehmen", "BGM", "Betriebliche Gesundheitsförderung"],
     bodyClass: "page-premium page-firmenfitness",
+    dateModified: "2026-08-11",
     socialImage: "/assets/images/firmenfitness-hero-wide-social.jpg",
     socialImageAlt: "Dominik Dörfl bei einer Firmenfitness-Analyse und Beratung",
     extraStructuredData: [
       serviceSchema({
         path: "/firmenfitness/",
-        name: "Firmenfitness Nürnberg – Camp Dörfl",
-        serviceType: "Firmenfitness und Gesundheitstage",
+        name: "Firmenfitness deutschlandweit – Camp Dörfl",
+        serviceType: "Firmenfitness, Gesundheitstage und Ernährungsvorträge",
         description:
-          "Gesundheitstage, Performance Checks, Analysen und Beratung für Unternehmen in Nürnberg und der Region."
+          "Deutschlandweite Gesundheitstage mit InBody-Körperanalyse und Beratung, berufsfeldbezogene Ernährungsvorträge sowie Bewegungs- und Team-Aktivierungen für Unternehmen.",
+        areaServed: { "@type": "Country", name: "Deutschland" }
       }),
       faqSchema("/firmenfitness/", corporateFaq),
       videoObjectSchema({
@@ -4230,6 +4667,7 @@ function contactPage() {
           <article class="summary-row" data-reveal>
             <h3>Für Privatpersonen</h3>
             <p>Wenn es um Premium Personal Training, Training ohne Bindung, Ernährung oder App-Zugang geht, hilft eine kurze Beschreibung von Ziel, Ausgangslage und gewünschter Begleitung.</p>
+            <p><a href="/personal-trainer-nürnberg/">Personal Trainer Nürnberg: Leistungen und Erfolge ansehen <span aria-hidden="true">→</span></a></p>
           </article>
           <article class="summary-row" data-reveal>
             <h3>Für Unternehmen</h3>
@@ -4278,6 +4716,7 @@ function contactPage() {
     keywords: ["Camp Dörfl Kontakt", "Dominik Dörfl Kontakt", "Beratung Camp Dörfl", "Anfrage Camp Dörfl"],
     bodyClass: "page-premium page-contact",
     pageType: "ContactPage",
+    dateModified: "2026-08-11",
     socialImage: "/assets/images/dominik-gym-grey-social.jpg",
     socialImageAlt: "Dominik Dörfl als Ansprechpartner für Kontakt und Beratung",
     content
@@ -4287,37 +4726,53 @@ function contactPage() {
 function personalTrainingCostPage() {
   const priceCards = [
     {
-      tag: "Flexibler Einstieg",
+      number: "01",
+      tag: "Ohne Kartenbindung",
       title: "Einzelsession",
       price: "120 € / 150 €<small>inkl. 2D-Körperanalyse</small>",
+      sessionPrice: "120 € oder 150 €",
+      fit: "Technik-Check, Trainingsimpuls oder Standortbestimmung",
       text:
         "Für einen gezielten Trainingsimpuls, Technik-Feedback oder eine persönliche Standortbestimmung ohne Kartenbindung.",
-      items: ["120 € ohne 2D-Körperanalyse", "150 € inklusive 2D-Körperanalyse"]
+      items: ["120 € ohne 2D-Körperanalyse", "150 € inklusive 2D-Körperanalyse"],
+      cta: "Einzelsession anfragen"
     },
     {
+      number: "02",
       tag: "Kontinuität",
       title: "5er-Karte",
       price: "500 €",
+      sessionPrice: "100 € pro Session",
+      fit: "Strukturierter Einstieg über mehrere aufbauende Termine",
       text:
         "Für mehrere aufeinander aufbauende Termine und mehr Verbindlichkeit über einen überschaubaren Zeitraum.",
-      items: ["5 persönliche Sessions", "Entspricht 100 € pro Session"]
+      items: ["5 persönliche Sessions", "Entspricht 100 € pro Session"],
+      cta: "5er-Karte anfragen"
     },
     {
+      number: "03",
       tag: "Bester Kartenwert",
       title: "10er-Karte",
       price: "800 €",
+      sessionPrice: "80 € pro Session",
+      fit: "Regelmäßige 1:1 Trainingssteuerung mit bestem Kartenpreis",
       text:
         "Für regelmäßige persönliche Trainingssteuerung und eine längerfristige, verlässliche Zusammenarbeit.",
       items: ["10 persönliche Sessions", "Entspricht 80 € pro Session"],
-      featured: true
+      featured: true,
+      cta: "10er-Karte anfragen"
     },
     {
+      number: "04",
       tag: "Laufende Führung",
       title: "Premium Begleitung",
       price: "ab 200 €<small>monatlich</small>",
+      sessionPrice: "ab 200 € monatlich",
+      fit: "Training, Ernährung, Analyse, App und laufende Anpassung",
       text:
         "Für ein abgestimmtes System aus Training, Ernährung, Analyse, App und laufender Anpassung.",
-      items: ["Persönliche laufende Begleitung", "Umfang passend zu Ziel und Alltag"]
+      items: ["Persönliche laufende Begleitung", "Umfang passend zu Ziel und Alltag"],
+      cta: "Premium Begleitung anfragen"
     }
   ];
 
@@ -4357,67 +4812,141 @@ function personalTrainingCostPage() {
 
   const pricingFaq = [
     {
-      question: "Was kostet Personal Training bei Camp Dörfl?",
+      question: "Wie teuer ist ein Personal Trainer in Nürnberg?",
       answer:
-        "Eine Einzelsession kostet 120 Euro; inklusive 2D-Körperanalyse sind es 150 Euro. Die 5er-Karte kostet 500 Euro, die 10er-Karte 800 Euro. Die Premium Begleitung startet ab 200 Euro monatlich."
+        "Bei Camp Dörfl kostet eine einzelne Personal-Training-Session 120 Euro; inklusive 2D-Körperanalyse sind es 150 Euro. Mit der 5er-Karte liegt eine Session bei 100 Euro, mit der 10er-Karte bei 80 Euro. Die Premium Begleitung startet ab 200 Euro monatlich."
     },
     {
-      question: "Ist günstiger immer die bessere Einstiegsoption?",
+      question: "Was kostet Personal Training pro Stunde?",
       answer:
-        "Nicht unbedingt. Wenn dir vor allem Struktur, Kontrolle und Verbindlichkeit fehlen, kann ein vermeintlich kleiner Einstieg am Ende weniger wirksam sein als ein klar geführtes Premium-Setup."
+        "Eine Einzelsession kostet 120 Euro ohne oder 150 Euro inklusive 2D-Körperanalyse. Bei einer 5er-Karte reduziert sich der Preis auf 100 Euro pro Session, bei einer 10er-Karte auf 80 Euro pro Session."
     },
     {
-      question: "Wann lohnt sich Premium Personal Training statt einzelner Sessions?",
+      question: "Lohnt sich Personal Training?",
       answer:
-        "Vor allem dann, wenn du Training, Ernährung, Analyse und laufende Anpassung als zusammenhängendes System brauchst und der Alltag nicht viel Raum für Fehler lässt."
+        "Personal Training lohnt sich besonders, wenn du Fehler und Umwege vermeiden, Übungen sicher ausführen und dein Training konsequent an Ziel, Alltag und Ausgangslage anpassen möchtest. Entscheidend ist nicht nur die Stunde selbst, sondern wie gut du das Gelernte zwischen den Terminen umsetzen kannst."
     },
     {
-      question: "Wie bekomme ich eine konkrete Preiseinschätzung?",
+      question: "Wie oft sollte man Personal Training buchen?",
       answer:
-        "Die Grundpreise stehen direkt in der Übersicht. Bei der Premium Begleitung lässt sich über eine kurze Anfrage klären, welcher monatliche Umfang zu deinen Zielen und deinem Kalender passt."
+        "Das hängt von Erfahrung, Ziel und gewünschter Eigenständigkeit ab. Für einen Technik-Check kann ein Einzeltermin reichen. Für neue Routinen und kontinuierlichen Fortschritt sind mehrere aufeinander aufbauende Sessions oder eine laufende Begleitung meist sinnvoller."
+    },
+    {
+      question: "Gibt es eine Probestunde ohne Kartenbindung?",
+      answer:
+        "Der flexible Einstieg ist eine einzelne Session ohne Kartenbindung. So kannst du einen konkreten Trainingsimpuls, Technik-Feedback oder eine persönliche Standortbestimmung buchen, bevor du dich für mehrere Termine entscheidest."
+    },
+    {
+      question: "Wann lohnt sich die Premium Begleitung?",
+      answer:
+        "Vor allem dann, wenn du Training, Ernährung, Analyse, App und laufende Anpassung als zusammenhängendes System brauchst. Der konkrete Umfang wird passend zu Ziel, Alltag und gewünschter Betreuungstiefe vereinbart."
     }
   ];
+
+  const pricingMarkup = priceCards
+    .map(
+      (card) => `
+        <article class="pt-price-card${card.featured ? " pt-price-card--featured" : ""}" data-reveal>
+          <div class="pt-price-card__top">
+            <span class="pt-price-card__number">${card.number}</span>
+            <span class="pt-price-card__tag">${card.tag}</span>
+          </div>
+          <h3>${card.title}</h3>
+          <p class="pt-price-card__price">${card.price}</p>
+          <p class="pt-price-card__fit">Ideal für: ${card.fit}</p>
+          <p class="pt-price-card__text">${card.text}</p>
+          <ul>${card.items.map((item) => `<li>${item}</li>`).join("")}</ul>
+          <a class="pt-price-card__link" href="${contactHref("premium-training")}">${card.cta}<span aria-hidden="true">&rarr;</span></a>
+        </article>`
+    )
+    .join("");
+
+  const offerCatalogSchema = {
+    "@type": "OfferCatalog",
+    "@id": `${site.url}/personal-training-kosten-nuernberg/#angebote`,
+    name: "Personal Training Preise Nürnberg",
+    itemListElement: [
+      { name: "Einzelsession Personal Training", price: "120", description: "Einzelsession ohne 2D-Körperanalyse" },
+      { name: "Einzelsession mit 2D-Körperanalyse", price: "150", description: "Einzelsession inklusive 2D-Körperanalyse" },
+      { name: "5er-Karte Personal Training", price: "500", description: "Fünf persönliche Sessions" },
+      { name: "10er-Karte Personal Training", price: "800", description: "Zehn persönliche Sessions" },
+      { name: "Premium Begleitung", price: "200", description: "Laufende persönliche Begleitung ab 200 Euro monatlich" }
+    ].map((offer) => ({
+      "@type": "Offer",
+      name: offer.name,
+      price: offer.price,
+      priceCurrency: "EUR",
+      description: offer.description,
+      url: `${site.url}/personal-training-kosten-nuernberg/#preise`,
+      itemOffered: { "@type": "Service", name: offer.name }
+    }))
+  };
 
   const content = `
     <section class="ff-hero ff-hero--coaching ff-hero--coaching-photo ff-hero--text-only">
       <img class="ff-hero__img" src="/assets/images/premium-training-hero-wide.webp" srcset="/assets/images/premium-training-hero-wide-960.webp 960w, /assets/images/premium-training-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl beim Personal Training mit einem Kunden im Studio"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
-        <p class="ff-hero__eyebrow" data-reveal>Ratgeber · Personal Training Kosten</p>
-        <h1 class="ff-hero__title" data-reveal>Was kostet Personal Training <br><span>in Nürnberg?</span></h1>
+        <p class="ff-hero__eyebrow" data-reveal>Personal Trainer Nürnberg · Preise transparent</p>
+        <h1 class="ff-hero__title" data-reveal>Personal Training Kosten <br><span>in Nürnberg.</span></h1>
         <p class="ff-hero__lead" data-reveal>
-          Die Kosten hängen nicht nur von der Dauer einer Session ab, sondern vor allem von Betreuungstiefe, Analyse, Trainingsfrequenz und dem Setup, das wirklich zu deinem Alltag passt.
+          Einzelsession ab 120 Euro, 5er-Karte für 500 Euro oder 10er-Karte für 800 Euro. Hier siehst du auf einen Blick, welches Modell zu deinem Ziel und deinem Alltag passt.
         </p>
         <p class="ff-hero__support" data-reveal>
-          Camp Dörfl arbeitet deshalb nicht mit einem künstlichen Einheitsmodell, sondern mit Einzelsessions, Karten und Premium Begleitung je nach Ziel, Anspruch und Verantwortung.
+          Transparent vergleichen, passend entscheiden und direkt mit Dominik klären, welcher Einstieg wirklich sinnvoll ist.
         </p>
         <div class="ff-hero__actions" data-reveal>
           <a class="button button--primary" href="${contactHref("premium-training")}"><span>Preiseinschätzung anfragen</span><span aria-hidden="true">&rarr;</span></a>
           <a class="button button--secondary-light" href="/personal-trainer-nürnberg/"><span>Personal Training ansehen</span><span aria-hidden="true">&rarr;</span></a>
         </div>
         <dl class="ff-hero__facts" data-reveal aria-label="Wichtige Preisfaktoren bei Personal Training in Nürnberg">
-          <div><dt>1:1</dt><dd>Persönliche Führung</dd></div>
-          <div><dt>Analyse</dt><dd>vor dem Start</dd></div>
-          <div><dt>App</dt><dd>optional integriert</dd></div>
+          <div><dt>ab 80 €</dt><dd>pro Session mit 10er-Karte</dd></div>
+          <div><dt>120 €</dt><dd>Einzelsession</dd></div>
+          <div><dt>150 €</dt><dd>inklusive 2D-Analyse</dd></div>
         </dl>
       </div>
     </section>
 
-    <section class="section section--pricing-overview" id="preise">
+    <section class="section pt-pricing-section" id="preise">
       <div class="section-shell section-shell--wide">
         ${sectionHeader({
           eyebrow: "Preise auf einen Blick",
-          title: "Wähle den Rahmen, der zu deinem Ziel passt.",
+          title: "Vier klare Wege. Kein Preisrätsel.",
           text:
-            "Transparent vom einzelnen Termin bis zur laufenden Premium Begleitung. Für die genaue Einordnung deines Bedarfs kannst du direkt eine persönliche Anfrage senden.",
+            "Vom flexiblen Einzeltermin bis zur laufenden Betreuung: Du siehst sofort, was enthalten ist, für wen das Modell gedacht ist und welcher Preis pro Session entsteht.",
           align: "center"
         })}
-        ${pricingCards(priceCards)}
+        <div class="pt-price-grid">${pricingMarkup}</div>
+        <div class="pt-price-assurance" data-reveal>
+          <div><strong>Noch unsicher?</strong><span>Schreib kurz dein Ziel und deine Ausgangslage. Du bekommst eine ehrliche Empfehlung – auch wenn dafür zunächst nur eine Einzelsession sinnvoll ist.</span></div>
+          <a class="button button--primary" href="${contactHref("premium-training")}"><span>Passendes Modell anfragen</span><span aria-hidden="true">&rarr;</span></a>
+        </div>
         <p class="pricing-overview__note">Der genaue Leistungsumfang der Premium Begleitung richtet sich nach dem individuell vereinbarten Betreuungsrahmen.</p>
       </div>
     </section>
 
-    <section class="section section--tight">
+    <section class="section section--tight pt-comparison-section" aria-labelledby="pt-comparison-title">
+      <div class="section-shell section-shell--wide">
+        ${sectionHeader({
+          eyebrow: "Direkter Vergleich",
+          title: "Welches Personal-Training-Modell passt zu dir?",
+          text: "Diese Übersicht hilft dir, nicht nur nach dem Preis, sondern nach dem gewünschten Ergebnis zu entscheiden."
+        }).replace("<h2", '<h2 id="pt-comparison-title"')}
+        <div class="pt-comparison" role="region" aria-label="Vergleich der Personal-Training-Preise" tabindex="0" data-reveal>
+          <table>
+            <thead><tr><th>Modell</th><th>Am besten für</th><th>Umfang</th><th>Preis</th><th>Je Session</th></tr></thead>
+            <tbody>
+              <tr><th>Einzelsession</th><td>Check, Technik, erster Impuls</td><td>1 Termin</td><td>120 € / 150 € inkl. 2D</td><td>120 € / 150 €</td></tr>
+              <tr><th>5er-Karte</th><td>Strukturierter Einstieg</td><td>5 Sessions</td><td>500 €</td><td>100 €</td></tr>
+              <tr class="is-recommended"><th>10er-Karte <span>Empfehlung</span></th><td>Regelmäßige 1:1 Führung</td><td>10 Sessions</td><td>800 €</td><td>80 €</td></tr>
+              <tr><th>Premium Begleitung</th><td>Ganzheitliche laufende Steuerung</td><td>Individuell</td><td>ab 200 € / Monat</td><td>nach Umfang</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight pt-value-section">
       <div class="section-shell">
         ${sectionHeader({
           eyebrow: "Preisfaktoren",
@@ -4430,17 +4959,41 @@ function personalTrainingCostPage() {
       </div>
     </section>
 
+    <section class="pt-pricing-proof" aria-labelledby="pt-pricing-proof-title">
+      <div class="section-shell section-shell--wide pt-pricing-proof__grid">
+        <div class="pt-pricing-proof__copy" data-reveal>
+          <p class="eyebrow">Was hinter dem Preis steht</p>
+          <h2 id="pt-pricing-proof-title">Erfahrung, die du nicht erst nach der Buchung beurteilen musst.</h2>
+          <p>Personal Training ist Vertrauenssache. Deshalb kannst du Erfahrung, dokumentierte Coaching-Erfolge und Kundenstimmen vor deiner Entscheidung nachvollziehen.</p>
+          <div class="pt-pricing-proof__links">
+            <a href="/erfolge-im-team/">Alle Coaching-Erfolge <span aria-hidden="true">&rarr;</span></a>
+            <a href="/personal-trainer-nürnberg/">Personal Trainer Nürnberg <span aria-hidden="true">&rarr;</span></a>
+          </div>
+        </div>
+        <dl class="pt-pricing-proof__facts" data-reveal>
+          <div><dt>10+</dt><dd>Jahre Coaching-Erfahrung</dd></div>
+          <div><dt>13</dt><dd>Deutsche Meistertitel im betreuten Team</dd></div>
+          <div><dt>${coachSuccessStats.placements}</dt><dd>dokumentierte Wettkampfplatzierungen</dd></div>
+          <div><dt>5,0</dt><dd>Sterne aus 34 Google-Bewertungen</dd></div>
+        </dl>
+      </div>
+    </section>
+
     <section class="section">
       <div class="section-shell editorial-stage editorial-stage--reverse">
         <div class="editorial-stage__copy" data-reveal>
           ${sectionHeader({
             eyebrow: "Einordnung",
-            title: "So findest du das passende Setup."
+            title: "In vier Schritten zur passenden Betreuung."
           })}
           ${processList(pricingSteps)}
+          <div class="pt-setup-links">
+            <a href="/koerperanalyse-nuernberg/">Körperanalyse Nürnberg ansehen <span aria-hidden="true">&rarr;</span></a>
+            <a href="/personal-trainer-nürnberg/">Alle Leistungen im Personal Training <span aria-hidden="true">&rarr;</span></a>
+          </div>
         </div>
         <div class="editorial-stage__media" data-reveal>
-          <img src="/assets/images/dominik-bike-road-yellow.webp" alt="Dominik Dörfl mit Rennrad als Symbol für individuell passende Trainingssteuerung"${imageLoadingAttributes()}>
+          <img src="/assets/images/dominik-personal-coaching-client.webp" alt="Dominik Dörfl bei der persönlichen Trainingsbetreuung eines Kunden in Nürnberg"${imageLoadingAttributes()}>
         </div>
       </div>
     </section>
@@ -4469,9 +5022,9 @@ function personalTrainingCostPage() {
 
   return layout({
     path: "/personal-training-kosten-nuernberg/",
-    title: "Was kostet Personal Training in Nürnberg? | Camp Dörfl",
+    title: "Personal Trainer Nürnberg: Preise & Kosten | Camp Dörfl",
     description:
-      "Was kostet Personal Training in Nürnberg? Camp Dörfl zeigt, welche Faktoren den Preis bestimmen und wann Einzelsessions, Karten oder Premium Begleitung sinnvoll sind.",
+      "Personal Trainer Nürnberg: 10er-Karte 80 € je Session, Einzeltraining ab 120 € und Premium-Begleitung ab 200 € monatlich. Alle Modelle im Vergleich.",
     keywords: [
       "Personal Training Kosten Nürnberg",
       "Was kostet Personal Training in Nürnberg",
@@ -4479,6 +5032,8 @@ function personalTrainingCostPage() {
       "Premium Personal Training Nürnberg"
     ],
     bodyClass: "page-premium page-coaching page-guide-pricing",
+    pageName: "Personal Training Kosten Nürnberg",
+    dateModified: "2026-08-11",
     socialImage: "/assets/images/premium-training-hero-wide-social.jpg",
     socialImageAlt: "Dominik Dörfl beim Personal Training mit einem Kunden in Nürnberg",
     extraStructuredData: [
@@ -4489,6 +5044,7 @@ function personalTrainingCostPage() {
         description:
           "Einordnung zu Preisfaktoren, Formaten und sinnvollen Einstiegen für Personal Training in Nürnberg."
       }),
+      offerCatalogSchema,
       faqSchema("/personal-training-kosten-nuernberg/", pricingFaq)
     ],
     content
@@ -4691,6 +5247,279 @@ function gesundheitstagNuernbergPage() {
   });
 }
 
+function koerperanalyseNuernbergPage() {
+  const analysisBenefits = [
+    {
+      detail: "Ausgangslage",
+      title: "Verstehen, wo du wirklich stehst",
+      text:
+        "Die Messung schafft eine belastbare Standortbestimmung. So werden Veränderungen nicht nur am Gewicht, sondern differenzierter und nachvollziehbarer eingeordnet."
+    },
+    {
+      detail: "Körperzusammensetzung",
+      title: "Muskelmasse und Körperfett einordnen",
+      text:
+        "Die InBody BIA-Messung liefert Werte zur Körperzusammensetzung, die anschließend persönlich und verständlich mit Blick auf dein Ziel besprochen werden."
+    },
+    {
+      detail: "Entwicklung",
+      title: "Fortschritt sichtbar machen",
+      text:
+        "Die 2D-Körperanalyse ergänzt die Zahlen um eine visuelle Perspektive. Wiederholte Messungen zeigen, wie sich Form und Proportionen entwickeln."
+    },
+    {
+      detail: "Nächster Schritt",
+      title: "Aus Daten klare Prioritäten ableiten",
+      text:
+        "Du gehst nicht mit einem unkommentierten Ausdruck nach Hause, sondern mit einer verständlichen Einordnung und konkreten Ansatzpunkten für Training, Ernährung und Alltag."
+    }
+  ];
+
+  const analysisSteps = [
+    {
+      step: "01",
+      title: "Ziel und Ausgangslage klären",
+      text:
+        "Vor der Messung besprechen wir kurz, was du verändern möchtest und welche Fragen die Körperanalyse für dich beantworten soll."
+    },
+    {
+      step: "02",
+      title: "2D-Analyse und InBody BIA-Messung",
+      text:
+        "Die beiden Verfahren ergänzen sich: Die 2D-Analyse macht körperliche Entwicklung sichtbar, InBody betrachtet die Körperzusammensetzung."
+    },
+    {
+      step: "03",
+      title: "Ergebnisse persönlich einordnen",
+      text:
+        "Wir besprechen die relevanten Werte verständlich und setzen sie in Beziehung zu deinem Ziel, deinem Training und deinem Alltag."
+    },
+    {
+      step: "04",
+      title: "Konkreten Ansatz festlegen",
+      text:
+        "Du erhältst klare nächste Schritte. Auf Wunsch wird die Analyse zum Startpunkt für Personal Training oder eine längerfristige Begleitung."
+    }
+  ];
+
+  const measurementRows = [
+    {
+      title: "2D-Körperanalyse",
+      text:
+        "Sie dokumentiert die körperliche Ausgangslage visuell und macht Veränderungen von Form und Proportionen bei Folgemessungen besser vergleichbar."
+    },
+    {
+      title: "InBody BIA-Messung",
+      text:
+        "Die Bioelektrische Impedanzanalyse – kurz BIA – dient zur Einordnung der Körperzusammensetzung, etwa von Muskelmasse, Körperfettanteil und Körperwasser."
+    },
+    {
+      title: "Persönliche Auswertung",
+      text:
+        "Erst die fachliche Einordnung macht aus Messwerten eine sinnvolle Entscheidungsgrundlage. Deshalb werden Ergebnisse verständlich erklärt und nicht isoliert bewertet."
+    }
+  ];
+
+  const analysisFaq = [
+    {
+      question: "Was ist eine InBody BIA-Messung?",
+      answer:
+        "BIA steht für Bioelektrische Impedanzanalyse. InBody nutzt dieses Messprinzip, um die Körperzusammensetzung zu erfassen und Werte wie Muskelmasse, Körperfettanteil und Körperwasser einzuordnen."
+    },
+    {
+      question: "Was ist der Unterschied zwischen 2D-Körperanalyse und InBody?",
+      answer:
+        "Die 2D-Körperanalyse dokumentiert Form und sichtbare körperliche Entwicklung. Die InBody BIA-Messung betrachtet die Körperzusammensetzung. Zusammen entsteht ein umfassenderer Blick auf die Ausgangslage."
+    },
+    {
+      question: "Kann ich die Körperanalyse auch ohne Personal Training buchen?",
+      answer:
+        "Ja. Die Körperanalyse in Nürnberg wird auch für Privatpersonen als eigener Einstieg angeboten. Auf Wunsch kann daraus anschließend Personal Training oder eine längerfristige Begleitung entstehen."
+    },
+    {
+      question: "Für wen ist eine Körperanalyse sinnvoll?",
+      answer:
+        "Für Menschen, die Fett reduzieren, Muskulatur aufbauen, ihre körperliche Entwicklung objektiver verfolgen oder vor dem Start in Training und Ernährungsumstellung eine klare Ausgangslage schaffen möchten."
+    },
+    {
+      question: "Wie bereite ich mich auf eine BIA-Messung vor?",
+      answer:
+        "Für gut vergleichbare Werte solltest du Messungen möglichst unter ähnlichen Bedingungen durchführen. Konkrete Hinweise zu Essen, Trinken, Training und Tageszeit erhältst du vor deinem Termin."
+    },
+    {
+      question: "Ersetzt die Körperanalyse eine medizinische Untersuchung?",
+      answer:
+        "Nein. Die Messung dient der Fitness- und Fortschrittseinordnung und ersetzt keine ärztliche Diagnose oder medizinische Untersuchung."
+    }
+  ];
+
+  const content = `
+    <section class="ff-hero ff-hero--photo ff-hero--firmenfitness ff-hero--firmenfitness-photo ff-hero--text-only">
+      <img class="ff-hero__img" src="/assets/images/firmenfitness-hero-wide.webp" srcset="/assets/images/firmenfitness-hero-wide-960.webp 960w, /assets/images/firmenfitness-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl bei einer Körperanalyse und persönlichen Auswertung in Nürnberg"${imageLoadingAttributes({ eager: true })}>
+      <div class="ff-hero__scrim" aria-hidden="true"></div>
+      <div class="section-shell ff-hero__inner">
+        <p class="ff-hero__eyebrow" data-reveal>2D-Körperanalyse · InBody · BIA-Messung</p>
+        <h1 class="ff-hero__title" data-reveal>Körperanalyse <br><span>in Nürnberg.</span></h1>
+        <p class="ff-hero__lead" data-reveal>
+          Verstehe deine Ausgangslage mit 2D-Körperanalyse und InBody BIA-Messung – persönlich ausgewertet und mit klaren Ansatzpunkten für Training, Ernährung und deinen Alltag.
+        </p>
+        <p class="ff-hero__support" data-reveal>
+          Die Analyse ist auch unabhängig von Firmenfitness für Privatpersonen buchbar und eignet sich als Standortbestimmung oder messbarer Startpunkt für deine Veränderung.
+        </p>
+        <div class="ff-hero__actions" data-reveal>
+          <a class="button button--primary" href="${contactHref("koerperanalyse")}"><span>Körperanalyse anfragen</span><span aria-hidden="true">&rarr;</span></a>
+          <a class="button button--secondary-light" href="/personal-trainer-nürnberg/"><span>Personal Training ansehen</span><span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <dl class="ff-hero__facts" data-reveal aria-label="Bestandteile der Körperanalyse in Nürnberg">
+          <div><dt>2D</dt><dd>Form sichtbar machen</dd></div>
+          <div><dt>InBody</dt><dd>BIA-Messung</dd></div>
+          <div><dt>1:1</dt><dd>persönliche Auswertung</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Dein Startpunkt",
+          title: "Mehr Klarheit als eine Zahl auf der Waage.",
+          text:
+            "Körpergewicht allein zeigt nicht, wie sich Muskelmasse, Körperfett und körperliche Form entwickeln. Die kombinierte Analyse macht deine Ausgangslage differenzierter sichtbar.",
+          align: "center"
+        })}
+        ${featureGrid(analysisBenefits, "feature-grid--coaching-flow")}
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section-shell editorial-stage">
+        <div class="editorial-stage__copy" data-reveal>
+          ${sectionHeader({
+            eyebrow: "Zwei Perspektiven",
+            title: "2D-Analyse und BIA sinnvoll kombiniert.",
+            text:
+              "Beide Verfahren beantworten unterschiedliche Fragen. Zusammen liefern sie eine verständliche Grundlage, um Fortschritt gezielter zu planen und später besser zu vergleichen."
+          })}
+          ${summaryRows(measurementRows)}
+        </div>
+        <div class="editorial-stage__media" data-reveal>
+          <img src="/assets/images/dominik-coaching-bikeerg.webp" alt="Persönliche Auswertung einer InBody BIA-Messung bei Camp Dörfl in Nürnberg"${imageLoadingAttributes()}>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Ablauf",
+          title: "So läuft deine Körperanalyse ab.",
+          text:
+            "Von der ersten Frage bis zum nächsten sinnvollen Schritt bleibt die Messung persönlich, verständlich und auf dein Ziel ausgerichtet."
+        })}
+        <div class="analysis-sequence" aria-label="Ablauf der Körperanalyse in vier Schritten">
+          ${stepGrid(analysisSteps)}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section-shell editorial-stage editorial-stage--reverse">
+        <div class="editorial-stage__copy" data-reveal>
+          ${sectionHeader({
+            eyebrow: "Für Privatpersonen",
+            title: "Messung einzeln oder als Start ins Training.",
+            text:
+              "Du kannst die Körperanalyse als eigenständigen Termin nutzen. Wenn du danach weiterarbeiten möchtest, werden die Ergebnisse auf Wunsch zur Grundlage für Personal Training, Ernährungsstruktur und Fortschrittskontrolle."
+          })}
+          <div class="summary-rows summary-rows--compact">
+            <article class="summary-row">
+              <h3>Eigenständige Standortbestimmung</h3>
+              <p>Ideal, wenn du deinen aktuellen Stand kennen und die wichtigsten Werte professionell einordnen lassen möchtest.</p>
+            </article>
+            <article class="summary-row">
+              <h3>Messbarer Coaching-Start</h3>
+              <p>Ideal, wenn Training und Ernährung von Anfang an auf einer klar dokumentierten Ausgangslage aufbauen sollen.</p>
+            </article>
+          </div>
+        </div>
+        <div class="editorial-stage__media editorial-stage__media--video editorial-stage__media--short" data-reveal>
+          ${deferredVideoEmbed({
+            embedUrl: "https://www.youtube-nocookie.com/embed/rQ9YocgKVSc?autoplay=1&rel=0&modestbranding=1&playsinline=1",
+            watchUrl: "https://www.youtube.com/watch?v=rQ9YocgKVSc",
+            title: "Camp Dörfl Körperanalyse und Beratung",
+            image: "/assets/images/dominik-athlete-nutrition.webp",
+            alt: "Dominik Dörfl im Ernährungs- und Gesundheitskontext",
+            headline: "Körperanalyse. Klar eingeordnet.",
+            actionLabel: "Video laden",
+            short: true
+          })}
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "FAQ",
+          title: "Häufige Fragen zur Körperanalyse in Nürnberg.",
+          text:
+            "Das Wichtigste zu InBody, BIA-Messung, 2D-Analyse, Vorbereitung und Buchung für Privatpersonen."
+        })}
+        ${faq(analysisFaq)}
+      </div>
+    </section>
+
+    ${ctaSection({
+      eyebrow: "Körperanalyse Nürnberg",
+      title: "Mach deinen Fortschritt messbar.",
+      text:
+        "Starte mit einer klaren Standortbestimmung aus 2D-Körperanalyse, InBody BIA-Messung und persönlicher Auswertung.",
+      primary: { label: "Körperanalyse anfragen", href: contactHref("koerperanalyse") },
+      secondary: { label: "Firmenfitness ansehen", href: "/firmenfitness/" }
+    })}
+  `;
+
+  return layout({
+    path: "/koerperanalyse-nuernberg/",
+    title: "Körperanalyse Nürnberg | InBody & BIA-Messung | Camp Dörfl",
+    description:
+      "Körperanalyse in Nürnberg für Privatpersonen: 2D-Körperanalyse, InBody BIA-Messung und persönliche Auswertung für Training, Ernährung und Fortschritt.",
+    keywords: [
+      "Körperanalyse Nürnberg",
+      "BIA Messung Nürnberg",
+      "InBody Nürnberg",
+      "Körperfettmessung Nürnberg",
+      "2D Körperanalyse Nürnberg",
+      "Körperzusammensetzung messen Nürnberg"
+    ],
+    bodyClass: "page-premium page-firmenfitness page-guide-corporate page-body-analysis",
+    socialImage: "/assets/images/firmenfitness-hero-wide-social.jpg",
+    socialImageAlt: "Körperanalyse mit InBody BIA-Messung und persönlicher Auswertung in Nürnberg",
+    extraStructuredData: [
+      serviceSchema({
+        path: "/koerperanalyse-nuernberg/",
+        name: "Körperanalyse Nürnberg – Camp Dörfl",
+        serviceType: "2D-Körperanalyse und InBody BIA-Messung",
+        description:
+          "Körperanalyse für Privatpersonen in Nürnberg mit 2D-Analyse, InBody BIA-Messung und persönlicher Auswertung."
+      }),
+      faqSchema("/koerperanalyse-nuernberg/", analysisFaq),
+      videoObjectSchema({
+        path: "/koerperanalyse-nuernberg/",
+        id: "koerperanalyse-video",
+        name: "Camp Dörfl Körperanalyse und Beratung",
+        description:
+          "Kurzer Videoeinblick in die persönliche Einordnung von Körperanalyse, Ernährung und Gesundheit bei Camp Dörfl.",
+        thumbnailUrl: "/assets/images/dominik-athlete-nutrition-social.jpg",
+        uploadDate: "2026-06-16T13:32:09-07:00",
+        embedUrl: "https://www.youtube-nocookie.com/embed/rQ9YocgKVSc?autoplay=1&rel=0&modestbranding=1&playsinline=1",
+        watchUrl: "https://www.youtube.com/watch?v=rQ9YocgKVSc"
+      })
+    ],
+    content
+  });
+}
+
 function bodybuildingCompetitionCard(event) {
   return `
     <article class="bbcal-event${event.past ? " bbcal-event--past" : ""}" data-bodybuilding-event>
@@ -4746,28 +5575,34 @@ function bodybuildingCalendarPage() {
     .sort((a, b) => a.date.localeCompare(b.date));
   const pastEvents = allEvents.filter((event) => event.past);
   const nextEvents = upcomingEvents.slice(0, 4);
-  const sourceNavigation = bodybuildingCalendarSources
-    .map(
-      (source) => `
-        <a class="bbcal-source-link" href="#${source.id}">
+  const sourceLinkFor = (source) => `
+        <a class="bbcal-source-link${source.scope === "international" ? " bbcal-source-link--international" : ""}" href="#${source.id}">
           <span>${source.number}</span>
           <strong>${source.name}</strong>
           <small>${source.events.filter((event) => !event.past).length} kommende Termine</small>
           <b aria-hidden="true">↓</b>
         </a>
-      `
-    )
+      `;
+  const nationalSourceNavigation = bodybuildingCalendarSources
+    .filter((source) => source.scope !== "international")
+    .map(sourceLinkFor)
     .join("");
-  const calendarSections = bodybuildingCalendarSources
-    .map((source) => {
+  const internationalSourceNavigation = bodybuildingCalendarSources
+    .filter((source) => source.scope === "international")
+    .map(sourceLinkFor)
+    .join("");
+  const calendarSectionFor = (source) => {
       const upcoming = source.events.filter((event) => !event.past);
       const completed = source.events.filter((event) => event.past);
+      const featuredUpcoming = source.scope === "international" ? upcoming.slice(0, 4) : upcoming;
+      const additionalUpcoming = source.scope === "international" ? upcoming.slice(4) : [];
 
       return `
-        <section class="bbcal-federation" id="${source.id}" data-reveal>
+        <section class="bbcal-federation${source.scope === "international" ? " bbcal-federation--international" : ""}" id="${source.id}" data-reveal>
           <header class="bbcal-federation__header">
             <span class="bbcal-federation__number">${source.number}</span>
             <div>
+              ${source.scope === "international" ? '<span class="bbcal-system-tag">International 2026</span>' : ""}
               <p class="eyebrow">${source.descriptor}</p>
               <h2>${source.name}</h2>
               <p>${source.note}</p>
@@ -4777,8 +5612,18 @@ function bodybuildingCalendarPage() {
             </a>
           </header>
           <div class="bbcal-event-list">
-            ${upcoming.map(bodybuildingCompetitionCard).join("")}
+            ${featuredUpcoming.map(bodybuildingCompetitionCard).join("")}
           </div>
+          ${
+            additionalUpcoming.length
+              ? `<details class="bbcal-more-events">
+                  <summary><span>Alle ${upcoming.length} Termine</span><strong>Weitere ${additionalUpcoming.length} öffnen <b aria-hidden="true">↓</b></strong></summary>
+                  <div class="bbcal-event-list bbcal-event-list--more">
+                    ${additionalUpcoming.map(bodybuildingCompetitionCard).join("")}
+                  </div>
+                </details>`
+              : ""
+          }
           ${
             completed.length
               ? `<details class="bbcal-archive">
@@ -4791,12 +5636,19 @@ function bodybuildingCalendarPage() {
           }
         </section>
       `;
-    })
+    };
+  const nationalCalendarSections = bodybuildingCalendarSources
+    .filter((source) => source.scope !== "international")
+    .map(calendarSectionFor)
+    .join("");
+  const internationalCalendarSections = bodybuildingCalendarSources
+    .filter((source) => source.scope === "international")
+    .map(calendarSectionFor)
     .join("");
   const itemListSchema = {
     "@type": "ItemList",
     "@id": `${site.url}/bodybuilding-wettkaempfe-2026/#wettkampfkalender`,
-    name: "Bodybuilding Wettkämpfe 2026 in Deutschland",
+    name: "Bodybuilding Wettkämpfe 2026 in Deutschland und international",
     numberOfItems: allEvents.length,
     itemListElement: allEvents
       .sort((a, b) => a.date.localeCompare(b.date))
@@ -4830,16 +5682,16 @@ function bodybuildingCalendarPage() {
       <div class="bbcal-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell bbcal-hero__inner">
         <div class="bbcal-hero__copy">
-          <p class="eyebrow" data-reveal>Verbandsübergreifender Kalender · Deutschland</p>
+          <p class="eyebrow" data-reveal>Deutschland · IFBB Pro League · NPC Worldwide · IFBB</p>
           <h1 data-reveal>Bodybuilding<br>Wettkämpfe <span>2026.</span></h1>
-          <p class="bbcal-hero__lead" data-reveal>Alle wichtigen Termine von sechs deutschen Bodybuilding-Verbänden – unabhängig zusammengeführt, übersichtlich sortiert und direkt mit den offiziellen Quellen verknüpft.</p>
+          <p class="bbcal-hero__lead" data-reveal>Deutsche Verbandstermine, internationale Profi-Shows der IFBB Pro League, NPC Worldwide Pro Qualifier und offizielle IFBB-Meisterschaften – getrennt nach System und direkt mit den Originalquellen verknüpft.</p>
           <div class="bbcal-hero__actions" data-reveal>
             <a class="button button--primary" href="#termine"><span>Alle Termine ansehen</span><span aria-hidden="true">↓</span></a>
-            <span class="bbcal-hero__updated">Geprüft am 1. August 2026</span>
+            <span class="bbcal-hero__updated">International erweitert am 10. August 2026</span>
           </div>
         </div>
         <dl class="bbcal-hero__facts" data-reveal>
-          <div><dt>${bodybuildingCalendarSources.length}</dt><dd>Verbände</dd></div>
+          <div><dt>${bodybuildingCalendarSources.length}</dt><dd>offizielle Kalender</dd></div>
           <div><dt>${upcomingEvents.length}</dt><dd>kommende Shows</dd></div>
           <div><dt>${pastEvents.length}</dt><dd>bereits ausgetragen</dd></div>
         </dl>
@@ -4850,16 +5702,23 @@ function bodybuildingCalendarPage() {
       <div class="section-shell section-shell--wide">
         <div class="bbcal-intro__head" data-reveal>
           <div>
-            <p class="eyebrow">Ein Kalender. Sechs Systeme.</p>
+            <p class="eyebrow">Ein Kalender. Neun offizielle Quellen.</p>
             <h2>Die Bühne kennt<br><span>keine Grenzen.</span></h2>
           </div>
           <div class="bbcal-intro__copy">
-            <p>Diese Übersicht stellt keinen Verband über einen anderen. Sie schafft genau das, was Athletinnen, Athleten, Coaches und Fans brauchen: einen gemeinsamen Blick auf das Wettkampfjahr.</p>
+            <p>Die Übersicht trennt nationale Verbände, IFBB Professional League, NPC Worldwide und IFBB International klar voneinander. So bleibt sichtbar, ob es um eine deutsche Meisterschaft, eine Profi-Show, einen Pro Qualifier oder einen internationalen IFBB-Wettkampf geht.</p>
             <p><strong>Wichtig:</strong> Terminänderungen, Klassen, Lizenzen, Qualifikationen und Anmeldeschlüsse immer zusätzlich beim jeweiligen Veranstalter prüfen.</p>
           </div>
         </div>
-        <nav class="bbcal-source-grid" aria-label="Direkt zu einem Verband" data-reveal>
-          ${sourceNavigation}
+        <nav class="bbcal-source-navigation" aria-label="Direkt zu einem Kalender" data-reveal>
+          <div class="bbcal-source-group">
+            <p><span>01</span> Deutschland</p>
+            <div class="bbcal-source-grid">${nationalSourceNavigation}</div>
+          </div>
+          <div class="bbcal-source-group bbcal-source-group--international">
+            <p><span>02</span> Profi &amp; international</p>
+            <div class="bbcal-source-grid bbcal-source-grid--international">${internationalSourceNavigation}</div>
+          </div>
         </nav>
       </div>
     </section>
@@ -4893,12 +5752,20 @@ function bodybuildingCalendarPage() {
       <div class="section-shell section-shell--wide">
         <div class="bbcal-section-heading" data-reveal>
           <p class="eyebrow">Wettkampfkalender 2026</p>
-          <h2>Alle Termine nach Verband.</h2>
-          <p>Bestätigte Termine laut den offiziellen Kalendern und Ergebnisarchiven der jeweiligen Verbände.</p>
+          <h2>Deutsche Termine nach Verband.</h2>
+          <p>Bestätigte Termine der sechs deutschen Verbandskalender und Ergebnisarchive.</p>
           <p class="bbcal-weeks-note"><span aria-hidden="true">↻</span><strong>Weeks Out aktualisiert sich täglich:</strong> So siehst du sofort, wie viel Vorbereitungszeit bis zur jeweiligen Show bleibt.</p>
         </div>
         <div class="bbcal-federations">
-          ${calendarSections}
+          ${nationalCalendarSections}
+        </div>
+        <div class="bbcal-section-heading bbcal-section-heading--international" data-reveal>
+          <p class="eyebrow">Profi & international</p>
+          <h2>IFBB Pro League, NPC Worldwide und IFBB International.</h2>
+          <p>Die wichtigsten kommenden internationalen Termine, pro Veranstaltung einmal aufgeführt. Divisionen, Regionals und kurzfristige Änderungen stehen vollständig in den jeweils verlinkten offiziellen Live-Kalendern.</p>
+        </div>
+        <div class="bbcal-federations bbcal-federations--international">
+          ${internationalCalendarSections}
         </div>
       </div>
     </section>
@@ -4910,9 +5777,48 @@ function bodybuildingCalendarPage() {
           <h2>Unabhängig gesammelt.<br>Offiziell gegengeprüft.</h2>
         </div>
         <div class="bbcal-method__copy" data-reveal>
-          <p>Die Termine wurden am <strong>1. August 2026</strong> mit den offiziellen Veröffentlichungen der sechs Verbände abgeglichen. Bereits ausgetragene Shows bleiben sichtbar, damit die Seite das komplette Wettkampfjahr abbildet.</p>
+          <p>Die deutschen Termine wurden am <strong>1. August 2026</strong> geprüft. Die internationalen Kalender von IFBB Professional League, NPC Worldwide und IFBB wurden am <strong>10. August 2026</strong> ergänzt. Bereits ausgetragene deutsche Shows bleiben sichtbar, damit die Seite das komplette Wettkampfjahr abbildet.</p>
           <p>Camp Dörfl ist nicht Veranstalter dieser Wettkämpfe. Maßgeblich sind ausschließlich die Angaben des jeweiligen Verbandes. Fehlt ein Termin oder wurde etwas verschoben, genügt ein kurzer Hinweis.</p>
           <a class="button button--secondary-light" href="${contactHref()}"><span>Änderung melden</span><span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section bbcal-search-guide">
+      <div class="section-shell section-shell--wide">
+        ${sectionHeader({
+          eyebrow: "Klassen und Systeme verstehen",
+          title: "Frauenklassen, Natural Bodybuilding und Verbände im Überblick.",
+          text:
+            "Die Kalendertermine führen zu unterschiedlichen Regelwerken. Vor der Anmeldung lohnt sich deshalb ein genauer Blick auf Klasse, Startberechtigung, Qualifikation und Anti-Doping-Vorgaben."
+        })}
+        ${featureGrid(
+          [
+            {
+              detail: "Frauenklassen",
+              title: "Bikini, Wellness, Figure und Physique",
+              text: "Nicht jede Klasse wird bei jedem Verband gleich benannt oder bewertet. Die jeweilige Ausschreibung entscheidet über Voraussetzungen und Einteilung."
+            },
+            {
+              detail: "Natural Bodybuilding",
+              title: "GNBF und Anti-Doping-Regelwerk",
+              text: "Natural-Wettkämpfe arbeiten mit eigenen Teilnahme- und Kontrollvorgaben. Fristen und Nachweise müssen direkt beim Verband geprüft werden."
+            },
+            {
+              detail: "IFBB Pro · NPC Worldwide · IFBB",
+              title: "Drei internationale Systeme, klar getrennt",
+              text: "Profi-Show, Pro Qualifier und internationaler IFBB-Cup sind nicht dasselbe. Die Kalenderblöcke zeigen den jeweiligen Weg und führen zur offiziellen Quelle."
+            },
+            {
+              detail: "Meisterschaften 2026",
+              title: "Deutschland, Europa und Welt",
+              text: "Der Kalender bündelt regionale Shows, Deutsche Meisterschaften sowie ausgewählte Europa-, Welt- und Universe-Termine."
+            }
+          ],
+          "feature-grid--calendar-guide"
+        )}
+        <div class="bbcal-guide-action" data-reveal>
+          <a class="button button--secondary" href="/bodybuilding-klassen-gewichtslimits/"><span>Bodybuilding-Klassen &amp; Gewichtslimits</span><span aria-hidden="true">→</span></a>
         </div>
       </div>
     </section>
@@ -4946,9 +5852,9 @@ function bodybuildingCalendarPage() {
 
   return layout({
     path: "/bodybuilding-wettkaempfe-2026/",
-    title: "Bodybuilding Wettkämpfe 2026: Alle Termine & Verbände | Camp Dörfl",
+    title: "Bodybuilding Wettkämpfe 2026: IFBB Pro, NPC &amp; Termine",
     description:
-      "Bodybuilding Wettkämpfe 2026 in einer unabhängigen Übersicht: Termine von NPC Germany, DBFV, GNBF, NAC, WFF/NABBA und PCA Germany.",
+      "Bodybuilding Wettkämpfe 2026: deutsche Termine, IFBB Pro League Profi-Shows, internationale NPC Worldwide Pro Qualifier und offizieller IFBB-Kalender.",
     keywords: [
       "Bodybuilding Wettkämpfe 2026",
       "Bodybuilding Termine 2026",
@@ -4957,17 +5863,221 @@ function bodybuildingCalendarPage() {
       "DBFV Termine 2026",
       "GNBF Wettkampf 2026",
       "NAC Germany Termine 2026",
-      "PCA Germany 2026"
+      "PCA Germany 2026",
+      "IFBB Pro League Termine 2026",
+      "NPC Worldwide Wettkämpfe 2026",
+      "IFBB Wettkämpfe 2026 international"
     ],
     bodyClass: "page-premium page-bodybuilding-calendar",
     pageName: "Bodybuilding Wettkämpfe 2026",
     pageType: "CollectionPage",
+    dateModified: "2026-08-10",
     socialImage: "/assets/images/dominik-bodybuilding-desert.webp",
     socialImageAlt: "Bodybuilding Wettkämpfe 2026 – verbandsübergreifender Kalender",
     extraStructuredData: [
       itemListSchema,
       faqSchema("/bodybuilding-wettkaempfe-2026/", bodybuildingCalendarFaq)
     ],
+    content
+  });
+}
+
+function bodybuildingClassesPage() {
+  const classFaq = [
+    {
+      question: "Ist Classic Physique bei jedem Verband gleich?",
+      answer: "Nein. DBFV, NAC Germany und NPC Worldwide nutzen unterschiedliche Formeln beziehungsweise Größentabellen. Auch Posinghose, Pflichtposen und Klassenaufteilung unterscheiden sich. Maßgeblich bleibt immer die aktuelle Ausschreibung der konkreten Meisterschaft."
+    },
+    {
+      question: "Gibt es in Bikini, Wellness oder Figure ein Gewichtslimit?",
+      answer: "Bei den hier verglichenen Verbänden werden diese Frauenklassen in der Regel offen oder nach Körpergröße eingeteilt, nicht über ein maximales Körpergewicht. Entscheidend sind Körperentwicklung, Proportionen, Präsentation und die verbandsspezifischen Bewertungskriterien."
+    },
+    {
+      question: "Was ist der Unterschied zwischen Gewichtsklasse und Gewichtslimit?",
+      answer: "Eine Gewichtsklasse ordnet Athleten nach dem tatsächlichen Waagegewicht ein, etwa bis 80 Kilogramm. Ein Gewichtslimit setzt dagegen ein Maximalgewicht in Relation zur Körpergröße. Wer darunter bleibt, kann starten; das Limit ist kein Zielgewicht."
+    },
+    {
+      question: "Kann ich bei mehreren Verbänden in derselben Saison starten?",
+      answer: "Das hängt von Mitgliedschaft, Qualifikation, Newcomer-Status und den Regeln des jeweiligen Veranstalters ab. Besonders Doppelstarts und verbandsübergreifender Newcomer-Status sollten vor der Anmeldung direkt geprüft werden."
+    },
+    {
+      question: "Welche Klasse passt zu meinem aktuellen Körperbau?",
+      answer: "Das Gewicht allein reicht nicht. Relevant sind Muskelmasse, Proportionen, Unterkörperentwicklung, Härte, Posing und Bühnenpräsentation. Die Übersicht liefert eine Vorauswahl; die endgültige Entscheidung sollte mit aktuellem Formcheck und der konkreten Ausschreibung fallen."
+    }
+  ];
+
+  const npcClassicRows = [
+    ["bis 162,6 cm", "75,7 kg"], ["bis 165,1 cm", "78,0 kg"],
+    ["bis 167,6 cm", "80,3 kg"], ["bis 170,2 cm", "82,6 kg"],
+    ["bis 172,7 cm", "84,8 kg"], ["bis 175,3 cm", "88,0 kg"],
+    ["bis 177,8 cm", "91,6 kg"], ["bis 180,3 cm", "94,8 kg"],
+    ["bis 182,9 cm", "98,4 kg"], ["bis 185,4 cm", "101,6 kg"],
+    ["bis 188,0 cm", "105,2 kg"], ["bis 190,5 cm", "108,4 kg"],
+    ["bis 193,0 cm", "111,6 kg"], ["bis 195,6 cm", "114,8 kg"],
+    ["bis 198,1 cm", "117,9 kg"], ["bis 200,7 cm", "121,1 kg"],
+    ["über 200,7 cm", "124,3 kg"]
+  ];
+
+  const limitRows = (rows) => rows.map(([height, limit]) => `<tr><td>${height}</td><td><strong>${limit}</strong></td></tr>`).join("");
+
+  const content = `
+    <section class="bbcal-hero bbclass-hero">
+      <img class="bbcal-hero__image" src="/assets/images/dominik-stage-suit.webp" alt="Dominik Dörfl in Wettkampfform auf der Bodybuilding-Bühne"${imageLoadingAttributes({ eager: true })}>
+      <div class="bbcal-hero__scrim" aria-hidden="true"></div>
+      <div class="section-shell bbcal-hero__inner">
+        <div class="bbcal-hero__copy">
+          <p class="eyebrow" data-reveal>DBFV · NAC Germany · NPC Worldwide</p>
+          <h1 data-reveal>Bodybuilding-<br>Klassen &amp; <span>Limits.</span></h1>
+          <p class="bbcal-hero__lead" data-reveal>Welcher Verband? Welche Klasse? Welches Maximalgewicht? Diese Übersicht bringt Männer- und Frauenklassen, Bewertungskriterien und die wichtigsten Größen-Gewichts-Limits in ein verständliches System.</p>
+          <div class="bbcal-hero__actions" data-reveal>
+            <a class="button button--primary" href="#klassencheck"><span>Klasse prüfen</span><span aria-hidden="true">↓</span></a>
+            <a class="button button--secondary-light" href="#verbaende"><span>Verbände vergleichen</span><span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+        <dl class="bbcal-hero__facts" data-reveal>
+          <div><dt>03</dt><dd>Regelwerke im Vergleich</dd></div>
+          <div><dt>11</dt><dd>zentrale Divisionen erklärt</dd></div>
+          <div><dt>01</dt><dd>interaktiver Limit-Check</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section bbcal-intro bbclass-intro">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-intro__head" data-reveal>
+          <div>
+            <p class="eyebrow">Das Wichtigste zuerst</p>
+            <h2>Gleicher Name.<br><span>Andere Regeln.</span></h2>
+          </div>
+          <div class="bbcal-intro__copy">
+            <p><strong>Classic Physique ist nicht überall dieselbe Klasse.</strong> Beim NPC Worldwide gelten feste Größenstufen mit Pfund-/Kilogramm-Limits, der DBFV arbeitet mit eigenen Zuschlägen zur Körpergröße und NAC Germany mit einer weiteren Formel.</p>
+            <p>Auch „Bikini“, „Figure/Figur“ oder „Men’s Physique“ unterscheiden sich in Muskulatur, Härte, Posing und Kleidung. Deshalb beginnt die Klassenwahl immer mit dem Verband – nicht nur mit dem Namen.</p>
+          </div>
+        </div>
+        <div class="bbclass-principles" data-reveal>
+          <article><span>01</span><strong>Gewichtsklasse</strong><p>Die Waage ordnet dich einer Klasse zu – etwa bis 80 kg oder über 100 kg.</p></article>
+          <article><span>02</span><strong>Gewichtslimit</strong><p>Deine Größe bestimmt das maximal erlaubte Gewicht. Darunter ist erlaubt, darüber nicht.</p></article>
+          <article><span>03</span><strong>Größenklasse</strong><p>Du startest nach Körpergröße. Das Bühnengewicht ist kein Einteilungskriterium.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted bbclass-check" id="klassencheck">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-section-heading" data-reveal>
+          <p class="eyebrow">Schnelle Vorauswahl für Männer</p>
+          <h2>Dein Größen- &amp; Gewichtscheck.</h2>
+          <p>Wähle Verband und Klasse. Der Check berechnet das offizielle Maximalgewicht für Männer/Open und zeigt, ob dein eingegebenes Bühnengewicht innerhalb des Limits liegt.</p>
+        </div>
+        <form class="bbclass-calculator" data-class-calculator data-reveal>
+          <div class="bbclass-calculator__fields">
+            <label><span>Verband</span><select name="federation"><option value="dbfv">DBFV e.V.</option><option value="nac">NAC Germany</option><option value="npc">NPC Worldwide</option></select></label>
+            <label><span>Klasse</span><select name="division"><option value="classic-physique">Classic Physique</option><option value="classic-bodybuilding">Classic Bodybuilding</option><option value="mens-physique">Men’s Physique</option><option value="bodybuilding">Bodybuilding</option></select></label>
+            <label><span>Körpergröße</span><span class="bbclass-input"><input name="height" type="number" min="150" max="210" step="0.1" value="180" inputmode="decimal"><b>cm</b></span></label>
+            <label><span>Bühnengewicht</span><span class="bbclass-input"><input name="weight" type="number" min="45" max="180" step="0.1" value="90" inputmode="decimal"><b>kg</b></span></label>
+          </div>
+          <output class="bbclass-calculator__result" data-class-result aria-live="polite">
+            <span>Dein Ergebnis</span><strong>Limit wird berechnet</strong><p>Die offizielle Ausschreibung bleibt maßgeblich.</p>
+          </output>
+        </form>
+      </div>
+    </section>
+
+    <section class="section bbclass-directory" id="verbaende">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-section-heading" data-reveal>
+          <p class="eyebrow">Verbandsvergleich</p>
+          <h2>Drei Systeme. Klar getrennt.</h2>
+          <p>Die Klassenanzahl einer konkreten Show kann wegen Teilnehmerzahl, Altersgruppe oder Ausschreibung abweichen. Die folgenden Übersichten zeigen das Grundsystem für Open-Athleten.</p>
+        </div>
+
+        <div class="bbclass-federations">
+          <article class="bbclass-federation" id="dbfv" data-reveal>
+            <header><span class="bbclass-federation__number">01</span><div><p class="eyebrow">Deutschland · IFBB Germany</p><h2>DBFV e.V.</h2><p>Viele Divisionen werden nach Gewicht oder Größe unterteilt. Classic Bodybuilding und Classic Physique haben unterschiedliche größenabhängige Limits.</p></div><a href="https://www.dbfv.de/wettkampfregeln/" target="_blank" rel="noopener noreferrer">Regelwerk <span aria-hidden="true">↗</span></a></header>
+            <div class="bbclass-federation__body">
+              <div class="bbclass-classlist"><h3>Angebotene Klassen</h3><div class="bbclass-sex-grid"><div><b>Frauen</b><ul><li>Bikini Fitness</li><li>Fit Model</li><li>Wellness Fitness</li><li>Fitness Figur</li><li>Frauen Physique</li></ul></div><div><b>Männer</b><ul><li>Bodybuilding</li><li>Classic Bodybuilding</li><li>Classic Physique</li><li>Men’s Physique</li><li>Muscular Physique</li></ul></div></div><p class="bbclass-note">Zusätzlich: Jugend, Junioren, Masters, Newcomer, Paare, Fit Pairs und Handicapped – je nach Veranstaltung.</p></div>
+              <div class="bbclass-limit-card"><h3>Open Bodybuilding</h3><p><strong>Gewichtsklassen:</strong> bis 70 · 80 · 90 · 100 kg, danach über 100 kg.</p><h3>Classic-Limits</h3><table><thead><tr><th>Größe</th><th>Classic BB / Classic Physique</th></tr></thead><tbody>${limitRows([["bis 168 cm", "Größe −100 / +4 kg"],["bis 171 cm", "+2 / +6 kg"],["bis 175 cm", "+4 / +8 kg"],["bis 180 cm", "+7 / +11 kg"],["bis 188 cm", "+9 / +13 kg"],["bis 196 cm", "+11 / +15 kg"],["über 196 cm", "+13 / +17 kg"]])}</tbody></table></div>
+            </div>
+          </article>
+
+          <article class="bbclass-federation" id="nac" data-reveal>
+            <header><span class="bbclass-federation__number">02</span><div><p class="eyebrow">Deutschland · NAC International</p><h2>NAC Germany</h2><p>Das System ist kompakter: Bodybuilding wird nach Körpergröße, Classic Physique und Men’s Physique werden über Formeln begrenzt.</p></div><a href="https://www.nac-germany.de/klassen-regeln.html" target="_blank" rel="noopener noreferrer">Regelwerk <span aria-hidden="true">↗</span></a></header>
+            <div class="bbclass-federation__body">
+              <div class="bbclass-classlist"><h3>Angebotene Klassen</h3><div class="bbclass-sex-grid"><div><b>Frauen</b><ul><li>Bikini Shape</li><li>Bikini Wellness</li><li>Figur</li><li>Frauen Physique</li><li>Mixed Couples</li></ul></div><div><b>Männer</b><ul><li>Bodybuilding</li><li>Classic Physique</li><li>Men’s Physique</li><li>Junioren</li><li>Masters +40 / +50 / +60</li></ul></div></div><p class="bbclass-note">Bodybuilding: Body II bis einschließlich 175 cm, Body I über 175 cm; kein Gewichtslimit.</p></div>
+              <div class="bbclass-formulas"><article><span>Men’s Physique</span><strong>Größe − 100 + 2 kg</strong><p>Beispiel 180 cm: maximal 82 kg.</p></article><article><span>Classic Physique</span><strong>Größe − 100 + Toleranz</strong><p>+4 kg bis 170 cm · +6 kg von 171–179 cm · +8 kg ab 180 cm · +10 kg über 189 cm.</p></article><p class="bbclass-note"><strong>Hinweis zur Grenze:</strong> Das NAC-Regelwerk formuliert „über 1,80 m“ und „über 1,89 m“. Bei exakt 180 beziehungsweise 189 cm vorab beim Veranstalter bestätigen.</p></div>
+            </div>
+          </article>
+
+          <article class="bbclass-federation" id="npc" data-reveal>
+            <header><span class="bbclass-federation__number">03</span><div><p class="eyebrow">International · IFBB Pro League Weg</p><h2>NPC Worldwide</h2><p>Die Divisionen werden veranstaltungsabhängig in unterschiedlich viele Größenklassen aufgeteilt. Classic Physique nutzt eine feste Inch-/Pfund-Tabelle.</p></div><a href="https://www.ifbbpro.com/npc-worldwide/rules/" target="_blank" rel="noopener noreferrer">Regelwerk <span aria-hidden="true">↗</span></a></header>
+            <div class="bbclass-federation__body bbclass-federation__body--npc">
+              <div class="bbclass-classlist"><h3>Angebotene Klassen</h3><div class="bbclass-sex-grid"><div><b>Frauen</b><ul><li>Bikini</li><li>Wellness</li><li>Figure</li><li>Physique</li><li>Fitness</li><li>Fit Model</li><li>Women’s Bodybuilding</li></ul></div><div><b>Männer</b><ul><li>Bodybuilding</li><li>Classic Physique</li><li>Men’s Physique</li><li>Wheelchair Bodybuilding</li></ul></div></div><p class="bbclass-note">Mögliche Kategorien: True Novice, Novice, Junior, Masters und Open. Welche davon angeboten werden, steht in der Show-Ausschreibung.</p></div>
+              <details class="bbclass-npc-table"><summary><span>Classic Physique: alle Größenlimits</span><strong>Tabelle öffnen <b aria-hidden="true">↓</b></strong></summary><div class="bbclass-table-wrap"><table><thead><tr><th>Körpergröße</th><th>Maximalgewicht</th></tr></thead><tbody>${limitRows(npcClassicRows)}</tbody></table></div><p>Die offizielle Tabelle rechnet in Zoll und Pfund; Kilogrammwerte sind die veröffentlichten Umrechnungen.</p></details>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted bbclass-division-guide">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-section-heading" data-reveal><p class="eyebrow">Frauenklassen verstehen</p><h2>Welche Entwicklung wird gesucht?</h2><p>Von Model-Look bis Physique: Nicht „besser“ oder „schlechter“, sondern ein anderes Verhältnis aus Muskulatur, Kondition, Proportion und Präsentation.</p></div>
+        <div class="bbclass-spectrum" data-reveal><span>Weniger Muskelmasse</span><i aria-hidden="true"></i><span>Mehr Muskelmasse &amp; Definition</span></div>
+        <div class="bbclass-guide-grid">
+          <article data-reveal><span>01</span><h3>Fit Model</h3><p>Der weichste, modelorientierte Look. Balance, Form und Präsentation stehen im Vordergrund; weniger Muskulatur als in Bikini.</p><b>High Heels · Front-/Rückenansicht</b></article>
+          <article data-reveal><span>02</span><h3>Bikini / Bikini Shape</h3><p>Athletisch-feminin mit klarer Silhouette, guter Gluteus-Form und starker Bühnenpräsentation – ohne extreme Härte oder Muskelteilung.</p><b>High Heels · Präsentation zentral</b></article>
+          <article data-reveal><span>03</span><h3>Wellness</h3><p>Deutlich stärkerer Unterkörper mit ausgeprägten Oberschenkeln und Gluteus. Der Oberkörper bleibt im Verhältnis weniger dominant.</p><b>High Heels · Unterkörperfokus</b></article>
+          <article data-reveal><span>04</span><h3>Figure / Fitness Figur</h3><p>Mehr Schulter-, Rücken- und Beinmuskulatur, stärkere Athletik und Symmetrie. Härter als Bikini/Wellness, aber ohne extreme Striations.</p><b>High Heels · Vierteldrehungen</b></article>
+          <article data-reveal><span>05</span><h3>Women’s Physique</h3><p>Ausgeprägte Muskulatur, sichtbare Definition und Pflichtposen. Proportion, Muskelqualität und Bühnenroutine werden stärker gewichtet.</p><b>Barfuß · Pflichtposen &amp; Kür</b></article>
+          <article data-reveal><span>06</span><h3>Women’s Bodybuilding</h3><p>Die höchste Stufe der Muskelmasse und Kondition. Vor allem im NPC-System angeboten; nicht jede Show schreibt die Division aus.</p><b>Barfuß · maximale Muskelentwicklung</b></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section bbclass-division-guide bbclass-men">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-section-heading" data-reveal><p class="eyebrow">Männerklassen verstehen</p><h2>Silhouette, Klassik oder maximale Masse?</h2></div>
+        <div class="bbclass-guide-grid bbclass-guide-grid--men">
+          <article data-reveal><span>01</span><h3>Men’s Physique</h3><p>V-Form, schmale Taille, runde Schultern und ästhetischer Oberkörper. Boardshorts verdecken die Oberschenkel; klassische Bodybuilding-Masse ist nicht das Ziel.</p><b>Boardshorts · Front-/Rückenansicht</b></article>
+          <article data-reveal><span>02</span><h3>Classic Physique</h3><p>Klassische Linien, Vakuum, Proportionen und ästhetische Posen – mit mehr zulässiger Masse als Classic Bodybuilding bei DBFV und meist deutlich mehr als Men’s Physique.</p><b>Größen-Gewichts-Limit · Classic Posing</b></article>
+          <article data-reveal><span>03</span><h3>Classic Bodybuilding</h3><p>DBFV-spezifische Classic-Klasse mit engerem Gewichtslimit als Classic Physique. Gesamtentwicklung und Bodybuilding-Pflichtposen bleiben zentral.</p><b>Engeres Limit · Pflichtposen</b></article>
+          <article data-reveal><span>04</span><h3>Bodybuilding</h3><p>Maximale vollständige Muskelentwicklung, Symmetrie, Härte und Kondition. Je nach Verband Einteilung über Gewicht, Größe oder offene Klassen.</p><b>Kein Größen-Gewichts-Cap · Pflichtposen</b></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted bbcal-method bbclass-method">
+      <div class="section-shell bbcal-method__grid">
+        <div data-reveal><p class="eyebrow">So triffst du die Entscheidung</p><h2>Vier Checks vor<br>der Anmeldung.</h2></div>
+        <div class="bbcal-method__copy" data-reveal><ol class="bbclass-steps"><li><span>01</span><p><strong>Verband und konkrete Show wählen.</strong> Nicht jede Division läuft bei jeder Meisterschaft.</p></li><li><span>02</span><p><strong>Größe korrekt messen.</strong> Schon wenige Millimeter können beim NPC die nächste Stufe bedeuten.</p></li><li><span>03</span><p><strong>Look ehrlich vergleichen.</strong> Muskelverteilung, Härte und Posing sind wichtiger als der Klassenname.</p></li><li><span>04</span><p><strong>Ausschreibung final prüfen.</strong> Altersklassen, Qualifikation, Lizenz, Doppelstarts und Check-in-Regeln können abweichen.</p></li></ol><a class="button button--secondary-light" href="/bodybuilding-wettkaempfe-2026/"><span>Wettkämpfe 2026 ansehen</span><span aria-hidden="true">→</span></a></div>
+      </div>
+    </section>
+
+    <section class="section bbcal-faq">
+      <div class="section-shell">${sectionHeader({ eyebrow: "Häufige Fragen", title: "Was vor der Klassenwahl wichtig ist.", text: "Die Regeln geben den Rahmen. Der passende Look entscheidet, ob du in der Klasse wirklich konkurrenzfähig bist." })}${faq(classFaq)}</div>
+    </section>
+
+    ${ctaSection({
+      eyebrow: "Wettkampfvorbereitung",
+      title: "Die richtige Klasse ist der Start. Die richtige Form ist der Weg.",
+      text: "Gemeinsam ordnen wir Verband, Klasse, Zeitplan, Training, Ernährung und Posing so ein, dass deine Vorbereitung ein klares Ziel bekommt.",
+      primary: { label: "Klassencheck anfragen", href: contactHref("premium-training") },
+      secondary: { label: "Wettkampfkalender 2026", href: "/bodybuilding-wettkaempfe-2026/" }
+    })}
+  `;
+
+  return layout({
+    path: "/bodybuilding-klassen-gewichtslimits/",
+    title: "Bodybuilding-Klassen &amp; Gewichtslimits: NPC, DBFV, NAC",
+    description: "Bodybuilding-Klassen und Gewichtslimits im Vergleich: NPC Worldwide, DBFV e.V. und NAC Germany. Frauen- und Männerklassen, Anforderungen und Limit-Check.",
+    keywords: ["Bodybuilding Klassen", "Bodybuilding Gewichtslimits", "NPC Classic Physique Gewichtslimit", "DBFV Klassen", "NAC Germany Klassen", "Bikini Wellness Figure Unterschied", "Classic Physique Gewicht Größe"],
+    bodyClass: "page-premium page-bodybuilding-calendar page-bodybuilding-classes",
+    pageName: "Bodybuilding-Klassen und Gewichtslimits",
+    pageType: "Article",
+    dateModified: "2026-08-11",
+    socialImage: "/assets/images/dominik-stage-suit-social.jpg",
+    socialImageAlt: "Bodybuilding-Klassen und Gewichtslimits im Verbandsvergleich",
+    extraStructuredData: [faqSchema("/bodybuilding-klassen-gewichtslimits/", classFaq)],
     content
   });
 }
@@ -5020,7 +6130,9 @@ function boxingCalendarPage() {
           <strong>${source.shortName || source.name}</strong>
           <small>${source.events.filter((event) => !event.past).length
             ? `${source.events.filter((event) => !event.past).length} kommende Termine`
-            : "2026-Ergebnisse"}</small>
+            : source.events.length
+              ? "2026-Ergebnisse"
+              : "Offiziellen Kalender öffnen"}</small>
           <b aria-hidden="true">↓</b>
         </a>
       `
@@ -5046,7 +6158,7 @@ function boxingCalendarPage() {
         ${
           upcoming.length
             ? `<div class="bbcal-event-list">${upcoming.map(boxingCompetitionCard).join("")}</div>`
-            : `<div class="boxcal-empty"><strong>Noch kein weiterer Termin veröffentlicht.</strong><span>Neue WBF-Ansetzungen ergänzen wir, sobald sie offiziell bestätigt sind.</span></div>`
+            : `<div class="boxcal-empty"><strong>${source.emptyTitle || "Noch kein weiterer Termin veröffentlicht."}</strong><span>${source.emptyText || `Neue ${source.shortName || source.name}-Ansetzungen ergänzen wir, sobald sie offiziell bestätigt sind.`}</span></div>`
         }
         ${
           completed.length
@@ -5105,10 +6217,10 @@ function boxingCalendarPage() {
         <div class="bbcal-hero__copy">
           <p class="eyebrow" data-reveal>Unabhängiger Kalender · Profi & Amateur</p>
           <h1 data-reveal>Boxen<br>Wettkämpfe <span>2026.</span></h1>
-          <p class="bbcal-hero__lead" data-reveal>Die wichtigsten Titelkämpfe, internationalen Turniere und Deutschen Meisterschaften – sauber getrennt nach Profi- und Amateurboxen.</p>
+          <p class="bbcal-hero__lead" data-reveal>Die wichtigsten Titelkämpfe von WBA, WBC, WBF, WBO und IBF, deutsche BDB-Termine, internationale Turniere und Deutsche Meisterschaften – sauber getrennt nach Profi- und Amateurboxen.</p>
           <div class="bbcal-hero__actions" data-reveal>
             <a class="button button--primary" href="#termine"><span>Alle Termine ansehen</span><span aria-hidden="true">↓</span></a>
-            <span class="bbcal-hero__updated">Geprüft am 1. August 2026</span>
+            <span class="bbcal-hero__updated">IBF und BDB ergänzt am 11. August 2026</span>
           </div>
         </div>
         <dl class="bbcal-hero__facts" data-reveal>
@@ -5168,7 +6280,7 @@ function boxingCalendarPage() {
         <div class="bbcal-section-heading" data-reveal>
           <p class="eyebrow">Boxkalender 2026</p>
           <h2>Profi. Titel. Fight Cards.</h2>
-          <p>Ausgewählte offiziell bestätigte Titelkämpfe der vier Profi-Organisationen. Die Pläne werden im Profiboxen fortlaufend ergänzt.</p>
+          <p>Ausgewählte offiziell bestätigte Titelkämpfe der fünf internationalen Profi-Organisationen sowie der deutsche BDB-Kalender. Die Pläne werden im Profiboxen fortlaufend ergänzt.</p>
         </div>
         <div class="boxcal-division boxcal-division--profi">
           <div class="boxcal-division__marker" data-reveal><span>Professional</span><strong>01</strong></div>
@@ -5194,7 +6306,7 @@ function boxingCalendarPage() {
           <h2>Sauber getrennt.<br>Offiziell gegengeprüft.</h2>
         </div>
         <div class="bbcal-method__copy" data-reveal>
-          <p>Die Übersicht wurde am <strong>1. August 2026</strong> mit den offiziellen Kalendern, Kampfplänen und Ergebnisdiensten der sechs Organisationen abgeglichen. Mehrtägige Amateurturniere werden als ein Event gezählt.</p>
+          <p>Die Übersicht wurde am <strong>11. August 2026</strong> mit den offiziellen Kalendern, Kampfplänen und Ergebnisdiensten der acht Organisationen abgeglichen. Mehrtägige Amateurturniere werden als ein Event gezählt.</p>
           <p>Camp Dörfl ist weder Veranstalter noch Ticketanbieter. Da sich Profikämpfe kurzfristig verändern können, sind ausschließlich die jeweils verlinkten Originalquellen verbindlich.</p>
           <a class="button button--secondary-light" href="${contactHref()}"><span>Änderung melden</span><span aria-hidden="true">→</span></a>
         </div>
@@ -5232,7 +6344,7 @@ function boxingCalendarPage() {
     path: "/boxen-wettkaempfe-2026/",
     title: "Boxen Wettkämpfe 2026: Profi & Amateur Termine | Camp Dörfl",
     description:
-      "Boxen Wettkämpfe 2026: aktuelle Profi-Titelkämpfe von WBA, WBC, WBF und WBO sowie Amateur-Termine von World Boxing und dem Deutschen Boxsport-Verband.",
+      "Boxen Wettkämpfe 2026: Profi-Titelkämpfe von WBA, WBC, WBF, WBO und IBF, deutsche BDB-Termine sowie Amateurboxen von World Boxing und DBV.",
     keywords: [
       "Boxen Wettkämpfe 2026",
       "Boxen Termine 2026",
@@ -5241,7 +6353,9 @@ function boxingCalendarPage() {
       "Amateurboxen 2026",
       "Deutsche Meisterschaft Boxen 2026",
       "World Boxing Kalender 2026",
-      "WBA WBC WBO Kämpfe 2026"
+      "WBA WBC WBO IBF Kämpfe 2026",
+      "IBF Boxen Termine 2026",
+      "BDB Boxen Termine 2026"
     ],
     bodyClass: "page-premium page-bodybuilding-calendar page-boxing-calendar",
     pageName: "Boxen Wettkämpfe 2026",
@@ -6059,15 +7173,17 @@ function sportSpotFinderPage() {
 }
 
 export const pages = [
-  { route: "/", render: homePage },
+  { route: "/", render: homePage, lastModified: "2026-08-11" },
   { route: "/app/", render: appPage },
-  { route: "/personal-training-kosten-nuernberg/", render: personalTrainingCostPage },
-  { route: "/personal-trainer-nürnberg/", render: personalCoachingPage },
+  { route: "/personal-training-kosten-nuernberg/", render: personalTrainingCostPage, lastModified: "2026-08-11" },
+  { route: "/personal-trainer-nürnberg/", render: personalCoachingPage, lastModified: "2026-08-11" },
   { route: "/gesundheitstag-nuernberg/", render: gesundheitstagNuernbergPage },
-  { route: "/firmenfitness/", render: firmenfitnessPage },
+  { route: "/koerperanalyse-nuernberg/", render: koerperanalyseNuernbergPage },
+  { route: "/firmenfitness/", render: firmenfitnessPage, lastModified: "2026-08-11" },
   { route: "/events/", render: eventsPage },
   { route: "/partner/", render: partnerPage },
-  { route: "/bodybuilding-wettkaempfe-2026/", render: bodybuildingCalendarPage },
+  { route: "/bodybuilding-wettkaempfe-2026/", render: bodybuildingCalendarPage, lastModified: "2026-08-10" },
+  { route: "/bodybuilding-klassen-gewichtslimits/", render: bodybuildingClassesPage, lastModified: "2026-08-11" },
   { route: "/boxen-wettkaempfe-2026/", render: boxingCalendarPage },
   { route: "/triathlon-kalender-2026/", render: triathlonCalendarPage },
   { route: "/laufkalender-2026/", render: runningCalendarPage },
@@ -6083,5 +7199,5 @@ export const pages = [
   { route: "/datenschutzformular-app/", render: appPrivacyPage, includeInSitemap: false },
   { route: "/werbung-partnerlinks/", render: partnerTransparencyPage, includeInSitemap: false },
   { route: "/barrierefreiheit/", render: accessibilityPage, includeInSitemap: false },
-  { route: "/kontakt/", render: contactPage }
+  { route: "/kontakt/", render: contactPage, lastModified: "2026-08-11" }
 ];

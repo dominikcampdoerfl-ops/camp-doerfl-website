@@ -7,6 +7,103 @@
   gap: 10px;
 }
 
+/* Körperanalyse: four clearly connected stages instead of a generic process list. */
+.page-body-analysis .analysis-sequence .step-grid {
+  position: relative;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.page-body-analysis .analysis-sequence .step-grid::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 51px;
+  right: 8%;
+  left: 8%;
+  height: 2px;
+  background: linear-gradient(90deg, #c9a34d, #e8d29a 50%, #c9a34d);
+}
+
+.page-body-analysis .analysis-sequence .step-card {
+  z-index: 1;
+  min-width: 0;
+  padding: 28px;
+  border-color: rgba(42, 33, 18, 0.13);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(201, 163, 77, 0.14), transparent 38%),
+    linear-gradient(145deg, #fffefa, #f5ead7);
+  box-shadow: 0 24px 52px -38px rgba(43, 32, 12, 0.42);
+}
+
+.page-body-analysis .analysis-sequence .step-card__index {
+  position: relative;
+  z-index: 2;
+  width: 46px;
+  height: 46px;
+  margin-bottom: 24px;
+  padding: 0;
+  border: 1px solid rgba(201, 163, 77, 0.45);
+  border-radius: 50%;
+  color: #fffdf8;
+  background: #17140f;
+  font-family: var(--font-cond);
+  font-size: 0.88rem;
+  font-style: italic;
+  letter-spacing: 0.08em;
+}
+
+.page-body-analysis .analysis-sequence .step-card h3 {
+  color: #19150e;
+  font-size: clamp(1.15rem, 1.5vw, 1.42rem);
+  line-height: 1.08;
+}
+
+.page-body-analysis .analysis-sequence .step-card p {
+  color: #625747;
+  line-height: 1.62;
+}
+
+@media (max-width: 980px) {
+  .page-body-analysis .analysis-sequence .step-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .page-body-analysis .analysis-sequence .step-grid::before {
+    display: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .page-body-analysis .analysis-sequence .step-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .page-body-analysis .analysis-sequence .step-card {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr);
+    column-gap: 16px;
+    padding: 20px;
+  }
+
+  .page-body-analysis .analysis-sequence .step-card__index {
+    grid-row: 1 / span 2;
+    width: 44px;
+    height: 44px;
+    margin: 0;
+  }
+
+  .page-body-analysis .analysis-sequence .step-card h3,
+  .page-body-analysis .analysis-sequence .step-card p {
+    grid-column: 2;
+  }
+
+  .page-body-analysis .analysis-sequence .step-card p {
+    margin-top: 8px;
+  }
+}
+
 /* FINAL PREMIUM LAYER — Günter Preis story and previews */
 html body.page-premium main .guenter-story-preview-section {
   padding-block: clamp(56px, 7vw, 104px) !important;
@@ -5393,6 +5490,12 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
   margin-top: 38px;
 }
 
+.page-bodybuilding-calendar .bbcal-guide-action {
+  display: flex;
+  justify-content: center;
+  margin-top: 34px;
+}
+
 @media (max-width: 1250px) {
   .page-bodybuilding-calendar .bbcal-source-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -6509,8 +6612,64 @@ body.page-premium.page-events main .editorial-stage:not(.editorial-stage--event-
 
 .page-triathlon-calendar .trical-hero .bbcal-hero__scrim {
   background:
-    linear-gradient(90deg, rgba(7, 8, 11, 0.96) 0%, rgba(7, 8, 11, 0.75) 43%, rgba(7, 8, 11, 0.13) 78%),
-    linear-gradient(0deg, rgba(7, 8, 11, 0.7), transparent 48%);
+    linear-gradient(90deg, rgba(7, 8, 11, 0.98) 0%, rgba(7, 8, 11, 0.88) 42%, rgba(7, 8, 11, 0.28) 76%, rgba(7, 8, 11, 0.16) 100%),
+    linear-gradient(0deg, rgba(7, 8, 11, 0.82), transparent 52%);
+}
+
+/* Triathlon top-area contrast lock: keep the hero and the first light section
+   independent from later generic premium colour passes. */
+html body.page-premium.page-triathlon-calendar main .trical-hero {
+  color: #fffdf8 !important;
+}
+
+html body.page-premium.page-triathlon-calendar main .trical-hero .eyebrow {
+  color: #f1dda5 !important;
+  -webkit-text-fill-color: #f1dda5 !important;
+}
+
+html body.page-premium.page-triathlon-calendar main .trical-hero h1,
+html body.page-premium.page-triathlon-calendar main .trical-hero .bbcal-hero__facts dt {
+  color: #fffdf8 !important;
+  -webkit-text-fill-color: #fffdf8 !important;
+  text-shadow: 0 18px 54px rgba(0, 0, 0, 0.62);
+}
+
+html body.page-premium.page-triathlon-calendar main .trical-hero h1 span {
+  color: #d7c394 !important;
+  -webkit-text-fill-color: #d7c394 !important;
+}
+
+html body.page-premium.page-triathlon-calendar main .trical-hero .bbcal-hero__lead {
+  color: rgba(255, 253, 248, 0.94) !important;
+  -webkit-text-fill-color: rgba(255, 253, 248, 0.94) !important;
+}
+
+html body.page-premium.page-triathlon-calendar main .trical-hero :is(
+  .bbcal-hero__updated,
+  .bbcal-hero__facts dd
+) {
+  color: rgba(255, 253, 248, 0.78) !important;
+  -webkit-text-fill-color: rgba(255, 253, 248, 0.78) !important;
+}
+
+html body.page-premium.page-triathlon-calendar main .trical-intro h2 {
+  color: #101114 !important;
+  -webkit-text-fill-color: #101114 !important;
+}
+
+html body.page-premium.page-triathlon-calendar main .trical-intro h2 span {
+  color: #8b6819 !important;
+  -webkit-text-fill-color: #8b6819 !important;
+}
+
+html body.page-premium.page-triathlon-calendar main .trical-intro .bbcal-intro__copy p {
+  color: #574f44 !important;
+  -webkit-text-fill-color: #574f44 !important;
+}
+
+html body.page-premium.page-triathlon-calendar main .trical-intro .bbcal-intro__copy strong {
+  color: #19150e !important;
+  -webkit-text-fill-color: #19150e !important;
 }
 
 .page-triathlon-calendar .trical-search-section {
@@ -9587,6 +9746,301 @@ html body.page-premium.page-bodybuilding-calendar main .bbcal-intro__head h2 spa
   -webkit-text-fill-color: var(--bbcal-gold-deep) !important;
 }
 
+/* ============================================================
+   BODYBUILDING CLASSES — federation and weight-limit guide
+   ============================================================ */
+.page-bodybuilding-classes .bbclass-hero .bbcal-hero__image {
+  object-position: 66% 24%;
+}
+
+.page-bodybuilding-classes .bbclass-hero .bbcal-hero__scrim {
+  background:
+    linear-gradient(90deg, rgba(7,8,11,.98) 0%, rgba(7,8,11,.91) 39%, rgba(7,8,11,.47) 65%, rgba(7,8,11,.14) 84%),
+    linear-gradient(0deg, rgba(7,8,11,.94), transparent 52%);
+}
+
+.page-bodybuilding-classes .bbclass-principles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  width: min(100%, 1540px);
+  margin: clamp(42px, 7vw, 76px) auto 0;
+}
+
+.page-bodybuilding-classes .bbclass-principles article {
+  min-height: 230px;
+  padding: clamp(24px, 3vw, 38px);
+  border: 1px solid var(--bbcal-line);
+  border-radius: 26px;
+  background: linear-gradient(145deg, #fffefa, #f3ead8);
+}
+
+.page-bodybuilding-classes .bbclass-principles span,
+.page-bodybuilding-classes .bbclass-guide-grid article > span {
+  color: var(--bbcal-gold-deep);
+  font-family: var(--font-cond);
+  font-size: 2.6rem;
+  font-style: italic;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.page-bodybuilding-classes .bbclass-principles strong {
+  display: block;
+  margin-top: 34px;
+  color: #16130d;
+  font-family: var(--font-cond);
+  font-size: 1.65rem;
+  font-style: italic;
+  text-transform: uppercase;
+}
+
+.page-bodybuilding-classes .bbclass-principles p {
+  margin: 10px 0 0;
+  color: #655d50;
+  line-height: 1.6;
+}
+
+.page-bodybuilding-classes .bbclass-calculator {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(320px, .55fr);
+  gap: 16px;
+  padding: clamp(18px, 3vw, 34px);
+  border: 1px solid rgba(215,195,148,.3);
+  border-radius: 34px;
+  background: linear-gradient(145deg, #181713, #0c0e12);
+  box-shadow: 0 40px 70px -50px rgba(0,0,0,.85);
+}
+
+.page-bodybuilding-classes .bbclass-calculator__fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.page-bodybuilding-classes .bbclass-calculator label {
+  display: grid;
+  gap: 9px;
+  color: rgba(255,253,248,.64);
+  font-size: .68rem;
+  font-weight: 850;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.page-bodybuilding-classes .bbclass-calculator select,
+.page-bodybuilding-classes .bbclass-calculator input {
+  width: 100%;
+  min-height: 58px;
+  padding: 0 16px;
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 14px;
+  color: #fffdf8;
+  background: rgba(255,255,255,.07);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 750;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.page-bodybuilding-classes .bbclass-input {
+  position: relative;
+  display: block;
+}
+
+.page-bodybuilding-classes .bbclass-input input { padding-right: 54px; }
+.page-bodybuilding-classes .bbclass-input b {
+  position: absolute;
+  top: 50%;
+  right: 17px;
+  color: var(--bbcal-gold);
+  transform: translateY(-50%);
+}
+
+.page-bodybuilding-classes .bbclass-calculator__result {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  padding: 28px;
+  border: 1px solid rgba(155,116,26,.32);
+  border-radius: 24px;
+  color: #16130d;
+  background: linear-gradient(135deg, #fff0bd, #d7bd78);
+}
+
+.page-bodybuilding-classes .bbclass-calculator__result > span {
+  font-size: .65rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.page-bodybuilding-classes .bbclass-calculator__result strong {
+  margin-top: 10px;
+  font-family: var(--font-cond);
+  font-size: clamp(1.8rem, 3vw, 3rem);
+  font-style: italic;
+  line-height: .95;
+  text-transform: uppercase;
+}
+
+.page-bodybuilding-classes .bbclass-calculator__result p {
+  margin: 14px 0 0;
+  color: #5f4918;
+  font-size: .82rem;
+  line-height: 1.5;
+}
+
+.page-bodybuilding-classes .bbclass-calculator__result.is-over {
+  border-color: rgba(111,37,31,.35);
+  background: linear-gradient(135deg, #f3d7c6, #d59c85);
+}
+
+.page-bodybuilding-classes .bbclass-federations { display: grid; gap: 28px; }
+.page-bodybuilding-classes .bbclass-federation {
+  scroll-margin-top: 120px;
+  padding: clamp(24px, 3.7vw, 52px);
+  overflow: hidden;
+  border: 1px solid rgba(215,195,148,.2);
+  border-radius: 38px;
+  background: radial-gradient(circle at 100% 0%, rgba(215,195,148,.14), transparent 32%), linear-gradient(145deg, #1a1916, #0d1015 78%);
+}
+
+.page-bodybuilding-classes .bbclass-federation > header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: clamp(22px, 3vw, 46px);
+  align-items: start;
+  padding-bottom: 30px;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+}
+
+.page-bodybuilding-classes .bbclass-federation__number {
+  color: var(--bbcal-gold);
+  font-family: var(--font-cond);
+  font-size: clamp(3.6rem, 5.4vw, 6rem);
+  font-style: italic;
+  font-weight: 900;
+  line-height: .82;
+}
+
+.page-bodybuilding-classes .bbclass-federation header .eyebrow { margin: 0 0 9px; color: rgba(215,195,148,.75); }
+.page-bodybuilding-classes .bbclass-federation header h2 {
+  margin: 0;
+  color: #fffdf8;
+  font-family: var(--font-cond);
+  font-size: clamp(2.5rem, 4.2vw, 4.5rem);
+  font-style: italic;
+  line-height: .9;
+  text-transform: uppercase;
+}
+
+.page-bodybuilding-classes .bbclass-federation header p:not(.eyebrow) { max-width: 68ch; margin: 13px 0 0; color: rgba(255,253,248,.62); line-height: 1.55; }
+.page-bodybuilding-classes .bbclass-federation header > a {
+  display: flex;
+  min-width: 160px;
+  min-height: 50px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 17px;
+  border: 1px solid rgba(215,195,148,.42);
+  border-radius: 999px;
+  color: #fffdf8;
+  font-size: .72rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.page-bodybuilding-classes .bbclass-federation header > a span { color: var(--bbcal-gold); font-size: 1.1rem; }
+.page-bodybuilding-classes .bbclass-federation__body { display: grid; grid-template-columns: minmax(0, .82fr) minmax(420px, 1.18fr); gap: 18px; margin-top: 22px; }
+.page-bodybuilding-classes .bbclass-classlist,
+.page-bodybuilding-classes .bbclass-limit-card,
+.page-bodybuilding-classes .bbclass-formulas,
+.page-bodybuilding-classes .bbclass-npc-table {
+  padding: clamp(22px, 3vw, 34px);
+  border: 1px solid rgba(101,71,6,.16);
+  border-radius: 24px;
+  color: #17140f;
+  background: linear-gradient(145deg, #fffefa, #f3ead8);
+}
+
+.page-bodybuilding-classes :is(.bbclass-classlist, .bbclass-limit-card) h3 { margin: 0 0 18px; font-family: var(--font-cond); font-size: 1.5rem; font-style: italic; text-transform: uppercase; }
+.page-bodybuilding-classes .bbclass-limit-card h3:not(:first-child) { margin-top: 26px; }
+.page-bodybuilding-classes .bbclass-limit-card > p { color: #625a4c; line-height: 1.55; }
+.page-bodybuilding-classes .bbclass-sex-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.page-bodybuilding-classes .bbclass-sex-grid b { color: var(--bbcal-gold-deep); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; }
+.page-bodybuilding-classes .bbclass-sex-grid ul { display: grid; gap: 8px; margin: 13px 0 0; padding: 0; list-style: none; }
+.page-bodybuilding-classes .bbclass-sex-grid li { position: relative; padding-left: 17px; color: #403b33; font-size: .87rem; line-height: 1.35; }
+.page-bodybuilding-classes .bbclass-sex-grid li::before { content: ""; position: absolute; top: .52em; left: 0; width: 7px; height: 2px; background: var(--bbcal-gold-deep); }
+.page-bodybuilding-classes .bbclass-note { margin: 22px 0 0; padding-top: 18px; border-top: 1px solid rgba(101,71,6,.15); color: #6a6255; font-size: .76rem; line-height: 1.55; }
+
+.page-bodybuilding-classes table { width: 100%; border-collapse: collapse; }
+.page-bodybuilding-classes th { padding: 9px 12px; color: #746641; font-size: .62rem; letter-spacing: .05em; text-align: left; text-transform: uppercase; }
+.page-bodybuilding-classes td { padding: 10px 12px; border-top: 1px solid rgba(101,71,6,.13); color: #514a3f; font-size: .78rem; }
+.page-bodybuilding-classes td strong { color: #17140f; }
+.page-bodybuilding-classes .bbclass-formulas { display: grid; gap: 12px; }
+.page-bodybuilding-classes .bbclass-formulas article { padding: 22px; border-radius: 18px; background: rgba(215,195,148,.16); }
+.page-bodybuilding-classes .bbclass-formulas article span { color: var(--bbcal-gold-deep); font-size: .65rem; font-weight: 900; text-transform: uppercase; }
+.page-bodybuilding-classes .bbclass-formulas article strong { display: block; margin-top: 9px; font-family: var(--font-cond); font-size: 1.45rem; font-style: italic; text-transform: uppercase; }
+.page-bodybuilding-classes .bbclass-formulas article p { margin: 8px 0 0; color: #625a4c; font-size: .8rem; }
+.page-bodybuilding-classes .bbclass-federation__body--npc { align-items: start; }
+.page-bodybuilding-classes .bbclass-npc-table { padding: 0; overflow: hidden; }
+.page-bodybuilding-classes .bbclass-npc-table summary { display: flex; min-height: 74px; align-items: center; justify-content: space-between; gap: 18px; padding: 18px 24px; cursor: pointer; list-style: none; }
+.page-bodybuilding-classes .bbclass-npc-table summary::-webkit-details-marker { display: none; }
+.page-bodybuilding-classes .bbclass-npc-table summary span { font-family: var(--font-cond); font-size: 1.25rem; font-style: italic; font-weight: 900; text-transform: uppercase; }
+.page-bodybuilding-classes .bbclass-npc-table summary strong { color: var(--bbcal-gold-deep); font-size: .65rem; text-transform: uppercase; }
+.page-bodybuilding-classes .bbclass-npc-table[open] summary b { display: inline-block; transform: rotate(180deg); }
+.page-bodybuilding-classes .bbclass-table-wrap { max-height: 440px; overflow: auto; border-top: 1px solid rgba(101,71,6,.15); }
+.page-bodybuilding-classes .bbclass-npc-table > p { margin: 0; padding: 15px 24px; border-top: 1px solid rgba(101,71,6,.15); color: #6a6255; font-size: .72rem; }
+
+.page-bodybuilding-classes .bbclass-spectrum { display: flex; align-items: center; gap: 18px; margin-bottom: 28px; color: #6c6252; font-size: .68rem; font-weight: 850; text-transform: uppercase; }
+.page-bodybuilding-classes .bbclass-spectrum i { height: 3px; flex: 1; border-radius: 9px; background: linear-gradient(90deg, #e7d7ae, #9b741a, #17140f); }
+.page-bodybuilding-classes .bbclass-guide-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.page-bodybuilding-classes .bbclass-guide-grid article { display: flex; min-height: 310px; flex-direction: column; padding: clamp(22px, 2.6vw, 34px); border: 1px solid var(--bbcal-line); border-radius: 26px; background: #fffefa; }
+.page-bodybuilding-classes .bbclass-guide-grid article h3 { margin: 30px 0 0; color: #17140f; font-family: var(--font-cond); font-size: 1.75rem; font-style: italic; text-transform: uppercase; }
+.page-bodybuilding-classes .bbclass-guide-grid article p { margin: 12px 0 24px; color: #625b4f; font-size: .88rem; line-height: 1.6; }
+.page-bodybuilding-classes .bbclass-guide-grid article b { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--bbcal-line); color: var(--bbcal-gold-deep); font-size: .64rem; line-height: 1.45; text-transform: uppercase; }
+.page-bodybuilding-classes .bbclass-men { background: #0e1014; }
+.page-bodybuilding-classes .bbclass-men .bbcal-section-heading h2 { color: #fffdf8; }
+.page-bodybuilding-classes .bbclass-guide-grid--men { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.page-bodybuilding-classes .bbclass-guide-grid--men article { border-color: rgba(215,195,148,.18); background: linear-gradient(145deg, #1c1b17, #101217); }
+.page-bodybuilding-classes .bbclass-guide-grid--men article h3 { color: #fffdf8; }
+.page-bodybuilding-classes .bbclass-guide-grid--men article p { color: rgba(255,253,248,.64); }
+.page-bodybuilding-classes .bbclass-guide-grid--men article b { border-color: rgba(255,255,255,.11); color: var(--bbcal-gold); }
+.page-bodybuilding-classes .bbclass-steps { display: grid; gap: 10px; margin: 0 0 12px; padding: 0; list-style: none; }
+.page-bodybuilding-classes .bbclass-steps li { display: grid; grid-template-columns: 46px 1fr; gap: 14px; align-items: start; padding: 16px 0; border-bottom: 1px solid rgba(101,71,6,.14); }
+.page-bodybuilding-classes .bbclass-steps span { color: var(--bbcal-gold-deep); font-family: var(--font-cond); font-size: 1.6rem; font-style: italic; font-weight: 900; }
+.page-bodybuilding-classes .bbclass-steps p { margin: 0; }
+
+@media (max-width: 1050px) {
+  .page-bodybuilding-classes .bbclass-federation__body,
+  .page-bodybuilding-classes .bbclass-calculator { grid-template-columns: 1fr; }
+  .page-bodybuilding-classes .bbclass-guide-grid,
+  .page-bodybuilding-classes .bbclass-guide-grid--men { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .page-bodybuilding-classes .bbclass-hero .bbcal-hero__image { object-position: 59% center; }
+  .page-bodybuilding-classes .bbclass-hero .bbcal-hero__scrim { background: linear-gradient(0deg, rgba(7,8,11,.99), rgba(7,8,11,.82) 53%, rgba(7,8,11,.18) 82%); }
+  .page-bodybuilding-classes .bbclass-principles,
+  .page-bodybuilding-classes .bbclass-guide-grid,
+  .page-bodybuilding-classes .bbclass-guide-grid--men { grid-template-columns: 1fr; }
+  .page-bodybuilding-classes .bbclass-principles article { min-height: 190px; }
+  .page-bodybuilding-classes .bbclass-calculator__fields { grid-template-columns: 1fr; }
+  .page-bodybuilding-classes .bbclass-federation { padding: 22px 14px 16px; border-radius: 25px; }
+  .page-bodybuilding-classes .bbclass-federation > header { grid-template-columns: 1fr; gap: 16px; padding-inline: 7px; }
+  .page-bodybuilding-classes .bbclass-federation header > a { width: 100%; }
+  .page-bodybuilding-classes .bbclass-federation__body { grid-template-columns: 1fr; }
+  .page-bodybuilding-classes .bbclass-sex-grid { grid-template-columns: 1fr; }
+  .page-bodybuilding-classes .bbclass-spectrum { align-items: flex-start; flex-direction: column; }
+  .page-bodybuilding-classes .bbclass-spectrum i { width: 100%; flex: none; }
+  .page-bodybuilding-classes .bbclass-guide-grid article { min-height: 270px; }
+  .page-bodybuilding-classes .bbclass-table-wrap { overflow-x: auto; }
+}
+
 @media (max-width: 1180px) {
   .page-running-calendar .runcal-category-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .page-running-calendar .runcal-filter { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -10397,6 +10851,392 @@ html body.page-premium.page-team main section.coach-success .coach-success__year
   transition: background 180ms ease;
 }
 
+/* Contextual inquiry path: always reachable on conversion-relevant mobile pages. */
+.mobile-inquiry-bar {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  body.has-mobile-inquiry-bar {
+    padding-bottom: calc(86px + env(safe-area-inset-bottom));
+  }
+
+  .mobile-inquiry-bar {
+    position: fixed;
+    z-index: 180;
+    right: 10px;
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    left: 10px;
+    display: block;
+  }
+
+  .mobile-inquiry-bar a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    min-height: 66px;
+    padding: 11px 14px 11px 18px;
+    border: 1px solid rgba(215, 195, 148, 0.55);
+    border-radius: 16px;
+    color: #fffdf8;
+    background: rgba(17, 16, 13, 0.97);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.32);
+    text-decoration: none;
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+  }
+
+  .mobile-inquiry-bar__copy {
+    display: grid;
+    gap: 2px;
+  }
+
+  .mobile-inquiry-bar__copy small {
+    color: #d7c394;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .mobile-inquiry-bar__copy strong {
+    color: #fffdf8;
+    font-size: 0.98rem;
+    line-height: 1.2;
+  }
+
+  .mobile-inquiry-bar__arrow {
+    display: grid;
+    flex: 0 0 38px;
+    width: 38px;
+    height: 38px;
+    place-items: center;
+    border-radius: 50%;
+    color: #17140f;
+    background: #d7c394;
+    font-size: 1.1rem;
+  }
+}
+
+@media print {
+  .mobile-inquiry-bar {
+    display: none !important;
+  }
+}
+
+/* Personal Trainer Nürnberg: authority and proof directly beneath the hero. */
+.page-coaching .pt-authority {
+  padding: clamp(44px, 6vw, 82px) 0;
+  border-top: 1px solid rgba(215, 195, 148, 0.24);
+  border-bottom: 1px solid rgba(215, 195, 148, 0.18);
+  background:
+    radial-gradient(circle at 88% 10%, rgba(215, 195, 148, 0.16), transparent 34%),
+    linear-gradient(145deg, #1a1916, #0d1015 78%);
+}
+
+.page-coaching .pt-authority__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+  gap: clamp(34px, 6vw, 92px);
+  align-items: end;
+}
+
+.page-coaching .pt-authority__copy .eyebrow {
+  margin: 0 0 18px;
+  color: #d7c394;
+}
+
+html body.page-premium.page-coaching main .pt-authority__copy h2 {
+  max-width: 15ch;
+  margin: 0;
+  color: #fffdf8 !important;
+  -webkit-text-fill-color: #fffdf8 !important;
+  font-family: var(--font-cond);
+  font-size: clamp(2.7rem, 4.6vw, 5rem);
+  font-style: italic;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+html body.page-premium.page-coaching main .pt-authority__copy > p:not(.eyebrow) {
+  max-width: 58ch;
+  margin: 24px 0 0;
+  color: rgba(255, 253, 248, 0.74) !important;
+  -webkit-text-fill-color: rgba(255, 253, 248, 0.74) !important;
+  line-height: 1.65;
+}
+
+.page-coaching .pt-authority__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 26px;
+  margin-top: 28px;
+}
+
+html body.page-premium.page-coaching main .pt-authority__links a {
+  color: #e5ce8d !important;
+  -webkit-text-fill-color: #e5ce8d !important;
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.page-coaching .pt-authority__facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.page-coaching .pt-authority__facts div {
+  min-height: 154px;
+  padding: clamp(22px, 3vw, 36px);
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+html body.page-premium.page-coaching main .pt-authority__facts dt {
+  color: #d7c394 !important;
+  -webkit-text-fill-color: #d7c394 !important;
+  font-family: var(--font-cond);
+  font-size: clamp(2.5rem, 4vw, 4.5rem);
+  font-style: italic;
+  font-weight: 850;
+  line-height: 0.86;
+}
+
+html body.page-premium.page-coaching main .pt-authority__facts dd {
+  max-width: 23ch;
+  margin: 16px 0 0;
+  color: rgba(255, 253, 248, 0.72) !important;
+  -webkit-text-fill-color: rgba(255, 253, 248, 0.72) !important;
+  font-size: 0.76rem;
+  font-weight: 750;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+@media (max-width: 860px) {
+  .page-coaching .pt-authority__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 540px) {
+  .page-coaching .pt-authority__facts {
+    grid-template-columns: 1fr;
+  }
+
+  .page-coaching .pt-authority__facts div {
+    min-height: 116px;
+  }
+}
+
+/* Bodybuilding calendar source groups and international programme. */
+.page-bodybuilding-calendar .bbcal-source-navigation {
+  display: grid;
+  gap: clamp(30px, 5vw, 54px);
+  width: min(100%, 1540px);
+  margin: clamp(44px, 7vw, 84px) auto 0;
+}
+
+.page-bodybuilding-calendar .bbcal-source-group > p {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: #5b5244;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.page-bodybuilding-calendar .bbcal-source-group > p span {
+  display: inline-grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 50%;
+  color: #201b12;
+  background: #d7c394;
+  font-size: 0.68rem;
+  letter-spacing: 0;
+}
+
+.page-bodybuilding-calendar .bbcal-source-group .bbcal-source-grid {
+  margin: 16px 0 0;
+}
+
+.page-bodybuilding-calendar .bbcal-source-grid--international {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.page-bodybuilding-calendar .bbcal-source-link--international {
+  min-height: 156px;
+  border-color: rgba(215, 195, 148, 0.35);
+  color: #fffdf8;
+  background:
+    radial-gradient(circle at 92% 8%, rgba(215, 195, 148, 0.2), transparent 42%),
+    linear-gradient(145deg, #20201c, #0c0f14);
+  box-shadow: 0 26px 56px -34px rgba(10, 9, 6, 0.85);
+}
+
+.page-bodybuilding-calendar .bbcal-source-link--international > span,
+.page-bodybuilding-calendar .bbcal-source-link--international b {
+  color: #e1c986;
+}
+
+html body.page-premium.page-bodybuilding-calendar main .bbcal-source-link--international > span,
+html body.page-premium.page-bodybuilding-calendar main .bbcal-source-link--international b {
+  color: #e1c986 !important;
+  -webkit-text-fill-color: #e1c986 !important;
+}
+
+html body.page-premium.page-bodybuilding-calendar main .bbcal-source-link--international strong {
+  color: #fffdf8 !important;
+  -webkit-text-fill-color: #fffdf8 !important;
+}
+
+html body.page-premium.page-bodybuilding-calendar main .bbcal-source-link--international small {
+  color: rgba(255, 253, 248, 0.72) !important;
+  -webkit-text-fill-color: rgba(255, 253, 248, 0.72) !important;
+}
+
+.page-bodybuilding-calendar .bbcal-source-link--international:hover,
+.page-bodybuilding-calendar .bbcal-source-link--international:focus-visible {
+  border-color: rgba(225, 201, 134, 0.78);
+  box-shadow: 0 30px 62px -34px rgba(10, 9, 6, 0.95);
+}
+
+.page-bodybuilding-calendar .bbcal-section-heading--international {
+  margin-top: clamp(72px, 10vw, 132px);
+  padding-top: clamp(34px, 5vw, 62px);
+  border-top: 1px solid rgba(42, 33, 18, 0.18);
+}
+
+.page-bodybuilding-calendar .bbcal-federation--international {
+  border-color: rgba(215, 195, 148, 0.28);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(215, 195, 148, 0.16), transparent 38%),
+    linear-gradient(145deg, #1b1b18, #0d1015);
+}
+
+.page-bodybuilding-calendar .bbcal-system-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 7px 12px;
+  border: 1px solid rgba(225, 201, 134, 0.38);
+  border-radius: 999px;
+  color: #e1c986;
+  background: rgba(225, 201, 134, 0.08);
+  font-size: 0.66rem;
+  font-style: normal;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.page-bodybuilding-calendar .bbcal-more-events {
+  margin-top: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.page-bodybuilding-calendar .bbcal-more-events summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 92px;
+  padding: 22px clamp(20px, 4vw, 54px);
+  cursor: pointer;
+  list-style: none;
+  color: #fffdf8;
+  font-family: var(--font-cond);
+  font-size: clamp(1.15rem, 2vw, 1.55rem);
+  font-style: italic;
+  font-weight: 800;
+  text-transform: uppercase;
+  transition: background 180ms ease;
+}
+
+.page-bodybuilding-calendar .bbcal-more-events summary::-webkit-details-marker {
+  display: none;
+}
+
+.page-bodybuilding-calendar .bbcal-more-events summary:hover,
+.page-bodybuilding-calendar .bbcal-more-events summary:focus-visible {
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.page-bodybuilding-calendar .bbcal-more-events summary b {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 8px 13px;
+  border-radius: 999px;
+  color: #19150e;
+  background: #d7c394;
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-style: normal;
+  letter-spacing: 0.07em;
+  line-height: 1;
+}
+
+.page-bodybuilding-calendar .bbcal-more-events .bbcal-event-list {
+  padding-top: 0;
+}
+
+@media (max-width: 680px) {
+  .page-bodybuilding-calendar .bbcal-source-navigation {
+    gap: 28px;
+  }
+
+  .page-bodybuilding-calendar .bbcal-source-group:not(.bbcal-source-group--international) .bbcal-source-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .page-bodybuilding-calendar .bbcal-source-link {
+    min-height: 112px;
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .page-bodybuilding-calendar .bbcal-source-link > span {
+    font-size: 1.8rem;
+  }
+
+  .page-bodybuilding-calendar .bbcal-source-link strong {
+    font-size: 1rem;
+  }
+
+  .page-bodybuilding-calendar .bbcal-source-link small {
+    font-size: 0.7rem;
+  }
+
+  .page-bodybuilding-calendar .bbcal-source-grid--international {
+    grid-template-columns: 1fr;
+  }
+
+  .page-bodybuilding-calendar .bbcal-source-link--international {
+    min-height: 106px;
+  }
+
+  .page-bodybuilding-calendar .bbcal-more-events summary {
+    align-items: flex-start;
+    flex-direction: column;
+    min-height: 0;
+    padding-block: 20px;
+  }
+}
+
 html body.page-premium.page-team main section.coach-success .coach-success__year summary:hover,
 html body.page-premium.page-team main section.coach-success .coach-success__year summary:focus-visible {
   background: rgba(255, 255, 255, 0.055) !important;
@@ -10436,4 +11276,857 @@ html body.page-premium.page-team main section.coach-success .coach-success__year
     grid-row: 1 / 3;
     align-self: center;
   }
+}
+
+/* Firmenfitness: nationwide offer architecture and decision-ready corporate flow. */
+.page-firmenfitness .corporate-offers-section {
+  background:
+    radial-gradient(circle at 10% 0%, rgba(215, 195, 148, 0.17), transparent 30%),
+    linear-gradient(180deg, #fffdf8 0%, #f4ead9 100%) !important;
+}
+
+.page-firmenfitness .corporate-offers-section .section-header {
+  max-width: 860px;
+  margin-inline: auto;
+}
+
+.page-firmenfitness .corporate-offer-showcase {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  gap: 18px;
+  margin-top: clamp(34px, 4.5vw, 62px);
+}
+
+.page-firmenfitness .corporate-offer-showcase__stack {
+  display: grid;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.page-firmenfitness .corporate-offer-card {
+  overflow: hidden;
+  border: 1px solid rgba(42, 33, 18, 0.13);
+  border-radius: 30px;
+  background: #fffdf8 !important;
+  box-shadow: 0 30px 72px -50px rgba(43, 32, 12, 0.48);
+}
+
+.page-firmenfitness .corporate-offer-card--featured {
+  display: grid;
+  grid-template-rows: minmax(290px, 0.86fr) minmax(0, 1.14fr);
+  min-height: 720px;
+}
+
+.page-firmenfitness .corporate-offer-card--compact {
+  display: grid;
+  grid-template-columns: minmax(190px, 0.78fr) minmax(0, 1.22fr);
+  min-height: 351px;
+}
+
+.page-firmenfitness .corporate-offer-card__media {
+  position: relative;
+  min-height: 0;
+  margin: 0;
+  overflow: hidden;
+  background: #25231e;
+}
+
+.page-firmenfitness .corporate-offer-card__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 15, 13, 0.02) 35%, rgba(15, 15, 13, 0.58) 100%);
+  pointer-events: none;
+}
+
+.page-firmenfitness .corporate-offer-card__media img {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  transition: transform 600ms ease;
+}
+
+.page-firmenfitness .corporate-offer-card:hover .corporate-offer-card__media img {
+  transform: scale(1.025);
+}
+
+.page-firmenfitness .corporate-offer-card__media-label {
+  position: absolute;
+  z-index: 1;
+  left: 20px;
+  bottom: 18px;
+  padding: 8px 11px;
+  border: 1px solid rgba(255, 253, 248, 0.38);
+  border-radius: 999px;
+  color: #fffdf8 !important;
+  -webkit-text-fill-color: #fffdf8 !important;
+  background: rgba(22, 21, 18, 0.55);
+  backdrop-filter: blur(12px);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.page-firmenfitness .corporate-offer-card__body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: clamp(26px, 3vw, 42px);
+}
+
+.page-firmenfitness .corporate-offer-card--compact .corporate-offer-card__body {
+  padding: clamp(23px, 2.15vw, 32px);
+}
+
+.page-firmenfitness .corporate-offer-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: clamp(30px, 4vw, 54px);
+}
+
+.page-firmenfitness .corporate-offer-card--compact .corporate-offer-card__meta {
+  margin-bottom: 26px;
+}
+
+.page-firmenfitness .corporate-offer-card__meta span {
+  color: #9b741a !important;
+  -webkit-text-fill-color: #9b741a !important;
+  font-size: clamp(1.35rem, 2vw, 2rem);
+  font-style: italic;
+  font-weight: 850;
+  letter-spacing: -0.05em;
+}
+
+.page-firmenfitness .corporate-offer-card__meta small {
+  color: rgba(25, 21, 14, 0.48) !important;
+  -webkit-text-fill-color: rgba(25, 21, 14, 0.48) !important;
+  font-size: 0.65rem;
+  font-weight: 760;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.page-firmenfitness .corporate-offer-card h3 {
+  max-width: 15ch;
+  margin: 0 0 16px;
+  color: #19150e !important;
+  -webkit-text-fill-color: #19150e !important;
+  font-size: clamp(2.1rem, 3.4vw, 4rem);
+  letter-spacing: -0.06em;
+  line-height: 0.94;
+  text-transform: none;
+}
+
+.page-firmenfitness .corporate-offer-card--compact h3 {
+  font-size: clamp(1.65rem, 2.2vw, 2.65rem);
+}
+
+.page-firmenfitness .corporate-offer-card__body > p {
+  max-width: 58ch;
+  margin: 0;
+  color: rgba(25, 21, 14, 0.69) !important;
+  -webkit-text-fill-color: rgba(25, 21, 14, 0.69) !important;
+  font-size: 0.95rem;
+  line-height: 1.62;
+}
+
+.page-firmenfitness .corporate-offer-card__points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: auto 0 0;
+  padding: 28px 0 0;
+  list-style: none;
+}
+
+.page-firmenfitness .corporate-offer-card__points li {
+  position: relative;
+  padding: 8px 11px 8px 25px;
+  border: 1px solid rgba(155, 116, 26, 0.2);
+  border-radius: 999px;
+  color: #4a3a17 !important;
+  -webkit-text-fill-color: #4a3a17 !important;
+  background: rgba(215, 195, 148, 0.16) !important;
+  font-size: 0.74rem;
+  font-weight: 720;
+  line-height: 1.2;
+}
+
+.page-firmenfitness .corporate-offer-card__points li::before {
+  content: "";
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #b88a22;
+  transform: translateY(-50%);
+}
+
+.page-firmenfitness .corporate-offers-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  margin-top: 22px;
+  padding: 22px 26px;
+  border: 1px solid rgba(155, 116, 26, 0.28);
+  border-radius: 22px;
+  background: #fffdf8;
+  box-shadow: 0 22px 48px -38px rgba(43, 32, 12, 0.42);
+}
+
+.page-firmenfitness .corporate-offers-cta p {
+  max-width: 720px;
+  margin: 0;
+  color: rgba(25, 21, 14, 0.72) !important;
+  line-height: 1.6;
+}
+
+.page-firmenfitness .corporate-offers-cta strong { color: #19150e !important; }
+.page-firmenfitness .corporate-offers-cta .button { flex: 0 0 auto; }
+
+.page-firmenfitness .corporate-cases-section {
+  background: #f5ecdc !important;
+}
+
+.page-firmenfitness .corporate-case-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: clamp(30px, 4vw, 52px);
+}
+
+.page-firmenfitness .corporate-case-card {
+  min-height: 430px;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(26px, 3vw, 38px);
+  border: 1px solid rgba(42, 33, 18, 0.13);
+  border-radius: 28px;
+  background: linear-gradient(145deg, #fffefa, #f8f0e2) !important;
+  box-shadow: 0 30px 60px -48px rgba(43, 32, 12, 0.5);
+}
+
+.page-firmenfitness .corporate-case-card--accent {
+  border-color: rgba(155, 116, 26, 0.34);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(215, 195, 148, 0.25), transparent 34%),
+    linear-gradient(145deg, #fffdf8, #f2e1c2) !important;
+}
+
+.page-firmenfitness .corporate-case-card__sector {
+  color: #9b741a !important;
+  font-size: 0.72rem;
+  font-weight: 820;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.page-firmenfitness .corporate-case-card h3 {
+  margin: 34px 0 16px;
+  color: #19150e !important;
+  font-size: clamp(1.8rem, 2.4vw, 2.65rem);
+  letter-spacing: -0.05em;
+  line-height: 0.98;
+}
+
+.page-firmenfitness .corporate-case-card p {
+  margin: 0;
+  color: rgba(25, 21, 14, 0.7) !important;
+  line-height: 1.65;
+}
+
+.page-firmenfitness .corporate-case-card ul {
+  display: grid;
+  gap: 9px;
+  margin: auto 0 0;
+  padding: 28px 0 0;
+  list-style: none;
+}
+
+.page-firmenfitness .corporate-case-card li {
+  padding-top: 9px;
+  border-top: 1px solid rgba(42, 33, 18, 0.11);
+  color: #19150e !important;
+  font-size: 0.9rem;
+  font-weight: 680;
+}
+
+.page-firmenfitness .corporate-reach-section {
+  background:
+    radial-gradient(circle at 90% 6%, rgba(215, 195, 148, 0.16), transparent 30%),
+    #fffdf8 !important;
+}
+
+.page-firmenfitness .corporate-scale-grid,
+.page-firmenfitness .corporate-decision-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: clamp(30px, 4vw, 52px);
+}
+
+.page-firmenfitness .corporate-scale-grid article,
+.page-firmenfitness .corporate-decision-grid article {
+  min-height: 300px;
+  padding: 28px;
+  border: 1px solid rgba(42, 33, 18, 0.12);
+  border-radius: 24px;
+  background: linear-gradient(145deg, #fffefa, #f7eddd) !important;
+  box-shadow: 0 24px 48px -40px rgba(43, 32, 12, 0.44);
+}
+
+.page-firmenfitness .corporate-scale-grid span,
+.page-firmenfitness .corporate-decision-grid span {
+  display: block;
+  color: #9b741a !important;
+  font-size: clamp(1.45rem, 2.3vw, 2.4rem);
+  font-style: italic;
+  font-weight: 850;
+  letter-spacing: -0.05em;
+}
+
+.page-firmenfitness .corporate-scale-grid h3,
+.page-firmenfitness .corporate-decision-grid h3 {
+  margin: 48px 0 14px;
+  color: #19150e !important;
+  font-size: clamp(1.25rem, 1.7vw, 1.65rem);
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+.page-firmenfitness .corporate-scale-grid p,
+.page-firmenfitness .corporate-decision-grid p {
+  margin: 0;
+  color: rgba(25, 21, 14, 0.68) !important;
+  line-height: 1.58;
+}
+
+.page-firmenfitness .corporate-process-section {
+  background: linear-gradient(145deg, #171714, #24211b) !important;
+}
+
+.page-firmenfitness .corporate-process-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: clamp(48px, 7vw, 108px);
+  align-items: start;
+}
+
+.page-firmenfitness .corporate-process-copy {
+  position: sticky;
+  top: 132px;
+}
+
+.page-firmenfitness .corporate-process-copy h2 {
+  margin: 12px 0 22px;
+  color: #fffdf8 !important;
+  font-size: clamp(2.45rem, 4.5vw, 5rem);
+  letter-spacing: -0.06em;
+  line-height: 0.93;
+}
+
+.page-firmenfitness .corporate-process-copy .eyebrow {
+  color: #d7c394 !important;
+  -webkit-text-fill-color: #d7c394 !important;
+}
+
+.page-firmenfitness .corporate-process-copy > p:not(.eyebrow) {
+  max-width: 560px;
+  margin: 0 0 28px;
+  color: rgba(255, 253, 248, 0.78) !important;
+  line-height: 1.68;
+}
+
+.page-firmenfitness .corporate-process-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.page-firmenfitness .corporate-process-list li {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 20px;
+  padding: 28px;
+  border: 1px solid rgba(215, 195, 148, 0.2);
+  border-radius: 22px;
+  background: rgba(255, 253, 248, 0.055) !important;
+}
+
+.page-firmenfitness .corporate-process-list li > span {
+  color: #d7c394 !important;
+  font-size: 1.25rem;
+  font-style: italic;
+  font-weight: 820;
+}
+
+.page-firmenfitness .corporate-process-list h3 {
+  margin: 0 0 8px;
+  color: #fffdf8 !important;
+  font-size: clamp(1.25rem, 1.8vw, 1.65rem);
+  letter-spacing: -0.035em;
+}
+
+.page-firmenfitness .corporate-process-list p {
+  margin: 0;
+  color: rgba(255, 253, 248, 0.72) !important;
+  line-height: 1.58;
+}
+
+.page-firmenfitness .corporate-decision-section {
+  background: #fffdf8 !important;
+}
+
+@media (max-width: 1020px) {
+  .page-firmenfitness .corporate-offer-showcase { grid-template-columns: 1fr; }
+  .page-firmenfitness .corporate-offer-card--featured {
+    grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.15fr);
+    grid-template-rows: none;
+    min-height: 460px;
+  }
+  .page-firmenfitness .corporate-offer-showcase__stack {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+  }
+  .page-firmenfitness .corporate-offer-card--compact {
+    grid-template-columns: 1fr;
+    grid-template-rows: 220px minmax(0, 1fr);
+  }
+  .page-firmenfitness .corporate-case-grid { grid-template-columns: 1fr; }
+  .page-firmenfitness .corporate-case-card { min-height: 0; }
+  .page-firmenfitness .corporate-case-card ul { margin-top: 26px; }
+  .page-firmenfitness .corporate-scale-grid,
+  .page-firmenfitness .corporate-decision-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .page-firmenfitness .corporate-process-layout { grid-template-columns: 1fr; }
+  .page-firmenfitness .corporate-process-copy { position: static; }
+}
+
+@media (max-width: 640px) {
+  .page-firmenfitness .corporate-offer-showcase__stack { grid-template-columns: 1fr; }
+  .page-firmenfitness .corporate-offer-card--featured,
+  .page-firmenfitness .corporate-offer-card--compact {
+    grid-template-columns: 1fr;
+    grid-template-rows: 230px minmax(0, 1fr);
+    min-height: 0;
+    border-radius: 24px;
+  }
+  .page-firmenfitness .corporate-offer-card__body,
+  .page-firmenfitness .corporate-offer-card--compact .corporate-offer-card__body { padding: 24px 20px; }
+  .page-firmenfitness .corporate-offer-card__meta,
+  .page-firmenfitness .corporate-offer-card--compact .corporate-offer-card__meta { margin-bottom: 24px; }
+  .page-firmenfitness .corporate-offer-card h3,
+  .page-firmenfitness .corporate-offer-card--compact h3 { font-size: clamp(1.85rem, 9vw, 2.55rem); }
+  .page-firmenfitness .corporate-offer-card__points { margin-top: 24px; padding-top: 0; }
+  .page-firmenfitness .corporate-offers-cta {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .page-firmenfitness .corporate-offers-cta .button { width: 100%; }
+  .page-firmenfitness .corporate-case-card { padding: 24px 20px; border-radius: 22px; }
+  .page-firmenfitness .corporate-case-card h3 { margin-top: 24px; }
+  .page-firmenfitness .corporate-scale-grid,
+  .page-firmenfitness .corporate-decision-grid { grid-template-columns: 1fr; }
+  .page-firmenfitness .corporate-scale-grid article,
+  .page-firmenfitness .corporate-decision-grid article { min-height: 0; padding: 24px 20px; }
+  .page-firmenfitness .corporate-scale-grid h3,
+  .page-firmenfitness .corporate-decision-grid h3 { margin-top: 30px; }
+  .page-firmenfitness .corporate-process-list li { grid-template-columns: 44px minmax(0, 1fr); gap: 12px; padding: 22px 18px; }
+}
+
+/* ============================================================
+   PERSONAL TRAINING PRICING — conversion-led comparison page
+   ============================================================ */
+.page-guide-pricing .pt-pricing-section {
+  padding-top: clamp(54px, 7vw, 100px);
+}
+
+.page-guide-pricing .pt-pricing-section .section-header {
+  max-width: 850px;
+  margin-inline: auto;
+}
+
+.page-guide-pricing .pt-price-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: clamp(34px, 5vw, 62px);
+}
+
+.page-guide-pricing .pt-price-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 610px;
+  padding: 30px 26px 26px;
+  overflow: hidden;
+  border: 1px solid rgba(42, 33, 18, 0.13);
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(215, 195, 148, 0.22), transparent 34%),
+    linear-gradient(145deg, #fffefa, #f5ecdc);
+  box-shadow: 0 28px 64px -46px rgba(43, 32, 12, 0.55);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.page-guide-pricing .pt-price-card::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg, #9b741a, #ead792 60%, transparent);
+  content: "";
+}
+
+.page-guide-pricing .pt-price-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(155, 116, 26, 0.42);
+  box-shadow: 0 34px 74px -44px rgba(43, 32, 12, 0.62);
+}
+
+.page-guide-pricing .pt-price-card--featured {
+  border-color: rgba(155, 116, 26, 0.42);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(234, 215, 146, 0.42), transparent 34%),
+    linear-gradient(145deg, #fffdf5, #eddfbd);
+  box-shadow: 0 32px 76px -42px rgba(112, 78, 8, 0.58);
+}
+
+.page-guide-pricing .pt-price-card--featured::after {
+  position: absolute;
+  top: 22px;
+  right: -38px;
+  width: 150px;
+  padding: 7px 10px;
+  transform: rotate(38deg);
+  background: #17140e;
+  color: #fffdf8;
+  content: "Empfohlen";
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.page-guide-pricing .pt-price-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 52px;
+}
+
+.page-guide-pricing .pt-price-card__number {
+  color: #9b741a;
+  font-size: 1.2rem;
+  font-style: italic;
+  font-weight: 850;
+}
+
+.page-guide-pricing .pt-price-card__tag {
+  max-width: 150px;
+  color: rgba(25, 21, 14, 0.58);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+.page-guide-pricing .pt-price-card h3 {
+  margin: 0;
+  color: #19150e !important;
+  font-size: clamp(1.65rem, 2.1vw, 2.2rem);
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
+.page-guide-pricing .pt-price-card__price {
+  min-height: 2.7em;
+  margin: 18px 0 22px;
+  color: #9b741a !important;
+  font-family: var(--font-cond);
+  font-size: clamp(2rem, 2.7vw, 3rem);
+  font-style: italic;
+  font-weight: 850;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+}
+
+.page-guide-pricing .pt-price-card__price small {
+  display: block;
+  margin-top: 8px;
+  color: rgba(25, 21, 14, 0.55);
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.page-guide-pricing .pt-price-card__fit {
+  min-height: 5.2em;
+  margin: 0 0 14px;
+  padding: 14px 0;
+  border-block: 1px solid rgba(42, 33, 18, 0.1);
+  color: #3f321c !important;
+  font-size: 0.88rem;
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+.page-guide-pricing .pt-price-card__text {
+  margin: 0;
+  color: rgba(25, 21, 14, 0.7) !important;
+  font-size: 0.92rem;
+  line-height: 1.58;
+}
+
+.page-guide-pricing .pt-price-card ul {
+  display: grid;
+  gap: 9px;
+  margin: 22px 0 26px;
+  padding: 0;
+  list-style: none;
+}
+
+.page-guide-pricing .pt-price-card li {
+  position: relative;
+  padding-left: 18px;
+  color: #19150e;
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.page-guide-pricing .pt-price-card li::before {
+  position: absolute;
+  top: 0.48em;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #b98d29;
+  box-shadow: 0 0 0 4px rgba(185, 141, 41, 0.12);
+  content: "";
+}
+
+.page-guide-pricing .pt-price-card__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid rgba(42, 33, 18, 0.12);
+  color: #19150e;
+  font-size: 0.8rem;
+  font-weight: 850;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+}
+
+.page-guide-pricing .pt-price-card__link span {
+  color: #9b741a;
+  font-size: 1.25rem;
+  transition: transform 160ms ease;
+}
+
+.page-guide-pricing .pt-price-card__link:hover span { transform: translateX(4px); }
+
+.page-guide-pricing .pt-price-assurance {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  margin-top: 22px;
+  padding: 22px 24px;
+  border: 1px solid rgba(42, 33, 18, 0.12);
+  border-radius: 22px;
+  background: #fffdf8;
+  box-shadow: 0 20px 50px -42px rgba(43, 32, 12, 0.5);
+}
+
+.page-guide-pricing .pt-price-assurance > div { display: grid; gap: 5px; max-width: 900px; }
+.page-guide-pricing .pt-price-assurance strong { color: #19150e; font-size: 1.02rem; }
+.page-guide-pricing .pt-price-assurance span { color: rgba(25, 21, 14, 0.68); line-height: 1.52; }
+.page-guide-pricing .pt-price-assurance .button span { color: inherit; }
+.page-guide-pricing .pricing-overview__note { color: rgba(25, 21, 14, 0.56); }
+
+.page-guide-pricing .pt-comparison-section {
+  position: relative;
+}
+
+.page-guide-pricing .pt-comparison {
+  margin-top: 34px;
+  overflow-x: auto;
+  border: 1px solid rgba(42, 33, 18, 0.13);
+  border-radius: 24px;
+  background: #fffdf8;
+  box-shadow: 0 28px 70px -52px rgba(43, 32, 12, 0.65);
+}
+
+.page-guide-pricing .pt-comparison table {
+  width: 100%;
+  min-width: 850px;
+  border-collapse: collapse;
+  color: #19150e;
+}
+
+.page-guide-pricing .pt-comparison th,
+.page-guide-pricing .pt-comparison td {
+  padding: 22px 24px;
+  border-bottom: 1px solid rgba(42, 33, 18, 0.1);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.page-guide-pricing .pt-comparison thead th {
+  background: #17140e;
+  color: #fffdf8;
+  font-size: 0.68rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.page-guide-pricing .pt-comparison tbody th { font-size: 0.96rem; }
+.page-guide-pricing .pt-comparison tbody td { color: rgba(25, 21, 14, 0.7); font-size: 0.9rem; }
+.page-guide-pricing .pt-comparison tbody tr:last-child :is(th, td) { border-bottom: 0; }
+.page-guide-pricing .pt-comparison .is-recommended { background: rgba(234, 215, 146, 0.28); }
+.page-guide-pricing .pt-comparison tbody th span {
+  display: inline-flex;
+  margin-left: 8px;
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: #9b741a;
+  color: #fff;
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.page-guide-pricing .pt-pricing-proof {
+  padding: clamp(64px, 8vw, 112px) 0;
+  background:
+    radial-gradient(circle at 80% 0%, rgba(215, 195, 148, 0.12), transparent 30%),
+    #171719;
+}
+
+.page-guide-pricing .pt-pricing-proof__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(520px, 1.1fr);
+  gap: clamp(48px, 7vw, 110px);
+  align-items: center;
+}
+
+.page-guide-pricing .pt-pricing-proof__copy .eyebrow { color: #d7c394 !important; }
+.page-guide-pricing .pt-pricing-proof__copy h2 {
+  max-width: 760px;
+  margin: 12px 0 24px;
+  color: #fffdf8 !important;
+  font-size: clamp(2.4rem, 4.5vw, 4.9rem);
+  letter-spacing: -0.06em;
+  line-height: 0.94;
+}
+
+.page-guide-pricing .pt-pricing-proof__copy > p:not(.eyebrow) {
+  max-width: 620px;
+  color: rgba(255, 253, 248, 0.7) !important;
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+
+.page-guide-pricing .pt-pricing-proof__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-top: 30px;
+}
+
+.page-guide-pricing .pt-pricing-proof__links a,
+.page-guide-pricing .pt-setup-links a {
+  color: #d7c394;
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.page-guide-pricing .pt-pricing-proof__facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.page-guide-pricing .pt-pricing-proof__facts div {
+  min-height: 190px;
+  padding: 28px;
+  border: 1px solid rgba(215, 195, 148, 0.2);
+  border-radius: 22px;
+  background: rgba(255, 253, 248, 0.055);
+}
+
+.page-guide-pricing .pt-pricing-proof__facts dt {
+  color: #d7c394;
+  font-family: var(--font-cond);
+  font-size: clamp(2.4rem, 4vw, 4.2rem);
+  font-style: italic;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.page-guide-pricing .pt-pricing-proof__facts dd {
+  max-width: 210px;
+  margin: 34px 0 0;
+  color: rgba(255, 253, 248, 0.72);
+  font-size: 0.82rem;
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+.page-guide-pricing .pt-setup-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-top: 28px;
+}
+
+.page-guide-pricing .pt-setup-links a { color: #7f5d0e; }
+.page-guide-pricing .editorial-stage__media img { object-position: center; }
+
+@media (max-width: 1180px) {
+  .page-guide-pricing .pt-price-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .page-guide-pricing .pt-price-card { min-height: 560px; }
+}
+
+@media (max-width: 920px) {
+  .page-guide-pricing .pt-pricing-proof__grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 680px) {
+  .page-guide-pricing .pt-price-grid { grid-template-columns: 1fr; gap: 14px; }
+  .page-guide-pricing .pt-price-card { min-height: 0; padding: 26px 20px 22px; border-radius: 22px; }
+  .page-guide-pricing .pt-price-card__top { margin-bottom: 34px; }
+  .page-guide-pricing .pt-price-card__price,
+  .page-guide-pricing .pt-price-card__fit { min-height: 0; }
+  .page-guide-pricing .pt-price-assurance { align-items: stretch; flex-direction: column; padding: 20px; }
+  .page-guide-pricing .pt-price-assurance .button { width: 100%; }
+  .page-guide-pricing .pt-pricing-proof__facts { grid-template-columns: 1fr 1fr; }
+  .page-guide-pricing .pt-pricing-proof__facts div { min-height: 150px; padding: 20px 16px; }
+  .page-guide-pricing .pt-pricing-proof__facts dd { margin-top: 22px; }
+  .page-guide-pricing .pt-comparison th,
+  .page-guide-pricing .pt-comparison td { padding: 18px; }
 }
