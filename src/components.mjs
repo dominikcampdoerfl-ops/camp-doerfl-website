@@ -2,6 +2,7 @@ import { navItems, site, sponsors } from "./data.mjs";
 import { contactTopics, resolveContactTopicKey } from "./contact-topics.js";
 
 const brandLogoPath = "/assets/images/camp-doerfl-logo.png";
+const compactBrandLogoPath = "/assets/images/camp-doerfl-logo-96.webp";
 const defaultRobotsContent = "index,follow,max-image-preview:large";
 const defaultSocialImage = "/assets/images/home-hero-stadium-wide-social.jpg";
 const socialPlatformIcons = {
@@ -32,7 +33,7 @@ export function imageLoadingAttributes({ eager = false } = {}) {
 }
 
 function brandLogo() {
-  return `<span class="brand__mark"><img class="brand__logo" src="${brandLogoPath}" alt=""></span>`;
+  return `<span class="brand__mark"><img class="brand__logo" src="${compactBrandLogoPath}" width="96" height="96" alt=""></span>`;
 }
 
 function socialPlatformFromUrl(url = "") {
@@ -55,7 +56,7 @@ function socialIconImage(platform) {
 
   if (!icon) return "";
 
-  return `<img class="social-link__icon" src="${icon.src}" alt="">`;
+  return `<img class="social-link__icon" src="${icon.src}" width="24" height="24" alt="">`;
 }
 
 export function socialIconLink(url, { className = "", label, iconOnly = true } = {}) {
@@ -109,22 +110,42 @@ function htmlText(value = "") {
 function breadcrumbSchema(path, pageName) {
   if (path === "/") return null;
 
+  const parentPages = {
+    "/gesundheitstag-nuernberg/": ["Firmenfitness", "/firmenfitness/"],
+    "/koerperanalyse-nuernberg/": ["Personal Trainer Nürnberg", "/personal-trainer-nürnberg/"],
+    "/personal-training-kosten-nuernberg/": ["Personal Trainer Nürnberg", "/personal-trainer-nürnberg/"],
+    "/executive-performance/": ["Firmenfitness", "/firmenfitness/"],
+    "/erfolge-im-team/guenter-preis/": ["Erfolge im Team", "/erfolge-im-team/"],
+    "/bodybuilding-wettkaempfe-2026/": ["Bodybuilding Coaching", "/bodybuilding-coaching-wettkampfvorbereitung/"],
+    "/bodybuilding-klassen-gewichtslimits/": ["Bodybuilding Coaching", "/bodybuilding-coaching-wettkampfvorbereitung/"]
+  };
+  const parent = parentPages[path];
+  const itemListElement = [{
+    "@type": "ListItem",
+    position: 1,
+    name: "Home",
+    item: site.url
+  }];
+
+  if (parent) {
+    itemListElement.push({
+      "@type": "ListItem",
+      position: 2,
+      name: parent[0],
+      item: `${site.url}${parent[1]}`
+    });
+  }
+
+  itemListElement.push({
+    "@type": "ListItem",
+    position: itemListElement.length + 1,
+    name: pageName
+  });
+
   return {
     "@type": "BreadcrumbList",
     "@id": `${site.url}${path}#breadcrumb`,
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Home",
-        item: site.url
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: pageName
-      }
-    ]
+    itemListElement
   };
 }
 
@@ -784,6 +805,7 @@ const inquiryByPath = Object.freeze({
   "/": { topic: "", label: "Beratung anfragen" },
   "/personal-trainer-nürnberg/": { topic: "premium-training", label: "Training anfragen" },
   "/personal-training-kosten-nuernberg/": { topic: "premium-training", label: "Training anfragen" },
+  "/bodybuilding-coaching-wettkampfvorbereitung/": { topic: "bodybuilding-coaching", label: "Coaching anfragen" },
   "/koerperanalyse-nuernberg/": { topic: "koerperanalyse", label: "Analyse anfragen" },
   "/executive-performance/": { topic: "executive-performance", label: "Platz anfragen" },
   "/firmenfitness/": { topic: "firmenfitness", label: "Firmenfitness anfragen" },
@@ -917,7 +939,10 @@ function footer() {
     { label: "Executive Performance", href: "/executive-performance/" },
     { label: "Über Dominik", href: "/ueber-dominik/" },
     { label: "Erfolge im Team", href: "/erfolge-im-team/" },
+    { label: "Presse & Medien", href: "/presse-medien/" },
+    { label: "Bodybuilding Coaching", href: "/bodybuilding-coaching-wettkampfvorbereitung/" },
     { label: "Bodybuilding Wettkämpfe 2026", href: "/bodybuilding-wettkaempfe-2026/" },
+    { label: "Bodybuilding Klassen & Gewichtslimits", href: "/bodybuilding-klassen-gewichtslimits/" },
     { label: "Boxen Wettkämpfe 2026", href: "/boxen-wettkaempfe-2026/" },
     { label: "Triathlon Kalender 2026", href: "/triathlon-kalender-2026/" },
     { label: "Laufkalender 2026", href: "/laufkalender-2026/" },
@@ -1041,7 +1066,7 @@ export function layout({
   robots = defaultRobotsContent,
   pageName = "",
   pageType = "WebPage",
-  dateModified = "",
+  dateModified = "2026-08-11",
   socialImage = defaultSocialImage,
   socialImageAlt = "Camp Dörfl Performance System in Nürnberg",
   extraStructuredData = []
@@ -1049,7 +1074,6 @@ export function layout({
   const canonicalPath = path === "/" ? "/" : path;
   const hasMobileInquiry = Boolean(inquiryForPath(path));
   const canonical = `${site.url}${canonicalPath}`;
-  const allKeywords = (keywords.length ? keywords : site.keywords).join(", ");
   const sameAs = socialProfileUrls();
   const resolvedPageName = htmlText(pageName || title.split("|")[0].trim()) || site.name;
   const resolvedSocialImage = normalizedAbsoluteUrl(socialImage);
@@ -1187,7 +1211,6 @@ export function layout({
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>${title}</title>
     <meta name="description" content="${description}">
-    <meta name="keywords" content="${allKeywords}">
     <meta name="robots" content="${robots}">
     <link rel="canonical" href="${canonical}">
     <meta property="og:title" content="${title}">
@@ -1206,8 +1229,8 @@ export function layout({
 	    <meta name="theme-color" content="#fbf7ef">
 	    <link rel="icon" href="${brandLogoPath}">
 	    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/camp-doerfl-logo.png">
-	    <link rel="stylesheet" href="/assets/styles.css?v=20260804-2">
-	    <link rel="stylesheet" href="/assets/mobile-overrides.css?v=20260811-2">
+	    <link rel="stylesheet" href="/assets/styles.css?v=20260811-4">
+	    <link rel="stylesheet" href="/assets/mobile-overrides.css?v=20260811-4">
 	    <script type="application/ld+json">${JSON.stringify(structuredData)}</script>
   </head>
   <body${bodyClass || hasMobileInquiry ? ` class="${[bodyClass, hasMobileInquiry ? "has-mobile-inquiry-bar" : ""].filter(Boolean).join(" ")}"` : ""}>
@@ -1218,7 +1241,7 @@ export function layout({
     ${footer()}
     ${mobileInquiryBar(path)}
     ${consentManager()}
-    <script type="module" src="/assets/main.js?v=20260810-1"></script>
+    <script type="module" src="/assets/main.js?v=20260811-4"></script>
   </body>
 </html>`;
 }

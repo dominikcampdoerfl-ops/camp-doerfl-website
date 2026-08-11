@@ -18,11 +18,18 @@ const canonicalRoutes = ${JSON.stringify(canonicalRoutes, null, 2)};
 const legacyRedirectRules = ${JSON.stringify(legacyRedirectRules, null, 2)};
 const securityHeaders = ${JSON.stringify(securityHeaders, null, 2)};
 
-function secureResponse(response) {
+function secureResponse(response, requestUrl = "") {
   const secured = new Response(response.body, response);
 
   for (const [name, value] of Object.entries(securityHeaders)) {
     secured.headers.set(name, value);
+  }
+
+  const pathname = requestUrl ? new URL(requestUrl).pathname : "";
+  if (pathname.startsWith("/assets/")) {
+    secured.headers.set("Cache-Control", "public, max-age=31536000, immutable");
+  } else if (secured.headers.get("Content-Type")?.includes("text/html")) {
+    secured.headers.set("Cache-Control", "public, max-age=0, must-revalidate");
   }
 
   return secured;
@@ -172,6 +179,56 @@ function assetRequest(request, pathname) {
   return new Request(new URL(pathname, request.url), request);
 }
 
+const conversionEvents = new Set([
+  "primary_cta",
+  "contact_link",
+  "form_start",
+  "form_success",
+  "form_error"
+]);
+
+async function recordConversion(request, env) {
+  if (request.method !== "POST") {
+    return secureResponse(new Response("Method not allowed", { status: 405 }), request.url);
+  }
+
+  const requestUrl = new URL(request.url);
+  const origin = request.headers.get("Origin");
+  if (origin && origin !== requestUrl.origin) {
+    return secureResponse(new Response("Forbidden", { status: 403 }), request.url);
+  }
+
+  const contentLength = Number(request.headers.get("Content-Length") || 0);
+  if (contentLength > 2048) {
+    return secureResponse(new Response("Payload too large", { status: 413 }), request.url);
+  }
+
+  const payload = await request.json().catch(() => null);
+  const event = typeof payload?.event === "string" ? payload.event : "";
+  if (!conversionEvents.has(event)) {
+    return secureResponse(new Response("Invalid event", { status: 400 }), request.url);
+  }
+
+  const clean = (value, max = 180) => typeof value === "string" ? value.slice(0, max) : "";
+  env.CONVERSIONS?.writeDataPoint({
+    indexes: [event],
+    blobs: [
+      event,
+      clean(payload.path),
+      clean(payload.target),
+      clean(payload.topic, 100),
+      clean(payload.source, 100),
+      clean(payload.device, 20)
+    ],
+    doubles: [1]
+  });
+
+  return secureResponse(new Response(null, {
+    status: 204,
+    headers: { "Cache-Control": "no-store" }
+  }), request.url);
+}
+
 export default {
   async fetch(request, env) {
     const redirect = legacyContentRedirect(request) || canonicalPathRedirect(request) || canonicalHttpsRedirect(request);
@@ -185,20 +242,24 @@ export default {
     // leitet .html-Pfade sonst per 307 auf die Clean-URL um, was die
     // Verifizierung scheitern lässt – daher den Inhalt direkt ausliefern.
     const requestUrl = new URL(request.url);
+    if (requestUrl.pathname === "/api/conversion") {
+      return recordConversion(request, env);
+    }
+
     if (/^\\/google[0-9a-f]+\\.html$/.test(requestUrl.pathname)) {
       const direct = await env.ASSETS.fetch(
         assetRequest(request, requestUrl.pathname.replace(/\\.html$/, ""))
       );
 
       if (direct.status !== 404) {
-        return secureResponse(direct);
+        return secureResponse(direct, request.url);
       }
     }
 
     let response = await env.ASSETS.fetch(request);
 
     if (response.status !== 404) {
-      return secureResponse(response);
+      return secureResponse(response, request.url);
     }
 
     const url = new URL(request.url);
@@ -214,7 +275,7 @@ export default {
     }
 
     response = await env.ASSETS.fetch(assetRequest(request, fallbackPath));
-    return response.status === 404 ? notFound() : secureResponse(response);
+    return response.status === 404 ? notFound() : secureResponse(response, request.url);
   },
 };
 `;
@@ -308,6 +369,22 @@ async function pathExists(path) {
   return Boolean(await stat(path).catch(() => null));
 }
 
+function escapeXml(value = "") {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&apos;");
+}
+
+function collectVideoObjects(value, videos = []) {
+  if (!value || typeof value !== "object") return videos;
+  if (value["@type"] === "VideoObject") videos.push(value);
+  Object.values(value).forEach((child) => collectVideoObjects(child, videos));
+  return videos;
+}
+
 export async function buildSite() {
   const hostingConfigPath = join(root, ".openai", "hosting.json");
   const hostingConfig = JSON.parse(await readFile(hostingConfigPath, "utf8"));
@@ -328,10 +405,13 @@ export async function buildSite() {
   await copyFile(join(root, "src", "main.js"), join(dist, "assets", "main.js"));
   await copyFile(join(root, "src", "contact-topics.js"), join(dist, "assets", "contact-topics.js"));
 
+  const renderedPages = new Map();
   for (const page of pages) {
     const outputDir = page.route === "/" ? dist : join(dist, page.route.replace(/^\/|\/$/g, ""));
     await mkdir(outputDir, { recursive: true });
-    await writeFile(join(outputDir, "index.html"), page.render(), "utf8");
+    const html = page.render();
+    renderedPages.set(page.route, html);
+    await writeFile(join(outputDir, "index.html"), html, "utf8");
   }
 
   const sitemapPages = pages.filter((page) => page.includeInSitemap !== false);
@@ -342,7 +422,8 @@ ${sitemapPages
     .map(
       (page) => `  <url>
     <loc>${site.url}${page.route}</loc>
-${page.lastModified ? `    <lastmod>${page.lastModified}</lastmod>\n` : ""}    <changefreq>weekly</changefreq>
+    <lastmod>${page.lastModified || "2026-08-11"}</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>${page.route === "/" ? "1.0" : "0.8"}</priority>
   </url>`
     )
@@ -350,6 +431,34 @@ ${page.lastModified ? `    <lastmod>${page.lastModified}</lastmod>\n` : ""}    <
 </urlset>`;
 
   await writeFile(join(dist, "sitemap.xml"), sitemap, "utf8");
+
+  const videoEntries = sitemapPages.flatMap((page) => {
+    const html = renderedPages.get(page.route) || "";
+    const structuredData = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
+      .flatMap((match) => {
+        try {
+          return collectVideoObjects(JSON.parse(match[1]));
+        } catch {
+          return [];
+        }
+      });
+
+    return structuredData.map((video) => ({ page, video }));
+  });
+  const videoSitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+${videoEntries.map(({ page, video }) => `  <url>
+    <loc>${escapeXml(`${site.url}${page.route}`)}</loc>
+    <video:video>
+      <video:thumbnail_loc>${escapeXml(Array.isArray(video.thumbnailUrl) ? video.thumbnailUrl[0] : video.thumbnailUrl)}</video:thumbnail_loc>
+      <video:title>${escapeXml(video.name)}</video:title>
+      <video:description>${escapeXml(video.description)}</video:description>
+      <video:player_loc>${escapeXml(video.embedUrl)}</video:player_loc>
+      <video:publication_date>${escapeXml(video.uploadDate)}</video:publication_date>
+    </video:video>
+  </url>`).join("\n")}
+</urlset>`;
+  await writeFile(join(dist, "video-sitemap.xml"), videoSitemap, "utf8");
   await writeFile(
     join(dist, "robots.txt"),
     `# AI search, live retrieval and model crawlers are explicitly welcome.
@@ -409,6 +518,7 @@ User-agent: *
 Allow: /
 
 Sitemap: ${site.url}/sitemap.xml
+Sitemap: ${site.url}/video-sitemap.xml
 # AI site guide: ${site.url}/llms.txt
 `,
     "utf8"

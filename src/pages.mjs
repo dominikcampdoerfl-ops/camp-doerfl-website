@@ -565,6 +565,7 @@ const homeEntryCards = [
     text:
       "INTERVIEWS, OPENINGS UND BÜHNENFÜHRUNG MIT KLARER WIRKUNG.",
     image: "/assets/images/dominik-stage-suit.webp",
+    srcset: "/assets/images/dominik-stage-suit-480.webp 480w, /assets/images/dominik-stage-suit-768.webp 768w, /assets/images/dominik-stage-suit.webp 1650w",
     alt: "Dominik Dörfl als Moderator bei einem Firmenevent",
     theme: "accent",
     href: "/events/",
@@ -576,6 +577,7 @@ const homeEntryCards = [
     text:
       "2D-SCAN, INBODY UND BERATUNG FÜR STARKE GESUNDHEITSTAGE.",
     image: "/assets/images/dominik-coaching-bikeerg.webp",
+    srcset: "/assets/images/dominik-coaching-bikeerg-480.webp 480w, /assets/images/dominik-coaching-bikeerg-768.webp 768w, /assets/images/dominik-coaching-bikeerg.webp 1236w",
     alt: "Firmenfitness mit InBody Messung und persönlicher Beratung",
     theme: "light",
     href: "/firmenfitness/",
@@ -587,6 +589,7 @@ const homeEntryCards = [
     text:
       "TRAINING UND ERNÄHRUNG IN PERSÖNLICHER PREMIUM-BEGLEITUNG.",
     image: "/assets/images/dominik-personal-coaching-client.webp",
+    srcset: "/assets/images/dominik-personal-coaching-client-480.webp 480w, /assets/images/dominik-personal-coaching-client-768.webp 768w, /assets/images/dominik-personal-coaching-client.webp 1707w",
     alt: "Dominik Dörfl mit einem Klienten im Personal Training im Studio",
     theme: "coaching",
     href: "/personal-trainer-nürnberg/",
@@ -598,6 +601,7 @@ const homeEntryCards = [
     text:
       "TRAINING, ERNÄHRUNG UND FORTSCHRITT IN EINEM KLAREN DIGITALEN SYSTEM.",
     image: "/assets/images/home-app-banner-coaching.webp",
+    srcset: "/assets/images/home-app-banner-coaching-480.webp 480w, /assets/images/home-app-banner-coaching-768.webp 768w, /assets/images/home-app-banner-coaching.webp 864w",
     alt: "Dominik Dörfl zeigt die Camp Dörfl App auf einem Smartphone im Fitnessstudio",
     theme: "app",
     href: "/app/",
@@ -1696,7 +1700,7 @@ function homePage() {
   const content = `
     <section class="ff-hero ff-hero--home-photo">
       <picture>
-        <source media="(max-width: 900px)" srcset="/assets/images/home-hero-ironman-interview-mobile.webp">
+        <source media="(max-width: 900px)" srcset="/assets/images/home-hero-ironman-interview-mobile-480.webp 480w, /assets/images/home-hero-ironman-interview-mobile-720.webp 720w, /assets/images/home-hero-ironman-interview-mobile.webp 900w" sizes="100vw">
         <img class="ff-hero__img" src="/assets/images/home-hero-ironman-interview.webp" srcset="/assets/images/home-hero-ironman-interview-960.webp 960w, /assets/images/home-hero-ironman-interview.webp 1920w" sizes="100vw" alt="Dominik Dörfl als Ironman-Finisher mit Medaille bei einem Interview im Stadion"${imageLoadingAttributes({ eager: true })}>
       </picture>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
@@ -1731,10 +1735,10 @@ function homePage() {
           <div class="ed-entry-grid" aria-label="Vier Einstiege ins Performance System">
             ${homeEntryCards
               .map(
-                ({ titleHtml, image, alt, href, buttonLabel, theme }) => `
+                ({ titleHtml, image, srcset, alt, href, buttonLabel, theme }) => `
                   <a class="ed-entry ed-entry--${theme}" href="${href}" data-reveal>
                   <div class="ed-entry__media">
-                    <img src="${image}" alt="${alt}"${imageLoadingAttributes()}>
+                    <img src="${image}" srcset="${srcset}" sizes="(max-width: 720px) calc(100vw - 76px), (max-width: 1100px) 50vw, 25vw" alt="${alt}"${imageLoadingAttributes()}>
                   </div>
                   <div class="ed-entry__body">
                     <h3>${titleHtml}</h3>
@@ -3812,6 +3816,7 @@ function privacyPage() {
               <li>Diese Website verwendet aktuell keine Analyse- oder Marketing-Tools, die ohne Einwilligung aktiviert werden.</li>
               <li>Die auf der Website verwendeten Schriftarten werden lokal bereitgestellt.</li>
               <li>Ihre Einwilligungsauswahl wird lokal im Browser unter <code>campdoerfl-consent</code> gespeichert.</li>
+              <li>Erfolgsrelevante Interaktionen werden ohne Cookies oder dauerhafte Nutzerkennung anonymisiert gezählt.</li>
               <li>YouTube-Inhalte werden erst nach Ihrer Freigabe geladen und können danach im sichtbaren Bereich automatisch und stumm starten.</li>
               <li>Die PLZ-Umkreissuche im Triathlon- und Laufkalender sendet Ihre Eingabe erst nach aktivem Start der Suche an den Geokodierungsdienst Photon von komoot.</li>
               <li>Das Kontaktformular dieser Website übermittelt Ihre Angaben an den Formular-Dienst FormSubmit, der die Nachricht an ${site.email} weiterleitet.</li>
@@ -3835,6 +3840,8 @@ function privacyPage() {
           <h2>2. Kontakt per E-Mail und Kontaktformular</h2>
           <p>Wenn Sie mir direkt per E-Mail schreiben oder das Kontaktformular auf dieser Website nutzen, verarbeite ich die von Ihnen übermittelten Angaben zur Bearbeitung Ihrer Anfrage. Das können insbesondere Name, E-Mail-Adresse, Telefonnummer, Unternehmen, Thema und Nachricht sein.</p>
           <p>Beim Absenden des Formulars werden die eingegebenen Daten an den externen Formular-Dienst FormSubmit unter <code>formsubmit.co</code> übertragen und von dort an ${site.email} weitergeleitet. Dabei können zusätzlich technische Verbindungsdaten wie IP-Adresse, Zeitstempel und Browserinformationen verarbeitet werden.</p>
+          <h2>Anonymisierte Erfolgsmessung</h2>
+          <p>Zur Verbesserung der Website werden ausschließlich erfolgsrelevante Interaktionen wie Klicks auf Anfragewege, Formularbeginn und erfolgreicher oder fehlgeschlagener Versand gezählt. Gespeichert werden Ereignistyp, aufgerufener Seitenpfad, Zielkategorie, grobe Geräteklasse und die verweisende Domain. Es werden keine Cookies, keine dauerhafte Nutzerkennung und keine Formularinhalte gespeichert. Die aggregierte Speicherung erfolgt im Cloudflare Workers Analytics Engine Dataset und wird nach drei Monaten automatisch gelöscht.</p>
           <p><span class="legal-label">Empfänger:</span> ich selbst sowie der eingesetzte Formular-Dienst FormSubmit / Devro LABS.</p>
           <p><span class="legal-label">Rechtsgrundlage:</span> Art. 6 Abs. 1 lit. b DSGVO, soweit es um vorvertragliche Kommunikation geht, im Übrigen Art. 6 Abs. 1 lit. f DSGVO.</p>
         </article>
@@ -5543,7 +5550,7 @@ function appTrafficPromo({ eyebrow, text, ref }) {
       <div class="section-shell section-shell--wide">
         <article class="app-traffic-promo__card" data-reveal>
           <figure class="app-traffic-promo__media">
-            <img src="/assets/images/home-app-banner-coaching.webp" alt="Dominik Dörfl zeigt auf seinem Smartphone die Camp Dörfl App im Training"${imageLoadingAttributes()}>
+            <img src="/assets/images/home-app-banner-coaching.webp" srcset="/assets/images/home-app-banner-coaching-480.webp 480w, /assets/images/home-app-banner-coaching-768.webp 768w, /assets/images/home-app-banner-coaching.webp 1200w" sizes="(max-width: 760px) 92vw, 48vw" alt="Dominik Dörfl zeigt auf seinem Smartphone die Camp Dörfl App im Training"${imageLoadingAttributes()}>
             <figcaption><span>Camp Dörfl App</span><strong>Training. Ernährung. Fortschritt.</strong></figcaption>
           </figure>
           <div class="app-traffic-promo__content">
@@ -5564,6 +5571,93 @@ function appTrafficPromo({ eyebrow, text, ref }) {
       </div>
     </section>
   `;
+}
+
+function bodybuildingCoachingPage() {
+  const coachingFaq = [
+    { question: "Ist das Bodybuilding Coaching auch für meinen ersten Wettkampf geeignet?", answer: "Ja. Gerade beim ersten Start schafft eine frühe Einordnung von Verband, Klasse, Ausgangsform und realistischem Zeitfenster Sicherheit. Training, Ernährung, Check-ins, Posing und Peak Week werden zu einem nachvollziehbaren Gesamtplan." },
+    { question: "Kann ich zu Dominik wechseln, obwohl meine Vorbereitung bereits läuft?", answer: "Ja, sofern noch Kapazität besteht und ein Wechsel fachlich sinnvoll ist. Im ersten Check werden aktueller Plan, Form, Zeit bis zur Show, bisheriger Verlauf und offene Probleme ehrlich bewertet." },
+    { question: "Funktioniert die Wettkampfvorbereitung komplett online?", answer: "Ja. Das Online Coaching ist deutschlandweit und international möglich. Fortschrittsbilder, Trainingsdaten, Körperwerte, Ernährungsumsetzung und regelmäßige Check-ins bilden die Grundlage für laufende Anpassungen." },
+    { question: "Wo findet das Bodybuilding Coaching vor Ort statt?", answer: "Die persönliche Betreuung findet in Nürnberg statt. Formchecks, Training, Posing und Körperanalyse können vor Ort mit der digitalen Begleitung verbunden werden." },
+    { question: "Wie früh sollte eine Wettkampfvorbereitung beginnen?", answer: "Das hängt von Ausgangsform, Muskelmasse, Klasse, Wettkampferfahrung und Show-Termin ab. Eine gute Vorbereitung beginnt dann, wenn das Ziel mit vertretbarem Tempo und genügend Reserven erreichbar ist." },
+    { question: "Ist das Coaching nur für Profi-Athleten?", answer: "Nein. Entscheidend sind Ernsthaftigkeit, Verlässlichkeit und die Bereitschaft, Feedback umzusetzen. Dominik begleitet ambitionierte Newcomer ebenso wie erfahrene Athleten." }
+  ];
+
+  const content = `
+    <section class="bbc-hero">
+      <img class="bbc-hero__image" src="/assets/images/dominik-stage-suit.webp" alt="Bodybuilding Coach Dominik Dörfl in Wettkampfform auf der Bühne"${imageLoadingAttributes({ eager: true })}>
+      <div class="bbc-hero__scrim" aria-hidden="true"></div>
+      <div class="section-shell section-shell--wide bbc-hero__inner">
+        <div class="bbc-hero__copy">
+          <p class="eyebrow" data-reveal>In Nürnberg &amp; online</p>
+          <h1 data-reveal>Bodybuilding Coaching.<br><span>Wettkampfvorbereitung mit System.</span></h1>
+          <p class="bbc-hero__lead" data-reveal>Für deinen ersten Start, dein nächstes Level oder einen sauberen Coach-Wechsel: Training, Ernährung, Formchecks, Posing und Peak Week werden zu einer Vorbereitung, in der jede Phase ein klares Ziel hat.</p>
+          <div class="bbc-hero__actions" data-reveal><a class="button button--primary" href="#anfrage"><span>Coaching unverbindlich anfragen</span><span aria-hidden="true">→</span></a><a class="button button--secondary-light" href="#coaching"><span>Ablauf ansehen</span><span aria-hidden="true">↓</span></a></div>
+          <p class="bbc-hero__micro" data-reveal>Persönliche Antwort von Dominik · begrenzte Athletenplätze</p>
+        </div>
+        <dl class="bbc-hero__proof" data-reveal><div><dt>IFBB</dt><dd>Pro Bodybuilding</dd></div><div><dt>2×</dt><dd>Deutscher Meister</dd></div><div><dt>Top</dt><dd>Coach von Olympia-Athleten &amp; Meistern</dd></div></dl>
+      </div>
+    </section>
+
+    <section class="section bbc-audience"><div class="section-shell section-shell--wide">
+      <div class="bbc-section-head" data-reveal><div><p class="eyebrow">Dein Ausgangspunkt</p><h2>Du musst noch nicht fertig sein.<br>Du musst bereit sein, <span>klar zu arbeiten.</span></h2></div><p>Eine gute Vorbereitung beginnt mit einer ehrlichen Standortbestimmung – nicht mit einem Standardplan oder dem Versprechen, dass jede Show die richtige ist.</p></div>
+      <div class="bbc-audience__grid">
+        <article data-reveal><span>01</span><small>Erster Wettkampf</small><h3>Du willst auf die Bühne – aber richtig.</h3><p>Du brauchst Klarheit bei Verband, Klasse, Zeitplan und den Details zwischen guter Studioform und echter Bühnenform.</p><ul><li>Ausgangsform realistisch einschätzen</li><li>Passende Klasse und Show auswählen</li><li>Vorbereitung ohne blindes Trial-and-Error</li></ul></article>
+        <article data-reveal><span>02</span><small>Aktiver Athlet &amp; Coach-Wechsel</small><h3>Du trainierst bereits – aber dir fehlt die Führung.</h3><p>Pläne kommen zu spät, Anpassungen sind nicht nachvollziehbar oder du drehst dich trotz Disziplin im Kreis. Dann braucht es zuerst einen sauberen Audit.</p><ul><li>Bestehende Planung und Entwicklung prüfen</li><li>Probleme ohne Schuldzuweisung benennen</li><li>Mit Ruhe und Daten neu ausrichten</li></ul></article>
+      </div>
+    </div></section>
+
+    <section class="section section--dark bbc-authority"><div class="section-shell section-shell--wide bbc-authority__grid">
+      <figure data-reveal><img src="/assets/images/dominik-bodybuilding-desert.webp" alt="Dominik Dörfl als erfolgreicher Bodybuilder in Wettkampfform"${imageLoadingAttributes()}></figure>
+      <div class="bbc-authority__copy" data-reveal><p class="eyebrow">Athlet. Coach. Nicht nur Theorie.</p><h2>Ich kenne die Vorbereitung<br><span>von beiden Seiten.</span></h2><p class="bbc-authority__lead">Ich war selbst Profi-Athlet auf europäischem Spitzenlevel, bin IFBB Pro und Deutscher Meister im Bodybuilding. Heute verbinde ich diese eigene Bühnenerfahrung mit der Verantwortung als Coach.</p>
+        <div class="bbc-authority__facts"><article><strong>Eigene Erfolge</strong><p>IFBB Pro Bodybuilding und zweifacher Deutscher Meister in Bodybuilding und Powerlifting.</p></article><article><strong>Erfolge als Coach</strong><p>Begleitung von Olympia-Athleten, deutschen Meistern, Vize-Weltmeistern und internationalen Top-Platzierungen.</p></article><article><strong>Praxis in Nürnberg</strong><p>Persönliches Training, Formchecks und Analysen vor Ort – verbunden mit digitaler Steuerung.</p></article></div>
+        <a class="bbc-text-link" href="/erfolge-im-team/"><span>Erfolge im Team ansehen</span><span aria-hidden="true">→</span></a>
+      </div>
+    </div></section>
+
+    <section class="section bbc-system" id="coaching"><div class="section-shell section-shell--wide">
+      <div class="bbc-section-head" data-reveal><div><p class="eyebrow">Wettkampfvorbereitung</p><h2>Eine Form ist kein Zufall.<br><span>Sie ist gesteuerte Entwicklung.</span></h2></div><p>Dein Plan wird anhand deiner Reaktion, Umsetzung und Entwicklung laufend gesteuert.</p></div>
+      <ol class="bbc-system__steps"><li data-reveal><span>01</span><div><small>Analyse</small><h3>Ausgangslage &amp; Ziel</h3><p>Form, Historie, Alltag, Verband, Klasse und Show-Termin werden gemeinsam eingeordnet.</p></div></li><li data-reveal><span>02</span><div><small>Aufbau</small><h3>Training &amp; Ernährung</h3><p>Individuelle Planung für Leistung, Muskelerhalt, Regeneration und einen realistischen Diätverlauf.</p></div></li><li data-reveal><span>03</span><div><small>Steuerung</small><h3>Check-ins &amp; Anpassungen</h3><p>Bilder, Körperwerte, Performance, Schlaf, Hunger und Umsetzung ergeben das Gesamtbild.</p></div></li><li data-reveal><span>04</span><div><small>Bühne</small><h3>Posing, Peak Week &amp; Show Day</h3><p>Du wirst so vorbereitet, dass du deine Form auf der Bühne auch zeigen kannst.</p></div></li></ol>
+    </div></section>
+
+    <section class="section section--muted bbc-formats"><div class="section-shell section-shell--wide">
+      <div class="bbc-section-head" data-reveal><div><p class="eyebrow">Zwei Wege. Ein Anspruch.</p><h2>Bodybuilding Coach in Nürnberg.<br><span>Oder vollständig online.</span></h2></div><p>Die Qualität der Steuerung bleibt gleich. Der Unterschied liegt in der persönlichen Arbeit vor Ort.</p></div>
+      <div class="bbc-formats__grid"><article data-reveal><small>Vor Ort</small><h3>Coaching in Nürnberg</h3><p>Für Athleten aus Nürnberg, Fürth, Erlangen und der Region.</p><ul><li>Persönliche Formchecks</li><li>Training und Technikarbeit</li><li>Posing und Präsentation</li><li>Körperanalyse nach Bedarf</li></ul><a href="#anfrage">Vor-Ort-Coaching anfragen →</a></article><article data-reveal><small>Deutschlandweit &amp; international</small><h3>Online Bodybuilding Coaching</h3><p>Für Athleten, die ortsunabhängig und trotzdem eng geführt arbeiten wollen.</p><ul><li>Trainings- und Ernährungsplanung</li><li>Regelmäßige digitale Check-ins</li><li>Video-Feedback für Form und Posing</li><li>Anpassungen bis zum Wettkampf</li></ul><a href="#anfrage">Online Coaching anfragen →</a></article></div>
+    </div></section>
+
+    <section class="section bbc-flow"><div class="section-shell section-shell--wide">
+      <div class="bbc-section-head" data-reveal><div><p class="eyebrow">Vom Ziel zur Show</p><h2>Erst den Rahmen klären.<br><span>Dann die Vorbereitung planen.</span></h2></div><p>Zwei Guides helfen dir, Show und Division einzuordnen. Im Coaching werden daraus Termin und Strategie.</p></div>
+      <div class="bbc-flow__grid"><a href="/bodybuilding-wettkaempfe-2026/" data-reveal><span>01 · Termin finden</span><h3>Bodybuilding Wettkämpfe 2026</h3><p>Deutsche und internationale Shows der wichtigsten Verbände.</p><b>Wettkampfkalender öffnen →</b></a><a href="/bodybuilding-klassen-gewichtslimits/" data-reveal><span>02 · Klasse verstehen</span><h3>Bodybuilding Klassen &amp; Gewichtslimits</h3><p>Divisionen, Kriterien und Größen-Gewichts-Limits vergleichen.</p><b>Klassen-Guide öffnen →</b></a><article data-reveal><span>03 · Entscheidung treffen</span><h3>Show, Klasse und Timeline gemeinsam prüfen</h3><p>Die beste Entscheidung verbindet Ausgangsform, Potenzial und realistische Zeit.</p><a href="#anfrage">Mit Dominik einordnen →</a></article></div>
+    </div></section>
+
+    <section class="section section--dark bbc-fit"><div class="section-shell section-shell--wide bbc-fit__grid"><div data-reveal><p class="eyebrow">Passt das Coaching zu dir?</p><h2>Ambition ist wichtig.<br><span>Coachability entscheidet.</span></h2></div><div data-reveal><ul><li>Du willst deinen ersten Start fundiert vorbereiten.</li><li>Du bist aktiv und suchst klarere Betreuung.</li><li>Du kannst ehrlich kommunizieren und Feedback umsetzen.</li><li>Du willst Entscheidungen verstehen.</li><li>Du suchst professionelle Führung statt Abkürzungen.</li></ul><p>Ein kurzfristiger Crash-Plan ohne verbindliche Check-ins passt nicht zu dieser Zusammenarbeit.</p></div></div></section>
+
+    <section class="section bbc-faq"><div class="section-shell">${sectionHeader({ eyebrow: "Häufige Fragen", title: "Was Athleten vor der Anfrage wissen wollen.", text: "Antworten zu Einstieg, Wechsel, Online Coaching und Vorbereitungsdauer." })}${faq(coachingFaq)}</div></section>
+
+    <section class="section bbc-inquiry" id="anfrage"><div class="section-shell section-shell--wide bbc-inquiry__grid">
+      <div class="bbc-inquiry__copy" data-reveal><p class="eyebrow">Coaching anfragen</p><h2>Erzähl mir, wo du stehst.<br><span>Ich sage dir ehrlich, ob ich helfen kann.</span></h2><p>Je konkreter deine Angaben, desto besser kann ich deine Ausgangslage einschätzen. Die Anfrage landet direkt bei mir.</p><div><strong>Nach deiner Anfrage</strong><ol><li><span>01</span>Ich prüfe Ziel, Status und Zeitrahmen.</li><li><span>02</span>Du bekommst eine persönliche Rückmeldung.</li><li><span>03</span>Wenn es passt, klären wir den Start.</li></ol></div></div>
+      <form class="contact-form bbc-inquiry__form" data-contact-simple-form action="https://formsubmit.co/${site.email}" data-contact-endpoint="https://formsubmit.co/ajax/${site.email}" method="POST" data-reveal>
+        <input class="contact-form__trap" type="text" name="_honey" tabindex="-1" autocomplete="off"><input type="hidden" name="_subject" value="Neue Anfrage: Bodybuilding Coaching"><input type="hidden" name="_template" value="table"><input type="hidden" name="topic" value="Bodybuilding Coaching & Wettkampfvorbereitung">
+        <div class="bbc-form-grid"><label><span>Name *</span><input name="name" autocomplete="name" required></label><label><span>E-Mail *</span><input name="email" type="email" autocomplete="email" required></label><label><span>Telefon</span><input name="phone" autocomplete="tel"></label><label><span>Betreuung *</span><select name="format" required><option value="">Bitte auswählen</option><option>Vor Ort in Nürnberg</option><option>Online Coaching</option><option>Noch offen</option></select></label><label><span>Dein Status *</span><select name="athlete_status" required><option value="">Bitte auswählen</option><option>Erster Wettkampf geplant</option><option>Aktiver Wettkampfathlet</option><option>Coach-Wechsel</option><option>Aufbau ohne festen Wettkampf</option></select></label><label><span>Geplanter Wettkampf</span><input name="competition" placeholder="Show / Monat / noch offen"></label></div>
+        <label class="bbc-inquiry__message"><span>Wo stehst du und was willst du erreichen? *</span><textarea name="message" rows="7" required placeholder="Erfahrung, aktuelle Form, Ziel und bisherige Vorbereitung."></textarea></label><p class="bbc-inquiry__privacy">Mit dem Absenden akzeptierst du die Verarbeitung zur Bearbeitung gemäß <a href="/datenschutz/">Datenschutz</a>.</p><button class="button button--primary" type="submit"><span>Coaching unverbindlich anfragen</span><span aria-hidden="true">→</span></button><p class="contact-form__status" data-contact-status aria-live="polite"></p>
+      </form>
+    </div></section>
+  `;
+
+  return layout({
+    path: "/bodybuilding-coaching-wettkampfvorbereitung/",
+    title: "Bodybuilding Coach Nürnberg & Online | Wettkampfvorbereitung",
+    description: "Bodybuilding Coaching und Wettkampfvorbereitung mit IFBB Pro Dominik Dörfl: vor Ort in Nürnberg oder online. Für Newcomer, aktive Athleten und Coach-Wechsel.",
+    keywords: ["Bodybuilding Coach Nürnberg", "Bodybuilding Coaching online", "Wettkampfvorbereitung Bodybuilding", "Contest Prep Coach", "Online Bodybuilding Coach"],
+    bodyClass: "page-premium page-bodybuilding-coaching",
+    pageName: "Bodybuilding Coaching und Wettkampfvorbereitung",
+    pageType: "ServicePage",
+    dateModified: "2026-08-11",
+    socialImage: "/assets/images/dominik-stage-suit-social.jpg",
+    socialImageAlt: "Bodybuilding Coach Dominik Dörfl auf der Wettkampfbühne",
+    extraStructuredData: [serviceSchema({ path: "/bodybuilding-coaching-wettkampfvorbereitung/", name: "Bodybuilding Coaching und Wettkampfvorbereitung", serviceType: "Bodybuilding Coaching, Contest Prep und Wettkampfvorbereitung", description: "Individuelle Wettkampfvorbereitung für Newcomer und erfahrene Athleten vor Ort in Nürnberg sowie online.", areaServed: [{ "@type": "City", name: "Nürnberg" }, { "@type": "Country", name: "Deutschland" }] }), faqSchema("/bodybuilding-coaching-wettkampfvorbereitung/", coachingFaq)],
+    content
+  });
 }
 
 function bodybuildingCalendarPage() {
@@ -5845,8 +5939,8 @@ function bodybuildingCalendarPage() {
       title: "Eine Bühne ist nur der Termin. Die Form entsteht davor.",
       text:
         "Wenn Training, Ernährung, Posing und Peak Week sauber zusammenlaufen sollen, beginnt die Vorbereitung mit einem klaren System.",
-      primary: { label: "Vorbereitung anfragen", href: contactHref("premium-training") },
-      secondary: { label: "Personal Training ansehen", href: "/personal-trainer-nürnberg/" }
+      primary: { label: "Bodybuilding Coaching ansehen", href: "/bodybuilding-coaching-wettkampfvorbereitung/" },
+      secondary: { label: "Vorbereitung direkt anfragen", href: contactHref("bodybuilding-coaching") }
     })}
   `;
 
@@ -6061,8 +6155,8 @@ function bodybuildingClassesPage() {
       eyebrow: "Wettkampfvorbereitung",
       title: "Die richtige Klasse ist der Start. Die richtige Form ist der Weg.",
       text: "Gemeinsam ordnen wir Verband, Klasse, Zeitplan, Training, Ernährung und Posing so ein, dass deine Vorbereitung ein klares Ziel bekommt.",
-      primary: { label: "Klassencheck anfragen", href: contactHref("premium-training") },
-      secondary: { label: "Wettkampfkalender 2026", href: "/bodybuilding-wettkaempfe-2026/" }
+      primary: { label: "Klasse & Vorbereitung anfragen", href: contactHref("bodybuilding-coaching") },
+      secondary: { label: "Bodybuilding Coaching ansehen", href: "/bodybuilding-coaching-wettkampfvorbereitung/" }
     })}
   `;
 
@@ -6523,7 +6617,7 @@ function triathlonCalendarPage() {
       </div>
     </section>
 
-    <section class="section trical-search-section" id="triathlon-suche" data-tri-calendar>
+    <section class="section trical-search-section" id="triathlon-suche" data-tri-calendar data-total-events="${allEvents.length}">
       <div class="section-shell section-shell--wide">
         <div class="bbcal-intro__head trical-intro" data-reveal>
           <div>
@@ -6570,7 +6664,9 @@ function triathlonCalendarPage() {
           ${calendarGroups}
           ${pastEvents.length ? `<details class="calendar-past-archive" data-calendar-past-archive>
             <summary><span><small>Archiv 2026</small><strong>Vergangene Triathlon-Termine</strong></span><b>${pastEvents.length} Rennen anzeigen</b></summary>
-            <div class="calendar-past-archive__content">${pastCalendarGroups}</div>
+            <div class="calendar-past-archive__content" data-calendar-archive-content>
+              <template data-calendar-archive-template>${pastCalendarGroups}</template>
+            </div>
           </details>` : ""}
         </div>
       </div>
@@ -6609,7 +6705,7 @@ function triathlonCalendarPage() {
 
   return layout({
     path: "/triathlon-kalender-2026/",
-    title: "Triathlon Kalender 2026: Termine nach PLZ & Radius | Camp Dörfl",
+    title: "Triathlon Kalender 2026 nach PLZ & Radius | Camp Dörfl",
     description: `Triathlon Kalender 2026 mit ${allEvents.length} Rennen: alle 351 DTU-Triathlons in Deutschland plus bestätigte Termine in acht europäischen Ländern. Suche nach PLZ, Radius und Land.`,
     keywords: ["Triathlon Kalender 2026", "Triathlon Termine 2026", "Triathlon in meiner Nähe", "Triathlon Deutschland 2026", "Ironman Termine 2026", "Triathlon Österreich 2026"],
     bodyClass: "page-premium page-bodybuilding-calendar page-triathlon-calendar",
@@ -6777,7 +6873,7 @@ function runningCalendarPage() {
       </div>
     </section>
 
-    <section class="section trical-search-section runcal-search-section" id="lauf-suche" data-run-calendar>
+    <section class="section trical-search-section runcal-search-section" id="lauf-suche" data-run-calendar data-total-events="${events.length}">
       <div class="section-shell section-shell--wide">
         <div class="bbcal-intro__head trical-intro" data-reveal>
           <div><p class="eyebrow">Individuelle Suche</p><h2>Welcher Lauf<br><span>passt zu dir?</span></h2></div>
@@ -6803,7 +6899,9 @@ function runningCalendarPage() {
           ${calendarGroups}
           ${pastEvents.length ? `<details class="calendar-past-archive" data-calendar-past-archive>
             <summary><span><small>Archiv 2026</small><strong>Vergangene Lauf-Termine</strong></span><b>${pastEvents.length} Läufe anzeigen</b></summary>
-            <div class="calendar-past-archive__content">${pastCalendarGroups}</div>
+            <div class="calendar-past-archive__content" data-calendar-archive-content>
+              <template data-calendar-archive-template>${pastCalendarGroups}</template>
+            </div>
           </details>` : ""}
         </div>
       </div>
@@ -7004,7 +7102,7 @@ function golfCalendarPage() {
 
   return layout({
     path: "/golfturniere-2026/",
-    title: "Golfturniere 2026: Amateur, Verbände & Profi-Portal | Camp Dörfl",
+    title: "Golfturniere 2026: Amateur & Profi | Camp Dörfl",
     description: "Golfturniere 2026 in Deutschland: DGV-Meisterschaften, alle zwölf Landesgolfverbände, offene Turnierwege und ein eigenes Profi-Portal mit Tour- und PGA-Terminen.",
     keywords: ["Golfturniere 2026", "Golf Turnierkalender 2026", "offene Golfturniere Deutschland", "DGV Turniere 2026", "Golf Profi Turniere Deutschland 2026"],
     bodyClass: "page-premium page-bodybuilding-calendar page-golf-calendar",
@@ -7172,6 +7270,84 @@ function sportSpotFinderPage() {
   });
 }
 
+function pressMediaPage() {
+  const content = `
+    <section class="ff-hero ff-hero--split ff-hero--photo ff-hero--about">
+      <img class="ff-hero__img" src="/assets/images/dominik-about-training-hero.jpg" alt="Dominik Dörfl beim Ausdauertraining im Fitnessstudio"${imageLoadingAttributes({ eager: true })}>
+      <div class="ff-hero__scrim" aria-hidden="true"></div>
+      <div class="section-shell ff-hero__shell">
+        <div class="ff-hero__inner">
+          <p class="ff-hero__eyebrow" data-reveal>Presse, Medien &amp; Redaktion</p>
+          <h1 class="ff-hero__title" data-reveal>Fakten. Bilder.<br><span>Direkte Quellen.</span></h1>
+          <p class="ff-hero__lead" data-reveal>Verlässliche Informationen zu Dominik Dörfl und Camp Dörfl für Interviews, Porträts, Veranstaltungsberichte und redaktionelle Verlinkungen.</p>
+          <div class="ff-hero__actions" data-reveal>
+            <a class="button button--primary" href="mailto:${site.email}?subject=Presseanfrage%20Camp%20D%C3%B6rfl"><span>Presseanfrage senden</span><span aria-hidden="true">→</span></a>
+            <a class="button button--secondary-light" href="#medienmaterial"><span>Material &amp; Links</span><span aria-hidden="true">↓</span></a>
+          </div>
+          <dl class="ff-hero__facts" data-reveal aria-label="Eckdaten">
+            <div><dt>2×</dt><dd>Deutscher Meister</dd></div>
+            <div><dt>IFBB</dt><dd>Pro Bodybuilding</dd></div>
+            <div><dt>Nürnberg</dt><dd>Standort</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="medienmaterial"><div class="section-shell section-shell--wide">
+      ${sectionHeader({
+        eyebrow: "Redaktionell nutzbar",
+        title: "Die wichtigsten Fakten auf einen Blick.",
+        text: "Bitte Aussagen im jeweiligen Kontext prüfen. Für aktuelle Zahlen, Interviewtermine oder Freigaben genügt eine direkte Anfrage."
+      })}
+      ${featureGrid([
+        { detail: "Person", title: "Dominik Dörfl", text: "Gründer von Camp Dörfl, Personal Trainer, Coach, Moderator, IFBB Pro Bodybuilder, zweifacher Deutscher Meister und Ironman-70.3-Finisher." },
+        { detail: "Unternehmen", title: "Camp Dörfl", text: "Performance-System aus Personal Training, Firmenfitness, Event-Moderation, digitaler App und sportlicher Community mit Sitz in Nürnberg." },
+        { detail: "Expertise", title: "Training & Performance", text: "Themenfelder sind individuelles Training, Körperanalyse, Ernährung, Wettkampfvorbereitung, Firmenfitness und langfristige Leistungsfähigkeit." },
+        { detail: "Interview", title: "Mögliche Themen", text: "Coaching im Leistungssport, alltagstaugliche Performance, Firmenfitness, Bodybuilding, Ausdauer, Moderation sowie die Verbindung von analoger und digitaler Betreuung." }
+      ])}
+    </div></section>
+
+    <section class="section section--muted"><div class="section-shell section-shell--wide">
+      ${sectionHeader({ eyebrow: "Zitierfähige Ziele", title: "Bitte direkt auf die passende Originalseite verlinken.", text: "Thematisch genaue Links helfen Leserinnen, Lesern und Suchmaschinen besser als ein pauschaler Verweis auf die Startseite." })}
+      <div class="bbc-flow__grid">
+        <a href="/ueber-dominik/" data-reveal><span>01 · Person</span><h3>Über Dominik Dörfl</h3><p>Werdegang, sportliche Stationen und Arbeitsweise.</p><b>Profil öffnen →</b></a>
+        <a href="/erfolge-im-team/" data-reveal><span>02 · Nachweise</span><h3>Erfolge im Team</h3><p>Dokumentierte Resultate aus Coaching und Leistungssport.</p><b>Erfolge öffnen →</b></a>
+        <a href="/personal-trainer-nürnberg/" data-reveal><span>03 · Angebot</span><h3>Personal Trainer Nürnberg</h3><p>Leistungsumfang, Zielgruppen und regionale Betreuung.</p><b>Leistungsseite öffnen →</b></a>
+      </div>
+    </div></section>
+
+    <section class="section"><div class="section-shell section-shell--wide">
+      ${sectionHeader({ eyebrow: "Medienmaterial", title: "Logo und Ansprechpartner.", text: "Das Logo darf im Rahmen einer redaktionellen Berichterstattung unverändert verwendet werden. Für werbliche Nutzung oder Kooperationen bitte vorher anfragen." })}
+      <div class="bbc-flow__grid">
+        <a href="/assets/images/camp-doerfl-logo.png" download data-reveal><span>PNG · Original</span><h3>Camp-Dörfl-Logo</h3><p>Quadratische Originaldatei für redaktionelle Beiträge.</p><b>Logo herunterladen ↓</b></a>
+        <a href="mailto:${site.email}?subject=Bildmaterial%20Camp%20D%C3%B6rfl" data-reveal><span>Fotos</span><h3>Hochauflösendes Bildmaterial</h3><p>Motiv, Format und geplante Veröffentlichung kurz angeben.</p><b>Bildmaterial anfragen →</b></a>
+        <a href="mailto:${site.email}?subject=Interviewanfrage%20Dominik%20D%C3%B6rfl" data-reveal><span>Kontakt</span><h3>Interview mit Dominik</h3><p>${site.email} · persönliche Abstimmung ohne Presseverteiler.</p><b>Interview anfragen →</b></a>
+      </div>
+    </div></section>
+
+    ${ctaSection({
+      eyebrow: "Pressekontakt",
+      title: "Du brauchst eine schnelle, belastbare Einordnung?",
+      text: "Sende Thema, Medium, gewünschtes Format und Deadline. So lässt sich die Anfrage direkt passend beantworten.",
+      primary: { label: "Presseanfrage per E-Mail", href: `mailto:${site.email}?subject=Presseanfrage%20Camp%20D%C3%B6rfl` },
+      secondary: { label: "Über Dominik", href: "/ueber-dominik/" }
+    })}
+  `;
+
+  return layout({
+    path: "/presse-medien/",
+    title: "Presse & Medien | Dominik Dörfl und Camp Dörfl",
+    description: "Pressebereich von Camp Dörfl: verlässliche Fakten, zitierfähige Originalseiten, Logo, Bildmaterial und direkter Kontakt zu Dominik Dörfl in Nürnberg.",
+    bodyClass: "page-premium page-press-media",
+    pageName: "Presse und Medien",
+    pageType: "CollectionPage",
+    dateModified: "2026-08-11",
+    socialImage: "/assets/images/dominik-about-training-hero.jpg",
+    socialImageAlt: "Dominik Dörfl – Presse und Medien",
+    content
+  });
+}
+
 export const pages = [
   { route: "/", render: homePage, lastModified: "2026-08-11" },
   { route: "/app/", render: appPage },
@@ -7182,6 +7358,7 @@ export const pages = [
   { route: "/firmenfitness/", render: firmenfitnessPage, lastModified: "2026-08-11" },
   { route: "/events/", render: eventsPage },
   { route: "/partner/", render: partnerPage },
+  { route: "/bodybuilding-coaching-wettkampfvorbereitung/", render: bodybuildingCoachingPage, lastModified: "2026-08-11" },
   { route: "/bodybuilding-wettkaempfe-2026/", render: bodybuildingCalendarPage, lastModified: "2026-08-10" },
   { route: "/bodybuilding-klassen-gewichtslimits/", render: bodybuildingClassesPage, lastModified: "2026-08-11" },
   { route: "/boxen-wettkaempfe-2026/", render: boxingCalendarPage },
@@ -7193,6 +7370,7 @@ export const pages = [
   { route: "/erfolge-im-team/", render: teamSuccessPage },
   { route: "/erfolge-im-team/guenter-preis/", render: guenterPreisStoryPage },
   { route: "/ueber-dominik/", render: ueberDominikPage },
+  { route: "/presse-medien/", render: pressMediaPage, lastModified: "2026-08-11" },
   { route: "/impressum/", render: impressumPage, includeInSitemap: false },
   { route: "/cookies/", render: cookiesPage, includeInSitemap: false },
   { route: "/datenschutz/", render: privacyPage, includeInSitemap: false },

@@ -411,6 +411,45 @@ const setContactFormStatus = (form, message = "", state = "") => {
   status.dataset.state = state;
 };
 
+const trackedForms = new WeakSet();
+const conversionDevice = window.matchMedia("(max-width: 760px)").matches ? "mobile" : "desktop";
+
+const trackConversion = (event, { target = "", topic = "" } = {}) => {
+  const referrer = document.referrer ? new URL(document.referrer).hostname : "direct";
+  const payload = JSON.stringify({
+    event,
+    path: window.location.pathname,
+    target: String(target).slice(0, 180),
+    topic: String(topic).slice(0, 100),
+    source: referrer,
+    device: conversionDevice
+  });
+
+  if (navigator.sendBeacon) {
+    navigator.sendBeacon("/api/conversion", new Blob([payload], { type: "application/json" }));
+    return;
+  }
+
+  fetch("/api/conversion", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: payload,
+    keepalive: true
+  }).catch(() => {});
+};
+
+document.addEventListener("click", (event) => {
+  const link = event.target instanceof Element ? event.target.closest("a") : null;
+  if (!(link instanceof HTMLAnchorElement)) return;
+
+  const href = link.getAttribute("href") || "";
+  if (href.startsWith("/kontakt/")) {
+    trackConversion("primary_cta", { target: href });
+  } else if (href.startsWith("tel:") || href.startsWith("mailto:")) {
+    trackConversion("contact_link", { target: href.split(":")[0] });
+  }
+});
+
 const buildContactSubject = (form) => {
   const topicField = form.querySelector('[name="topic"]');
   const nameField = form.querySelector('[name="name"]');
@@ -448,6 +487,14 @@ document.querySelectorAll("[data-contact-simple-form]").forEach((form) => {
   }
 
   const defaultTopicValue = topicField instanceof HTMLSelectElement ? topicField.value : "";
+
+  form.addEventListener("focusin", () => {
+    if (trackedForms.has(form)) return;
+    trackedForms.add(form);
+    trackConversion("form_start", {
+      topic: topicField instanceof HTMLSelectElement ? topicField.value : form.querySelector('[name="topic"]')?.value || ""
+    });
+  }, { once: true });
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -492,12 +539,14 @@ document.querySelectorAll("[data-contact-simple-form]").forEach((form) => {
       }
 
       setContactFormStatus(form, "Deine Nachricht wurde erfolgreich gesendet.", "success");
+      trackConversion("form_success", { topic: defaultTopicValue });
     } catch (error) {
       setContactFormStatus(
         form,
         `Das Senden hat gerade nicht funktioniert. Schreib alternativ direkt an ${fallbackEmail}.`,
         "warn"
       );
+      trackConversion("form_error", { topic: defaultTopicValue });
     } finally {
       if (submitButton instanceof HTMLButtonElement) {
         submitButton.disabled = false;
@@ -823,10 +872,11 @@ const initTriathlonCalendar = () => {
   const labelOutput = root.querySelector("[data-tri-result-label]");
   const statusOutput = root.querySelector("[data-tri-status]");
   const emptyOutput = root.querySelector("[data-tri-empty]");
-  const events = [...root.querySelectorAll("[data-tri-event]")];
-  const monthGroups = [...root.querySelectorAll("[data-tri-month]")];
+  let events = [...root.querySelectorAll("[data-tri-event]")];
+  let monthGroups = [...root.querySelectorAll("[data-tri-month]")];
   const pastArchive = root.querySelector("[data-calendar-past-archive]");
   const submitButton = form?.querySelector("button[type='submit']");
+  const totalEvents = Number(root.getAttribute("data-total-events")) || events.length;
 
   if (!(form instanceof HTMLFormElement) || !(postcodeInput instanceof HTMLInputElement) ||
       !(radiusSelect instanceof HTMLSelectElement) || !(countrySelect instanceof HTMLSelectElement)) return;
@@ -835,6 +885,22 @@ const initTriathlonCalendar = () => {
     DE: "Deutschland", AT: "Österreich", CH: "Schweiz", ES: "Spanien", IT: "Italien",
     LU: "Luxemburg", BE: "Belgien", NL: "Niederlande", FR: "Frankreich"
   };
+
+  const hydrateArchive = () => {
+    if (!(pastArchive instanceof HTMLDetailsElement)) return false;
+    const template = pastArchive.querySelector("[data-calendar-archive-template]");
+    const content = pastArchive.querySelector("[data-calendar-archive-content]");
+    if (!(template instanceof HTMLTemplateElement) || !(content instanceof HTMLElement)) return false;
+    content.append(template.content.cloneNode(true));
+    template.remove();
+    events = [...root.querySelectorAll("[data-tri-event]")];
+    monthGroups = [...root.querySelectorAll("[data-tri-month]")];
+    return true;
+  };
+
+  pastArchive?.addEventListener("toggle", () => {
+    if (pastArchive instanceof HTMLDetailsElement && pastArchive.open && hydrateArchive()) updateMonthGroups();
+  });
 
   const distanceInKilometres = (latA, lonA, latB, lonB) => {
     const toRadians = (value) => (value * Math.PI) / 180;
@@ -909,6 +975,7 @@ const initTriathlonCalendar = () => {
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+    hydrateArchive();
     const postcode = postcodeInput.value.trim();
     const country = countrySelect.value;
     const radius = Number(radiusSelect.value);
@@ -957,6 +1024,10 @@ const initTriathlonCalendar = () => {
     radiusSelect.value = "50";
     countrySelect.value = "";
     setResults();
+    if (events.length < totalEvents && countOutput instanceof HTMLElement) {
+      countOutput.textContent = String(totalEvents);
+      if (labelOutput instanceof HTMLElement) labelOutput.textContent = " Termine im gesamten Kalender";
+    }
   });
 };
 
@@ -976,10 +1047,11 @@ const initRunningCalendar = () => {
   const labelOutput = root.querySelector("[data-run-result-label]");
   const statusOutput = root.querySelector("[data-run-status]");
   const emptyOutput = root.querySelector("[data-run-empty]");
-  const events = [...root.querySelectorAll("[data-run-event]")];
-  const categoryGroups = [...root.querySelectorAll("[data-run-group]")];
+  let events = [...root.querySelectorAll("[data-run-event]")];
+  let categoryGroups = [...root.querySelectorAll("[data-run-group]")];
   const pastArchive = root.querySelector("[data-calendar-past-archive]");
   const submitButton = form?.querySelector("button[type='submit']");
+  const totalEvents = Number(root.getAttribute("data-total-events")) || events.length;
 
   if (!(form instanceof HTMLFormElement) || !(postcodeInput instanceof HTMLInputElement) ||
       !(radiusSelect instanceof HTMLSelectElement) || !(categorySelect instanceof HTMLSelectElement) ||
@@ -989,6 +1061,22 @@ const initRunningCalendar = () => {
     half: "Halbmarathon", marathon: "Marathon", mammut: "Mammutmarsch",
     mega: "Megamarsch", ultra: "Ultra Running"
   };
+
+  const hydrateArchive = () => {
+    if (!(pastArchive instanceof HTMLDetailsElement)) return false;
+    const template = pastArchive.querySelector("[data-calendar-archive-template]");
+    const content = pastArchive.querySelector("[data-calendar-archive-content]");
+    if (!(template instanceof HTMLTemplateElement) || !(content instanceof HTMLElement)) return false;
+    content.append(template.content.cloneNode(true));
+    template.remove();
+    events = [...root.querySelectorAll("[data-run-event]")];
+    categoryGroups = [...root.querySelectorAll("[data-run-group]")];
+    return true;
+  };
+
+  pastArchive?.addEventListener("toggle", () => {
+    if (pastArchive instanceof HTMLDetailsElement && pastArchive.open && hydrateArchive()) updateGroups();
+  });
 
   const normaliseSearch = (value) => value
     .normalize("NFD")
@@ -1065,6 +1153,7 @@ const initRunningCalendar = () => {
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+    hydrateArchive();
     const postcode = postcodeInput.value.trim();
     const radius = Number(radiusSelect.value);
     const category = categorySelect.value;
@@ -1111,6 +1200,10 @@ const initRunningCalendar = () => {
     categorySelect.value = "";
     queryInput.value = "";
     setResults();
+    if (events.length < totalEvents && countOutput instanceof HTMLElement) {
+      countOutput.textContent = String(totalEvents);
+      if (labelOutput instanceof HTMLElement) labelOutput.textContent = " Termine im gesamten Kalender";
+    }
   });
 };
 
