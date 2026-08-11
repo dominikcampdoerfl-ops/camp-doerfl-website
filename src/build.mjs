@@ -184,7 +184,8 @@ const conversionEvents = new Set([
   "contact_link",
   "form_start",
   "form_success",
-  "form_error"
+  "form_error",
+  "ai_referral"
 ]);
 
 async function recordConversion(request, env) {
@@ -537,7 +538,20 @@ Camp Dörfl is a public German-language website for personal training, body anal
 - [Events](${site.url}/events/): Event moderation and performance formats
 - [Camp Dörfl App](${site.url}/app/): Training, nutrition and progress tracking
 - [About Dominik Dörfl](${site.url}/ueber-dominik/): Coach, athlete and moderator profile
+- [Expert knowledge hub](${site.url}/expertenwissen/): Source-backed guides by Dominik Dörfl
+- [How to choose a personal trainer](${site.url}/personal-trainer-auswaehlen-nuernberg/): Seven verifiable selection criteria
+- [Bodybuilding contest prep duration](${site.url}/bodybuilding-wettkampfvorbereitung-dauer/): Evidence-informed planning guide
+- [BIA, InBody and 2D body analysis](${site.url}/bia-inbody-koerperanalyse-vergleich/): Methods, benefits and limitations
+- [Editorial guidelines](${site.url}/redaktionelle-richtlinien/): Authorship, sourcing, corrections and commercial transparency
+- [Press and media](${site.url}/presse-medien/): Citable facts, media material and direct contact
 - [Contact](${site.url}/kontakt/): Enquiries and contact options
+
+## Expert identity
+
+- Dominik Dörfl is the founder of Camp Dörfl and works as a personal trainer, bodybuilding and performance coach in Nürnberg.
+- Publicly documented fields: personal training, bodybuilding contest preparation, strength training, body analysis, sports nutrition, corporate fitness and endurance performance.
+- Claims and external evidence are linked from the canonical profile at ${site.url}/ueber-dominik/.
+- Fachartikel clearly identify their author, review date and primary sources.
 
 ## Discovery
 
@@ -548,6 +562,9 @@ Camp Dörfl is a public German-language website for personal training, body anal
 `;
 
   await writeFile(join(dist, "llms.txt"), llmsTxt, "utf8");
+
+  const indexNowKey = "campdoerfl-indexnow-2026";
+  await writeFile(join(dist, `${indexNowKey}.txt`), indexNowKey, "utf8");
 
   const securityTxtExpires = new Date(Date.now() + oneYearInMilliseconds)
     .toISOString()

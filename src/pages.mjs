@@ -2090,6 +2090,7 @@ function personalCoachingPage() {
           <div class="pt-authority__links">
             <a href="/erfolge-im-team/">Alle Coaching-Erfolge ansehen <span aria-hidden="true">→</span></a>
             <a href="/ueber-dominik/">Dominik Dörfl kennenlernen <span aria-hidden="true">→</span></a>
+            <a href="/personal-trainer-auswaehlen-nuernberg/">7 Kriterien für einen guten Personal Trainer <span aria-hidden="true">→</span></a>
           </div>
         </div>
         <dl class="pt-authority__facts" data-reveal aria-label="Erfahrung und Referenzen von Personal Trainer Dominik Dörfl">
@@ -3547,6 +3548,154 @@ function executivePerformancePage() {
   });
 }
 
+function expertAuthorBlock({ reviewed = "11. August 2026" } = {}) {
+  return `
+    <aside class="expert-author" data-reveal aria-label="Autor und redaktionelle Verantwortung">
+      <img src="/assets/images/dominik-about-gym-portrait.jpg" alt="Dominik Dörfl, Personal Trainer und Performance Coach in Nürnberg"${imageLoadingAttributes()}>
+      <div>
+        <p class="eyebrow">Autor &amp; Praxisexperte</p>
+        <h2>Dominik Dörfl</h2>
+        <p>Personal Trainer, Bodybuilding- und Performance-Coach in Nürnberg. Deutscher Meister im Bodybuilding und Powerlifting, IFBB Pro und Coach von Athletinnen und Athleten mit nationalen und internationalen Platzierungen.</p>
+        <p class="expert-author__meta">Fachlich geprüft und zuletzt aktualisiert: ${reviewed}</p>
+        <div class="expert-author__links"><a href="/ueber-dominik/">Vollständiges Expertenprofil →</a><a href="/redaktionelle-richtlinien/">Quellen- und Redaktionsstandard →</a></div>
+      </div>
+    </aside>`;
+}
+
+function expertArticleSchema({ path, headline, description, image, datePublished = "2026-08-11", dateModified = "2026-08-11" }) {
+  return {
+    "@type": "Article",
+    "@id": `${site.url}${path}#article`,
+    headline,
+    description,
+    image: [absoluteUrl(image)],
+    datePublished,
+    dateModified,
+    author: { "@id": `${site.url}/#person` },
+    publisher: { "@id": `${site.url}/#organization` },
+    mainEntityOfPage: { "@id": `${site.url}${path}#webpage` }
+  };
+}
+
+function expertKnowledgePage() {
+  const content = `
+    <section class="expert-hero">
+      <div class="section-shell section-shell--wide expert-hero__grid">
+        <div data-reveal>
+          <p class="eyebrow">Expertenwissen von Dominik Dörfl</p>
+          <h1>Klare Antworten.<br><span>Aus Praxis und Quellen.</span></h1>
+          <p class="expert-hero__lead">Fachwissen zu Personal Training, Bodybuilding, Körperanalyse und Performance – mit direkter Antwort, nachvollziehbarer Einordnung und belastbaren Originalquellen.</p>
+        </div>
+        <aside class="expert-hero__proof" data-reveal><strong>25+ Jahre</strong><span>Leistungssport-Erfahrung laut persönlichem Werdegang</span><strong>2× Deutscher Meister</strong><span>Bodybuilding und Powerlifting</span><strong>Nürnberg</strong><span>Persönliches Coaching vor Ort</span></aside>
+      </div>
+    </section>
+    <section class="section"><div class="section-shell section-shell--wide">
+      ${sectionHeader({ eyebrow: "Neu & grundlegend", title: "Drei Fragen, die vor einer Entscheidung wirklich zählen.", text: "Jeder Leitfaden trennt Messbares, praktische Erfahrung und individuelle Entscheidung sauber voneinander." })}
+      <div class="expert-card-grid">
+        <a class="expert-card" href="/personal-trainer-auswaehlen-nuernberg/" data-reveal><span>Personal Training</span><h2>Wie erkennt man einen guten Personal Trainer?</h2><p>Qualifikation, Diagnostik, Betreuung und transparente Erwartungen richtig prüfen.</p><b>Leitfaden lesen →</b></a>
+        <a class="expert-card" href="/bodybuilding-wettkampfvorbereitung-dauer/" data-reveal><span>Contest Prep</span><h2>Wie lange dauert eine Wettkampfvorbereitung?</h2><p>Warum Ausgangslage und nachhaltige Abnahmerate wichtiger sind als ein fixes Datum.</p><b>Leitfaden lesen →</b></a>
+        <a class="expert-card" href="/bia-inbody-koerperanalyse-vergleich/" data-reveal><span>Körperanalyse</span><h2>BIA, InBody oder 2D-Analyse?</h2><p>Was die Verfahren zeigen, wo ihre Grenzen liegen und wie Verlaufsdaten sinnvoll werden.</p><b>Leitfaden lesen →</b></a>
+      </div>
+    </div></section>
+    <section class="section section--muted"><div class="section-shell section-shell--wide">
+      ${sectionHeader({ eyebrow: "Transparenz", title: "So entstehen die Inhalte.", text: "Eigene Coaching-Erfahrung wird als Erfahrung gekennzeichnet. Wissenschaftliche Aussagen verlinken auf Primärliteratur, Fachgesellschaften oder offizielle Ergebnisquellen." })}
+      <div class="expert-principles"><article><b>01</b><h3>Direkte Antwort zuerst</h3><p>Die Kernaussage steht am Anfang und bleibt auch ohne Fachsprache verständlich.</p></article><article><b>02</b><h3>Belege am Anspruch</h3><p>Je größer oder sensibler eine Aussage, desto stärker muss ihre Quelle sein.</p></article><article><b>03</b><h3>Aktualisierung sichtbar</h3><p>Veröffentlichungs- und Prüfdatum werden auf jeder Fachseite genannt.</p></article></div>
+      <p class="expert-policy-link"><a href="/redaktionelle-richtlinien/">Vollständige redaktionelle Richtlinien ansehen →</a></p>
+    </div></section>
+    ${ctaSection({ eyebrow: "Persönliche Einordnung", title: "Du brauchst keine allgemeine Antwort, sondern eine für deinen Ausgangspunkt?", text: "Dann klären wir Ziel, Alltag und sinnvolle nächsten Schritte persönlich.", primary: { label: "Beratung anfragen", href: contactHref("premium-training") }, secondary: { label: "Über Dominik", href: "/ueber-dominik/" } })}`;
+
+  return layout({ path: "/expertenwissen/", title: "Expertenwissen: Training, Bodybuilding & Analyse | Dominik Dörfl", description: "Fundierte Leitfäden von Dominik Dörfl zu Personal Training, Bodybuilding-Wettkampfvorbereitung, BIA, InBody und Körperanalyse.", keywords: ["Fitness Expertenwissen", "Personal Training Ratgeber", "Bodybuilding Coach Wissen", "Körperanalyse Ratgeber"], bodyClass: "page-premium page-expert-hub", pageType: "CollectionPage", pageName: "Expertenwissen", dateModified: "2026-08-11", socialImage: "/assets/images/dominik-about-gym-portrait.jpg", socialImageAlt: "Dominik Dörfl – Expertenwissen zu Training und Performance", content });
+}
+
+function choosePersonalTrainerGuidePage() {
+  const path = "/personal-trainer-auswaehlen-nuernberg/";
+  const guideFaq = [
+    { question: "Woran erkennt man einen guten Personal Trainer?", answer: "An nachvollziehbarer Qualifikation, einer strukturierten Bestandsaufnahme, realistischen Zielen, verständlicher Planung, sauberer Kommunikation und daran, dass Grenzen erkannt und bei medizinischen Fragen an passende Fachpersonen verwiesen wird." },
+    { question: "Sollte ein Personal Trainer Probetraining anbieten?", answer: "Ein Kennenlern- oder Starttermin ist sinnvoll, damit Ziel, Arbeitsweise, Kommunikation und organisatorischer Rahmen vor einer längerfristigen Zusammenarbeit geprüft werden können." },
+    { question: "Ist der günstigste Personal Trainer die beste Wahl?", answer: "Der Stundenpreis allein sagt wenig aus. Entscheidend sind Betreuungsumfang, Vorbereitung, Analyse, Nachbereitung, Erreichbarkeit und die Qualität der laufenden Anpassung." }
+  ];
+  const description = "Sieben überprüfbare Kriterien, mit denen du einen qualifizierten Personal Trainer in Nürnberg auswählen und Angebote fair vergleichen kannst.";
+  const content = `
+    <article class="expert-article">
+      <header class="expert-article__header"><div class="section-shell"><p class="eyebrow">Personal Trainer auswählen · Nürnberg</p><h1>Woran erkennt man einen guten Personal Trainer?</h1><p class="expert-article__dek">Sieben überprüfbare Kriterien für eine Entscheidung, bei der nicht nur Sympathie und Marketing zählen.</p><div class="expert-article__meta"><span>Von Dominik Dörfl</span><span>Veröffentlicht und geprüft am 11. August 2026</span><span>7 Min. Lesezeit</span></div></div></header>
+      <div class="section-shell expert-article__layout"><div class="expert-article__body">
+        <section class="answer-box" aria-labelledby="pt-direct-answer"><p class="eyebrow">Kurzantwort</p><h2 id="pt-direct-answer">Ein guter Personal Trainer verbindet Qualifikation mit einem nachvollziehbaren Prozess.</h2><p>Er fragt vor dem Training nach Ziel, Erfahrung, Beschwerden und Alltag, erklärt seinen Plan verständlich, dokumentiert Fortschritt und passt die Belastung laufend an. Referenzen müssen zur gewünschten Aufgabe passen. Bei gesundheitlichen Fragen erkennt er die Grenze seines Tätigkeitsfeldes und arbeitet gegebenenfalls mit ärztlichen oder therapeutischen Fachpersonen zusammen.</p></section>
+        <h2>Die sieben Kriterien im Vergleich</h2>
+        <ol class="expert-checklist"><li><h3>1. Qualifikation ist konkret benannt</h3><p>Frage nach Ausbildung, Zertifizierung, Fortbildung und praktischer Erfahrung. Ein Logo oder der Begriff „Coach“ allein belegt keine fachliche Tiefe. Die ACSM empfiehlt ausdrücklich, Qualifikation und Zertifizierung eines Trainers zu prüfen.</p></li><li><h3>2. Der Start beginnt mit Fragen, nicht mit Übungen</h3><p>Ziele, Trainingshistorie, verfügbare Zeit, Beschwerden und relevante Risiken gehören vor die erste intensive Einheit.</p></li><li><h3>3. Der Plan passt zu deinem Alltag</h3><p>Ein guter Plan berücksichtigt Arbeitszeiten, Reisen, Schlaf, verfügbare Geräte und realistische Trainingshäufigkeit.</p></li><li><h3>4. Fortschritt wird nachvollziehbar</h3><p>Je nach Ziel können Leistungswerte, Trainingsqualität, Umfänge, Gewicht oder standardisierte Körperanalysen sinnvoll sein. Nicht jede Kennzahl passt zu jedem Ziel.</p></li><li><h3>5. Kommunikation ist klar</h3><p>Du solltest verstehen, warum etwas trainiert oder verändert wird. Druck, Heilsversprechen und garantierte Ergebnisse sind Warnsignale.</p></li><li><h3>6. Referenzen passen zur Aufgabe</h3><p>Wettkampferfahrung kann für Contest Prep relevant sein; für Training bei Erkrankungen sind andere Kompetenzen und interdisziplinäre Zusammenarbeit entscheidend.</p></li><li><h3>7. Umfang und Preis sind transparent</h3><p>Vergleiche nicht nur die Präsenzstunde, sondern auch Planung, Check-ins, Analysen, Erreichbarkeit und Nachbereitung.</p></li></ol>
+        <h2>So läuft die Auswahl in 20 Minuten</h2><div class="expert-table-wrap"><table class="expert-table"><thead><tr><th>Frage</th><th>Gutes Signal</th><th>Warnsignal</th></tr></thead><tbody><tr><td>Wie beginnt die Zusammenarbeit?</td><td>Anamnese, Zielklärung, Ausgangswerte</td><td>Sofortiger Standardplan</td></tr><tr><td>Wie wird angepasst?</td><td>Feste Check-ins und Kriterien</td><td>Nur nach Bauchgefühl</td></tr><tr><td>Was ist im Preis enthalten?</td><td>Konkreter Leistungsumfang</td><td>Unklare Zusatzkosten</td></tr><tr><td>Was passiert bei Beschwerden?</td><td>Abklärung und passende Weiterleitung</td><td>Diagnosen oder Heilversprechen</td></tr></tbody></table></div>
+        <h2>Einordnung von Dominik Dörfl</h2><blockquote class="expert-quote">„Die wichtigste Trainerfrage lautet nicht: Wie hart kann ich dich trainieren? Sondern: Welche Struktur kannst du über Monate zuverlässig umsetzen und wie erkennen wir früh, dass sie angepasst werden muss?“</blockquote>
+        <section class="source-panel"><h2>Quellen und weiterführende Originalseiten</h2><ol><li><a href="https://www.acsm.org/wp-content/uploads/2025/02/Investing-in-a-personal-trainer-handout.pdf" target="_blank" rel="noopener noreferrer">American College of Sports Medicine: Investing in a Personal Trainer</a></li><li><a href="/personal-training-kosten-nuernberg/">Camp Dörfl: Personal-Training-Preise und Leistungsumfang</a></li><li><a href="/erfolge-im-team/">Camp Dörfl: dokumentierte Erfolge im Team</a></li></ol></section>
+        ${expertAuthorBlock()}
+        <section><h2>Häufige Fragen</h2>${faq(guideFaq)}</section>
+      </div><aside class="expert-article__rail"><span>Passender nächster Schritt</span><h2>Personal Training in Nürnberg</h2><p>Leistungsumfang, Vorgehen und persönliche Betreuung mit Dominik kennenlernen.</p><a class="button button--primary" href="/personal-trainer-nürnberg/"><span>Angebot ansehen</span><span aria-hidden="true">→</span></a></aside></div>
+    </article>`;
+  return layout({ path, title: "Guten Personal Trainer in Nürnberg finden: 7 Kriterien", description, keywords: ["guter Personal Trainer Nürnberg", "Personal Trainer auswählen", "Personal Trainer Qualifikation", "Personal Training Vergleich"], bodyClass: "page-premium page-expert-article", pageType: "Article", pageName: "Guten Personal Trainer auswählen", dateModified: "2026-08-11", socialImage: "/assets/images/dominik-personal-coaching-client.webp", socialImageAlt: "Dominik Dörfl begleitet einen Kunden beim Personal Training", extraStructuredData: [expertArticleSchema({ path, headline: "Woran erkennt man einen guten Personal Trainer?", description, image: "/assets/images/dominik-personal-coaching-client.webp" }), faqSchema(path, guideFaq)], content });
+}
+
+function contestPrepDurationGuidePage() {
+  const path = "/bodybuilding-wettkampfvorbereitung-dauer/";
+  const guideFaq = [
+    { question: "Wie viele Wochen dauert eine Bodybuilding-Wettkampfvorbereitung?", answer: "Häufig werden 16 bis 24 Wochen geplant. Der sinnvolle Zeitraum hängt jedoch von Körperfett, Muskelmasse, Wettkampfklasse, Diäterfahrung, Gesundheit und einer realistischen wöchentlichen Abnahmerate ab." },
+    { question: "Kann eine Contest Prep in zwölf Wochen funktionieren?", answer: "Bei bereits sehr guter Ausgangsform kann das möglich sein. Je weiter die Ausgangsform von der Bühnenform entfernt ist, desto höher wird bei einem kurzen Zeitfenster das Risiko unnötig aggressiver Maßnahmen." },
+    { question: "Wann sollte der Wettkampf ausgewählt werden?", answer: "Erst wenn Ausgangslage, benötigte Gewichtsabnahme, Klasse und zeitlicher Puffer realistisch eingeordnet wurden. Der Kalender sollte zum Athleten passen, nicht umgekehrt." }
+  ];
+  const description = "Wie lange eine Bodybuilding-Wettkampfvorbereitung dauern sollte: Ausgangslage, Abnahmerate, Phasen und Entscheidungskriterien aus Coaching-Praxis und Forschung.";
+  const content = `
+    <article class="expert-article"><header class="expert-article__header"><div class="section-shell"><p class="eyebrow">Bodybuilding · Wettkampfvorbereitung</p><h1>Wie lange dauert eine gute Contest Prep?</h1><p class="expert-article__dek">Nicht der Kalender bestimmt die Vorbereitung, sondern der Abstand zwischen Ausgangslage und realistischer Bühnenform.</p><div class="expert-article__meta"><span>Von Dominik Dörfl</span><span>Veröffentlicht und geprüft am 11. August 2026</span><span>8 Min. Lesezeit</span></div></div></header>
+      <div class="section-shell expert-article__layout"><div class="expert-article__body">
+        <section class="answer-box"><p class="eyebrow">Kurzantwort</p><h2>Für viele Athletinnen und Athleten sind 16 bis 24 Wochen ein sinnvoller Planungsrahmen.</h2><p>Die tatsächliche Dauer ergibt sich aus Ausgangsform, Wettkampfklasse, Diäterfahrung und notwendigem Gewichtsverlust. Forschung zur Natural-Bodybuilding-Vorbereitung nennt ungefähr 0,5 bis 1 Prozent Körpergewichtsverlust pro Woche als Orientierungsbereich, um Muskelmasse möglichst zu erhalten. Je näher die Bühnenform rückt, desto individueller muss gesteuert werden.</p></section>
+        <h2>Die Dauer wird rückwärts gerechnet</h2><p>Eine seriöse Planung beginnt nicht mit „noch 16 Wochen“, sondern mit vier Fragen: Wie viel Gewicht muss voraussichtlich verloren werden? Welche Klasse ist vorgesehen? Wie hat der Körper auf frühere Diäten reagiert? Welcher Puffer wird für Plateaus, Reisen oder gesundheitliche Veränderungen benötigt?</p>
+        <div class="expert-formula"><span>Planungslogik</span><strong>notwendiger Gewichtsverlust ÷ realistische Wochenrate + Sicherheitspuffer</strong><p>Das Ergebnis ist eine erste Arbeitshypothese – keine Garantie für eine bestimmte Bühnenform.</p></div>
+        <h2>Vier Phasen einer kontrollierten Vorbereitung</h2><div class="expert-principles"><article><b>01</b><h3>Ausgangslage</h3><p>Gesundheit, Training, Körperdaten, Klasse und Alltag einordnen.</p></article><article><b>02</b><h3>Hauptphase</h3><p>Moderates Defizit, Leistung erhalten, Entwicklung regelmäßig prüfen.</p></article><article><b>03</b><h3>Feinsteuerung</h3><p>Tempo und Belastung auf tatsächliche Form statt Wunschdatum abstimmen.</p></article><article><b>04</b><h3>Wettkampfwoche</h3><p>Keine ungetesteten Extreme. Präsentation und bekannte Routinen priorisieren.</p></article></div>
+        <h2>Warum schneller nicht automatisch besser ist</h2><p>Aggressive Defizite können Trainingsleistung, Regeneration und den Erhalt fettfreier Masse erschweren. Die Übersichtsarbeit von Helms, Aragon und Fitschen empfiehlt, die Abnahmerate individuell zu kontrollieren. Dehydrierung und riskante Elektrolytmanipulationen werden ausdrücklich kritisch eingeordnet.</p>
+        <blockquote class="expert-quote">„Eine gute Vorbereitung beginnt früh genug, damit wir nicht jede Abweichung mit mehr Hunger und mehr Cardio beantworten müssen. Zeit ist kein Luxus, sondern ein Steuerungsinstrument.“</blockquote>
+        <h2>Praktische Entscheidungsmatrix</h2><div class="expert-table-wrap"><table class="expert-table"><thead><tr><th>Ausgangslage</th><th>Planungstendenz</th><th>Priorität</th></tr></thead><tbody><tr><td>Nahe an der Wettkampfform</td><td>Kürzer möglich</td><td>Form erhalten, Details steuern</td></tr><tr><td>Moderater Abstand</td><td>16–24 Wochen häufig sinnvoll</td><td>Leistung und Abnahmerate balancieren</td></tr><tr><td>Großer Abstand oder erste Prep</td><td>Mehr Zeit oder späterer Wettkampf</td><td>Gesundheit, Lernkurve und Puffer</td></tr></tbody></table></div>
+        <section class="source-panel"><h2>Quellen</h2><ol><li><a href="https://pubmed.ncbi.nlm.nih.gov/24864135/" target="_blank" rel="noopener noreferrer">Helms, Aragon &amp; Fitschen: Evidence-based recommendations for natural bodybuilding contest preparation</a></li><li><a href="https://pubmed.ncbi.nlm.nih.gov/25949233/" target="_blank" rel="noopener noreferrer">Robinson et al.: Nutrition and conditioning intervention – 14-week case study</a></li><li><a href="/bodybuilding-wettkaempfe-2026/">Aktueller Bodybuilding-Wettkampfkalender 2026</a></li></ol></section>
+        ${expertAuthorBlock()}
+        <section><h2>Häufige Fragen</h2>${faq(guideFaq)}</section>
+      </div><aside class="expert-article__rail"><span>Contest Prep</span><h2>Individuelle Wettkampfvorbereitung</h2><p>Klasse, Ausgangsform und Zeitfenster persönlich einordnen.</p><a class="button button--primary" href="/bodybuilding-coaching-wettkampfvorbereitung/"><span>Coaching ansehen</span><span aria-hidden="true">→</span></a></aside></div></article>`;
+  return layout({ path, title: "Contest Prep: Wie lange dauert eine Wettkampfvorbereitung?", description, keywords: ["Wettkampfvorbereitung Dauer", "Contest Prep Wochen", "Bodybuilding Wettkampfvorbereitung", "Bodybuilding Diät Dauer"], bodyClass: "page-premium page-expert-article", pageType: "Article", pageName: "Dauer einer Bodybuilding-Wettkampfvorbereitung", dateModified: "2026-08-11", socialImage: "/assets/images/team-success-hero.jpg", socialImageAlt: "Dominik Dörfl in Bodybuilding-Wettkampfform", extraStructuredData: [expertArticleSchema({ path, headline: "Wie lange dauert eine gute Bodybuilding-Wettkampfvorbereitung?", description, image: "/assets/images/team-success-hero.jpg" }), faqSchema(path, guideFaq)], content });
+}
+
+function biaComparisonGuidePage() {
+  const path = "/bia-inbody-koerperanalyse-vergleich/";
+  const guideFaq = [
+    { question: "Ist InBody dasselbe wie BIA?", answer: "InBody ist eine Gerätemarke, die bioelektrische Impedanzanalyse verwendet. BIA bezeichnet das Messprinzip, nicht ein einzelnes Gerät." },
+    { question: "Wie genau ist eine BIA-Messung?", answer: "BIA schätzt Körperzusammensetzung über elektrische Messwerte und mathematische Modelle. Einzelwerte sind von Gerät, Modell und Messbedingungen abhängig; standardisierte Verlaufsmessungen sind häufig aussagekräftiger als ein isolierter Messwert." },
+    { question: "Was sollte vor einer InBody-Messung beachtet werden?", answer: "Messungen sollten möglichst unter vergleichbaren Bedingungen stattfinden, insbesondere bei Tageszeit, Flüssigkeitsstatus, Nahrungsaufnahme und vorheriger Belastung." }
+  ];
+  const description = "BIA, InBody und 2D-Körperanalyse verständlich verglichen: Messprinzip, Nutzen, Grenzen und Standardisierung für aussagekräftige Verlaufsdaten.";
+  const content = `
+    <article class="expert-article"><header class="expert-article__header"><div class="section-shell"><p class="eyebrow">Körperanalyse · BIA · InBody</p><h1>Was misst welches Verfahren – und was nicht?</h1><p class="expert-article__dek">Ein fairer Vergleich von bioelektrischer Impedanz, InBody-Systemen und optischer 2D-Körperanalyse.</p><div class="expert-article__meta"><span>Von Dominik Dörfl</span><span>Veröffentlicht und geprüft am 11. August 2026</span><span>7 Min. Lesezeit</span></div></div></header>
+      <div class="section-shell expert-article__layout"><div class="expert-article__body">
+        <section class="answer-box"><p class="eyebrow">Kurzantwort</p><h2>BIA und 2D-Analyse beantworten unterschiedliche Fragen.</h2><p>Eine BIA – etwa mit einem InBody-System – misst elektrische Impedanz und schätzt daraus Körperwasser, fettfreie Masse und Fettmasse. Eine 2D-Körperanalyse erfasst äußere Form, Umfänge und Haltung über standardisierte Aufnahmen. Beide Verfahren sind indirekt. Besonders wertvoll werden sie als Verlauf, wenn Gerät, Zeitpunkt und Vorbereitung vergleichbar bleiben.</p></section>
+        <h2>Der direkte Vergleich</h2><div class="expert-table-wrap"><table class="expert-table"><thead><tr><th>Verfahren</th><th>Stärke</th><th>Wichtige Grenze</th></tr></thead><tbody><tr><td>BIA / InBody</td><td>Schnelle Schätzung von Körperwasser und Körperzusammensetzung</td><td>Hydration, Messprotokoll und Gerätemodell beeinflussen Ergebnisse</td></tr><tr><td>2D-Körperanalyse</td><td>Sichtbare Veränderungen, Umfänge und Proportionen dokumentieren</td><td>Keine direkte Messung von Fett- oder Muskelgewebe</td></tr><tr><td>Waage</td><td>Einfacher Gewichtsverlauf</td><td>Keine Aussage darüber, wodurch sich Gewicht verändert</td></tr><tr><td>DXA</td><td>Detailliertes klinisches Referenzverfahren</td><td>Aufwendiger, nicht für jedes regelmäßige Coaching-Check-in nötig</td></tr></tbody></table></div>
+        <h2>Warum ein Einzelwert keine Diagnose ist</h2><p>BIA misst nicht direkt Fett oder Muskelmasse. Das Gerät erfasst elektrische Eigenschaften des Körpers und überführt diese mithilfe von Modellen in Schätzwerte. Forschung beschreibt relevante Unterschiede zwischen Geräten sowie Einflüsse durch Flüssigkeitsverteilung und Messbedingungen. Deshalb sollte ein Wert nie losgelöst von Verlauf, Training und Kontext interpretiert werden.</p>
+        <h2>So wird ein Verlauf vergleichbarer</h2><ul class="expert-bullets"><li>möglichst dasselbe Gerät und Messprotokoll verwenden</li><li>ähnliche Tageszeit und ähnliche Nahrungs- und Flüssigkeitssituation wählen</li><li>intensive Belastung unmittelbar vor der Messung vermeiden</li><li>nicht nur Körperfettprozent, sondern mehrere relevante Werte betrachten</li><li>Messung mit Fotos, Umfängen, Leistungsdaten und subjektivem Befinden verbinden</li></ul>
+        <blockquote class="expert-quote">„Die Analyse ist nicht das Ergebnis. Sie ist ein Navigationspunkt. Entscheidend ist, ob mehrere Daten über Zeit dieselbe Entwicklung zeigen und welche Handlung daraus folgt.“</blockquote>
+        <section class="source-panel"><h2>Quellen</h2><ol><li><a href="https://www.ncbi.nlm.nih.gov/books/NBK233766/" target="_blank" rel="noopener noreferrer">National Academies / NCBI: Bioelectrical Impedance – Grundlagen und Grenzen</a></li><li><a href="https://pubmed.ncbi.nlm.nih.gov/16215137/" target="_blank" rel="noopener noreferrer">Kyle et al.: Validity of bioelectrical impedance models</a></li><li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7852023/" target="_blank" rel="noopener noreferrer">Estimation of body composition depends on the BIA device</a></li></ol></section>
+        ${expertAuthorBlock()}
+        <section><h2>Häufige Fragen</h2>${faq(guideFaq)}</section>
+      </div><aside class="expert-article__rail"><span>Vor Ort in Nürnberg</span><h2>Körperanalyse mit persönlicher Auswertung</h2><p>InBody, 2D-Analyse und konkrete nächste Schritte zusammenführen.</p><a class="button button--primary" href="/koerperanalyse-nuernberg/"><span>Analyse ansehen</span><span aria-hidden="true">→</span></a></aside></div></article>`;
+  return layout({ path, title: "BIA, InBody & 2D-Körperanalyse: Vergleich und Grenzen", description, keywords: ["BIA InBody Vergleich", "InBody Genauigkeit", "Körperanalyse Nürnberg", "2D Körperanalyse"], bodyClass: "page-premium page-expert-article", pageType: "Article", pageName: "BIA, InBody und 2D-Körperanalyse im Vergleich", dateModified: "2026-08-11", socialImage: "/assets/images/dominik-coaching-bikeerg.webp", socialImageAlt: "Dominik Dörfl erklärt Ergebnisse einer Körperanalyse", extraStructuredData: [expertArticleSchema({ path, headline: "BIA, InBody und 2D-Körperanalyse: Was misst welches Verfahren?", description, image: "/assets/images/dominik-coaching-bikeerg.webp" }), faqSchema(path, guideFaq)], content });
+}
+
+function editorialGuidelinesPage() {
+  const content = `
+    <section class="expert-hero"><div class="section-shell"><p class="eyebrow">Transparenz &amp; Qualität</p><h1>Redaktionelle Richtlinien.</h1><p class="expert-hero__lead">So trennt Camp Dörfl persönliche Erfahrung, wissenschaftliche Evidenz, Kundenbeispiele und kommerzielle Inhalte.</p></div></section>
+    <section class="section"><div class="section-shell legal-stack">
+      <article class="legal-card"><h2>1. Verantwortlicher Autor</h2><p>Fachinhalte zu Training, Bodybuilding, Wettkampfvorbereitung und Körperanalyse werden Dominik Dörfl als Autor zugeordnet. Das Autorenprofil nennt Arbeitsfelder und belegbare sportliche Stationen.</p></article>
+      <article class="legal-card"><h2>2. Quellenstandard</h2><p>Bevorzugt werden Primärstudien, systematische Übersichten, Fachgesellschaften, Behörden, Verbände und offizielle Ergebnislisten. Quellen werden direkt an der betreffenden Fachseite verlinkt.</p></article>
+      <article class="legal-card"><h2>3. Erfahrung und Evidenz</h2><p>Persönliche Coaching-Erfahrung wird als Einordnung oder Zitat gekennzeichnet. Sie ersetzt keine wissenschaftliche Evidenz und wird nicht als allgemeingültiger Beweis dargestellt.</p></article>
+      <article class="legal-card"><h2>4. Aktualisierung und Korrekturen</h2><p>Fachseiten tragen ein sichtbares Prüfdatum. Wesentliche inhaltliche Änderungen aktualisieren zusätzlich die strukturierten Metadaten und die Sitemap. Hinweise auf sachliche Fehler können an <a href="mailto:${site.email}?subject=Redaktioneller%20Hinweis">${site.email}</a> gesendet werden.</p></article>
+      <article class="legal-card"><h2>5. Gesundheitliche Grenzen</h2><p>Die Inhalte dienen der allgemeinen Information und ersetzen keine medizinische Diagnose oder Behandlung. Medikamente und medizinische Maßnahmen werden ausschließlich mit behandelnden Fachpersonen entschieden.</p></article>
+      <article class="legal-card"><h2>6. KI-Unterstützung</h2><p>Digitale Werkzeuge können bei Struktur, Rechercheorganisation und Qualitätskontrolle unterstützen. Verantwortung, fachliche Einordnung und Freigabe bleiben bei Camp Dörfl. Quellen und Aussagen werden vor Veröffentlichung geprüft.</p></article>
+      <article class="legal-card"><h2>7. Kommerzielle Transparenz</h2><p>Kooperationen, Partnerlinks und wirtschaftlich relevante Empfehlungen werden kenntlich gemacht. Details stehen unter <a href="/werbung-partnerlinks/">Partnerlinks &amp; Werbung</a>.</p></article>
+    </div></section>
+    ${ctaSection({ eyebrow: "Fachinhalte", title: "Direkt zu den aktuellen Leitfäden.", text: "Alle Fachseiten mit Autor, Prüfdatum und Quellen an einem Ort.", primary: { label: "Expertenwissen öffnen", href: "/expertenwissen/" }, secondary: { label: "Presse & Medien", href: "/presse-medien/" } })}`;
+  return layout({ path: "/redaktionelle-richtlinien/", title: "Redaktionelle Richtlinien & Quellenstandard | Camp Dörfl", description: "Transparente Redaktions-, Quellen- und Korrekturstandards für Fachinhalte von Dominik Dörfl und Camp Dörfl.", keywords: ["Camp Dörfl Redaktion", "Quellenstandard", "Dominik Dörfl Autor"], bodyClass: "page-premium page-editorial-policy", pageType: "WebPage", pageName: "Redaktionelle Richtlinien", dateModified: "2026-08-11", content });
+}
+
 function ueberDominikPage() {
   const facts = dominikFacts;
 
@@ -3660,6 +3809,45 @@ function ueberDominikPage() {
       </div>
     </section>
 
+    <section class="section section--dark">
+      <div class="section-shell section-shell--wide expert-profile-grid">
+        <div data-reveal>
+          <p class="eyebrow">Zitierfähiges Kurzprofil</p>
+          <h2>Dominik Dörfl ist Personal Trainer, Bodybuilding- und Performance-Coach aus Nürnberg.</h2>
+          <p>Er ist Gründer von Camp Dörfl, Deutscher Meister im Bodybuilding und Powerlifting, IFBB Pro und Ironman-70.3-Finisher. In seiner Arbeit verbindet er individuelles Training, Wettkampfvorbereitung, Körperanalyse, Sporternährung und alltagstaugliche Leistungssteuerung.</p>
+          <p>Als Coach begleitet er ambitionierte Privatkunden sowie Athletinnen und Athleten. Darüber hinaus entwickelt er Firmenfitness-Formate, moderiert Sport- und Business-Veranstaltungen und veröffentlicht den Podcast „Erfolg bewusst steuern“.</p>
+          <p class="expert-profile-grid__note">Diese Kurzbiografie darf mit Verlinkung auf diese Seite für redaktionelle Vorstellungen verwendet werden.</p>
+        </div>
+        <aside data-reveal>
+          <span>Fachgebiete</span>
+          <ul class="premium-checklist">
+            <li>Personal Training und Krafttraining</li>
+            <li>Bodybuilding und Wettkampfvorbereitung</li>
+            <li>Körperanalyse und Fortschrittssteuerung</li>
+            <li>Sporternährung und alltagstaugliche Umsetzung</li>
+            <li>Firmenfitness und Gesundheitstage</li>
+            <li>Ausdauer- und Hybrid-Performance</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-shell section-shell--wide">
+        ${sectionHeader({
+          eyebrow: "Externe Nachweise",
+          title: "Originalquellen und unabhängige Profile.",
+          text: "Die folgenden Seiten liegen außerhalb von campdoerfl.de und helfen dabei, Person, sportliche Ergebnisse und publizistische Arbeit eindeutig zuzuordnen."
+        })}
+        <div class="external-proof-grid">
+          <a href="https://dbfv.de/wp-content/uploads/Ergebnisliste-DM-JunMas2018.pdf" target="_blank" rel="noopener noreferrer" data-reveal><span>Offizielle Ergebnisliste</span><h3>DBFV Deutsche Meisterschaft 2018</h3><p>Dominik Dörfl ist in der offiziellen Ergebnisliste als Erstplatzierter aufgeführt.</p><b>Originalquelle öffnen ↗</b></a>
+          <a href="https://blv-bfk.de/90-2/" target="_blank" rel="noopener noreferrer" data-reveal><span>Landesverband</span><h3>BLV-BFK Vereins- und Studioverzeichnis</h3><p>Camp Dörfl wird mit Standort, Kontakt und Website im Nürnberger PLZ-Bereich geführt.</p><b>Verbandsseite öffnen ↗</b></a>
+          <a href="https://podcasts.apple.com/us/podcast/erfolg-bewusst-steuern-der-camp-d%C3%B6rfl-podcast/id1549119123" target="_blank" rel="noopener noreferrer" data-reveal><span>Apple Podcasts</span><h3>Erfolg bewusst steuern</h3><p>Podcast von Dominik Dörfl zu Leistungssport, Unternehmertum und mentaler Umsetzung.</p><b>Podcast öffnen ↗</b></a>
+          <a href="${site.linkedin}" target="_blank" rel="noopener noreferrer" data-reveal><span>Berufsprofil</span><h3>LinkedIn</h3><p>Öffentliches Profil mit beruflicher Einordnung, Standort und Camp-Dörfl-Zuordnung.</p><b>Profil öffnen ↗</b></a>
+        </div>
+      </div>
+    </section>
+
     <section class="section section--muted">
       <div class="section-shell">
         ${sectionHeader({
@@ -3671,6 +3859,15 @@ function ueberDominikPage() {
         ${summaryRows(principleRows)}
       </div>
     </section>
+
+    <section class="section"><div class="section-shell section-shell--wide">
+      ${sectionHeader({ eyebrow: "Fachbeiträge", title: "Wissen mit Autor, Prüfdatum und Quellen.", text: "Dominiks aktuelle Leitfäden beantworten konkrete Fragen zu Trainerwahl, Contest Prep und Körperanalyse." })}
+      <div class="expert-card-grid">
+        <a class="expert-card" href="/personal-trainer-auswaehlen-nuernberg/"><span>Personal Training</span><h3>Guten Personal Trainer erkennen</h3><b>Leitfaden lesen →</b></a>
+        <a class="expert-card" href="/bodybuilding-wettkampfvorbereitung-dauer/"><span>Bodybuilding</span><h3>Dauer einer Contest Prep</h3><b>Leitfaden lesen →</b></a>
+        <a class="expert-card" href="/bia-inbody-koerperanalyse-vergleich/"><span>Körperanalyse</span><h3>BIA und InBody einordnen</h3><b>Leitfaden lesen →</b></a>
+      </div>
+    </div></section>
 
     ${ctaSection({
       eyebrow: "Über Dominik",
@@ -3690,6 +3887,8 @@ function ueberDominikPage() {
     keywords: ["Dominik Dörfl", "Camp Dörfl Gründer", "Ex-Profi Athlet Nürnberg", "Coach und Moderator Nürnberg"],
     bodyClass: "page-premium page-about",
     pageType: "AboutPage",
+    pageName: "Dominik Dörfl – Personal Trainer und Performance Coach",
+    dateModified: "2026-08-11",
     socialImage: "/assets/images/dominik-stage-suit-social.jpg",
     socialImageAlt: "Dominik Dörfl im Anzug auf der Bühne",
     content
@@ -5473,6 +5672,7 @@ function koerperanalyseNuernbergPage() {
             "Das Wichtigste zu InBody, BIA-Messung, 2D-Analyse, Vorbereitung und Buchung für Privatpersonen."
         })}
         ${faq(analysisFaq)}
+        <p class="expert-policy-link" data-reveal><a href="/bia-inbody-koerperanalyse-vergleich/">Fachleitfaden: BIA, InBody und 2D-Körperanalyse vergleichen →</a></p>
       </div>
     </section>
 
@@ -5627,7 +5827,7 @@ function bodybuildingCoachingPage() {
 
     <section class="section bbc-flow"><div class="section-shell section-shell--wide">
       <div class="bbc-section-head" data-reveal><div><p class="eyebrow">Vom Ziel zur Show</p><h2>Erst den Rahmen klären.<br><span>Dann die Vorbereitung planen.</span></h2></div><p>Zwei Guides helfen dir, Show und Division einzuordnen. Im Coaching werden daraus Termin und Strategie.</p></div>
-      <div class="bbc-flow__grid"><a href="/bodybuilding-wettkaempfe-2026/" data-reveal><span>01 · Termin finden</span><h3>Bodybuilding Wettkämpfe 2026</h3><p>Deutsche und internationale Shows der wichtigsten Verbände.</p><b>Wettkampfkalender öffnen →</b></a><a href="/bodybuilding-klassen-gewichtslimits/" data-reveal><span>02 · Klasse verstehen</span><h3>Bodybuilding Klassen &amp; Gewichtslimits</h3><p>Divisionen, Kriterien und Größen-Gewichts-Limits vergleichen.</p><b>Klassen-Guide öffnen →</b></a><article data-reveal><span>03 · Entscheidung treffen</span><h3>Show, Klasse und Timeline gemeinsam prüfen</h3><p>Die beste Entscheidung verbindet Ausgangsform, Potenzial und realistische Zeit.</p><a href="#anfrage">Mit Dominik einordnen →</a></article></div>
+      <div class="bbc-flow__grid"><a href="/bodybuilding-wettkaempfe-2026/" data-reveal><span>01 · Termin finden</span><h3>Bodybuilding Wettkämpfe 2026</h3><p>Deutsche und internationale Shows der wichtigsten Verbände.</p><b>Wettkampfkalender öffnen →</b></a><a href="/bodybuilding-klassen-gewichtslimits/" data-reveal><span>02 · Klasse verstehen</span><h3>Bodybuilding Klassen &amp; Gewichtslimits</h3><p>Divisionen, Kriterien und Größen-Gewichts-Limits vergleichen.</p><b>Klassen-Guide öffnen →</b></a><a href="/bodybuilding-wettkampfvorbereitung-dauer/" data-reveal><span>03 · Timeline planen</span><h3>Wie lange dauert eine Contest Prep?</h3><p>Vorbereitungsdauer anhand von Ausgangslage und realistischer Abnahmerate planen.</p><b>Dauer einordnen →</b></a></div>
     </div></section>
 
     <section class="section section--dark bbc-fit"><div class="section-shell section-shell--wide bbc-fit__grid"><div data-reveal><p class="eyebrow">Passt das Coaching zu dir?</p><h2>Ambition ist wichtig.<br><span>Coachability entscheidet.</span></h2></div><div data-reveal><ul><li>Du willst deinen ersten Start fundiert vorbereiten.</li><li>Du bist aktiv und suchst klarere Betreuung.</li><li>Du kannst ehrlich kommunizieren und Feedback umsetzen.</li><li>Du willst Entscheidungen verstehen.</li><li>Du suchst professionelle Führung statt Abkürzungen.</li></ul><p>Ein kurzfristiger Crash-Plan ohne verbindliche Check-ins passt nicht zu dieser Zusammenarbeit.</p></div></div></section>
@@ -7320,6 +7520,7 @@ function pressMediaPage() {
       ${sectionHeader({ eyebrow: "Medienmaterial", title: "Logo und Ansprechpartner.", text: "Das Logo darf im Rahmen einer redaktionellen Berichterstattung unverändert verwendet werden. Für werbliche Nutzung oder Kooperationen bitte vorher anfragen." })}
       <div class="bbc-flow__grid">
         <a href="/assets/images/camp-doerfl-logo.png" download data-reveal><span>PNG · Original</span><h3>Camp-Dörfl-Logo</h3><p>Quadratische Originaldatei für redaktionelle Beiträge.</p><b>Logo herunterladen ↓</b></a>
+        <a href="/assets/media/camp-doerfl-kurzprofil.txt" download data-reveal><span>TXT · Redaktion</span><h3>Kurzprofil &amp; Fachgebiete</h3><p>Zitierfähige Kurzbiografie, kanonische Links und Kontaktdaten in einer Datei.</p><b>Kurzprofil herunterladen ↓</b></a>
         <a href="mailto:${site.email}?subject=Bildmaterial%20Camp%20D%C3%B6rfl" data-reveal><span>Fotos</span><h3>Hochauflösendes Bildmaterial</h3><p>Motiv, Format und geplante Veröffentlichung kurz angeben.</p><b>Bildmaterial anfragen →</b></a>
         <a href="mailto:${site.email}?subject=Interviewanfrage%20Dominik%20D%C3%B6rfl" data-reveal><span>Kontakt</span><h3>Interview mit Dominik</h3><p>${site.email} · persönliche Abstimmung ohne Presseverteiler.</p><b>Interview anfragen →</b></a>
       </div>
@@ -7371,6 +7572,11 @@ export const pages = [
   { route: "/erfolge-im-team/guenter-preis/", render: guenterPreisStoryPage },
   { route: "/ueber-dominik/", render: ueberDominikPage },
   { route: "/presse-medien/", render: pressMediaPage, lastModified: "2026-08-11" },
+  { route: "/expertenwissen/", render: expertKnowledgePage, lastModified: "2026-08-11" },
+  { route: "/personal-trainer-auswaehlen-nuernberg/", render: choosePersonalTrainerGuidePage, lastModified: "2026-08-11" },
+  { route: "/bodybuilding-wettkampfvorbereitung-dauer/", render: contestPrepDurationGuidePage, lastModified: "2026-08-11" },
+  { route: "/bia-inbody-koerperanalyse-vergleich/", render: biaComparisonGuidePage, lastModified: "2026-08-11" },
+  { route: "/redaktionelle-richtlinien/", render: editorialGuidelinesPage, lastModified: "2026-08-11" },
   { route: "/impressum/", render: impressumPage, includeInSitemap: false },
   { route: "/cookies/", render: cookiesPage, includeInSitemap: false },
   { route: "/datenschutz/", render: privacyPage, includeInSitemap: false },

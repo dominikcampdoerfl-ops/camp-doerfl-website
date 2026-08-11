@@ -117,7 +117,10 @@ function breadcrumbSchema(path, pageName) {
     "/executive-performance/": ["Firmenfitness", "/firmenfitness/"],
     "/erfolge-im-team/guenter-preis/": ["Erfolge im Team", "/erfolge-im-team/"],
     "/bodybuilding-wettkaempfe-2026/": ["Bodybuilding Coaching", "/bodybuilding-coaching-wettkampfvorbereitung/"],
-    "/bodybuilding-klassen-gewichtslimits/": ["Bodybuilding Coaching", "/bodybuilding-coaching-wettkampfvorbereitung/"]
+    "/bodybuilding-klassen-gewichtslimits/": ["Bodybuilding Coaching", "/bodybuilding-coaching-wettkampfvorbereitung/"],
+    "/personal-trainer-auswaehlen-nuernberg/": ["Personal Trainer Nürnberg", "/personal-trainer-nürnberg/"],
+    "/bodybuilding-wettkampfvorbereitung-dauer/": ["Bodybuilding Coaching", "/bodybuilding-coaching-wettkampfvorbereitung/"],
+    "/bia-inbody-koerperanalyse-vergleich/": ["Körperanalyse Nürnberg", "/koerperanalyse-nuernberg/"]
   };
   const parent = parentPages[path];
   const itemListElement = [{
@@ -940,6 +943,11 @@ function footer() {
     { label: "Über Dominik", href: "/ueber-dominik/" },
     { label: "Erfolge im Team", href: "/erfolge-im-team/" },
     { label: "Presse & Medien", href: "/presse-medien/" },
+    { label: "Expertenwissen", href: "/expertenwissen/" },
+    { label: "Personal Trainer auswählen", href: "/personal-trainer-auswaehlen-nuernberg/" },
+    { label: "Dauer der Wettkampfvorbereitung", href: "/bodybuilding-wettkampfvorbereitung-dauer/" },
+    { label: "BIA & InBody Vergleich", href: "/bia-inbody-koerperanalyse-vergleich/" },
+    { label: "Redaktionelle Richtlinien", href: "/redaktionelle-richtlinien/" },
     { label: "Bodybuilding Coaching", href: "/bodybuilding-coaching-wettkampfvorbereitung/" },
     { label: "Bodybuilding Wettkämpfe 2026", href: "/bodybuilding-wettkaempfe-2026/" },
     { label: "Bodybuilding Klassen & Gewichtslimits", href: "/bodybuilding-klassen-gewichtslimits/" },
@@ -1162,10 +1170,34 @@ export function layout({
         "@type": "Person",
         "@id": personId,
         name: site.ownerName,
-        jobTitle: "Personal Trainer, Coach und Moderator",
+        url: `${site.url}/ueber-dominik/`,
+        image: normalizedAbsoluteUrl("/assets/images/dominik-about-gym-portrait.jpg"),
+        description:
+          "Dominik Dörfl ist Personal Trainer, Bodybuilding- und Performance-Coach, Moderator und Gründer von Camp Dörfl in Nürnberg.",
+        jobTitle: "Personal Trainer, Bodybuilding- und Performance-Coach",
         worksFor: {
           "@id": organizationId
         },
+        knowsAbout: [
+          "Personal Training",
+          "Bodybuilding",
+          "Wettkampfvorbereitung",
+          "Krafttraining",
+          "Körperanalyse",
+          "Sporternährung",
+          "Firmenfitness",
+          "Ausdauertraining"
+        ],
+        award: [
+          "Deutscher Meister im Bodybuilding",
+          "Deutscher Meister im Powerlifting",
+          "IFBB Pro Bodybuilding"
+        ],
+        subjectOf: [
+          { "@type": "WebPage", url: "https://dbfv.de/wp-content/uploads/Ergebnisliste-DM-JunMas2018.pdf", name: "DBFV Ergebnisliste Deutsche Meisterschaft 2018" },
+          { "@type": "PodcastSeries", url: "https://podcasts.apple.com/us/podcast/erfolg-bewusst-steuern-der-camp-d%C3%B6rfl-podcast/id1549119123", name: "Camp Dörfl Podcast – Erfolg bewusst steuern" },
+          { "@type": "WebPage", url: "https://blv-bfk.de/90-2/", name: "Bayerischer Landesverband für Bodybuilding, Fitness und Kraftsport – PLZ 90" }
+        ],
         sameAs,
         address: {
           "@type": "PostalAddress",

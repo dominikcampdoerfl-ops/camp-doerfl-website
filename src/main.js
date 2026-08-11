@@ -414,14 +414,14 @@ const setContactFormStatus = (form, message = "", state = "") => {
 const trackedForms = new WeakSet();
 const conversionDevice = window.matchMedia("(max-width: 760px)").matches ? "mobile" : "desktop";
 
-const trackConversion = (event, { target = "", topic = "" } = {}) => {
+const trackConversion = (event, { target = "", topic = "", source = "" } = {}) => {
   const referrer = document.referrer ? new URL(document.referrer).hostname : "direct";
   const payload = JSON.stringify({
     event,
     path: window.location.pathname,
     target: String(target).slice(0, 180),
     topic: String(topic).slice(0, 100),
-    source: referrer,
+    source: String(source || referrer).slice(0, 100),
     device: conversionDevice
   });
 
@@ -437,6 +437,20 @@ const trackConversion = (event, { target = "", topic = "" } = {}) => {
     keepalive: true
   }).catch(() => {});
 };
+
+const trackAiReferral = () => {
+  const params = new URLSearchParams(window.location.search);
+  const campaignSource = (params.get("utm_source") || "").toLowerCase();
+  const referrerHost = (() => {
+    try { return document.referrer ? new URL(document.referrer).hostname.toLowerCase() : ""; }
+    catch { return ""; }
+  })();
+  const aiSources = ["chatgpt.com", "perplexity.ai", "claude.ai", "gemini.google.com", "copilot.microsoft.com"];
+  const matchedSource = aiSources.find((host) => campaignSource.includes(host) || referrerHost === host || referrerHost.endsWith(`.${host}`));
+  if (matchedSource) trackConversion("ai_referral", { target: campaignSource || referrerHost, source: matchedSource });
+};
+
+trackAiReferral();
 
 document.addEventListener("click", (event) => {
   const link = event.target instanceof Element ? event.target.closest("a") : null;
