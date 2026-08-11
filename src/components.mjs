@@ -792,11 +792,24 @@ export function contactForm() {
         <textarea name="message" rows="8" required placeholder="Schreib hier kurz, worum es geht."></textarea>
       </label>
       <div class="form-footer form-footer--contact form-footer--contact-simple">
-        <p class="contact-form__note">
-          Unverbindlich anfragen. Deine Nachricht geht direkt an Dominik – ohne Callcenter und ohne Umwege.
-        </p>
+        <div class="contact-form__trust" id="contact-trust-note" aria-label="Antwortzeit und Datenschutz">
+          <div class="contact-form__trust-item contact-form__trust-item--response">
+            <span class="contact-form__trust-mark" aria-hidden="true">01</span>
+            <div>
+              <span class="contact-form__trust-label">Persönliche Rückmeldung</span>
+              <strong>Meist innerhalb eines Werktags.</strong>
+            </div>
+          </div>
+          <div class="contact-form__trust-item contact-form__trust-item--privacy">
+            <span class="contact-form__trust-mark" aria-hidden="true">02</span>
+            <div>
+              <span class="contact-form__trust-label">Vertraulich behandelt</span>
+              <p>Deine Angaben werden ausschließlich zur Bearbeitung deiner Anfrage verwendet. <a href="/datenschutz/">Datenschutz ansehen&nbsp;→</a></p>
+            </div>
+          </div>
+        </div>
         <div class="contact-form__actions contact-form__actions--single">
-          <button class="button button--primary" type="submit"><span>Unverbindlich anfragen</span><span aria-hidden="true">&rarr;</span></button>
+          <button class="button button--primary" type="submit" aria-describedby="contact-trust-note"><span>Unverbindlich anfragen</span><span aria-hidden="true">&rarr;</span></button>
         </div>
         <p class="contact-form__status" data-contact-status aria-live="polite"></p>
       </div>

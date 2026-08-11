@@ -124,5 +124,9 @@ test("boxing calendar includes IBF and BDB as professional organisations", () =>
 test("contact form communicates a low-friction personal response", () => {
   const markup = pageMarkup("/kontakt/");
   assert.match(markup, /Unverbindlich anfragen/);
-  assert.match(markup, /ohne Callcenter und ohne Umwege/);
+  assert.match(markup, /Persönliche Rückmeldung/);
+  assert.match(markup, /Meist innerhalb eines Werktags/);
+  assert.match(markup, /ausschließlich zur Bearbeitung deiner Anfrage verwendet/);
+  assert.match(markup, /href="\/datenschutz\/"/);
+  assert.match(markup, /aria-describedby="contact-trust-note"/);
 });
