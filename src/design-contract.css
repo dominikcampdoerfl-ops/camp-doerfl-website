@@ -30,7 +30,7 @@ html body [data-color-scheme="light"] :is(p, li, td) {
   color: var(--cd-text-body);
 }
 
-html body [data-color-scheme="light"] :is(a, strong, b, th) {
+html body [data-color-scheme="light"] :is(a, strong, b) {
   color: var(--cd-text-strong);
 }
 
@@ -76,6 +76,12 @@ html body.page-expert-article main .expert-article__header :is(h1, h2, h3) {
 
 html body.page-expert-article main .expert-article__header :is(.expert-article__dek, .expert-article__meta) {
   color: var(--cd-text-on-dark-muted) !important;
+}
+
+/* Table headers are dark components even when their table lives on a light page. */
+html body.page-expert-article main .expert-table thead th {
+  color: var(--cd-text-on-dark) !important;
+  background: var(--cd-surface-dark) !important;
 }
 
 html body.page-expert-article main .answer-box h2,

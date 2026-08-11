@@ -53,8 +53,10 @@ test("the design contract meets WCAG AA contrast for normal body text", async ()
   const contract = await readFile(new URL("../src/design-contract.css", import.meta.url), "utf8");
   assert.match(contract, /\[data-color-scheme="light"\]/);
   assert.match(contract, /\[data-color-scheme="dark"\]/);
+  assert.doesNotMatch(contract, /\[data-color-scheme="light"\][^{]*:is\([^)]*\bth\b/);
+  assert.match(contract, /\.expert-table thead th[\s\S]*color: var\(--cd-text-on-dark\) !important;[\s\S]*background: var\(--cd-surface-dark\) !important;/);
   assert.ok(contrast("#5d5549", "#fcfaf5") >= 4.5);
   assert.ok(contrast("#17130d", "#fcfaf5") >= 4.5);
   assert.ok(contrast("#ded5c5", "#11100d") >= 4.5);
-  assert.ok(contrast("#fffdf8", "#11100d") >= 4.5);
+  assert.ok(contrast("#fffdf8", "#11100d") >= 4.5, "table header contrast must remain accessible");
 });
