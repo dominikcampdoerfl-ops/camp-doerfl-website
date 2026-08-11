@@ -4726,37 +4726,53 @@ function contactPage() {
 function personalTrainingCostPage() {
   const priceCards = [
     {
-      tag: "Flexibler Einstieg",
+      number: "01",
+      tag: "Ohne Kartenbindung",
       title: "Einzelsession",
       price: "120 € / 150 €<small>inkl. 2D-Körperanalyse</small>",
+      sessionPrice: "120 € oder 150 €",
+      fit: "Technik-Check, Trainingsimpuls oder Standortbestimmung",
       text:
         "Für einen gezielten Trainingsimpuls, Technik-Feedback oder eine persönliche Standortbestimmung ohne Kartenbindung.",
-      items: ["120 € ohne 2D-Körperanalyse", "150 € inklusive 2D-Körperanalyse"]
+      items: ["120 € ohne 2D-Körperanalyse", "150 € inklusive 2D-Körperanalyse"],
+      cta: "Einzelsession anfragen"
     },
     {
+      number: "02",
       tag: "Kontinuität",
       title: "5er-Karte",
       price: "500 €",
+      sessionPrice: "100 € pro Session",
+      fit: "Strukturierter Einstieg über mehrere aufbauende Termine",
       text:
         "Für mehrere aufeinander aufbauende Termine und mehr Verbindlichkeit über einen überschaubaren Zeitraum.",
-      items: ["5 persönliche Sessions", "Entspricht 100 € pro Session"]
+      items: ["5 persönliche Sessions", "Entspricht 100 € pro Session"],
+      cta: "5er-Karte anfragen"
     },
     {
+      number: "03",
       tag: "Bester Kartenwert",
       title: "10er-Karte",
       price: "800 €",
+      sessionPrice: "80 € pro Session",
+      fit: "Regelmäßige 1:1 Trainingssteuerung mit bestem Kartenpreis",
       text:
         "Für regelmäßige persönliche Trainingssteuerung und eine längerfristige, verlässliche Zusammenarbeit.",
       items: ["10 persönliche Sessions", "Entspricht 80 € pro Session"],
-      featured: true
+      featured: true,
+      cta: "10er-Karte anfragen"
     },
     {
+      number: "04",
       tag: "Laufende Führung",
       title: "Premium Begleitung",
       price: "ab 200 €<small>monatlich</small>",
+      sessionPrice: "ab 200 € monatlich",
+      fit: "Training, Ernährung, Analyse, App und laufende Anpassung",
       text:
         "Für ein abgestimmtes System aus Training, Ernährung, Analyse, App und laufender Anpassung.",
-      items: ["Persönliche laufende Begleitung", "Umfang passend zu Ziel und Alltag"]
+      items: ["Persönliche laufende Begleitung", "Umfang passend zu Ziel und Alltag"],
+      cta: "Premium Begleitung anfragen"
     }
   ];
 
@@ -4796,67 +4812,141 @@ function personalTrainingCostPage() {
 
   const pricingFaq = [
     {
-      question: "Was kostet Personal Training bei Camp Dörfl?",
+      question: "Wie teuer ist ein Personal Trainer in Nürnberg?",
       answer:
-        "Eine Einzelsession kostet 120 Euro; inklusive 2D-Körperanalyse sind es 150 Euro. Die 5er-Karte kostet 500 Euro, die 10er-Karte 800 Euro. Die Premium Begleitung startet ab 200 Euro monatlich."
+        "Bei Camp Dörfl kostet eine einzelne Personal-Training-Session 120 Euro; inklusive 2D-Körperanalyse sind es 150 Euro. Mit der 5er-Karte liegt eine Session bei 100 Euro, mit der 10er-Karte bei 80 Euro. Die Premium Begleitung startet ab 200 Euro monatlich."
     },
     {
-      question: "Ist günstiger immer die bessere Einstiegsoption?",
+      question: "Was kostet Personal Training pro Stunde?",
       answer:
-        "Nicht unbedingt. Wenn dir vor allem Struktur, Kontrolle und Verbindlichkeit fehlen, kann ein vermeintlich kleiner Einstieg am Ende weniger wirksam sein als ein klar geführtes Premium-Setup."
+        "Eine Einzelsession kostet 120 Euro ohne oder 150 Euro inklusive 2D-Körperanalyse. Bei einer 5er-Karte reduziert sich der Preis auf 100 Euro pro Session, bei einer 10er-Karte auf 80 Euro pro Session."
     },
     {
-      question: "Wann lohnt sich Premium Personal Training statt einzelner Sessions?",
+      question: "Lohnt sich Personal Training?",
       answer:
-        "Vor allem dann, wenn du Training, Ernährung, Analyse und laufende Anpassung als zusammenhängendes System brauchst und der Alltag nicht viel Raum für Fehler lässt."
+        "Personal Training lohnt sich besonders, wenn du Fehler und Umwege vermeiden, Übungen sicher ausführen und dein Training konsequent an Ziel, Alltag und Ausgangslage anpassen möchtest. Entscheidend ist nicht nur die Stunde selbst, sondern wie gut du das Gelernte zwischen den Terminen umsetzen kannst."
     },
     {
-      question: "Wie bekomme ich eine konkrete Preiseinschätzung?",
+      question: "Wie oft sollte man Personal Training buchen?",
       answer:
-        "Die Grundpreise stehen direkt in der Übersicht. Bei der Premium Begleitung lässt sich über eine kurze Anfrage klären, welcher monatliche Umfang zu deinen Zielen und deinem Kalender passt."
+        "Das hängt von Erfahrung, Ziel und gewünschter Eigenständigkeit ab. Für einen Technik-Check kann ein Einzeltermin reichen. Für neue Routinen und kontinuierlichen Fortschritt sind mehrere aufeinander aufbauende Sessions oder eine laufende Begleitung meist sinnvoller."
+    },
+    {
+      question: "Gibt es eine Probestunde ohne Kartenbindung?",
+      answer:
+        "Der flexible Einstieg ist eine einzelne Session ohne Kartenbindung. So kannst du einen konkreten Trainingsimpuls, Technik-Feedback oder eine persönliche Standortbestimmung buchen, bevor du dich für mehrere Termine entscheidest."
+    },
+    {
+      question: "Wann lohnt sich die Premium Begleitung?",
+      answer:
+        "Vor allem dann, wenn du Training, Ernährung, Analyse, App und laufende Anpassung als zusammenhängendes System brauchst. Der konkrete Umfang wird passend zu Ziel, Alltag und gewünschter Betreuungstiefe vereinbart."
     }
   ];
+
+  const pricingMarkup = priceCards
+    .map(
+      (card) => `
+        <article class="pt-price-card${card.featured ? " pt-price-card--featured" : ""}" data-reveal>
+          <div class="pt-price-card__top">
+            <span class="pt-price-card__number">${card.number}</span>
+            <span class="pt-price-card__tag">${card.tag}</span>
+          </div>
+          <h3>${card.title}</h3>
+          <p class="pt-price-card__price">${card.price}</p>
+          <p class="pt-price-card__fit">Ideal für: ${card.fit}</p>
+          <p class="pt-price-card__text">${card.text}</p>
+          <ul>${card.items.map((item) => `<li>${item}</li>`).join("")}</ul>
+          <a class="pt-price-card__link" href="${contactHref("premium-training")}">${card.cta}<span aria-hidden="true">&rarr;</span></a>
+        </article>`
+    )
+    .join("");
+
+  const offerCatalogSchema = {
+    "@type": "OfferCatalog",
+    "@id": `${site.url}/personal-training-kosten-nuernberg/#angebote`,
+    name: "Personal Training Preise Nürnberg",
+    itemListElement: [
+      { name: "Einzelsession Personal Training", price: "120", description: "Einzelsession ohne 2D-Körperanalyse" },
+      { name: "Einzelsession mit 2D-Körperanalyse", price: "150", description: "Einzelsession inklusive 2D-Körperanalyse" },
+      { name: "5er-Karte Personal Training", price: "500", description: "Fünf persönliche Sessions" },
+      { name: "10er-Karte Personal Training", price: "800", description: "Zehn persönliche Sessions" },
+      { name: "Premium Begleitung", price: "200", description: "Laufende persönliche Begleitung ab 200 Euro monatlich" }
+    ].map((offer) => ({
+      "@type": "Offer",
+      name: offer.name,
+      price: offer.price,
+      priceCurrency: "EUR",
+      description: offer.description,
+      url: `${site.url}/personal-training-kosten-nuernberg/#preise`,
+      itemOffered: { "@type": "Service", name: offer.name }
+    }))
+  };
 
   const content = `
     <section class="ff-hero ff-hero--coaching ff-hero--coaching-photo ff-hero--text-only">
       <img class="ff-hero__img" src="/assets/images/premium-training-hero-wide.webp" srcset="/assets/images/premium-training-hero-wide-960.webp 960w, /assets/images/premium-training-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl beim Personal Training mit einem Kunden im Studio"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
-        <p class="ff-hero__eyebrow" data-reveal>Ratgeber · Personal Training Kosten</p>
-        <h1 class="ff-hero__title" data-reveal>Was kostet Personal Training <br><span>in Nürnberg?</span></h1>
+        <p class="ff-hero__eyebrow" data-reveal>Personal Trainer Nürnberg · Preise transparent</p>
+        <h1 class="ff-hero__title" data-reveal>Personal Training Kosten <br><span>in Nürnberg.</span></h1>
         <p class="ff-hero__lead" data-reveal>
-          Die Kosten hängen nicht nur von der Dauer einer Session ab, sondern vor allem von Betreuungstiefe, Analyse, Trainingsfrequenz und dem Setup, das wirklich zu deinem Alltag passt.
+          Einzelsession ab 120 Euro, 5er-Karte für 500 Euro oder 10er-Karte für 800 Euro. Hier siehst du auf einen Blick, welches Modell zu deinem Ziel und deinem Alltag passt.
         </p>
         <p class="ff-hero__support" data-reveal>
-          Camp Dörfl arbeitet deshalb nicht mit einem künstlichen Einheitsmodell, sondern mit Einzelsessions, Karten und Premium Begleitung je nach Ziel, Anspruch und Verantwortung.
+          Transparent vergleichen, passend entscheiden und direkt mit Dominik klären, welcher Einstieg wirklich sinnvoll ist.
         </p>
         <div class="ff-hero__actions" data-reveal>
           <a class="button button--primary" href="${contactHref("premium-training")}"><span>Preiseinschätzung anfragen</span><span aria-hidden="true">&rarr;</span></a>
           <a class="button button--secondary-light" href="/personal-trainer-nürnberg/"><span>Personal Training ansehen</span><span aria-hidden="true">&rarr;</span></a>
         </div>
         <dl class="ff-hero__facts" data-reveal aria-label="Wichtige Preisfaktoren bei Personal Training in Nürnberg">
-          <div><dt>1:1</dt><dd>Persönliche Führung</dd></div>
-          <div><dt>Analyse</dt><dd>vor dem Start</dd></div>
-          <div><dt>App</dt><dd>optional integriert</dd></div>
+          <div><dt>ab 80 €</dt><dd>pro Session mit 10er-Karte</dd></div>
+          <div><dt>120 €</dt><dd>Einzelsession</dd></div>
+          <div><dt>150 €</dt><dd>inklusive 2D-Analyse</dd></div>
         </dl>
       </div>
     </section>
 
-    <section class="section section--pricing-overview" id="preise">
+    <section class="section pt-pricing-section" id="preise">
       <div class="section-shell section-shell--wide">
         ${sectionHeader({
           eyebrow: "Preise auf einen Blick",
-          title: "Wähle den Rahmen, der zu deinem Ziel passt.",
+          title: "Vier klare Wege. Kein Preisrätsel.",
           text:
-            "Transparent vom einzelnen Termin bis zur laufenden Premium Begleitung. Für die genaue Einordnung deines Bedarfs kannst du direkt eine persönliche Anfrage senden.",
+            "Vom flexiblen Einzeltermin bis zur laufenden Betreuung: Du siehst sofort, was enthalten ist, für wen das Modell gedacht ist und welcher Preis pro Session entsteht.",
           align: "center"
         })}
-        ${pricingCards(priceCards)}
+        <div class="pt-price-grid">${pricingMarkup}</div>
+        <div class="pt-price-assurance" data-reveal>
+          <div><strong>Noch unsicher?</strong><span>Schreib kurz dein Ziel und deine Ausgangslage. Du bekommst eine ehrliche Empfehlung – auch wenn dafür zunächst nur eine Einzelsession sinnvoll ist.</span></div>
+          <a class="button button--primary" href="${contactHref("premium-training")}"><span>Passendes Modell anfragen</span><span aria-hidden="true">&rarr;</span></a>
+        </div>
         <p class="pricing-overview__note">Der genaue Leistungsumfang der Premium Begleitung richtet sich nach dem individuell vereinbarten Betreuungsrahmen.</p>
       </div>
     </section>
 
-    <section class="section section--tight">
+    <section class="section section--tight pt-comparison-section" aria-labelledby="pt-comparison-title">
+      <div class="section-shell section-shell--wide">
+        ${sectionHeader({
+          eyebrow: "Direkter Vergleich",
+          title: "Welches Personal-Training-Modell passt zu dir?",
+          text: "Diese Übersicht hilft dir, nicht nur nach dem Preis, sondern nach dem gewünschten Ergebnis zu entscheiden."
+        }).replace("<h2", '<h2 id="pt-comparison-title"')}
+        <div class="pt-comparison" role="region" aria-label="Vergleich der Personal-Training-Preise" tabindex="0" data-reveal>
+          <table>
+            <thead><tr><th>Modell</th><th>Am besten für</th><th>Umfang</th><th>Preis</th><th>Je Session</th></tr></thead>
+            <tbody>
+              <tr><th>Einzelsession</th><td>Check, Technik, erster Impuls</td><td>1 Termin</td><td>120 € / 150 € inkl. 2D</td><td>120 € / 150 €</td></tr>
+              <tr><th>5er-Karte</th><td>Strukturierter Einstieg</td><td>5 Sessions</td><td>500 €</td><td>100 €</td></tr>
+              <tr class="is-recommended"><th>10er-Karte <span>Empfehlung</span></th><td>Regelmäßige 1:1 Führung</td><td>10 Sessions</td><td>800 €</td><td>80 €</td></tr>
+              <tr><th>Premium Begleitung</th><td>Ganzheitliche laufende Steuerung</td><td>Individuell</td><td>ab 200 € / Monat</td><td>nach Umfang</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight pt-value-section">
       <div class="section-shell">
         ${sectionHeader({
           eyebrow: "Preisfaktoren",
@@ -4869,17 +4959,41 @@ function personalTrainingCostPage() {
       </div>
     </section>
 
+    <section class="pt-pricing-proof" aria-labelledby="pt-pricing-proof-title">
+      <div class="section-shell section-shell--wide pt-pricing-proof__grid">
+        <div class="pt-pricing-proof__copy" data-reveal>
+          <p class="eyebrow">Was hinter dem Preis steht</p>
+          <h2 id="pt-pricing-proof-title">Erfahrung, die du nicht erst nach der Buchung beurteilen musst.</h2>
+          <p>Personal Training ist Vertrauenssache. Deshalb kannst du Erfahrung, dokumentierte Coaching-Erfolge und Kundenstimmen vor deiner Entscheidung nachvollziehen.</p>
+          <div class="pt-pricing-proof__links">
+            <a href="/erfolge-im-team/">Alle Coaching-Erfolge <span aria-hidden="true">&rarr;</span></a>
+            <a href="/personal-trainer-nürnberg/">Personal Trainer Nürnberg <span aria-hidden="true">&rarr;</span></a>
+          </div>
+        </div>
+        <dl class="pt-pricing-proof__facts" data-reveal>
+          <div><dt>10+</dt><dd>Jahre Coaching-Erfahrung</dd></div>
+          <div><dt>13</dt><dd>Deutsche Meistertitel im betreuten Team</dd></div>
+          <div><dt>${coachSuccessStats.placements}</dt><dd>dokumentierte Wettkampfplatzierungen</dd></div>
+          <div><dt>5,0</dt><dd>Sterne aus 34 Google-Bewertungen</dd></div>
+        </dl>
+      </div>
+    </section>
+
     <section class="section">
       <div class="section-shell editorial-stage editorial-stage--reverse">
         <div class="editorial-stage__copy" data-reveal>
           ${sectionHeader({
             eyebrow: "Einordnung",
-            title: "So findest du das passende Setup."
+            title: "In vier Schritten zur passenden Betreuung."
           })}
           ${processList(pricingSteps)}
+          <div class="pt-setup-links">
+            <a href="/koerperanalyse-nuernberg/">Körperanalyse Nürnberg ansehen <span aria-hidden="true">&rarr;</span></a>
+            <a href="/personal-trainer-nürnberg/">Alle Leistungen im Personal Training <span aria-hidden="true">&rarr;</span></a>
+          </div>
         </div>
         <div class="editorial-stage__media" data-reveal>
-          <img src="/assets/images/dominik-bike-road-yellow.webp" alt="Dominik Dörfl mit Rennrad als Symbol für individuell passende Trainingssteuerung"${imageLoadingAttributes()}>
+          <img src="/assets/images/dominik-personal-coaching-client.webp" alt="Dominik Dörfl bei der persönlichen Trainingsbetreuung eines Kunden in Nürnberg"${imageLoadingAttributes()}>
         </div>
       </div>
     </section>
@@ -4908,9 +5022,9 @@ function personalTrainingCostPage() {
 
   return layout({
     path: "/personal-training-kosten-nuernberg/",
-    title: "Was kostet Personal Training in Nürnberg? | Camp Dörfl",
+    title: "Personal Trainer Nürnberg: Preise & Kosten | Camp Dörfl",
     description:
-      "Was kostet Personal Training in Nürnberg? Camp Dörfl zeigt, welche Faktoren den Preis bestimmen und wann Einzelsessions, Karten oder Premium Begleitung sinnvoll sind.",
+      "Personal Trainer Nürnberg: 10er-Karte 80 € je Session, Einzeltraining ab 120 € und Premium-Begleitung ab 200 € monatlich. Alle Modelle im Vergleich.",
     keywords: [
       "Personal Training Kosten Nürnberg",
       "Was kostet Personal Training in Nürnberg",
@@ -4918,6 +5032,8 @@ function personalTrainingCostPage() {
       "Premium Personal Training Nürnberg"
     ],
     bodyClass: "page-premium page-coaching page-guide-pricing",
+    pageName: "Personal Training Kosten Nürnberg",
+    dateModified: "2026-08-11",
     socialImage: "/assets/images/premium-training-hero-wide-social.jpg",
     socialImageAlt: "Dominik Dörfl beim Personal Training mit einem Kunden in Nürnberg",
     extraStructuredData: [
@@ -4928,6 +5044,7 @@ function personalTrainingCostPage() {
         description:
           "Einordnung zu Preisfaktoren, Formaten und sinnvollen Einstiegen für Personal Training in Nürnberg."
       }),
+      offerCatalogSchema,
       faqSchema("/personal-training-kosten-nuernberg/", pricingFaq)
     ],
     content
@@ -5700,6 +5817,9 @@ function bodybuildingCalendarPage() {
           ],
           "feature-grid--calendar-guide"
         )}
+        <div class="bbcal-guide-action" data-reveal>
+          <a class="button button--secondary" href="/bodybuilding-klassen-gewichtslimits/"><span>Bodybuilding-Klassen &amp; Gewichtslimits</span><span aria-hidden="true">→</span></a>
+        </div>
       </div>
     </section>
 
@@ -5758,6 +5878,206 @@ function bodybuildingCalendarPage() {
       itemListSchema,
       faqSchema("/bodybuilding-wettkaempfe-2026/", bodybuildingCalendarFaq)
     ],
+    content
+  });
+}
+
+function bodybuildingClassesPage() {
+  const classFaq = [
+    {
+      question: "Ist Classic Physique bei jedem Verband gleich?",
+      answer: "Nein. DBFV, NAC Germany und NPC Worldwide nutzen unterschiedliche Formeln beziehungsweise Größentabellen. Auch Posinghose, Pflichtposen und Klassenaufteilung unterscheiden sich. Maßgeblich bleibt immer die aktuelle Ausschreibung der konkreten Meisterschaft."
+    },
+    {
+      question: "Gibt es in Bikini, Wellness oder Figure ein Gewichtslimit?",
+      answer: "Bei den hier verglichenen Verbänden werden diese Frauenklassen in der Regel offen oder nach Körpergröße eingeteilt, nicht über ein maximales Körpergewicht. Entscheidend sind Körperentwicklung, Proportionen, Präsentation und die verbandsspezifischen Bewertungskriterien."
+    },
+    {
+      question: "Was ist der Unterschied zwischen Gewichtsklasse und Gewichtslimit?",
+      answer: "Eine Gewichtsklasse ordnet Athleten nach dem tatsächlichen Waagegewicht ein, etwa bis 80 Kilogramm. Ein Gewichtslimit setzt dagegen ein Maximalgewicht in Relation zur Körpergröße. Wer darunter bleibt, kann starten; das Limit ist kein Zielgewicht."
+    },
+    {
+      question: "Kann ich bei mehreren Verbänden in derselben Saison starten?",
+      answer: "Das hängt von Mitgliedschaft, Qualifikation, Newcomer-Status und den Regeln des jeweiligen Veranstalters ab. Besonders Doppelstarts und verbandsübergreifender Newcomer-Status sollten vor der Anmeldung direkt geprüft werden."
+    },
+    {
+      question: "Welche Klasse passt zu meinem aktuellen Körperbau?",
+      answer: "Das Gewicht allein reicht nicht. Relevant sind Muskelmasse, Proportionen, Unterkörperentwicklung, Härte, Posing und Bühnenpräsentation. Die Übersicht liefert eine Vorauswahl; die endgültige Entscheidung sollte mit aktuellem Formcheck und der konkreten Ausschreibung fallen."
+    }
+  ];
+
+  const npcClassicRows = [
+    ["bis 162,6 cm", "75,7 kg"], ["bis 165,1 cm", "78,0 kg"],
+    ["bis 167,6 cm", "80,3 kg"], ["bis 170,2 cm", "82,6 kg"],
+    ["bis 172,7 cm", "84,8 kg"], ["bis 175,3 cm", "88,0 kg"],
+    ["bis 177,8 cm", "91,6 kg"], ["bis 180,3 cm", "94,8 kg"],
+    ["bis 182,9 cm", "98,4 kg"], ["bis 185,4 cm", "101,6 kg"],
+    ["bis 188,0 cm", "105,2 kg"], ["bis 190,5 cm", "108,4 kg"],
+    ["bis 193,0 cm", "111,6 kg"], ["bis 195,6 cm", "114,8 kg"],
+    ["bis 198,1 cm", "117,9 kg"], ["bis 200,7 cm", "121,1 kg"],
+    ["über 200,7 cm", "124,3 kg"]
+  ];
+
+  const limitRows = (rows) => rows.map(([height, limit]) => `<tr><td>${height}</td><td><strong>${limit}</strong></td></tr>`).join("");
+
+  const content = `
+    <section class="bbcal-hero bbclass-hero">
+      <img class="bbcal-hero__image" src="/assets/images/dominik-stage-suit.webp" alt="Dominik Dörfl in Wettkampfform auf der Bodybuilding-Bühne"${imageLoadingAttributes({ eager: true })}>
+      <div class="bbcal-hero__scrim" aria-hidden="true"></div>
+      <div class="section-shell bbcal-hero__inner">
+        <div class="bbcal-hero__copy">
+          <p class="eyebrow" data-reveal>DBFV · NAC Germany · NPC Worldwide</p>
+          <h1 data-reveal>Bodybuilding-<br>Klassen &amp; <span>Limits.</span></h1>
+          <p class="bbcal-hero__lead" data-reveal>Welcher Verband? Welche Klasse? Welches Maximalgewicht? Diese Übersicht bringt Männer- und Frauenklassen, Bewertungskriterien und die wichtigsten Größen-Gewichts-Limits in ein verständliches System.</p>
+          <div class="bbcal-hero__actions" data-reveal>
+            <a class="button button--primary" href="#klassencheck"><span>Klasse prüfen</span><span aria-hidden="true">↓</span></a>
+            <a class="button button--secondary-light" href="#verbaende"><span>Verbände vergleichen</span><span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+        <dl class="bbcal-hero__facts" data-reveal>
+          <div><dt>03</dt><dd>Regelwerke im Vergleich</dd></div>
+          <div><dt>11</dt><dd>zentrale Divisionen erklärt</dd></div>
+          <div><dt>01</dt><dd>interaktiver Limit-Check</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section bbcal-intro bbclass-intro">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-intro__head" data-reveal>
+          <div>
+            <p class="eyebrow">Das Wichtigste zuerst</p>
+            <h2>Gleicher Name.<br><span>Andere Regeln.</span></h2>
+          </div>
+          <div class="bbcal-intro__copy">
+            <p><strong>Classic Physique ist nicht überall dieselbe Klasse.</strong> Beim NPC Worldwide gelten feste Größenstufen mit Pfund-/Kilogramm-Limits, der DBFV arbeitet mit eigenen Zuschlägen zur Körpergröße und NAC Germany mit einer weiteren Formel.</p>
+            <p>Auch „Bikini“, „Figure/Figur“ oder „Men’s Physique“ unterscheiden sich in Muskulatur, Härte, Posing und Kleidung. Deshalb beginnt die Klassenwahl immer mit dem Verband – nicht nur mit dem Namen.</p>
+          </div>
+        </div>
+        <div class="bbclass-principles" data-reveal>
+          <article><span>01</span><strong>Gewichtsklasse</strong><p>Die Waage ordnet dich einer Klasse zu – etwa bis 80 kg oder über 100 kg.</p></article>
+          <article><span>02</span><strong>Gewichtslimit</strong><p>Deine Größe bestimmt das maximal erlaubte Gewicht. Darunter ist erlaubt, darüber nicht.</p></article>
+          <article><span>03</span><strong>Größenklasse</strong><p>Du startest nach Körpergröße. Das Bühnengewicht ist kein Einteilungskriterium.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted bbclass-check" id="klassencheck">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-section-heading" data-reveal>
+          <p class="eyebrow">Schnelle Vorauswahl für Männer</p>
+          <h2>Dein Größen- &amp; Gewichtscheck.</h2>
+          <p>Wähle Verband und Klasse. Der Check berechnet das offizielle Maximalgewicht für Männer/Open und zeigt, ob dein eingegebenes Bühnengewicht innerhalb des Limits liegt.</p>
+        </div>
+        <form class="bbclass-calculator" data-class-calculator data-reveal>
+          <div class="bbclass-calculator__fields">
+            <label><span>Verband</span><select name="federation"><option value="dbfv">DBFV e.V.</option><option value="nac">NAC Germany</option><option value="npc">NPC Worldwide</option></select></label>
+            <label><span>Klasse</span><select name="division"><option value="classic-physique">Classic Physique</option><option value="classic-bodybuilding">Classic Bodybuilding</option><option value="mens-physique">Men’s Physique</option><option value="bodybuilding">Bodybuilding</option></select></label>
+            <label><span>Körpergröße</span><span class="bbclass-input"><input name="height" type="number" min="150" max="210" step="0.1" value="180" inputmode="decimal"><b>cm</b></span></label>
+            <label><span>Bühnengewicht</span><span class="bbclass-input"><input name="weight" type="number" min="45" max="180" step="0.1" value="90" inputmode="decimal"><b>kg</b></span></label>
+          </div>
+          <output class="bbclass-calculator__result" data-class-result aria-live="polite">
+            <span>Dein Ergebnis</span><strong>Limit wird berechnet</strong><p>Die offizielle Ausschreibung bleibt maßgeblich.</p>
+          </output>
+        </form>
+      </div>
+    </section>
+
+    <section class="section bbclass-directory" id="verbaende">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-section-heading" data-reveal>
+          <p class="eyebrow">Verbandsvergleich</p>
+          <h2>Drei Systeme. Klar getrennt.</h2>
+          <p>Die Klassenanzahl einer konkreten Show kann wegen Teilnehmerzahl, Altersgruppe oder Ausschreibung abweichen. Die folgenden Übersichten zeigen das Grundsystem für Open-Athleten.</p>
+        </div>
+
+        <div class="bbclass-federations">
+          <article class="bbclass-federation" id="dbfv" data-reveal>
+            <header><span class="bbclass-federation__number">01</span><div><p class="eyebrow">Deutschland · IFBB Germany</p><h2>DBFV e.V.</h2><p>Viele Divisionen werden nach Gewicht oder Größe unterteilt. Classic Bodybuilding und Classic Physique haben unterschiedliche größenabhängige Limits.</p></div><a href="https://www.dbfv.de/wettkampfregeln/" target="_blank" rel="noopener noreferrer">Regelwerk <span aria-hidden="true">↗</span></a></header>
+            <div class="bbclass-federation__body">
+              <div class="bbclass-classlist"><h3>Angebotene Klassen</h3><div class="bbclass-sex-grid"><div><b>Frauen</b><ul><li>Bikini Fitness</li><li>Fit Model</li><li>Wellness Fitness</li><li>Fitness Figur</li><li>Frauen Physique</li></ul></div><div><b>Männer</b><ul><li>Bodybuilding</li><li>Classic Bodybuilding</li><li>Classic Physique</li><li>Men’s Physique</li><li>Muscular Physique</li></ul></div></div><p class="bbclass-note">Zusätzlich: Jugend, Junioren, Masters, Newcomer, Paare, Fit Pairs und Handicapped – je nach Veranstaltung.</p></div>
+              <div class="bbclass-limit-card"><h3>Open Bodybuilding</h3><p><strong>Gewichtsklassen:</strong> bis 70 · 80 · 90 · 100 kg, danach über 100 kg.</p><h3>Classic-Limits</h3><table><thead><tr><th>Größe</th><th>Classic BB / Classic Physique</th></tr></thead><tbody>${limitRows([["bis 168 cm", "Größe −100 / +4 kg"],["bis 171 cm", "+2 / +6 kg"],["bis 175 cm", "+4 / +8 kg"],["bis 180 cm", "+7 / +11 kg"],["bis 188 cm", "+9 / +13 kg"],["bis 196 cm", "+11 / +15 kg"],["über 196 cm", "+13 / +17 kg"]])}</tbody></table></div>
+            </div>
+          </article>
+
+          <article class="bbclass-federation" id="nac" data-reveal>
+            <header><span class="bbclass-federation__number">02</span><div><p class="eyebrow">Deutschland · NAC International</p><h2>NAC Germany</h2><p>Das System ist kompakter: Bodybuilding wird nach Körpergröße, Classic Physique und Men’s Physique werden über Formeln begrenzt.</p></div><a href="https://www.nac-germany.de/klassen-regeln.html" target="_blank" rel="noopener noreferrer">Regelwerk <span aria-hidden="true">↗</span></a></header>
+            <div class="bbclass-federation__body">
+              <div class="bbclass-classlist"><h3>Angebotene Klassen</h3><div class="bbclass-sex-grid"><div><b>Frauen</b><ul><li>Bikini Shape</li><li>Bikini Wellness</li><li>Figur</li><li>Frauen Physique</li><li>Mixed Couples</li></ul></div><div><b>Männer</b><ul><li>Bodybuilding</li><li>Classic Physique</li><li>Men’s Physique</li><li>Junioren</li><li>Masters +40 / +50 / +60</li></ul></div></div><p class="bbclass-note">Bodybuilding: Body II bis einschließlich 175 cm, Body I über 175 cm; kein Gewichtslimit.</p></div>
+              <div class="bbclass-formulas"><article><span>Men’s Physique</span><strong>Größe − 100 + 2 kg</strong><p>Beispiel 180 cm: maximal 82 kg.</p></article><article><span>Classic Physique</span><strong>Größe − 100 + Toleranz</strong><p>+4 kg bis 170 cm · +6 kg von 171–179 cm · +8 kg ab 180 cm · +10 kg über 189 cm.</p></article><p class="bbclass-note"><strong>Hinweis zur Grenze:</strong> Das NAC-Regelwerk formuliert „über 1,80 m“ und „über 1,89 m“. Bei exakt 180 beziehungsweise 189 cm vorab beim Veranstalter bestätigen.</p></div>
+            </div>
+          </article>
+
+          <article class="bbclass-federation" id="npc" data-reveal>
+            <header><span class="bbclass-federation__number">03</span><div><p class="eyebrow">International · IFBB Pro League Weg</p><h2>NPC Worldwide</h2><p>Die Divisionen werden veranstaltungsabhängig in unterschiedlich viele Größenklassen aufgeteilt. Classic Physique nutzt eine feste Inch-/Pfund-Tabelle.</p></div><a href="https://www.ifbbpro.com/npc-worldwide/rules/" target="_blank" rel="noopener noreferrer">Regelwerk <span aria-hidden="true">↗</span></a></header>
+            <div class="bbclass-federation__body bbclass-federation__body--npc">
+              <div class="bbclass-classlist"><h3>Angebotene Klassen</h3><div class="bbclass-sex-grid"><div><b>Frauen</b><ul><li>Bikini</li><li>Wellness</li><li>Figure</li><li>Physique</li><li>Fitness</li><li>Fit Model</li><li>Women’s Bodybuilding</li></ul></div><div><b>Männer</b><ul><li>Bodybuilding</li><li>Classic Physique</li><li>Men’s Physique</li><li>Wheelchair Bodybuilding</li></ul></div></div><p class="bbclass-note">Mögliche Kategorien: True Novice, Novice, Junior, Masters und Open. Welche davon angeboten werden, steht in der Show-Ausschreibung.</p></div>
+              <details class="bbclass-npc-table"><summary><span>Classic Physique: alle Größenlimits</span><strong>Tabelle öffnen <b aria-hidden="true">↓</b></strong></summary><div class="bbclass-table-wrap"><table><thead><tr><th>Körpergröße</th><th>Maximalgewicht</th></tr></thead><tbody>${limitRows(npcClassicRows)}</tbody></table></div><p>Die offizielle Tabelle rechnet in Zoll und Pfund; Kilogrammwerte sind die veröffentlichten Umrechnungen.</p></details>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted bbclass-division-guide">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-section-heading" data-reveal><p class="eyebrow">Frauenklassen verstehen</p><h2>Welche Entwicklung wird gesucht?</h2><p>Von Model-Look bis Physique: Nicht „besser“ oder „schlechter“, sondern ein anderes Verhältnis aus Muskulatur, Kondition, Proportion und Präsentation.</p></div>
+        <div class="bbclass-spectrum" data-reveal><span>Weniger Muskelmasse</span><i aria-hidden="true"></i><span>Mehr Muskelmasse &amp; Definition</span></div>
+        <div class="bbclass-guide-grid">
+          <article data-reveal><span>01</span><h3>Fit Model</h3><p>Der weichste, modelorientierte Look. Balance, Form und Präsentation stehen im Vordergrund; weniger Muskulatur als in Bikini.</p><b>High Heels · Front-/Rückenansicht</b></article>
+          <article data-reveal><span>02</span><h3>Bikini / Bikini Shape</h3><p>Athletisch-feminin mit klarer Silhouette, guter Gluteus-Form und starker Bühnenpräsentation – ohne extreme Härte oder Muskelteilung.</p><b>High Heels · Präsentation zentral</b></article>
+          <article data-reveal><span>03</span><h3>Wellness</h3><p>Deutlich stärkerer Unterkörper mit ausgeprägten Oberschenkeln und Gluteus. Der Oberkörper bleibt im Verhältnis weniger dominant.</p><b>High Heels · Unterkörperfokus</b></article>
+          <article data-reveal><span>04</span><h3>Figure / Fitness Figur</h3><p>Mehr Schulter-, Rücken- und Beinmuskulatur, stärkere Athletik und Symmetrie. Härter als Bikini/Wellness, aber ohne extreme Striations.</p><b>High Heels · Vierteldrehungen</b></article>
+          <article data-reveal><span>05</span><h3>Women’s Physique</h3><p>Ausgeprägte Muskulatur, sichtbare Definition und Pflichtposen. Proportion, Muskelqualität und Bühnenroutine werden stärker gewichtet.</p><b>Barfuß · Pflichtposen &amp; Kür</b></article>
+          <article data-reveal><span>06</span><h3>Women’s Bodybuilding</h3><p>Die höchste Stufe der Muskelmasse und Kondition. Vor allem im NPC-System angeboten; nicht jede Show schreibt die Division aus.</p><b>Barfuß · maximale Muskelentwicklung</b></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section bbclass-division-guide bbclass-men">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-section-heading" data-reveal><p class="eyebrow">Männerklassen verstehen</p><h2>Silhouette, Klassik oder maximale Masse?</h2></div>
+        <div class="bbclass-guide-grid bbclass-guide-grid--men">
+          <article data-reveal><span>01</span><h3>Men’s Physique</h3><p>V-Form, schmale Taille, runde Schultern und ästhetischer Oberkörper. Boardshorts verdecken die Oberschenkel; klassische Bodybuilding-Masse ist nicht das Ziel.</p><b>Boardshorts · Front-/Rückenansicht</b></article>
+          <article data-reveal><span>02</span><h3>Classic Physique</h3><p>Klassische Linien, Vakuum, Proportionen und ästhetische Posen – mit mehr zulässiger Masse als Classic Bodybuilding bei DBFV und meist deutlich mehr als Men’s Physique.</p><b>Größen-Gewichts-Limit · Classic Posing</b></article>
+          <article data-reveal><span>03</span><h3>Classic Bodybuilding</h3><p>DBFV-spezifische Classic-Klasse mit engerem Gewichtslimit als Classic Physique. Gesamtentwicklung und Bodybuilding-Pflichtposen bleiben zentral.</p><b>Engeres Limit · Pflichtposen</b></article>
+          <article data-reveal><span>04</span><h3>Bodybuilding</h3><p>Maximale vollständige Muskelentwicklung, Symmetrie, Härte und Kondition. Je nach Verband Einteilung über Gewicht, Größe oder offene Klassen.</p><b>Kein Größen-Gewichts-Cap · Pflichtposen</b></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted bbcal-method bbclass-method">
+      <div class="section-shell bbcal-method__grid">
+        <div data-reveal><p class="eyebrow">So triffst du die Entscheidung</p><h2>Vier Checks vor<br>der Anmeldung.</h2></div>
+        <div class="bbcal-method__copy" data-reveal><ol class="bbclass-steps"><li><span>01</span><p><strong>Verband und konkrete Show wählen.</strong> Nicht jede Division läuft bei jeder Meisterschaft.</p></li><li><span>02</span><p><strong>Größe korrekt messen.</strong> Schon wenige Millimeter können beim NPC die nächste Stufe bedeuten.</p></li><li><span>03</span><p><strong>Look ehrlich vergleichen.</strong> Muskelverteilung, Härte und Posing sind wichtiger als der Klassenname.</p></li><li><span>04</span><p><strong>Ausschreibung final prüfen.</strong> Altersklassen, Qualifikation, Lizenz, Doppelstarts und Check-in-Regeln können abweichen.</p></li></ol><a class="button button--secondary-light" href="/bodybuilding-wettkaempfe-2026/"><span>Wettkämpfe 2026 ansehen</span><span aria-hidden="true">→</span></a></div>
+      </div>
+    </section>
+
+    <section class="section bbcal-faq">
+      <div class="section-shell">${sectionHeader({ eyebrow: "Häufige Fragen", title: "Was vor der Klassenwahl wichtig ist.", text: "Die Regeln geben den Rahmen. Der passende Look entscheidet, ob du in der Klasse wirklich konkurrenzfähig bist." })}${faq(classFaq)}</div>
+    </section>
+
+    ${ctaSection({
+      eyebrow: "Wettkampfvorbereitung",
+      title: "Die richtige Klasse ist der Start. Die richtige Form ist der Weg.",
+      text: "Gemeinsam ordnen wir Verband, Klasse, Zeitplan, Training, Ernährung und Posing so ein, dass deine Vorbereitung ein klares Ziel bekommt.",
+      primary: { label: "Klassencheck anfragen", href: contactHref("premium-training") },
+      secondary: { label: "Wettkampfkalender 2026", href: "/bodybuilding-wettkaempfe-2026/" }
+    })}
+  `;
+
+  return layout({
+    path: "/bodybuilding-klassen-gewichtslimits/",
+    title: "Bodybuilding-Klassen &amp; Gewichtslimits: NPC, DBFV, NAC",
+    description: "Bodybuilding-Klassen und Gewichtslimits im Vergleich: NPC Worldwide, DBFV e.V. und NAC Germany. Frauen- und Männerklassen, Anforderungen und Limit-Check.",
+    keywords: ["Bodybuilding Klassen", "Bodybuilding Gewichtslimits", "NPC Classic Physique Gewichtslimit", "DBFV Klassen", "NAC Germany Klassen", "Bikini Wellness Figure Unterschied", "Classic Physique Gewicht Größe"],
+    bodyClass: "page-premium page-bodybuilding-calendar page-bodybuilding-classes",
+    pageName: "Bodybuilding-Klassen und Gewichtslimits",
+    pageType: "Article",
+    dateModified: "2026-08-11",
+    socialImage: "/assets/images/dominik-stage-suit-social.jpg",
+    socialImageAlt: "Bodybuilding-Klassen und Gewichtslimits im Verbandsvergleich",
+    extraStructuredData: [faqSchema("/bodybuilding-klassen-gewichtslimits/", classFaq)],
     content
   });
 }
@@ -6855,7 +7175,7 @@ function sportSpotFinderPage() {
 export const pages = [
   { route: "/", render: homePage, lastModified: "2026-08-11" },
   { route: "/app/", render: appPage },
-  { route: "/personal-training-kosten-nuernberg/", render: personalTrainingCostPage },
+  { route: "/personal-training-kosten-nuernberg/", render: personalTrainingCostPage, lastModified: "2026-08-11" },
   { route: "/personal-trainer-nürnberg/", render: personalCoachingPage, lastModified: "2026-08-11" },
   { route: "/gesundheitstag-nuernberg/", render: gesundheitstagNuernbergPage },
   { route: "/koerperanalyse-nuernberg/", render: koerperanalyseNuernbergPage },
@@ -6863,6 +7183,7 @@ export const pages = [
   { route: "/events/", render: eventsPage },
   { route: "/partner/", render: partnerPage },
   { route: "/bodybuilding-wettkaempfe-2026/", render: bodybuildingCalendarPage, lastModified: "2026-08-10" },
+  { route: "/bodybuilding-klassen-gewichtslimits/", render: bodybuildingClassesPage, lastModified: "2026-08-11" },
   { route: "/boxen-wettkaempfe-2026/", render: boxingCalendarPage },
   { route: "/triathlon-kalender-2026/", render: triathlonCalendarPage },
   { route: "/laufkalender-2026/", render: runningCalendarPage },

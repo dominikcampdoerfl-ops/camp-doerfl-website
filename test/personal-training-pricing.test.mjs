@@ -24,6 +24,21 @@ test("the pricing page lists every current Personal Training price", () => {
   assert.match(markup, /monatlich/);
 });
 
+test("the pricing page answers commercial search intent and supports a confident decision", () => {
+  const markup = renderPage("/personal-training-kosten-nuernberg/");
+
+  assert.match(markup, /Personal Trainer Nürnberg: Preise & Kosten/);
+  assert.match(markup, /Welches Personal-Training-Modell passt zu dir/);
+  assert.match(markup, /80 € pro Session/);
+  assert.match(markup, /Wie teuer ist ein Personal Trainer in Nürnberg/);
+  assert.match(markup, /Was kostet Personal Training pro Stunde/);
+  assert.match(markup, /OfferCatalog/);
+  assert.match(markup, /dateModified/);
+  assert.match(markup, /34 Google-Bewertungen/);
+  assert.match(markup, /href="\/erfolge-im-team\/"/);
+  assert.match(markup, /href="\/koerperanalyse-nuernberg\/"/);
+});
+
 test("pricing is linked from Personal Training Nürnberg and every footer", () => {
   const pricingHref = 'href="/personal-training-kosten-nuernberg/"';
   const trainingMarkup = renderPage("/personal-trainer-nürnberg/");

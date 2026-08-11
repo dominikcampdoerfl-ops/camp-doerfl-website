@@ -784,6 +784,7 @@ const inquiryByPath = Object.freeze({
   "/": { topic: "", label: "Beratung anfragen" },
   "/personal-trainer-nürnberg/": { topic: "premium-training", label: "Training anfragen" },
   "/personal-training-kosten-nuernberg/": { topic: "premium-training", label: "Training anfragen" },
+  "/bodybuilding-coaching-wettkampfvorbereitung/": { topic: "bodybuilding-coaching", label: "Coaching anfragen" },
   "/koerperanalyse-nuernberg/": { topic: "koerperanalyse", label: "Analyse anfragen" },
   "/executive-performance/": { topic: "executive-performance", label: "Platz anfragen" },
   "/firmenfitness/": { topic: "firmenfitness", label: "Firmenfitness anfragen" },
@@ -917,7 +918,9 @@ function footer() {
     { label: "Executive Performance", href: "/executive-performance/" },
     { label: "Über Dominik", href: "/ueber-dominik/" },
     { label: "Erfolge im Team", href: "/erfolge-im-team/" },
+    { label: "Bodybuilding Coaching", href: "/bodybuilding-coaching-wettkampfvorbereitung/" },
     { label: "Bodybuilding Wettkämpfe 2026", href: "/bodybuilding-wettkaempfe-2026/" },
+    { label: "Bodybuilding Klassen & Gewichtslimits", href: "/bodybuilding-klassen-gewichtslimits/" },
     { label: "Boxen Wettkämpfe 2026", href: "/boxen-wettkaempfe-2026/" },
     { label: "Triathlon Kalender 2026", href: "/triathlon-kalender-2026/" },
     { label: "Laufkalender 2026", href: "/laufkalender-2026/" },
@@ -1207,7 +1210,7 @@ export function layout({
 	    <link rel="icon" href="${brandLogoPath}">
 	    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/camp-doerfl-logo.png">
 	    <link rel="stylesheet" href="/assets/styles.css?v=20260804-2">
-	    <link rel="stylesheet" href="/assets/mobile-overrides.css?v=20260811-1">
+	    <link rel="stylesheet" href="/assets/mobile-overrides.css?v=20260811-2">
 	    <script type="application/ld+json">${JSON.stringify(structuredData)}</script>
   </head>
   <body${bodyClass || hasMobileInquiry ? ` class="${[bodyClass, hasMobileInquiry ? "has-mobile-inquiry-bar" : ""].filter(Boolean).join(" ")}"` : ""}>
