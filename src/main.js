@@ -1476,6 +1476,109 @@ const initBodybuildingWeeksOut = () => {
 
 initBodybuildingWeeksOut();
 
+const initBodybuildingClassCalculator = () => {
+  const calculator = document.querySelector("[data-class-calculator]");
+  if (!(calculator instanceof HTMLFormElement)) return;
+
+  const federation = calculator.elements.namedItem("federation");
+  const division = calculator.elements.namedItem("division");
+  const heightInput = calculator.elements.namedItem("height");
+  const weightInput = calculator.elements.namedItem("weight");
+  const result = calculator.querySelector("[data-class-result]");
+  if (!(federation instanceof HTMLSelectElement) || !(division instanceof HTMLSelectElement) || !(heightInput instanceof HTMLInputElement) || !(weightInput instanceof HTMLInputElement) || !(result instanceof HTMLOutputElement)) return;
+
+  const npcClassicLimits = [
+    [162.6, 75.7], [165.1, 78], [167.6, 80.3], [170.2, 82.6],
+    [172.7, 84.8], [175.3, 88], [177.8, 91.6], [180.3, 94.8],
+    [182.9, 98.4], [185.4, 101.6], [188, 105.2], [190.5, 108.4],
+    [193, 111.6], [195.6, 114.8], [198.1, 117.9], [200.7, 121.1],
+    [Infinity, 124.3]
+  ];
+
+  const dbfvBonus = (height, classicPhysique) => {
+    const bonuses = classicPhysique ? [4, 6, 8, 11, 13, 15, 17] : [0, 2, 4, 7, 9, 11, 13];
+    const index = height <= 168 ? 0 : height <= 171 ? 1 : height <= 175 ? 2 : height <= 180 ? 3 : height <= 188 ? 4 : height <= 196 ? 5 : 6;
+    return bonuses[index];
+  };
+
+  const render = () => {
+    const height = Number.parseFloat(heightInput.value);
+    const weight = Number.parseFloat(weightInput.value);
+    result.classList.remove("is-over");
+
+    if (!Number.isFinite(height) || !Number.isFinite(weight)) {
+      result.innerHTML = "<span>Dein Ergebnis</span><strong>Werte ergänzen</strong><p>Bitte Körpergröße und geplantes Bühnengewicht eingeben.</p>";
+      return;
+    }
+
+    let limit = null;
+    let label = "";
+    let note = "";
+
+    if (federation.value === "dbfv") {
+      if (division.value === "classic-physique" || division.value === "classic-bodybuilding") {
+        const isPhysique = division.value === "classic-physique";
+        limit = height - 100 + dbfvBonus(height, isPhysique);
+        label = `DBFV-Limit: ${limit.toFixed(1).replace(".0", "")} kg`;
+        note = isPhysique ? "Männer/Open Classic Physique." : "Männer/Open Classic Bodybuilding.";
+      } else if (division.value === "bodybuilding") {
+        const weightClass = weight <= 70 ? "bis 70 kg" : weight <= 80 ? "bis 80 kg" : weight <= 90 ? "bis 90 kg" : weight <= 100 ? "bis 100 kg" : "über 100 kg";
+        label = `Klasse ${weightClass}`;
+        note = "DBFV Open Bodybuilding wird nach tatsächlichem Waagegewicht eingeteilt.";
+      } else {
+        label = "Größenklasse, kein kg-Limit";
+        note = "DBFV Men’s Physique: bis 175 cm, bis 180 cm oder über 180 cm (Open).";
+      }
+    } else if (federation.value === "nac") {
+      if (division.value === "classic-physique") {
+        const bonus = height <= 170 ? 4 : height < 180 ? 6 : height <= 189 ? 8 : 10;
+        limit = height - 100 + bonus;
+        label = `NAC-Limit: ${limit.toFixed(1).replace(".0", "")} kg`;
+        note = "Classic Physique nach Größe minus 100 plus Toleranz. Grenzfälle bei exakt 180/189 cm bestätigen.";
+      } else if (division.value === "mens-physique") {
+        limit = height - 100 + 2;
+        label = `NAC-Limit: ${limit.toFixed(1).replace(".0", "")} kg`;
+        note = "Men’s Physique nach Körpergröße minus 100 plus 2 kg.";
+      } else if (division.value === "bodybuilding") {
+        label = height <= 175 ? "Body II · bis 175 cm" : "Body I · über 175 cm";
+        note = "NAC Bodybuilding wird nach Größe eingeteilt und hat kein Gewichtslimit.";
+      } else {
+        label = "Nicht als eigene Klasse geführt";
+        note = "NAC Germany führt Classic Physique, aber keine separate Classic-Bodybuilding-Division.";
+      }
+    } else {
+      if (division.value === "classic-physique") {
+        const bracket = npcClassicLimits.find(([maxHeight]) => height <= maxHeight);
+        limit = bracket?.[1] ?? 124.3;
+        label = `NPC-Limit: ${limit.toFixed(1).replace(".0", "")} kg`;
+        note = "Offizielle NPC/NPC Worldwide Classic-Physique-Tabelle; die Originalwerte basieren auf Zoll und Pfund.";
+      } else if (division.value === "classic-bodybuilding") {
+        label = "Nicht als eigene Klasse geführt";
+        note = "NPC Worldwide bietet Classic Physique, aber keine separate Classic-Bodybuilding-Division.";
+      } else {
+        label = "Showabhängige Einteilung";
+        note = division.value === "mens-physique" ? "Men’s Physique wird nach Körpergröße aufgeteilt, ohne kg-Limit." : "Bodybuilding-Klassen und Gewichtsstufen stehen in der konkreten Ausschreibung.";
+      }
+    }
+
+    if (limit !== null) {
+      const difference = limit - weight;
+      const fits = difference >= -0.05;
+      result.classList.toggle("is-over", !fits);
+      result.innerHTML = `<span>${fits ? "Innerhalb des Limits" : "Über dem Limit"}</span><strong>${label}</strong><p>${fits ? `${difference.toFixed(1).replace(".0", "")} kg Spielraum.` : `${Math.abs(difference).toFixed(1).replace(".0", "")} kg über dem rechnerischen Maximum.`} ${note}</p>`;
+      return;
+    }
+
+    result.innerHTML = `<span>Deine Einordnung</span><strong>${label}</strong><p>${note}</p>`;
+  };
+
+  calculator.addEventListener("input", render);
+  calculator.addEventListener("change", render);
+  render();
+};
+
+initBodybuildingClassCalculator();
+
 const initCoachSuccessYears = () => {
   const yearLinks = document.querySelectorAll('.coach-success__years a[href^="#coach-erfolge-"]');
   if (!yearLinks.length) return;
