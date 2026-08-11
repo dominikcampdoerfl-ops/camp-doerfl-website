@@ -1,4 +1,5 @@
 import { cp, mkdir, rm, writeFile, copyFile, readFile, readdir, stat } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { pages } from "./pages.mjs";
@@ -397,17 +398,18 @@ export async function buildSite() {
   if (await pathExists(publicDir)) {
     await copyDeployableAssets(publicDir, dist);
   }
-  await mkdir(join(dist, "assets"), { recursive: true });
-  await copyFile(join(root, "src", "styles.css"), join(dist, "assets", "styles.css"));
-  await copyFile(join(root, "src", "mobile-overrides.css"), join(dist, "assets", "mobile-overrides.css"));
-  await copyFile(join(root, "src", "main.js"), join(dist, "assets", "main.js"));
-  await copyFile(join(root, "src", "contact-topics.js"), join(dist, "assets", "contact-topics.js"));
+  const coreAssetNames = ["styles.css", "mobile-overrides.css", "design-contract.css", "main.js", "contact-topics.js"];
+  const coreAssetContents = await Promise.all(coreAssetNames.map((name) => readFile(join(root, "src", name))));
+  const assetVersion = `v-${createHash("sha256").update(Buffer.concat(coreAssetContents)).digest("hex").slice(0, 12)}`;
+  const versionedAssetDir = join(dist, "assets", assetVersion);
+  await mkdir(versionedAssetDir, { recursive: true });
+  await Promise.all(coreAssetNames.map((name) => copyFile(join(root, "src", name), join(versionedAssetDir, name))));
 
   const renderedPages = new Map();
   for (const page of pages) {
     const outputDir = page.route === "/" ? dist : join(dist, page.route.replace(/^\/|\/$/g, ""));
     await mkdir(outputDir, { recursive: true });
-    const html = page.render();
+    const html = page.render().replaceAll("__ASSET_VERSION__", assetVersion);
     renderedPages.set(page.route, html);
     await writeFile(join(outputDir, "index.html"), html, "utf8");
   }

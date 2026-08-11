@@ -1,0 +1,104 @@
+/*
+  CAMP DÖRFL DESIGN CONTRACT
+  This stylesheet is fingerprinted and always loaded after every visual layer.
+  Page sections declare their surface via data-color-scheme, so text contrast
+  cannot accidentally inherit from a hero or an unrelated legacy page rule.
+*/
+:root {
+  --cd-text-strong: #17130d;
+  --cd-text-body: #5d5549;
+  --cd-text-on-dark: #fffdf8;
+  --cd-text-on-dark-muted: #ded5c5;
+  --cd-surface-light: #fcfaf5;
+  --cd-surface-soft: #f4ede0;
+  --cd-surface-dark: #11100d;
+  --cd-line-light: rgba(23, 19, 13, 0.13);
+  --cd-line-dark: rgba(255, 255, 255, 0.16);
+  --cd-accent: #d7c394;
+  --cd-accent-strong: #8a6414;
+}
+
+html body [data-color-scheme="light"] {
+  color: var(--cd-text-body) !important;
+}
+
+html body [data-color-scheme="light"] :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--cd-text-strong) !important;
+}
+
+html body [data-color-scheme="light"] :is(p, li, td) {
+  color: var(--cd-text-body);
+}
+
+html body [data-color-scheme="light"] :is(a, strong, b, th) {
+  color: var(--cd-text-strong);
+}
+
+html body [data-color-scheme="dark"] {
+  color: var(--cd-text-on-dark) !important;
+}
+
+html body [data-color-scheme="dark"] :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--cd-text-on-dark) !important;
+}
+
+html body [data-color-scheme="dark"] p:not(.eyebrow),
+html body [data-color-scheme="dark"] li {
+  color: var(--cd-text-on-dark-muted);
+}
+
+html body [data-color-scheme="dark"] a {
+  color: var(--cd-text-on-dark);
+}
+
+html body [data-color-scheme] .eyebrow {
+  color: var(--cd-accent-strong);
+}
+
+html body [data-color-scheme="dark"] .eyebrow {
+  color: var(--cd-accent);
+}
+
+/* Explicit safeguards for the editorial templates used by all new guides. */
+html body.page-expert-article main .expert-article__layout :is(h2, h3),
+html body.page-editorial-policy main .legal-card :is(h2, h3) {
+  color: var(--cd-text-strong) !important;
+}
+
+html body.page-expert-article main .expert-article__layout :is(p, li, td),
+html body.page-editorial-policy main .legal-card p {
+  color: var(--cd-text-body) !important;
+}
+
+html body.page-expert-article main .expert-article__header :is(h1, h2, h3) {
+  color: var(--cd-text-on-dark) !important;
+}
+
+html body.page-expert-article main .expert-article__header :is(.expert-article__dek, .expert-article__meta) {
+  color: var(--cd-text-on-dark-muted) !important;
+}
+
+html body.page-expert-article main .answer-box h2,
+html body.page-expert-article main .source-panel h2,
+html body.page-expert-article main .expert-author h2 {
+  color: var(--cd-text-strong) !important;
+}
+
+/* A dark component nested inside a light article remains dark by contract. */
+html body.page-expert-article main .expert-article__rail :is(h2, h3),
+html body.page-expert-article main .expert-quote :is(h2, h3) {
+  color: var(--cd-text-on-dark) !important;
+}
+
+html body.page-expert-article main .expert-article__rail :is(p, li),
+html body.page-expert-article main .expert-quote :is(p, li) {
+  color: var(--cd-text-on-dark-muted) !important;
+}
+
+@media (forced-colors: active) {
+  html body [data-color-scheme] {
+    color: CanvasText !important;
+    background: Canvas !important;
+    border-color: CanvasText !important;
+  }
+}
