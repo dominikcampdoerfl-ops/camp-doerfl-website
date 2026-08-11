@@ -210,18 +210,15 @@ async function recordConversion(request, env) {
   }
 
   const clean = (value, max = 180) => typeof value === "string" ? value.slice(0, max) : "";
-  env.CONVERSIONS?.writeDataPoint({
-    indexes: [event],
-    blobs: [
-      event,
-      clean(payload.path),
-      clean(payload.target),
-      clean(payload.topic, 100),
-      clean(payload.source, 100),
-      clean(payload.device, 20)
-    ],
-    doubles: [1]
-  });
+  console.log(JSON.stringify({
+    type: "camp_conversion",
+    event,
+    path: clean(payload.path),
+    target: clean(payload.target),
+    topic: clean(payload.topic, 100),
+    source: clean(payload.source, 100),
+    device: clean(payload.device, 20)
+  }));
 
   return secureResponse(new Response(null, {
     status: 204,

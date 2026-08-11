@@ -8,6 +8,9 @@ directory = "dist/server/public"
 binding = "ASSETS"
 run_worker_first = true
 
-[[analytics_engine_datasets]]
-binding = "CONVERSIONS"
-dataset = "camp_doerfl_conversions"
+[observability]
+enabled = true
+
+[observability.logs]
+invocation_logs = false
+head_sampling_rate = 1
