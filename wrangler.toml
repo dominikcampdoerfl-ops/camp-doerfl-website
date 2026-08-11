@@ -7,3 +7,7 @@ workers_dev = true
 directory = "dist/server/public"
 binding = "ASSETS"
 run_worker_first = true
+
+[[analytics_engine_datasets]]
+binding = "CONVERSIONS"
+dataset = "camp_doerfl_conversions"
