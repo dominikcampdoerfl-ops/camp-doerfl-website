@@ -451,7 +451,6 @@ const trackAiReferral = () => {
 };
 
 trackAiReferral();
-
 document.addEventListener("click", (event) => {
   const link = event.target instanceof Element ? event.target.closest("a") : null;
   if (!(link instanceof HTMLAnchorElement)) return;
