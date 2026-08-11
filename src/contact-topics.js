@@ -5,6 +5,11 @@ export const contactTopics = Object.freeze([
     aliases: Object.freeze(["premium-personal-training", "personal-training", "personal-coaching"])
   }),
   Object.freeze({
+    key: "koerperanalyse",
+    label: "Körperanalyse & InBody",
+    aliases: Object.freeze(["körperanalyse", "inbody", "bia-messung", "koerperanalyse-nuernberg"])
+  }),
+  Object.freeze({
     key: "executive-performance",
     label: "Executive Performance",
     aliases: Object.freeze(["executive", "executive-coaching", "performance-coaching"])

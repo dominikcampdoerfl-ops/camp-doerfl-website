@@ -55,7 +55,7 @@ test("the contact form renders every configured topic exactly once", () => {
 test("all five service pages emit their canonical preselection URL", () => {
   const pageTopics = {
     "/app/": "app",
-    "/personal-coaching/": "premium-training",
+    "/personal-trainer-nürnberg/": "premium-training",
     "/firmenfitness/": "firmenfitness",
     "/events/": "events",
     "/executive-performance/": "executive-performance"
