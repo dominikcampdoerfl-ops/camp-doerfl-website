@@ -189,6 +189,49 @@ function corporateModuleShowcase(items) {
   `;
 }
 
+function corporateOfferShowcase(items) {
+  const [featured, ...supporting] = items;
+  const points = (item) => `
+    <ul class="corporate-offer-card__points" aria-label="${item.detail} Leistungen">
+      ${item.points.map((point) => `<li>${point}</li>`).join("")}
+    </ul>`;
+
+  return `
+    <div class="corporate-offer-showcase" aria-label="Drei Firmenfitness-Angebote">
+      <article class="corporate-offer-card corporate-offer-card--featured" data-reveal>
+        <figure class="corporate-offer-card__media">
+          <img src="${featured.image}" alt="${featured.alt}" style="object-position:${featured.imagePosition || "center"}"${imageLoadingAttributes()}>
+          <span class="corporate-offer-card__media-label">${featured.detail}</span>
+        </figure>
+        <div class="corporate-offer-card__body">
+          <div class="corporate-offer-card__meta"><span>${featured.number}</span><small>Firmenfitness-Angebot</small></div>
+          <h3>${featured.shortTitle || featured.title}</h3>
+          <p>${featured.text}</p>
+          ${points(featured)}
+        </div>
+      </article>
+      <div class="corporate-offer-showcase__stack">
+        ${supporting
+          .map(
+            (item) => `
+              <article class="corporate-offer-card corporate-offer-card--compact" data-reveal>
+                <figure class="corporate-offer-card__media">
+                  <img src="${item.image}" alt="${item.alt}" style="object-position:${item.imagePosition || "center"}"${imageLoadingAttributes()}>
+                  <span class="corporate-offer-card__media-label">${item.detail}</span>
+                </figure>
+                <div class="corporate-offer-card__body">
+                  <div class="corporate-offer-card__meta"><span>${item.number}</span><small>Firmenfitness-Angebot</small></div>
+                  <h3>${item.shortTitle || item.title}</h3>
+                  <p>${item.text}</p>
+                  ${points(item)}
+                </div>
+              </article>`
+          )
+          .join("")}
+      </div>
+    </div>`;
+}
+
 function corporateOutcomeShowcase(items) {
   return `
     <div class="corporate-outcome-stage" aria-label="Wirkung von Firmenfitness">
@@ -580,6 +623,7 @@ const corporateModuleCards = [
     number: "01",
     detail: "Gesundheitstag",
     title: "Gesundheitstag mit InBody und Beratung",
+    shortTitle: "Gesundheitstag mit InBody",
     text:
       "Mitarbeitende erhalten eine fundierte InBody-Körperanalyse und direkt im Anschluss eine persönliche Einordnung ihrer Ergebnisse. So wird Gesundheit sichtbar, verständlich und konkret handlungsfähig.",
     points: ["InBody-Körperanalyse", "persönliche Auswertung", "konkrete nächste Schritte"],
@@ -591,6 +635,7 @@ const corporateModuleCards = [
     number: "02",
     detail: "Vortrag",
     title: "Ernährung verstehen. Im Beruf dranbleiben.",
+    shortTitle: "Ernährung im Berufsalltag",
     text:
       "Der Vortrag ‚Warum Dranbleiben für unsere Gesundheit kein Nice-to-have ist‘ verbindet gesunde Ernährung mit realistischen Möglichkeiten, Sport in das jeweilige Berufsfeld zu integrieren.",
     points: ["berufsfeldbezogene Inhalte", "Ernährung ohne Dogmen", "Sport realistisch integrieren"],
@@ -602,6 +647,7 @@ const corporateModuleCards = [
     number: "03",
     detail: "Aktivierung",
     title: "Bewegungsimpuls und Team-Aktivierung",
+    shortTitle: "Bewegung &amp; Team-Aktivierung",
     text:
       "Ein aktives Format, das Bewegung direkt erlebbar macht und an Arbeitsumfeld, Zeitfenster und Gruppe angepasst wird. Eigenständig buchbar oder als Praxisbaustein zu Analyse und Vortrag.",
     points: ["direkt im Unternehmen", "an Belastung und Team angepasst", "einzeln oder kombinierbar"],
@@ -2388,7 +2434,7 @@ function firmenfitnessPage() {
             "Gesundheit wird dann relevant, wenn Mitarbeitende verstehen, was sie konkret tun können. Deshalb verbindet jedes Angebot fachliche Substanz mit einer Umsetzung, die zum jeweiligen Berufsfeld passt.",
           align: "center"
         })}
-        ${corporateModuleShowcase(corporateModuleCards)}
+        ${corporateOfferShowcase(corporateModuleCards)}
         <div class="corporate-offers-cta" data-reveal>
           <p><strong>Noch nicht sicher, welches Angebot passt?</strong> Die drei Formate können einzeln geplant oder als Gesundheitstag sinnvoll kombiniert werden.</p>
           <a class="button button--primary" href="${contactHref("firmenfitness")}"><span>Passendes Format anfragen</span><span aria-hidden="true">&rarr;</span></a>

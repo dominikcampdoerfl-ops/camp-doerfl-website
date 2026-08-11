@@ -54,9 +54,9 @@ test("service pages declare their real geographic coverage", () => {
 test("corporate fitness presents three concrete offers and verifiable experience", () => {
   const markup = pageMarkup("/firmenfitness/");
 
-  assert.match(markup, /Gesundheitstag mit InBody und Beratung/);
+  assert.match(markup, /Gesundheitstag mit InBody/);
   assert.match(markup, /Warum Dranbleiben für unsere Gesundheit kein Nice-to-have ist/);
-  assert.match(markup, /Bewegungsimpuls und Team-Aktivierung/);
+  assert.match(markup, /Bewegung &amp; Team-Aktivierung/);
   assert.match(markup, /Stadt Nürnberg/);
   assert.match(markup, /Neunkirchener Achsenfabrik/);
   assert.match(markup, /Caverion GmbH/);
