@@ -1,8 +1,13 @@
 import { navItems, site, sponsors } from "./data.mjs";
 import { contactTopics, resolveContactTopicKey } from "./contact-topics.js";
 
-const brandLogoPath = "/assets/images/camp-doerfl-logo.png";
-const compactBrandLogoPath = "/assets/images/camp-doerfl-logo-96.webp";
+// Ein Markenzeichen, zwei Dateien mit klar getrennter Aufgabe:
+// - brandLogoSourcePath ist die 2000er Originaldatei für strukturierte Daten,
+//   das Apple-Touch-Icon und den Presse-Download.
+// - brandLogoDisplayPath ist die 96er Anzeigegröße für alles Sichtbare im Layout
+//   (Kopfzeile, Navigation, Fußzeile) und für das Favicon.
+const brandLogoSourcePath = "/assets/images/camp-doerfl-logo.png";
+const brandLogoDisplayPath = "/assets/images/camp-doerfl-logo-96.webp";
 const defaultRobotsContent = "index,follow,max-image-preview:large";
 const defaultSocialImage = "/assets/images/home-hero-stadium-wide-social.jpg";
 const socialPlatformIcons = {
@@ -32,8 +37,14 @@ export function imageLoadingAttributes({ eager = false } = {}) {
   return eager ? ' loading="eager" decoding="async" fetchpriority="high"' : ' loading="lazy" decoding="async"';
 }
 
+// Die WhatsApp-Adresse wird aus site.phone abgeleitet, damit die Nummer nur an einer
+// Stelle gepflegt wird und Fußzeile und Kontaktseite nicht auseinanderlaufen können.
+export function whatsappNumber() {
+  return site.phone.replace(/\D/g, "");
+}
+
 function brandLogo() {
-  return `<span class="brand__mark"><img class="brand__logo" src="${compactBrandLogoPath}" width="96" height="96" alt=""></span>`;
+  return `<span class="brand__mark"><img class="brand__logo" src="${brandLogoDisplayPath}" width="96" height="96" alt=""></span>`;
 }
 
 function socialPlatformFromUrl(url = "") {
@@ -120,7 +131,8 @@ function breadcrumbSchema(path, pageName) {
     "/bodybuilding-klassen-gewichtslimits/": ["Bodybuilding Coaching", "/bodybuilding-coaching-wettkampfvorbereitung/"],
     "/personal-trainer-auswaehlen-nuernberg/": ["Personal Trainer Nürnberg", "/personal-trainer-nürnberg/"],
     "/bodybuilding-wettkampfvorbereitung-dauer/": ["Bodybuilding Coaching", "/bodybuilding-coaching-wettkampfvorbereitung/"],
-    "/bia-inbody-koerperanalyse-vergleich/": ["Körperanalyse Nürnberg", "/koerperanalyse-nuernberg/"]
+    "/bia-inbody-koerperanalyse-vergleich/": ["Körperanalyse Nürnberg", "/koerperanalyse-nuernberg/"],
+    "/keynote-speaker-nuernberg/": ["Events", "/events/"]
   };
   const parent = parentPages[path];
   const itemListElement = [{
@@ -950,6 +962,7 @@ function footer() {
   const footerNavItems = [
     ...navItems,
     { label: "Körperanalyse Nürnberg", href: "/koerperanalyse-nuernberg/" },
+    { label: "Keynote Speaker Nürnberg", href: "/keynote-speaker-nuernberg/" },
     { label: "Gesundheitstag Nürnberg", href: "/gesundheitstag-nuernberg/" },
     { label: "Personal Training Kosten", href: "/personal-training-kosten-nuernberg/" },
     { label: "Executive Performance", href: "/executive-performance/" },
@@ -991,6 +1004,8 @@ function footer() {
         <div class="footer-panel footer-contact-panel">
           <h2>Kontakt</h2>
           <a class="footer-email" href="mailto:${site.email}">${site.email}</a>
+          <a class="footer-phone" href="tel:${site.phone}">${site.phoneDisplay}</a>
+          <a class="footer-whatsapp" href="https://wa.me/${whatsappNumber()}" target="_blank" rel="noopener noreferrer">Direkt über WhatsApp schreiben</a>
           <span class="footer-location">${site.location}</span>
           ${socialIconLinks(socialProfileUrls(), { className: "social-link--chip social-link--footer" })}
         </div>
@@ -1113,7 +1128,7 @@ export function layout({
         name: site.name,
         alternateName: "Camp Dörfl – Personal Trainer Nürnberg",
         url: site.url,
-        logo: normalizedAbsoluteUrl(brandLogoPath),
+        logo: normalizedAbsoluteUrl(brandLogoSourcePath),
         image: resolvedSocialImage,
         email: site.email,
         telephone: site.phone,
@@ -1139,7 +1154,7 @@ export function layout({
         url: site.url,
         email: site.email,
         telephone: site.phone,
-        logo: normalizedAbsoluteUrl(brandLogoPath),
+        logo: normalizedAbsoluteUrl(brandLogoSourcePath),
         image: resolvedSocialImage,
         priceRange: "€€€",
         currenciesAccepted: "EUR",
@@ -1272,8 +1287,9 @@ export function layout({
     <meta name="twitter:image" content="${resolvedSocialImage}">
     <meta name="twitter:image:alt" content="${socialImageAlt}">
 	    <meta name="theme-color" content="#fbf7ef">
-	    <link rel="icon" href="${brandLogoPath}">
-	    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/camp-doerfl-logo.png">
+	    <link rel="icon" type="image/webp" href="${brandLogoDisplayPath}">
+	    <link rel="icon" type="image/png" href="${brandLogoSourcePath}">
+	    <link rel="apple-touch-icon" sizes="180x180" href="${brandLogoSourcePath}">
 	    <link rel="stylesheet" href="/assets/__ASSET_VERSION__/styles.css">
 	    <link rel="stylesheet" href="/assets/__ASSET_VERSION__/mobile-overrides.css">
 	    <link rel="stylesheet" href="/assets/__ASSET_VERSION__/design-contract.css">

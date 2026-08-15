@@ -29,7 +29,8 @@ import {
   stepGrid,
   summaryRows,
   timelineList,
-  transformationGrid
+  transformationGrid,
+  whatsappNumber
 } from "./components.mjs";
 import { dtuTriathlonEvents2026 } from "./triathlon-events-2026.mjs";
 import { runningEvents2026 } from "./running-events-2026.mjs";
@@ -1701,7 +1702,7 @@ function homePage() {
     <section class="ff-hero ff-hero--home-photo">
       <picture>
         <source media="(max-width: 900px)" srcset="/assets/images/home-hero-ironman-interview-mobile-480.webp 480w, /assets/images/home-hero-ironman-interview-mobile-720.webp 720w, /assets/images/home-hero-ironman-interview-mobile.webp 900w" sizes="100vw">
-        <img class="ff-hero__img" src="/assets/images/home-hero-ironman-interview.webp" srcset="/assets/images/home-hero-ironman-interview-960.webp 960w, /assets/images/home-hero-ironman-interview.webp 1920w" sizes="100vw" alt="Dominik Dörfl als Ironman-Finisher mit Medaille bei einem Interview im Stadion"${imageLoadingAttributes({ eager: true })}>
+        <img class="ff-hero__img" src="/assets/images/home-hero-ironman-interview.webp" srcset="/assets/images/home-hero-ironman-interview-960.webp 960w, /assets/images/home-hero-ironman-interview.webp 1920w" sizes="100vw" alt="Dominik Dörfl als Ironman-70.3-Finisher mit Medaille bei einem Interview im Stadion"${imageLoadingAttributes({ eager: true })}>
       </picture>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
@@ -1719,7 +1720,7 @@ function homePage() {
             <div><dt>Fitness Trainer</dt><dd>ausgebildet & zertifiziert</dd></div>
             <div><dt>Profi Athlet</dt><dd>Fitness &amp; Bodybuilding</dd></div>
             <div><dt>2×</dt><dd>Deutscher Meister</dd></div>
-            <div><dt>Ironman</dt><dd>Finisher</dd></div>
+            <div><dt>Ironman 70.3</dt><dd>Finisher</dd></div>
           </dl>
         </div>
       </div>
@@ -1874,9 +1875,16 @@ function homePage() {
             {
               detail: "Events · Bühne · Interviews",
               title: "Moderator Nürnberg",
-              text: "Professionelle Moderation für Business-, Sport- und Bühnenformate mit Präsenz und Timing.",
+              text: "Knapp 100 moderierte Events: professionelle Moderation für Business-, Sport- und Bühnenformate mit Präsenz und Timing.",
               href: "/events/",
               ctaLabel: "Moderation ansehen"
+            },
+            {
+              detail: "Keynote · Vortrag · Bühne",
+              title: "Keynote Speaker Nürnberg",
+              text: "Vorträge über Leistung unter Druck, Gesundheit im Unternehmen und Disziplin, die trägt.",
+              href: "/keynote-speaker-nuernberg/",
+              ctaLabel: "Keynote ansehen"
             }
           ],
           "feature-grid--search-paths"
@@ -1902,7 +1910,7 @@ function homePage() {
     pageName: "Camp Dörfl",
     dateModified: "2026-08-10",
     socialImage: "/assets/images/home-hero-ironman-interview-social.jpg",
-    socialImageAlt: "Dominik Dörfl als Ironman-Finisher im Stadion",
+    socialImageAlt: "Dominik Dörfl als Ironman-70.3-Finisher im Stadion",
     keywords: [
       "Camp Dörfl Nürnberg",
       "Performance System Nürnberg",
@@ -2916,6 +2924,7 @@ function eventsPage() {
             "Die wichtigsten Fragen zu Moderation, Eventformaten und dem professionellen Ablauf auf der Bühne."
         })}
         ${faq(eventFaq)}
+        <p class="expert-policy-link" data-reveal><a href="/keynote-speaker-nuernberg/">Keynote ansehen: Vorträge über Leistung, Gesundheit und Disziplin →</a></p>
       </div>
     </section>
 
@@ -3731,7 +3740,7 @@ function ueberDominikPage() {
           <p class="ff-hero__eyebrow" data-reveal>Die Person hinter Camp Dörfl</p>
           <h1 class="ff-hero__title" data-reveal>Dominik.<br class="ff-hero__break--desktop"> Dörfl.<br><span>Performance gelebt.</span></h1>
           <p class="ff-hero__lead" data-reveal>
-            Ex-Profi-Athlet, zweifacher Deutscher Meister, Ironman-Finisher, Coach von Top-Athleten und Unternehmer aus Nürnberg. Camp Dörfl ist die Summe dieser Erfahrung.
+            Ex-Profi-Athlet, zweifacher Deutscher Meister, Ironman-70.3-Finisher, Coach von Top-Athleten und Unternehmer aus Nürnberg. Camp Dörfl ist die Summe dieser Erfahrung.
           </p>
           <p class="ff-hero__support" data-reveal>
             Was hier vermittelt wird, ist nicht aus Büchern abgeleitet, sondern auf der Bühne, im Wettkampf und im Coaching-Alltag selbst durchlebt.
@@ -3743,7 +3752,7 @@ function ueberDominikPage() {
           <dl class="ff-hero__facts" data-reveal aria-label="Eckdaten zu Dominik Dörfl">
             <div><dt>2×</dt><dd>Deutscher Meister</dd></div>
             <div><dt>IFBB</dt><dd>Pro Bodybuilding</dd></div>
-            <div><dt>Ironman</dt><dd>70.3 Finisher</dd></div>
+            <div><dt>Ironman 70.3</dt><dd>Finisher</dd></div>
           </dl>
         </div>
         <div class="ff-hero__showcase ff-hero__showcase--photo" data-reveal>
@@ -3883,7 +3892,7 @@ function ueberDominikPage() {
     path: "/ueber-dominik/",
     title: "Über Dominik Dörfl | Camp Dörfl Nürnberg",
     description:
-      "Über Dominik Dörfl: Unternehmer, Ex-Profi-Athlet, Deutscher Meister, Ironman-Finisher und Coach aus Nürnberg – die Person und Erfahrung hinter Camp Dörfl.",
+      "Über Dominik Dörfl: Unternehmer, Ex-Profi-Athlet, Deutscher Meister, Ironman-70.3-Finisher und Coach aus Nürnberg – die Person und Erfahrung hinter Camp Dörfl.",
     keywords: ["Dominik Dörfl", "Camp Dörfl Gründer", "Ex-Profi Athlet Nürnberg", "Coach und Moderator Nürnberg"],
     bodyClass: "page-premium page-about",
     pageType: "AboutPage",
@@ -4572,6 +4581,12 @@ function accessibilityPage() {
   });
 }
 
+// Sichtbare Werbekennzeichnung für Affiliate- und Referral-Links. Der Hinweis
+// verlinkt auf die Seite, die Partnerlinks und Werbung im Detail erklärt.
+function advertisingNote(className = "ad-note", label = "Werbung") {
+  return `<a class="${className}" href="/werbung-partnerlinks/">${label}</a>`;
+}
+
 function partnerPage() {
   const renderPartnerBrandCard = ({
     name,
@@ -4677,6 +4692,7 @@ function partnerPage() {
                 <img src="/assets/images/partner-aeke-logo.png" alt=""${imageLoadingAttributes()}>
               </a>
             </div>
+            ${advertisingNote("ad-note ad-note--hero", "Werbung: Der AEKE-Link ist ein Partnerlink")}
           </div>
           <dl class="ff-hero__facts" data-reveal aria-label="Partner Schwerpunkte">
             <div><dt>Live</dt><dd>Events & Bühne</dd></div>
@@ -4718,6 +4734,7 @@ function partnerPage() {
               <img src="/assets/images/partner-aeke-logo.png" alt=""${imageLoadingAttributes()}>
             </span>
             <span class="premium-sponsor-card__copy">
+              <span class="ad-note ad-note--sponsor">Werbung</span>
               <strong>AEKE</strong>
               <span>Smarte Trainingshardware für präzise Bewegung und messbare Entwicklung.</span>
             </span>
@@ -4906,6 +4923,20 @@ function contactPage() {
               "Trag deine Daten und deine Nachricht ein. Der Versand läuft direkt aus der Website an dominik@campdoerfl.de.",
             align: "center"
           })}
+          <div class="contact-direct" data-reveal aria-label="Direkte Kontaktwege">
+            <a class="contact-direct__item" href="tel:${site.phone}">
+              <span class="contact-direct__label">Telefon</span>
+              <span class="contact-direct__value">${site.phoneDisplay}</span>
+            </a>
+            <a class="contact-direct__item" href="https://wa.me/${whatsappNumber()}" target="_blank" rel="noopener noreferrer">
+              <span class="contact-direct__label">WhatsApp</span>
+              <span class="contact-direct__value">Direkt schreiben</span>
+            </a>
+            <a class="contact-direct__item" href="mailto:${site.email}">
+              <span class="contact-direct__label">E-Mail</span>
+              <span class="contact-direct__value">${site.email}</span>
+            </a>
+          </div>
           <div class="contact-simple-wrap" data-reveal>
             ${contactForm()}
           </div>
@@ -5722,6 +5753,261 @@ function koerperanalyseNuernbergPage() {
         embedUrl: "https://www.youtube-nocookie.com/embed/rQ9YocgKVSc?autoplay=1&rel=0&modestbranding=1&playsinline=1",
         watchUrl: "https://www.youtube.com/watch?v=rQ9YocgKVSc"
       })
+    ],
+    content
+  });
+}
+
+function keynoteSpeakerNuernbergPage() {
+  const keynoteValue = [
+    {
+      detail: "Gelebte Praxis",
+      title: "Erfahrung statt Theoriefolien",
+      text:
+        "Die Inhalte kommen aus dem eigenen Weg als Profi-Athlet, Coach und Unternehmer. Publikum merkt schnell, ob jemand über Leistung spricht oder sie selbst durchlaufen hat."
+    },
+    {
+      detail: "Bühnensicherheit",
+      title: "Knapp 100 Events auf der Bühne",
+      text:
+        "Aus der Moderation von Business-, Sport- und Bühnenformaten kommt die Routine für Timing, Publikumsführung und den ruhigen Umgang mit dem, was live schiefgeht."
+    },
+    {
+      detail: "Anschluss",
+      title: "Auf euer Thema zugeschnitten",
+      text:
+        "Vorab wird geklärt, wer im Publikum sitzt und was danach anders sein soll. Die Keynote wird darauf zugeschnitten statt als fertiger Standardvortrag gehalten."
+    },
+    {
+      detail: "Wirkung danach",
+      title: "Mitnehmbare nächste Schritte",
+      text:
+        "Statt kurzfristiger Motivation bleiben konkrete Ansatzpunkte, die Zuhörende am nächsten Arbeitstag tatsächlich anwenden können."
+    }
+  ];
+
+  const keynoteTopics = [
+    {
+      title: "Leistung unter Druck",
+      text:
+        "Wie Wettkampfsport mit Belastung, Rückschlägen und Erwartungsdruck umgeht und was davon auf Führung, Projekte und Arbeitsalltag übertragbar ist."
+    },
+    {
+      title: "Gesundheit als Unternehmensfaktor",
+      text:
+        "Warum körperliche Leistungsfähigkeit kein privates Nebenthema ist, sondern Konzentration, Ausfalltage und Belastbarkeit im Team direkt beeinflusst."
+    },
+    {
+      title: "Disziplin, die trägt",
+      text:
+        "Was Motivation wirklich leistet, wo sie zuverlässig versagt und welche Strukturen Veränderung über Monate statt über zwei Wochen tragen."
+    }
+  ];
+
+  const keynoteSteps = [
+    {
+      step: "01",
+      title: "Anlass und Publikum klären",
+      text:
+        "Im Vorgespräch geht es um Anlass, Zusammensetzung des Publikums, Länge und die Botschaft, die hängenbleiben soll."
+    },
+    {
+      step: "02",
+      title: "Inhalt zuschneiden",
+      text:
+        "Themen, Beispiele und Sprache werden auf die Zielgruppe abgestimmt, damit der Vortrag zu eurer Veranstaltung passt und nicht daneben steht."
+    },
+    {
+      step: "03",
+      title: "Auftritt auf der Bühne",
+      text:
+        "Der Vortrag wird mit Präsenz, Timing und sicherer Publikumsführung gehalten, auf Wunsch mit anschließender Fragerunde oder Panel."
+    },
+    {
+      step: "04",
+      title: "Anschluss sichern",
+      text:
+        "Auf Wunsch folgt der nächste Schritt: Gesundheitstag, Firmenfitness oder eine begleitende Maßnahme, damit der Impuls nicht bei der Keynote endet."
+    }
+  ];
+
+  const keynoteFormats = [
+    {
+      title: "Keynote",
+      text:
+        "Der klassische Vortrag von etwa 30 bis 60 Minuten als inhaltlicher Höhepunkt einer Tagung, Kundenveranstaltung oder internen Konferenz."
+    },
+    {
+      title: "Impulsvortrag",
+      text:
+        "Kürzeres Format für Gesundheitstage, Teamevents oder Führungskreise, wenn ein klarer Denkanstoß gesetzt werden soll."
+    },
+    {
+      title: "Keynote und Moderation kombiniert",
+      text:
+        "Vortrag und Moderation aus einer Hand: inhaltlicher Einstieg am Anfang, danach Führung durch das Programm des Tages."
+    }
+  ];
+
+  const keynoteFaq = [
+    {
+      question: "Welche Themen deckt die Keynote ab?",
+      answer:
+        "Schwerpunkte sind Leistung unter Druck, Gesundheit als Unternehmensfaktor sowie Disziplin und Veränderung. Die Inhalte stammen aus Wettkampfsport, Coaching und unternehmerischer Praxis und werden auf das Publikum zugeschnitten."
+    },
+    {
+      question: "Wie lang ist ein Vortrag?",
+      answer:
+        "Üblich sind 30 bis 60 Minuten als Keynote. Für Gesundheitstage oder Teamformate sind auch kürzere Impulsvorträge möglich. Die Länge wird im Vorgespräch festgelegt."
+    },
+    {
+      question: "Wo finden die Auftritte statt?",
+      answer:
+        "Schwerpunkt sind Nürnberg, Fürth, Erlangen und die Metropolregion. Termine außerhalb der Region sind nach Absprache möglich."
+    },
+    {
+      question: "Lässt sich die Keynote mit Moderation verbinden?",
+      answer:
+        "Ja. Vortrag und Moderation aus einer Hand sind ein häufiges Format: inhaltlicher Einstieg zu Beginn, anschließend Führung durch Interviews, Panels und Programmpunkte."
+    },
+    {
+      question: "Für welche Anlässe eignet sich der Vortrag?",
+      answer:
+        "Für Tagungen, Kundenveranstaltungen, Führungskreise, Gesundheitstage, Jubiläen und interne Konferenzen, bei denen Gesundheit, Leistung oder Veränderung eine Rolle spielen."
+    },
+    {
+      question: "Wie läuft die Anfrage ab?",
+      answer:
+        "Nach der Anfrage mit Anlass, Termin, Ort und Publikum folgt ein kurzes Gespräch zur Einordnung. Danach kommt ein konkretes Angebot mit Format, Länge und Ablauf."
+    }
+  ];
+
+  const content = `
+    <section class="ff-hero ff-hero--photo ff-hero--events ff-hero--events-photo ff-hero--text-only">
+      <img class="ff-hero__img" src="/assets/images/events-hero-wide.webp" srcset="/assets/images/events-hero-wide-960.webp 960w, /assets/images/events-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl als Redner auf einer Bühne vor Publikum in Nürnberg"${imageLoadingAttributes({ eager: true })}>
+      <div class="ff-hero__scrim" aria-hidden="true"></div>
+      <div class="section-shell ff-hero__inner">
+        <p class="ff-hero__eyebrow" data-reveal>Keynote · Vortrag · Bühne · Nürnberg</p>
+        <h1 class="ff-hero__title" data-reveal>Keynote Speaker <br><span>in Nürnberg.</span></h1>
+        <p class="ff-hero__lead" data-reveal>
+          Vorträge über Leistung, Gesundheit und Veränderung von jemandem, der beides kennt: den Wettkampf auf der Bühne und die Verantwortung im Unternehmen.
+        </p>
+        <p class="ff-hero__support" data-reveal>
+          Aus knapp 100 moderierten Events, einer Karriere als Profi-Athlet und der täglichen Arbeit mit Menschen und Teams entsteht ein Vortrag, der trägt statt nur zu motivieren.
+        </p>
+        <div class="ff-hero__actions" data-reveal>
+          <a class="button button--primary" href="${contactHref("events")}"><span>Keynote anfragen</span><span aria-hidden="true">&rarr;</span></a>
+          <a class="button button--secondary-light" href="/events/"><span>Moderation ansehen</span><span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <dl class="ff-hero__facts" data-reveal aria-label="Keynote Speaker Nürnberg in Zahlen">
+          <div><dt>knapp 100</dt><dd>moderierte Events</dd></div>
+          <div><dt>2×</dt><dd>Deutscher Meister</dd></div>
+          <div><dt>Nürnberg</dt><dd>und Metropolregion</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Warum dieser Vortrag",
+          title: "Ein Redner, der die Strecke selbst gelaufen ist.",
+          text:
+            "Leistung, Rückschläge und Belastungsgrenzen lassen sich glaubwürdiger erklären, wenn man sie im Wettkampf, im Coaching und im eigenen Unternehmen erlebt hat.",
+          align: "center"
+        })}
+        ${featureGrid(keynoteValue, "feature-grid--coaching-flow")}
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section-shell editorial-stage">
+        <div class="editorial-stage__copy" data-reveal>
+          ${sectionHeader({
+            eyebrow: "Themen",
+            title: "Drei Schwerpunkte, die im Unternehmen ankommen.",
+            text:
+              "Die Themen lassen sich einzeln buchen oder kombinieren. Entscheidend ist, was euer Publikum nach dem Vortrag anders machen soll."
+          })}
+          ${summaryRows(keynoteTopics)}
+        </div>
+        <div class="editorial-stage__media" data-reveal>
+          <img src="/assets/images/dominik-moderator-mic.webp" alt="Dominik Dörfl mit Mikrofon während eines Vortrags"${imageLoadingAttributes()}>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Formate",
+          title: "Vom Impuls bis zum ganzen Bühnentag.",
+          text:
+            "Je nach Anlass reicht ein kurzer Denkanstoß oder es braucht den inhaltlichen Höhepunkt einer Veranstaltung. Beides ist möglich, auch zusammen mit der Moderation."
+        })}
+        ${summaryRows(keynoteFormats)}
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Ablauf",
+          title: "So entsteht euer Vortrag.",
+          text:
+            "Von der ersten Anfrage bis zum Anschluss nach der Veranstaltung bleibt der Weg kurz, persönlich und auf euer Ziel ausgerichtet."
+        })}
+        ${stepGrid(keynoteSteps)}
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "FAQ",
+          title: "Häufige Fragen zur Keynote in Nürnberg.",
+          text: "Das Wichtigste zu Themen, Länge, Region, Formaten und Ablauf einer Anfrage."
+        })}
+        ${faq(keynoteFaq)}
+        <p class="expert-policy-link" data-reveal><a href="/events/">Moderation und Bühnenformate ansehen →</a></p>
+      </div>
+    </section>
+
+    ${ctaSection({
+      eyebrow: "Keynote Speaker Nürnberg",
+      title: "Gebt eurer Veranstaltung einen Inhalt, der bleibt.",
+      text:
+        "Schildert kurz Anlass, Termin, Ort und Publikum. Danach folgt eine ehrliche Einschätzung, ob und in welchem Format der Vortrag passt.",
+      primary: { label: "Keynote anfragen", href: contactHref("events") },
+      secondary: { label: "Firmenfitness ansehen", href: "/firmenfitness/" }
+    })}
+  `;
+
+  return layout({
+    path: "/keynote-speaker-nuernberg/",
+    title: "Keynote Speaker Nürnberg | Vortrag über Leistung & Gesundheit | Camp Dörfl",
+    description:
+      "Keynote Speaker in Nürnberg: Vorträge über Leistung unter Druck, Gesundheit im Unternehmen und Disziplin – von Profi-Athlet, Coach und Moderator Dominik Dörfl.",
+    keywords: [
+      "Keynote Speaker Nürnberg",
+      "Redner Nürnberg",
+      "Vortragsredner Nürnberg",
+      "Speaker Gesundheit Unternehmen",
+      "Motivationsredner Nürnberg",
+      "Keynote Leistung und Gesundheit"
+    ],
+    bodyClass: "page-premium page-events page-keynote",
+    socialImage: "/assets/images/events-hero-wide-social.jpg",
+    socialImageAlt: "Dominik Dörfl als Keynote Speaker auf einer Bühne in Nürnberg",
+    extraStructuredData: [
+      serviceSchema({
+        path: "/keynote-speaker-nuernberg/",
+        name: "Keynote Speaker Nürnberg – Camp Dörfl",
+        serviceType: "Keynote, Vortrag und Impulsvortrag",
+        description:
+          "Keynotes und Impulsvorträge in Nürnberg zu Leistung unter Druck, Gesundheit als Unternehmensfaktor sowie Disziplin und Veränderung."
+      }),
+      faqSchema("/keynote-speaker-nuernberg/", keynoteFaq)
     ],
     content
   });
@@ -7558,6 +7844,7 @@ export const pages = [
   { route: "/koerperanalyse-nuernberg/", render: koerperanalyseNuernbergPage },
   { route: "/firmenfitness/", render: firmenfitnessPage, lastModified: "2026-08-11" },
   { route: "/events/", render: eventsPage },
+  { route: "/keynote-speaker-nuernberg/", render: keynoteSpeakerNuernbergPage, lastModified: "2026-08-16" },
   { route: "/partner/", render: partnerPage },
   { route: "/bodybuilding-coaching-wettkampfvorbereitung/", render: bodybuildingCoachingPage, lastModified: "2026-08-11" },
   { route: "/bodybuilding-wettkaempfe-2026/", render: bodybuildingCalendarPage, lastModified: "2026-08-10" },

@@ -4495,6 +4495,21 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
   text-transform: uppercase;
 }
 
+/* Werbekennzeichnung auf der Sponsorenkarte: sachlich statt Auszeichnung, aber
+   klar lesbar. Braucht dieselbe Spezifität wie die Karte selbst, sonst gewinnt
+   die span-Regel weiter oben. */
+.page-partner .premium-sponsor-card__copy .ad-note--sponsor {
+  width: fit-content;
+  margin-bottom: 2px;
+  color: #4a443a !important;
+  font-size: .68rem;
+  font-weight: 900;
+  letter-spacing: .1em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
 .page-partner .premium-sponsor-card__action {
   grid-column: 1 / -1;
   display: inline-flex;
@@ -8474,6 +8489,26 @@ body.page-premium.page-firmenfitness main .corporate-outcome-stage .corporate-ou
   color: #f6f8fb !important;
   font-size: clamp(0.9rem, 1vw, 1.02rem);
   font-weight: 760;
+}
+
+.page-premium .footer-phone {
+  display: inline-flex;
+  width: 100%;
+  min-height: 44px;
+  align-items: center;
+  color: #f6f8fb !important;
+  font-size: clamp(0.9rem, 1vw, 1.02rem);
+  font-weight: 760;
+}
+
+.page-premium .footer-whatsapp {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 44px;
+  align-items: center;
+  color: #f2dfa8 !important;
+  font-size: 0.86rem;
+  font-weight: 700;
 }
 
 .page-premium .footer-location {

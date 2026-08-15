@@ -2539,6 +2539,16 @@ p {
   color: #ffffff;
 }
 
+.footer-phone {
+  margin-top: 4px;
+  letter-spacing: 0.01em;
+}
+
+.footer-whatsapp {
+  margin-top: 2px;
+  font-size: 0.92rem;
+}
+
 .footer-link-button {
   padding: 0;
   border: 0;
@@ -8204,6 +8214,41 @@ p {
   font-weight: 900;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+/* Sichtbare Werbekennzeichnung für Affiliate-Links, verlinkt auf die Erklärseite. */
+.ad-note {
+  display: inline-block;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ad-note--card {
+  color: var(--color-ink);
+}
+
+.ad-note--hero {
+  margin-top: 12px;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* Auf der hellen Sponsorenkarte steht der Hinweis als Text, nicht als Link. */
+.ad-note--sponsor {
+  width: fit-content;
+  margin-bottom: 4px;
+  color: #5d5549;
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+}
+
+.ad-note--hero:hover,
+.ad-note--hero:focus-visible {
+  color: #f2dfa8;
 }
 
 .partner-brand-card__link {
@@ -14472,6 +14517,52 @@ body.consent-modal-open {
 .page-contact .contact-form-stage .section-header {
   max-width: 760px;
   margin-inline: auto;
+}
+
+.page-contact .contact-direct {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(196px, 1fr));
+  gap: 14px;
+  /* margin-inline: auto schaltet im Grid das Strecken ab, dadurch würde der Block
+     auf Inhaltsbreite wachsen und auf schmalen Displays überlaufen. width: 100%
+     bindet ihn wieder an die Spaltenbreite, min-width: 0 erlaubt das Schrumpfen. */
+  width: 100%;
+  min-width: 0;
+  max-width: 760px;
+  margin-inline: auto;
+}
+
+.page-contact .contact-direct__item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 16px 20px;
+  border: 1px solid var(--cd-line);
+  border-radius: 18px;
+  background: linear-gradient(160deg, rgba(18, 18, 22, 0.97), rgba(8, 8, 10, 0.97));
+  text-decoration: none;
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.page-contact .contact-direct__item:hover,
+.page-contact .contact-direct__item:focus-visible {
+  border-color: rgba(215, 195, 148, 0.42);
+  transform: translateY(-2px);
+}
+
+.page-contact .contact-direct__label {
+  color: #f2dfa8;
+  font-size: 0.72rem;
+  font-weight: 760;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.page-contact .contact-direct__value {
+  color: #f6f8fb;
+  font-size: 1rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
 }
 
 .page-contact .contact-simple-wrap {
