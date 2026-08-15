@@ -5774,7 +5774,7 @@ function keynoteSpeakerNuernbergPage() {
     },
     {
       detail: "Anschluss",
-      title: "Auf euer Thema zugeschnitten",
+      title: "Auf Ihr Thema zugeschnitten",
       text:
         "Vorab wird geklärt, wer im Publikum sitzt und was danach anders sein soll. Die Keynote wird darauf zugeschnitten statt als fertiger Standardvortrag gehalten."
     },
@@ -5815,7 +5815,7 @@ function keynoteSpeakerNuernbergPage() {
       step: "02",
       title: "Inhalt zuschneiden",
       text:
-        "Themen, Beispiele und Sprache werden auf die Zielgruppe abgestimmt, damit der Vortrag zu eurer Veranstaltung passt und nicht daneben steht."
+        "Themen, Beispiele und Sprache werden auf die Zielgruppe abgestimmt, damit der Vortrag zu Ihrer Veranstaltung passt und nicht daneben steht."
     },
     {
       step: "03",
@@ -5927,7 +5927,7 @@ function keynoteSpeakerNuernbergPage() {
             eyebrow: "Themen",
             title: "Drei Schwerpunkte, die im Unternehmen ankommen.",
             text:
-              "Die Themen lassen sich einzeln buchen oder kombinieren. Entscheidend ist, was euer Publikum nach dem Vortrag anders machen soll."
+              "Die Themen lassen sich einzeln buchen oder kombinieren. Entscheidend ist, was Ihr Publikum nach dem Vortrag anders machen soll."
           })}
           ${summaryRows(keynoteTopics)}
         </div>
@@ -5953,9 +5953,9 @@ function keynoteSpeakerNuernbergPage() {
       <div class="section-shell">
         ${sectionHeader({
           eyebrow: "Ablauf",
-          title: "So entsteht euer Vortrag.",
+          title: "So entsteht Ihr Vortrag.",
           text:
-            "Von der ersten Anfrage bis zum Anschluss nach der Veranstaltung bleibt der Weg kurz, persönlich und auf euer Ziel ausgerichtet."
+            "Von der ersten Anfrage bis zum Anschluss nach der Veranstaltung bleibt der Weg kurz, persönlich und auf Ihr Ziel ausgerichtet."
         })}
         ${stepGrid(keynoteSteps)}
       </div>
@@ -5975,9 +5975,9 @@ function keynoteSpeakerNuernbergPage() {
 
     ${ctaSection({
       eyebrow: "Keynote Speaker Nürnberg",
-      title: "Gebt eurer Veranstaltung einen Inhalt, der bleibt.",
+      title: "Geben Sie Ihrer Veranstaltung einen Inhalt, der bleibt.",
       text:
-        "Schildert kurz Anlass, Termin, Ort und Publikum. Danach folgt eine ehrliche Einschätzung, ob und in welchem Format der Vortrag passt.",
+        "Schildern Sie kurz Anlass, Termin, Ort und Publikum. Danach folgt eine ehrliche Einschätzung, ob und in welchem Format der Vortrag passt.",
       primary: { label: "Keynote anfragen", href: contactHref("events") },
       secondary: { label: "Firmenfitness ansehen", href: "/firmenfitness/" }
     })}
