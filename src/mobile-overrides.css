@@ -4495,6 +4495,23 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
   text-transform: uppercase;
 }
 
+/* Lange Abschnittsüberschriften brauchen Luft. Inter liegt nur aufrecht vor, die
+   Kursive rechnet der Browser aus der geraden Schrift. Zusammen mit Versalien,
+   Schriftstärke 800 und negativer Laufweite laufen mehrzeilige Überschriften
+   sonst ineinander. Zeilenabstand und Laufweite korrigieren das, ohne den
+   kursiven Auftritt der Marke aufzugeben. */
+body.page-premium.page-keynote main :is(.section-header h2, .cta-band h2) {
+  letter-spacing: 0;
+  line-height: 1.06;
+}
+
+@media (max-width: 700px) {
+  body.page-premium.page-keynote main :is(.section-header h2, .cta-band h2) {
+    letter-spacing: 0 !important;
+    line-height: 1.06 !important;
+  }
+}
+
 /* Werbekennzeichnung auf der Sponsorenkarte: sachlich statt Auszeichnung, aber
    klar lesbar. Braucht dieselbe Spezifität wie die Karte selbst, sonst gewinnt
    die span-Regel weiter oben. */
