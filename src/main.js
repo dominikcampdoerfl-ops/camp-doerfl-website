@@ -301,7 +301,7 @@ requestAnimationFrame(() => {
 });
 
 const counterItems = document.querySelectorAll(
-  ".ff-hero__facts dt, .ff-hero__facts dd, .hero__stat-value, .landing-stat__value, .stat-card__value, .bbcal-hero__stat strong, .spot-results-count strong, .coaching-success-proof__stats strong, .coach-success__totals strong, .ed-proof__item dt, .ed-google-reviews__score, .pricing-card__price, .start-card__price, .guenter-story-preview__facts strong, .guenter-story-hero__facts dt, .guenter-story-health__facts dt, .guenter-story-medals strong, .guenter-story-chart__bars b"
+  ".ff-hero__facts dt, .ff-hero__facts dd, .hero__stat-value, .landing-stat__value, .stat-card__value, .offer40-price__amount, .bbcal-hero__stat strong, .spot-results-count strong, .coaching-success-proof__stats strong, .coach-success__totals strong, .ed-proof__item dt, .ed-google-reviews__score, .pricing-card__price, .start-card__price, .guenter-story-preview__facts strong, .guenter-story-hero__facts dt, .guenter-story-health__facts dt, .guenter-story-medals strong, .guenter-story-chart__bars b"
 );
 
 const parseCounter = (element) => {

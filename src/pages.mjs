@@ -1845,6 +1845,13 @@ function homePage() {
         ${featureGrid(
           [
             {
+              detail: "12 Wochen · begleitet",
+              title: "Wieder fit werden",
+              text: "12-Wochen-Programm mit InBody-Messung, Ernährungs- und Trainingsplan, wöchentlichem Training und Endanalyse.",
+              href: "/personal-training-ab-40-nuernberg/",
+              ctaLabel: "Programm ansehen"
+            },
+            {
               detail: "1:1 Coaching",
               title: "Personal Trainer Nürnberg",
               text: "Individuelles Training, Ernährung und persönliche Führung für ambitionierte Ziele.",
@@ -2079,6 +2086,7 @@ function personalCoachingPage() {
         </p>
         <div class="ff-hero__actions" data-reveal>
           <a class="button button--primary" href="${contactHref("premium-training")}"><span>Beratung anfragen</span><span aria-hidden="true">&rarr;</span></a>
+          <a class="button button--secondary-light" href="/personal-training-ab-40-nuernberg/"><span>12-Wochen-Programm</span><span aria-hidden="true">&rarr;</span></a>
           <a class="button button--secondary-light" href="/koerperanalyse-nuernberg/"><span>Körperanalyse ansehen</span><span aria-hidden="true">&rarr;</span></a>
         </div>
         <dl class="ff-hero__facts" data-reveal aria-label="Leistungsbausteine im Premium Personal Training">
@@ -5758,6 +5766,383 @@ function koerperanalyseNuernbergPage() {
   });
 }
 
+function personalTrainingAb40NuernbergPage() {
+  const priceLines = [
+    { label: "InBody-Analyse mit Beratung", value: "39 €" },
+    { label: "Ernährungs- und Trainingsplan", value: "100 €" },
+    { label: "12 × Personal Training à 80 €", value: "960 €" }
+  ];
+
+  const whatChanged = [
+    {
+      detail: "Kraft",
+      title: "Der Körper reagiert träger",
+      text:
+        "Dasselbe Training bringt weniger als früher. Nicht weil zu wenig gewollt wird, sondern weil der Reiz präziser gesetzt werden muss."
+    },
+    {
+      detail: "Bauch",
+      title: "Fett sitzt plötzlich anders",
+      text:
+        "Es verteilt sich zur Mitte, obwohl sich am Essen nichts geändert hat. Genau das ist der Punkt: Der Stoffwechsel hat sich geändert, das Verhalten nicht."
+    },
+    {
+      detail: "Erholung",
+      title: "Zwei harte Tage rächen sich",
+      text:
+        "Regeneration wird zum Trainingsbestandteil. Wer das ignoriert, trainiert viel und kommt trotzdem nicht voran."
+    }
+  ];
+
+  const hormones = [
+    {
+      detail: "Testosteron",
+      title: "Rund 1 % weniger pro Jahr",
+      text:
+        "Ab etwa Mitte 30 sinkt der Testosteronspiegel beim Mann jährlich um ungefähr ein Prozent. Das ist ein normaler Verlauf, kein Defekt – aber er verschiebt still, wie der Körper auf Training und Essen reagiert."
+    },
+    {
+      detail: "Muskelaufbau",
+      title: "Eiweiß muss lauter anklopfen",
+      text:
+        "Die Muskulatur spricht schwächer auf Eiweiß an. Fachlich heißt das anabole Resistenz. Praktisch heißt es: mehr Eiweiß, gleichmäßiger über den Tag verteilt, statt einer großen Portion am Abend."
+    },
+    {
+      detail: "Schlaf",
+      title: "Zu wenig Schlaf senkt den Spiegel",
+      text:
+        "Kurze Nächte drücken den Testosteronwert messbar und heben Cortisol. Deshalb steht Schlaf in der Planung nicht als Nebensatz, sondern als Stellschraube."
+    }
+  ];
+
+  const programSteps = [
+    {
+      step: "01",
+      title: "InBody-Messung",
+      text:
+        "Muskelmasse, Körperfettanteil und Körperwasser werden gemessen. Die Ausgangslage steht damit schwarz auf weiß – nicht als Gewicht, sondern als Zusammensetzung."
+    },
+    {
+      step: "02",
+      title: "Ernährungs- und Trainingsplan",
+      text:
+        "Aus Messwerten und Ziel entsteht die Planung: Eiweißmenge, Trainingsreiz und Erholung abgestimmt auf Ihren Alltag, nicht aus einer Vorlage."
+    },
+    {
+      step: "03",
+      title: "Wöchentliches Personal Training",
+      text:
+        "Zwölf Wochen, eine feste Einheit pro Woche. Technik und Belastung werden direkt an der Übung korrigiert, nicht per Nachricht."
+    },
+    {
+      step: "04",
+      title: "Begleitung dazwischen",
+      text:
+        "Fragen kommen selten zum Termin. Über die gesamten zwölf Wochen erreichen Sie mich direkt."
+    },
+    {
+      step: "05",
+      title: "Endanalyse",
+      text:
+        "Dieselbe Messung wie am Anfang. Aufgebaute Muskelmasse und veränderte Fettmasse stehen nebeneinander – nachprüfbar statt gefühlt."
+    }
+  ];
+
+  const rightFor = [
+    {
+      title: "Passt, wenn …",
+      text:
+        "… Sie spürbar etwas verändern wollen und zwölf Wochen lang einen festen Termin pro Woche halten können. Studioerfahrung ist nicht nötig."
+    },
+    {
+      title: "Passt nicht, wenn …",
+      text:
+        "… Sie eine Diät ohne Training suchen oder die nächsten Wochen kaum planbar sind. Dann ist eine Einzelsession der ehrlichere Einstieg."
+    }
+  ];
+
+  const offerFaq = [
+    {
+      question: "Was kostet das Programm?",
+      answer:
+        "999 € für zwölf Wochen, also 333 € pro Monat. Einzeln gerechnet wären es 1.099 €: 39 € InBody-Analyse mit Beratung, 100 € Ernährungs- und Trainingsplan, 960 € für zwölf Personal-Training-Einheiten."
+    },
+    {
+      question: "Wie oft wird trainiert?",
+      answer:
+        "Einmal pro Woche gemeinsam, zwölf Wochen lang. Dazu kommen die Einheiten aus Ihrem Plan, die Sie selbst umsetzen. Umfang und Häufigkeit richten sich nach Ihrem Alltag."
+    },
+    {
+      question: "Ich habe seit Jahren nicht trainiert. Ist das ein Problem?",
+      answer:
+        "Nein. Der Einstieg richtet sich nach der Messung, nicht nach einem Standardplan. Wer lange pausiert hat, startet mit weniger Volumen und sauberer Technik – das bringt am Anfang ohnehin den größten Effekt."
+    },
+    {
+      question: "Was ist eine InBody-Messung?",
+      answer:
+        "Eine Bioelektrische Impedanzanalyse. Sie erfasst die Körperzusammensetzung: Muskelmasse, Körperfettanteil und Körperwasser. Start- und Endmessung laufen unter gleichen Bedingungen, damit die Werte vergleichbar bleiben."
+    },
+    {
+      question: "Muss ich meine Ernährung komplett umstellen?",
+      answer:
+        "Nein. Der Plan setzt an dem an, was Sie ohnehin essen, und verändert gezielt Eiweißmenge, Verteilung und Portionen. Was Sie nicht durchhalten, steht auch nicht im Plan."
+    },
+    {
+      question: "Wo findet das Training statt?",
+      answer:
+        "In Nürnberg. Das Programm richtet sich an Interessierte aus Nürnberg, Fürth, Erlangen und der Metropolregion. Den genauen Ort klären wir im Erstgespräch."
+    },
+    {
+      question: "Welche Ergebnisse sind realistisch?",
+      answer:
+        "Das hängt von Ausgangslage und Umsetzung ab, deshalb werden hier keine Kilogramm versprochen. Zugesichert wird eine saubere Messung am Anfang, eine am Ende und zwölf Wochen konsequente Begleitung dazwischen."
+    },
+    {
+      question: "Wie melde ich mich an?",
+      answer:
+        "Über das Kontaktformular, per Telefon oder WhatsApp. Danach folgt ein kurzes Gespräch, ob das Programm zu Ihrem Ziel passt."
+    }
+  ];
+
+  const content = `
+    <section class="ff-hero ff-hero--photo ff-hero--text-only offer40-hero">
+      <img class="ff-hero__img" src="/assets/images/premium-training-hero-wide.webp" srcset="/assets/images/premium-training-hero-wide-960.webp 960w, /assets/images/premium-training-hero-wide.webp 1774w" sizes="100vw" alt="Personal Training bei Camp Dörfl in Nürnberg"${imageLoadingAttributes({ eager: true })}>
+      <div class="ff-hero__scrim" aria-hidden="true"></div>
+      <div class="section-shell ff-hero__inner">
+        <p class="ff-hero__eyebrow" data-reveal>12-Wochen-Programm · Personal Training · Nürnberg</p>
+        <h1 class="ff-hero__title" data-reveal>Wieder fit werden.<br><span>In 12 Wochen.</span></h1>
+        <p class="ff-hero__lead" data-reveal>
+          Für alle, die im Job funktionieren, zu Hause gebraucht werden und beim Blick in den Spiegel merken: So war das nicht gedacht.
+        </p>
+        <p class="ff-hero__support" data-reveal>
+          Gemessene Ausgangslage, ein Plan, der zu Ihrer Woche passt, und zwölf Wochen persönliche Begleitung. Kein Abo, keine Bindung.
+        </p>
+        <div class="ff-hero__actions" data-reveal>
+          <a class="button button--primary" href="${contactHref("premium-training")}"><span>Erstgespräch anfragen</span><span aria-hidden="true">&rarr;</span></a>
+          <a class="button button--secondary-light" href="#programm"><span>Programm ansehen</span><span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <dl class="ff-hero__facts" data-reveal aria-label="Das Programm in Zahlen">
+          <div><dt>12</dt><dd>Wochen Begleitung</dd></div>
+          <div><dt>1×</dt><dd>pro Woche gemeinsam</dd></div>
+          <div><dt>999 €</dt><dd>statt 1.099 €</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Warum es nicht mehr läuft wie früher",
+          title: "Sie haben sich nicht verändert. Ihr Stoffwechsel schon.",
+          text:
+            "Dieselbe Ernährung, dasselbe Training, ein anderes Ergebnis. Das ist kein fehlender Wille, sondern eine veränderte Ausgangslage.",
+          align: "center"
+        })}
+        ${featureGrid(whatChanged, "feature-grid--coaching-flow")}
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section-shell editorial-stage">
+        <div class="editorial-stage__copy" data-reveal>
+          ${sectionHeader({
+            eyebrow: "Was im Körper passiert",
+            title: "Hormone verschieben die Regeln, nicht das Ziel.",
+            text:
+              "Wer versteht, was sich im Hintergrund ändert, hört auf, härter zu trainieren, und fängt an, richtig zu trainieren."
+          })}
+          ${summaryRows(hormones.map(({ title, text }) => ({ title, text })))}
+          <p class="offer40-disclaimer">Allgemeine Einordnung, keine medizinische Beratung. Beschwerden gehören ärztlich abgeklärt.</p>
+        </div>
+        <div class="editorial-stage__media" data-reveal>
+          <img src="/assets/images/dominik-personal-coaching-client.webp" srcset="/assets/images/dominik-personal-coaching-client-480.webp 480w, /assets/images/dominik-personal-coaching-client-768.webp 768w, /assets/images/dominik-personal-coaching-client.webp 1200w" sizes="(max-width: 900px) 100vw, 46vw" alt="Dominik Dörfl korrigiert eine Übungsausführung im Personal Training"${imageLoadingAttributes()}>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="programm">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Das Programm",
+          title: "Fünf Schritte über zwölf Wochen.",
+          text: "Am Anfang eine Messung, am Ende dieselbe Messung. Dazwischen die Arbeit."
+        })}
+        <ol class="offer40-timeline" aria-label="Ablauf des Programms in fünf Schritten">
+          ${programSteps
+            .map(
+              (item, index) => `
+                <li class="offer40-timeline__item" data-reveal style="--offer40-delay: ${index * 90}ms">
+                  <span class="offer40-timeline__marker" aria-hidden="true">${item.step}</span>
+                  <div class="offer40-timeline__body">
+                    <h3>${item.title}</h3>
+                    <p>${item.text}</p>
+                  </div>
+                </li>
+              `
+            )
+            .join("")}
+        </ol>
+      </div>
+    </section>
+
+    <section class="section section--muted" id="preis">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Preis",
+          title: "Als Paket günstiger als die Summe der Teile.",
+          text: "Jeder Baustein ist einzeln buchbar und einzeln bepreist.",
+          align: "center"
+        })}
+        <div class="offer40-price" data-reveal>
+          <div class="offer40-price__breakdown">
+            <h3 class="offer40-price__heading">Einzeln gerechnet</h3>
+            <dl class="offer40-price__lines">
+              ${priceLines
+                .map(
+                  (line) => `
+                    <div class="offer40-price__line">
+                      <dt>${line.label}</dt>
+                      <dd>${line.value}</dd>
+                    </div>
+                  `
+                )
+                .join("")}
+              <div class="offer40-price__line offer40-price__line--sum">
+                <dt>Summe</dt>
+                <dd>1.099 €</dd>
+              </div>
+            </dl>
+          </div>
+          <div class="offer40-price__offer">
+            <span class="offer40-price__tag">Als Programm gebucht</span>
+            <p class="offer40-price__was">
+              <span class="offer40-price__strike">1.099 €</span>
+              <span class="offer40-price__save">Sie sparen 100 €</span>
+            </p>
+            <p class="offer40-price__amount">999 €</p>
+            <p class="offer40-price__rate">für 12 Wochen &middot; 333 € pro Monat</p>
+            <ul class="offer40-price__includes">
+              <li>InBody-Messung zu Beginn und am Ende</li>
+              <li>Ernährungs- und Trainingsplan nach Messwerten</li>
+              <li>12 Personal-Training-Einheiten</li>
+              <li>Begleitung über die gesamten zwölf Wochen</li>
+            </ul>
+            <a class="button button--primary offer40-price__cta" href="${contactHref("premium-training")}"><span>Erstgespräch anfragen</span><span aria-hidden="true">&rarr;</span></a>
+            <p class="offer40-price__note">Keine Vertragsbindung, keine automatische Verlängerung.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Ergebnisse",
+          title: "Veränderung, die gemessen wurde.",
+          text: "Dieselbe Systematik: messen, planen, dranbleiben, nachmessen.",
+          align: "center"
+        })}
+        ${transformationGrid([
+          {
+            image: "/assets/images/transformation-front-progress.webp",
+            alt: "Vorher-Nachher-Vergleich eines Teilnehmers von vorne",
+            detail: "Körperzusammensetzung",
+            title: "Weniger Körperfett",
+            text: "Dokumentiert über wiederholte Messungen unter gleichen Bedingungen statt über Momentaufnahmen."
+          },
+          {
+            image: "/assets/images/transformation-side-progress.webp",
+            alt: "Vorher-Nachher-Vergleich eines Teilnehmers von der Seite",
+            detail: "Haltung und Form",
+            title: "Aufgebaute Muskulatur",
+            text: "Kraftaufbau verändert Haltung und Umfänge oft deutlicher als die Zahl auf der Waage."
+          }
+        ])}
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section-shell editorial-stage editorial-stage--reverse">
+        <div class="editorial-stage__copy" data-reveal>
+          ${sectionHeader({
+            eyebrow: "Ehrliche Einordnung",
+            title: "Für wen das Programm gedacht ist."
+          })}
+          ${summaryRows(rightFor)}
+          <p class="expert-policy-link"><a href="/personal-training-kosten-nuernberg/">Alle Preise für Personal Training ansehen →</a></p>
+        </div>
+        <div class="editorial-stage__media" data-reveal>
+          <img src="/assets/images/dominik-coaching-bikeerg.webp" srcset="/assets/images/dominik-coaching-bikeerg-480.webp 480w, /assets/images/dominik-coaching-bikeerg-768.webp 768w, /assets/images/dominik-coaching-bikeerg.webp 1200w" sizes="(max-width: 900px) 100vw, 46vw" alt="Trainingseinheit mit persönlicher Betreuung bei Camp Dörfl"${imageLoadingAttributes()}>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "FAQ",
+          title: "Was Interessierte vorher wissen wollen."
+        })}
+        ${faq(offerFaq)}
+      </div>
+    </section>
+
+    ${ctaSection({
+      eyebrow: "Erstgespräch",
+      title: "Die nächsten zwölf Wochen vergehen ohnehin.",
+      text:
+        "Schreiben Sie kurz, wo Sie stehen und was Sie erreichen wollen. Danach folgt eine ehrliche Einschätzung.",
+      primary: { label: "Erstgespräch anfragen", href: contactHref("premium-training") },
+      secondary: { label: "Körperanalyse ansehen", href: "/koerperanalyse-nuernberg/" }
+    })}
+  `;
+
+  return layout({
+    path: "/personal-training-ab-40-nuernberg/",
+    title: "Personal Training ab 40 in Nürnberg | 12-Wochen-Programm | Camp Dörfl",
+    description:
+      "12-Wochen-Programm in Nürnberg: InBody-Messung, Ernährungs- und Trainingsplan, wöchentliches Personal Training und Endanalyse. 999 € statt 1.099 €.",
+    keywords: [
+      "Personal Training ab 40 Nürnberg",
+      "Muskelaufbau ab 40",
+      "Abnehmen ab 40 Nürnberg",
+      "12 Wochen Programm Personal Training",
+      "Testosteron Training Ernährung",
+      "Körpertransformation Nürnberg",
+      "Personal Trainer Nürnberg Männer"
+    ],
+    bodyClass: "page-premium page-offer-40",
+    socialImage: "/assets/images/premium-training-hero-wide-social.jpg",
+    socialImageAlt: "12-Wochen-Programm mit Personal Training in Nürnberg",
+    extraStructuredData: [
+      {
+        "@type": "Service",
+        "@id": `${site.url}/personal-training-ab-40-nuernberg/#service`,
+        name: "12-Wochen-Programm – Camp Dörfl Nürnberg",
+        serviceType: "Personal Training, Körperanalyse und Ernährungsberatung",
+        description:
+          "Begleitetes 12-Wochen-Programm in Nürnberg mit InBody-Messung, individuellem Ernährungs- und Trainingsplan, wöchentlichem Personal Training und Endanalyse.",
+        provider: { "@id": `${site.url}/#business` },
+        areaServed: [
+          { "@type": "City", name: "Nürnberg" },
+          { "@type": "City", name: "Fürth" },
+          { "@type": "City", name: "Erlangen" }
+        ],
+        offers: {
+          "@type": "Offer",
+          price: "999",
+          priceCurrency: "EUR",
+          availability: "https://schema.org/InStock",
+          url: `${site.url}/personal-training-ab-40-nuernberg/`,
+          description: "12-Wochen-Programm als Paket, statt 1.099 € für die Einzelleistungen."
+        }
+      },
+      faqSchema("/personal-training-ab-40-nuernberg/", offerFaq)
+    ],
+    content
+  });
+}
+
 function keynoteSpeakerNuernbergPage() {
   const keynoteValue = [
     {
@@ -7848,6 +8233,7 @@ export const pages = [
   { route: "/firmenfitness/", render: firmenfitnessPage, lastModified: "2026-08-11" },
   { route: "/events/", render: eventsPage },
   { route: "/keynote-speaker-nuernberg/", render: keynoteSpeakerNuernbergPage, lastModified: "2026-08-16" },
+  { route: "/personal-training-ab-40-nuernberg/", render: personalTrainingAb40NuernbergPage, lastModified: "2026-08-16" },
   { route: "/partner/", render: partnerPage },
   { route: "/bodybuilding-coaching-wettkampfvorbereitung/", render: bodybuildingCoachingPage, lastModified: "2026-08-11" },
   { route: "/bodybuilding-wettkaempfe-2026/", render: bodybuildingCalendarPage, lastModified: "2026-08-10" },

@@ -132,7 +132,8 @@ function breadcrumbSchema(path, pageName) {
     "/personal-trainer-auswaehlen-nuernberg/": ["Personal Trainer Nürnberg", "/personal-trainer-nürnberg/"],
     "/bodybuilding-wettkampfvorbereitung-dauer/": ["Bodybuilding Coaching", "/bodybuilding-coaching-wettkampfvorbereitung/"],
     "/bia-inbody-koerperanalyse-vergleich/": ["Körperanalyse Nürnberg", "/koerperanalyse-nuernberg/"],
-    "/keynote-speaker-nuernberg/": ["Events", "/events/"]
+    "/keynote-speaker-nuernberg/": ["Events", "/events/"],
+    "/personal-training-ab-40-nuernberg/": ["Personal Trainer Nürnberg", "/personal-trainer-nürnberg/"]
   };
   const parent = parentPages[path];
   const itemListElement = [{
@@ -869,6 +870,7 @@ function navbar(activePath) {
     "/",
     "/personal-trainer-nürnberg/",
     "/firmenfitness/",
+    "/personal-training-ab-40-nuernberg/",
     "/events/",
     "/partner/"
   ];
@@ -890,8 +892,11 @@ function navbar(activePath) {
   const navSocials = socialProfileUrls();
   const mobileSocialMarkup = navSocials.length ? socialIconLinks(navSocials, { className: "social-link--chip social-link--nav-menu" }) : "";
   const mobileNavItems = [...primaryNavItems, ...(appItem ? [appItem] : []), ...(contextualContactItem ? [contextualContactItem] : [])];
+  // Kurzform nur für die Desktop-Leiste. Mit sechs Hauptpunkten reicht die Breite
+  // sonst nicht und die Anfragen-Schaltfläche läuft über den Rand. Im Kompaktmenü
+  // und in der Fußzeile steht weiterhin die vollständige Bezeichnung.
   const desktopLabels = {
-    "/personal-trainer-nürnberg/": "Personal Trainer Nürnberg"
+    "/personal-trainer-nürnberg/": "Personal Training"
   };
   const renderNavItem = (item) => `
     <a class="site-nav__entry${item.href === "/app/" || item.isContact ? " site-nav__entry--supplemental" : ""}${activePath === item.href ? " is-active" : ""}" href="${item.href}" ${activePath === item.href ? 'aria-current="page"' : ""}>

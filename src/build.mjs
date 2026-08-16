@@ -6,6 +6,15 @@ import { pages } from "./pages.mjs";
 import { site } from "./data.mjs";
 import { legacyRedirectRules } from "./redirects.mjs";
 import { securityHeaders } from "./security.mjs";
+import {
+  MEMBER_BASE_PATH,
+  MEMBER_BUILD_MANIFEST,
+  MEMBER_SOURCE_DIR,
+  isMemberAreaPath,
+  memberAssetCandidates,
+  memberCacheControl,
+  memberSecurityHeaders
+} from "./member-area.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");
@@ -18,22 +27,50 @@ const apexHost = ${JSON.stringify(site.domain)};
 const canonicalRoutes = ${JSON.stringify(canonicalRoutes, null, 2)};
 const legacyRedirectRules = ${JSON.stringify(legacyRedirectRules, null, 2)};
 const securityHeaders = ${JSON.stringify(securityHeaders, null, 2)};
+const memberSecurityHeaders = ${JSON.stringify(memberSecurityHeaders, null, 2)};
+
+// Aus src/member-area.mjs übernommen, damit Worker, Build und Vorschau-Server
+// dieselbe Pfadauflösung benutzen.
+const isMemberAreaPath = ${isMemberAreaPath.toString()};
+const memberAssetCandidates = ${memberAssetCandidates.toString()};
+const memberCacheControl = ${memberCacheControl.toString()};
 
 function secureResponse(response, requestUrl = "") {
   const secured = new Response(response.body, response);
+  const pathname = requestUrl ? new URL(requestUrl).pathname : "";
+  const isMemberArea = pathname ? isMemberAreaPath(pathname) : false;
 
-  for (const [name, value] of Object.entries(securityHeaders)) {
+  for (const [name, value] of Object.entries(isMemberArea ? memberSecurityHeaders : securityHeaders)) {
     secured.headers.set(name, value);
   }
 
-  const pathname = requestUrl ? new URL(requestUrl).pathname : "";
-  if (pathname.startsWith("/assets/")) {
+  if (isMemberArea) {
+    secured.headers.set("Cache-Control", memberCacheControl(pathname));
+  } else if (pathname.startsWith("/assets/")) {
     secured.headers.set("Cache-Control", "public, max-age=31536000, immutable");
   } else if (secured.headers.get("Content-Type")?.includes("text/html")) {
     secured.headers.set("Cache-Control", "public, max-age=0, must-revalidate");
   }
 
   return secured;
+}
+
+// Die Member Area ist der Web-Export der App: eigene Routen, eigene Dateinamen,
+// eigener Fallback. Sie läuft deshalb vor allen Website-Regeln und komplett an
+// den Weiterleitungen der Marketingseiten vorbei.
+async function serveMemberArea(request, env, pathname) {
+  for (const candidate of memberAssetCandidates(pathname)) {
+    const response = await env.ASSETS.fetch(assetRequest(request, candidate));
+
+    if (response.status !== 404) {
+      return secureResponse(response, request.url);
+    }
+  }
+
+  return secureResponse(new Response("Not found", {
+    status: 404,
+    headers: { "Content-Type": "text/plain; charset=utf-8" }
+  }), request.url);
 }
 
 function secureRedirect(location) {
@@ -230,6 +267,15 @@ async function recordConversion(request, env) {
 
 export default {
   async fetch(request, env) {
+    const memberUrl = new URL(request.url);
+
+    if (isMemberAreaPath(memberUrl.pathname)) {
+      // Auf die kanonische Domain führen, bevor die App lädt: Die Sitzung liegt
+      // im localStorage und gilt nur pro Herkunft — ein Wechsel von der
+      // Apex-Domain auf www würde die Anmeldung verlieren.
+      return canonicalHttpsRedirect(request) || serveMemberArea(request, env, memberUrl.pathname);
+    }
+
     const redirect = legacyContentRedirect(request) || canonicalPathRedirect(request) || canonicalHttpsRedirect(request);
 
     if (redirect) {
@@ -384,6 +430,55 @@ function collectVideoObjects(value, videos = []) {
   return videos;
 }
 
+// Der Web-Export der App liegt in `member-app/` und ist bewusst nicht im Git —
+// er entsteht bei jedem Release neu (App-Repo: `npm run export:web`).
+async function readMemberBuild() {
+  const manifestPath = join(root, MEMBER_SOURCE_DIR, MEMBER_BUILD_MANIFEST);
+
+  if (!(await pathExists(manifestPath))) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(await readFile(manifestPath, "utf8"));
+  } catch {
+    console.warn(`Member Area: ${MEMBER_BUILD_MANIFEST} ist unlesbar — Versionshinweis entfällt.`);
+    return null;
+  }
+}
+
+// Steht klein unter dem Login-Fenster, damit erkennbar ist, welcher App-Stand
+// gerade im Browser läuft.
+function memberBuildNote(memberBuild) {
+  if (!memberBuild?.version) {
+    return "";
+  }
+
+  const exportedAt = new Date(memberBuild.exportedAt ?? "");
+  const stand = Number.isNaN(exportedAt.valueOf())
+    ? ""
+    : ` &middot; Stand ${exportedAt.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" })}`;
+
+  return `<p class="member-login__build">Camp Dörfl App ${memberBuild.version}${stand}</p>`;
+}
+
+async function copyMemberArea() {
+  const sourceDir = join(root, MEMBER_SOURCE_DIR);
+
+  if (!(await pathExists(sourceDir))) {
+    console.warn(
+      `Member Area fehlt: Ordner "${MEMBER_SOURCE_DIR}/" nicht gefunden — ${MEMBER_BASE_PATH}/ wird nicht ausgeliefert.\n` +
+        "  Web-Build der App erzeugen: im App-Repo \"npm run export:web\" ausführen."
+    );
+    return 0;
+  }
+
+  const targetDir = join(dist, MEMBER_BASE_PATH.replace(/^\/+/, ""));
+  await copyDeployableAssets(sourceDir, targetDir);
+
+  return (await collectFiles(targetDir, () => true)).length;
+}
+
 export async function buildSite() {
   const hostingConfigPath = join(root, ".openai", "hosting.json");
   const hostingConfig = JSON.parse(await readFile(hostingConfigPath, "utf8"));
@@ -405,11 +500,17 @@ export async function buildSite() {
   await mkdir(versionedAssetDir, { recursive: true });
   await Promise.all(coreAssetNames.map((name) => copyFile(join(root, "src", name), join(versionedAssetDir, name))));
 
+  const memberBuild = await readMemberBuild();
+  const memberBuildNoteMarkup = memberBuildNote(memberBuild);
+
   const renderedPages = new Map();
   for (const page of pages) {
     const outputDir = page.route === "/" ? dist : join(dist, page.route.replace(/^\/|\/$/g, ""));
     await mkdir(outputDir, { recursive: true });
-    const html = page.render().replaceAll("__ASSET_VERSION__", assetVersion);
+    const html = page
+      .render()
+      .replaceAll("__ASSET_VERSION__", assetVersion)
+      .replaceAll("__MEMBER_APP_BUILD_NOTE__", memberBuildNoteMarkup);
     renderedPages.set(page.route, html);
     await writeFile(join(outputDir, "index.html"), html, "utf8");
   }
@@ -587,6 +688,10 @@ Canonical: ${site.url}/.well-known/security.txt
   const referencedAssets = await collectReferencedAssetPaths(dist);
   await copyReferencedAssets(referencedAssets);
 
+  // Erst nach der Asset-Suche: Der Web-Export der App bringt seine Dateien
+  // fertig referenziert mit und soll nicht gegen die Website-Assets geprüft werden.
+  const memberFileCount = await copyMemberArea();
+
   const serverDir = join(dist, "server");
   const serverPublicDir = join(serverDir, "public");
 
@@ -600,6 +705,13 @@ Canonical: ${site.url}/.well-known/security.txt
   await writeFile(join(serverDir, "index.js"), workerEntrypoint, "utf8");
 
   console.log(`Built ${pages.length} pages into ${dist}`);
+
+  if (memberFileCount > 0) {
+    console.log(
+      `Member Area: ${memberFileCount} Dateien unter ${MEMBER_BASE_PATH}/ ` +
+        `(Camp Dörfl App ${memberBuild?.version ?? "unbekannt"}, Commit ${memberBuild?.commit ?? "unbekannt"})`
+    );
+  }
 }
 
 await buildSite();

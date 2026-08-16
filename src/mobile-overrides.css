@@ -3109,6 +3109,7 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
   .summary-row h3,
   .pricing-card h3,
   .stat-card h3,
+  .transformation-card h3,
   .timeline__item h3,
   .app-system-card h3,
   .contact-intro-card h3,
@@ -12482,4 +12483,14 @@ html body.page-premium.page-bodybuilding-coaching main .bbc-inquiry {
   .bbc-flow__grid > * { min-height: 330px; }
   .bbc-authority figure { min-height: 480px; }
   .bbc-inquiry__form { padding: 24px 18px; border-radius: 23px; }
+}
+
+/* Mit sechs Hauptpunkten wird die Desktop-Leiste zwischen 980 und 1120 px zu eng
+   und die Anfragen-Schaltfläche lief über den Rand. Etwas weniger Innenabstand
+   in genau diesem Band löst das, ohne die Trefferfläche unter 44 px zu drücken. */
+@media (min-width: 980px) and (max-width: 1119px) {
+  body.page-premium .site-nav .site-nav__entry,
+  body.page-home-reboot .site-nav .site-nav__entry {
+    padding-inline: 4px !important;
+  }
 }

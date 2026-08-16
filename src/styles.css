@@ -15657,6 +15657,9 @@ body.consent-modal-open {
 .expert-card b,
 .external-proof-grid b { display: inline-block; margin-top: 1rem; color: var(--color-ink); }
 .expert-policy-link { margin-top: 2rem; font-weight: 800; }
+/* Reines Textmaß liegt bei 21 px und damit unter der 24-px-Mindestgröße
+   für Bedienelemente (WCAG 2.5.8). Etwas Innenabstand hebt die Trefferfläche. */
+.expert-policy-link a { display: inline-block; padding-block: 4px; }
 .expert-principles { grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); }
 .expert-principles > article { min-height: 0; }
 .expert-principles b { color: var(--accent-strong); font-size: 1.6rem; }
@@ -15744,4 +15747,282 @@ body.consent-modal-open {
 @media (max-width: 560px) {
   .expert-author { grid-template-columns: 1fr; }
   .expert-author img { width: 7rem; height: 8.5rem; }
+}
+
+/* ============================================================
+   12-Wochen-Programm ab 40 (/personal-training-ab-40-nuernberg/)
+   Helle Premium-Seite: Fließtext dunkel auf Beige, das Angebot
+   als dunkle Karte zum Kontrast. Alle Farben stehen explizit,
+   damit keine fremde Seitenregel sie umfärbt.
+   ============================================================ */
+
+.page-offer-40 .offer40-timeline {
+  position: relative;
+  display: grid;
+  gap: 18px;
+  margin: 0;
+  padding: 0 0 0 4px;
+  list-style: none;
+}
+
+/* Verbindungslinie, die beim Einblenden von oben nach unten wächst. */
+.page-offer-40 .offer40-timeline::before {
+  content: "";
+  position: absolute;
+  top: 26px;
+  bottom: 26px;
+  left: 30px;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(155, 116, 26, 0.42), rgba(155, 116, 26, 0.08));
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 900ms cubic-bezier(0.22, 0.61, 0.36, 1) 120ms;
+}
+
+.page-offer-40 .offer40-timeline:has(.is-visible)::before {
+  transform: scaleY(1);
+}
+
+.page-offer-40 .offer40-timeline__item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 18px;
+  align-items: start;
+  padding: 22px 24px;
+  border: 1px solid rgba(42, 33, 18, 0.12);
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255, 253, 248, 0.96), rgba(251, 248, 241, 0.9));
+  box-shadow: 0 20px 44px -34px rgba(20, 17, 12, 0.5);
+  transition-delay: var(--offer40-delay, 0ms);
+}
+
+.page-offer-40 .offer40-timeline__marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid rgba(155, 116, 26, 0.34);
+  background: linear-gradient(115deg, #fff1b8 0%, #d7c394 43%, #b68727 100%);
+  color: #4a3208;
+  font-size: 1.05rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+.page-offer-40 .offer40-timeline__body h3 {
+  margin: 4px 0 8px;
+  color: #19150e;
+}
+
+.page-offer-40 .offer40-timeline__body p {
+  margin: 0;
+  color: rgba(25, 21, 14, 0.78);
+}
+
+/* ---- Preisblock ---- */
+
+.page-offer-40 .offer40-price {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  align-items: start;
+  width: 100%;
+  min-width: 0;
+  max-width: 1040px;
+  margin-inline: auto;
+}
+
+@media (min-width: 900px) {
+  .page-offer-40 .offer40-price {
+    grid-template-columns: 1fr 1.05fr;
+    gap: 26px;
+  }
+}
+
+.page-offer-40 .offer40-price__breakdown {
+  padding: clamp(24px, 3vw, 34px);
+  border: 1px solid rgba(42, 33, 18, 0.12);
+  border-radius: 26px;
+  background: linear-gradient(180deg, rgba(255, 253, 248, 0.96), rgba(247, 242, 232, 0.9));
+}
+
+.page-offer-40 .offer40-price__heading {
+  margin: 0 0 18px;
+  color: #19150e;
+  font-size: 1.02rem;
+}
+
+.page-offer-40 .offer40-price__lines {
+  margin: 0;
+}
+
+.page-offer-40 .offer40-price__line {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(42, 33, 18, 0.1);
+}
+
+.page-offer-40 .offer40-price__line dt {
+  color: rgba(25, 21, 14, 0.82);
+}
+
+.page-offer-40 .offer40-price__line dd {
+  margin: 0;
+  color: #19150e;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.page-offer-40 .offer40-price__line--sum {
+  border-bottom: 0;
+  margin-top: 6px;
+  padding-top: 18px;
+  border-top: 2px solid rgba(155, 116, 26, 0.28);
+}
+
+.page-offer-40 .offer40-price__line--sum dt,
+.page-offer-40 .offer40-price__line--sum dd {
+  color: #19150e;
+  font-weight: 900;
+}
+
+.page-offer-40 .offer40-price__offer {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(26px, 3.2vw, 38px);
+  border: 1px solid rgba(215, 195, 148, 0.3);
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(215, 195, 148, 0.2), transparent 42%),
+    linear-gradient(160deg, #16161a 0%, #0b0b0d 62%, #131318 100%);
+  box-shadow: 0 44px 90px -50px rgba(0, 0, 0, 0.85);
+}
+
+.page-offer-40 .offer40-price__tag {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: #f2dfa8;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.page-offer-40 .offer40-price__was {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0 0 4px;
+  /* Erbt sonst die dunkle Schriftfarbe der hellen Seite in die dunkle Karte. */
+  color: rgba(255, 253, 248, 0.72);
+}
+
+.page-offer-40 .offer40-price__strike {
+  position: relative;
+  color: rgba(255, 253, 248, 0.62);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+/* Der Strich zieht sich beim Einblenden durch den alten Preis. */
+.page-offer-40 .offer40-price__strike::after {
+  content: "";
+  position: absolute;
+  top: 52%;
+  left: -2px;
+  right: -2px;
+  height: 2px;
+  background: #f2dfa8;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 620ms cubic-bezier(0.22, 0.61, 0.36, 1) 420ms;
+}
+
+.page-offer-40 .offer40-price.is-visible .offer40-price__strike::after {
+  transform: scaleX(1);
+}
+
+.page-offer-40 .offer40-price__save {
+  color: #f2dfa8;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.page-offer-40 .offer40-price__amount {
+  margin: 0;
+  color: #fffdf8;
+  font-size: clamp(3rem, 7vw, 4.4rem);
+  font-weight: 900;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.page-offer-40 .offer40-price__rate {
+  margin: 6px 0 22px;
+  color: rgba(255, 253, 248, 0.84);
+}
+
+.page-offer-40 .offer40-price__includes {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 26px;
+  padding: 0;
+  list-style: none;
+}
+
+.page-offer-40 .offer40-price__includes li {
+  position: relative;
+  padding-left: 28px;
+  color: rgba(255, 253, 248, 0.9);
+}
+
+.page-offer-40 .offer40-price__includes li::before {
+  content: "";
+  position: absolute;
+  top: 0.62em;
+  left: 4px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #d7c394;
+}
+
+.page-offer-40 .offer40-price__cta {
+  width: 100%;
+  justify-content: center;
+  min-height: 52px;
+}
+
+.page-offer-40 .offer40-price__note {
+  margin: 14px 0 0;
+  color: rgba(255, 253, 248, 0.72);
+  font-size: 0.86rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-offer-40 .offer40-timeline::before,
+  .page-offer-40 .offer40-price__strike::after {
+    transform: none;
+    transition: none;
+  }
+
+  .page-offer-40 .offer40-timeline__item {
+    transition-delay: 0ms;
+  }
+}
+
+.page-offer-40 .offer40-disclaimer {
+  margin-top: 18px;
+  color: rgba(25, 21, 14, 0.62);
+  font-size: 0.84rem;
 }

@@ -4,3 +4,8 @@ dist/
 
 # 200-MB-Video: über GitHub- (100 MB) und Cloudflare-Limit (25 MB), wird nirgends referenziert
 assets/videos/events-wir-bewegen-bayern.mp4
+
+# Web-Export der App (entsteht mit "npm run export:web" im App-Repo, ~70 MB)
+member-app/
+member-app.staging/
+member-app.previous/
