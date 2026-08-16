@@ -5996,7 +5996,10 @@ function keynoteSpeakerNuernbergPage() {
       "Motivationsredner Nürnberg",
       "Keynote Leistung und Gesundheit"
     ],
-    bodyClass: "page-premium page-events page-keynote",
+    // Bewusst ohne page-events: diese Klasse bringt Ausnahmen mit, die für die
+    // dunklen Bühnen-Panels der Events-Seite geschrieben sind und Überschriften in
+    // .editorial-stage weiß färben. Hier stehen sie auf hellem Grund.
+    bodyClass: "page-premium page-keynote",
     socialImage: "/assets/images/events-hero-wide-social.jpg",
     socialImageAlt: "Dominik Dörfl als Keynote Speaker auf einer Bühne in Nürnberg",
     extraStructuredData: [
