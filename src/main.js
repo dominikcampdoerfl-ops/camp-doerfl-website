@@ -1716,3 +1716,403 @@ const initCoachSuccessYears = () => {
 };
 
 initCoachSuccessYears();
+
+/* ---------------------------------------------------------------
+   Member Area — Login-Fenster und Übergabe an die App unter /member/
+
+   Der Ablauf ist derselbe wie im Login der App (app/login.tsx):
+   Anmeldung gegen /api/auth/login, bis zu drei Versuche mit großzügigem
+   Timeout (das Backend schläft nach Leerlauf ein und braucht bis zu
+   einer Minute zum Aufwachen), dieselben Meldungen, dieselbe Sitzung.
+   Die Sitzung wird unter demselben Schlüssel abgelegt, den die App im
+   Browser liest — deshalb startet sie direkt angemeldet.
+   --------------------------------------------------------------- */
+const MEMBER_ICON_EYE =
+  '<svg class="member-login__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+const MEMBER_ICON_EYE_OFF =
+  '<svg class="member-login__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.9 5.7A9.6 9.6 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a17 17 0 0 1-3.2 4"></path><path d="M6.6 7.6A16.9 16.9 0 0 0 2.5 12S6 18.5 12 18.5a9.4 9.4 0 0 0 3.9-.8"></path><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path><path d="m3.5 3.5 17 17"></path></svg>';
+
+const initMemberLogin = () => {
+  const root = document.querySelector("[data-member-login-root]");
+  const dialog = document.querySelector("[data-member-login-dialog]");
+  const backdrop = document.querySelector("[data-member-login-dismiss]");
+  const form = document.querySelector("[data-member-login-form]");
+  const triggers = document.querySelectorAll("[data-member-login]");
+
+  if (!root || !dialog || !form || !triggers.length) return;
+
+  const API_URL = "https://camp-doerfl-backend.onrender.com";
+  const SESSION_KEY = "camp-doerfl.auth-session";
+  const APP_ENTRY_PATH = "/member/explore";
+  const REQUEST_TIMEOUT_MS = 40000;
+  const RETRY_DELAY_MS = 2500;
+  const MAX_ATTEMPTS = 3;
+  const SLOW_HINT_DELAY_MS = 4200;
+
+  const emailInput = form.querySelector('input[name="email"]');
+  const passwordInput = form.querySelector('input[name="password"]');
+  const rememberInput = form.querySelector('input[name="remember"]');
+  const revealButton = form.querySelector("[data-member-login-reveal]");
+  const resetButton = form.querySelector("[data-member-login-reset]");
+  const submitButton = form.querySelector("[data-member-login-submit]");
+  const submitLabel = form.querySelector("[data-member-login-submit-label]");
+  const notice = form.querySelector("[data-member-login-notice]");
+  const errorBox = form.querySelector("[data-member-login-error]");
+  const errorTitle = form.querySelector("[data-member-login-error-title]");
+  const errorText = form.querySelector("[data-member-login-error-text]");
+  const closeButton = dialog.querySelector("[data-member-login-close]");
+
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  let isBusy = false;
+  let slowHintTimer = null;
+  let lastFocusedElement = null;
+
+  const storageArea = (area) => {
+    try {
+      return window[area] ?? null;
+    } catch {
+      return null;
+    }
+  };
+
+  const readStoredSession = () => {
+    const raw =
+      storageArea("localStorage")?.getItem(SESSION_KEY) ??
+      storageArea("sessionStorage")?.getItem(SESSION_KEY) ??
+      null;
+
+    if (!raw) return null;
+
+    try {
+      const session = JSON.parse(raw);
+      const isValid = session?.token && session?.expiresAt && session?.user?.email;
+
+      if (!isValid || new Date(session.expiresAt).getTime() <= Date.now()) {
+        storageArea("localStorage")?.removeItem(SESSION_KEY);
+        storageArea("sessionStorage")?.removeItem(SESSION_KEY);
+        return null;
+      }
+
+      return session;
+    } catch {
+      return null;
+    }
+  };
+
+  // "Eingeloggt bleiben" abgewählt heißt: nur solange dieser Tab offen ist.
+  // Genau so verhält sich die App im Browser (lib/auth.ts).
+  const storeSession = (session, remember) => {
+    const target = storageArea(remember ? "localStorage" : "sessionStorage");
+    const other = storageArea(remember ? "sessionStorage" : "localStorage");
+
+    other?.removeItem(SESSION_KEY);
+
+    if (!target) return false;
+
+    try {
+      target.setItem(SESSION_KEY, JSON.stringify(session));
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const setNotice = (message) => {
+    if (!notice) return;
+    notice.textContent = message || "";
+    notice.hidden = !message;
+  };
+
+  const setError = (message, title = "Login nicht möglich") => {
+    if (!errorBox) return;
+    if (errorTitle) errorTitle.textContent = title;
+    if (errorText) errorText.textContent = message || "";
+    errorBox.hidden = !message;
+  };
+
+  const setBusy = (busy, label) => {
+    isBusy = busy;
+    submitButton.disabled = busy;
+    submitButton.classList.toggle("is-busy", busy);
+    if (submitLabel) submitLabel.textContent = label || (busy ? "Wird geprüft..." : "Einloggen");
+  };
+
+  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  // Das Backend auf Render schläft nach etwa 15 Minuten Leerlauf ein. Der Ping
+  // beim Öffnen weckt es, während noch getippt wird — genau wie warmUpBackend()
+  // beim Start der App.
+  const warmUpBackend = () => {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 60000);
+    fetch(`${API_URL}/health`, { method: "GET", signal: controller.signal })
+      .catch(() => null)
+      .finally(() => clearTimeout(timeout));
+  };
+
+  class MemberApiError extends Error {
+    constructor(message, { statusCode, isConnectionError } = {}) {
+      super(message);
+      this.statusCode = statusCode;
+      this.isConnectionError = isConnectionError;
+    }
+  }
+
+  const requestOnce = async (path, body, timeoutMs) => {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+    let response;
+
+    try {
+      response = await fetch(`${API_URL}${path}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+        signal: controller.signal
+      });
+    } catch (error) {
+      const aborted = error instanceof Error && error.name.toLowerCase() === "aborterror";
+      throw new MemberApiError(
+        aborted
+          ? "Die Anfrage an den Memberbereich hat zu lange gedauert. Bitte versuche es gleich noch einmal."
+          : "Der Memberbereich ist gerade nicht erreichbar. Bitte versuche es später erneut.",
+        { statusCode: aborted ? 408 : undefined, isConnectionError: true }
+      );
+    } finally {
+      clearTimeout(timeout);
+    }
+
+    const result = await response.json().catch(() => null);
+
+    if (!response.ok || !result?.ok) {
+      throw new MemberApiError(result?.message || "Die Authentifizierung ist fehlgeschlagen.", {
+        statusCode: response.status,
+        isConnectionError: response.status >= 502 || response.status === 408 || response.status === 429
+      });
+    }
+
+    return result;
+  };
+
+  const shouldRetry = (error, attempt) =>
+    attempt < MAX_ATTEMPTS &&
+    error instanceof MemberApiError &&
+    Boolean(
+      error.isConnectionError ||
+        error.statusCode === 408 ||
+        error.statusCode === 429 ||
+        (error.statusCode && error.statusCode >= 500)
+    );
+
+  const requestApi = async (path, body, timeoutMs = REQUEST_TIMEOUT_MS) => {
+    let lastError = null;
+
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+      try {
+        return await requestOnce(path, body, timeoutMs);
+      } catch (error) {
+        if (!shouldRetry(error, attempt)) throw error;
+        lastError = error;
+        await wait(RETRY_DELAY_MS);
+      }
+    }
+
+    throw lastError;
+  };
+
+  const errorMessageFor = (error) => {
+    if (error instanceof MemberApiError && error.statusCode === 429) {
+      return "Zu viele Versuche in kurzer Zeit. Bitte warte einen Moment und probiere es dann erneut.";
+    }
+
+    if (error instanceof MemberApiError && error.statusCode && error.statusCode >= 500) {
+      return "Der Memberbereich ist gerade nicht erreichbar. Bitte kurz warten und erneut versuchen.";
+    }
+
+    if (error instanceof Error && error.message) {
+      return error.message;
+    }
+
+    return "Der Login ist gerade nicht möglich. Prüfe bitte deine Verbindung.";
+  };
+
+  const focusableElements = () =>
+    [...dialog.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])')]
+      .filter((element) => element.offsetParent !== null || element === document.activeElement);
+
+  const trapFocus = (event) => {
+    if (event.key !== "Tab") return;
+
+    const focusable = focusableElements();
+    if (!focusable.length) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
+
+  const handleKeydown = (event) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeDialog();
+      return;
+    }
+
+    trapFocus(event);
+  };
+
+  const openDialog = () => {
+    if (!root.hidden) return;
+
+    lastFocusedElement = document.activeElement;
+    root.hidden = false;
+    if (backdrop) backdrop.hidden = false;
+    dialog.hidden = false;
+    document.body.classList.add("member-login-open");
+    document.addEventListener("keydown", handleKeydown);
+    setNotice("");
+    setError("");
+    warmUpBackend();
+
+    window.requestAnimationFrame(() => {
+      (emailInput?.value ? passwordInput : emailInput)?.focus();
+    });
+  };
+
+  function closeDialog() {
+    if (root.hidden) return;
+
+    root.hidden = true;
+    if (backdrop) backdrop.hidden = true;
+    dialog.hidden = true;
+    document.body.classList.remove("member-login-open");
+    document.removeEventListener("keydown", handleKeydown);
+    window.clearTimeout(slowHintTimer);
+
+    if (lastFocusedElement instanceof HTMLElement) {
+      lastFocusedElement.focus();
+    }
+  }
+
+  const openMemberApp = (session) => {
+    setNotice(`Angemeldet als ${session.user.name || session.user.email}. Die App wird geöffnet ...`);
+    window.location.assign(APP_ENTRY_PATH);
+  };
+
+  triggers.forEach((trigger) => {
+    trigger.addEventListener("click", (event) => {
+      // Ohne JavaScript bleibt der Verweis auf /member/ — mit JavaScript
+      // übernimmt das Login-Fenster, und eine gültige Sitzung springt direkt
+      // in die App.
+      event.preventDefault();
+
+      const session = readStoredSession();
+
+      if (session) {
+        window.location.assign(APP_ENTRY_PATH);
+        return;
+      }
+
+      openDialog();
+    });
+  });
+
+  closeButton?.addEventListener("click", closeDialog);
+  backdrop?.addEventListener("click", closeDialog);
+
+  revealButton?.addEventListener("click", () => {
+    const revealed = passwordInput.type === "text";
+    passwordInput.type = revealed ? "password" : "text";
+    revealButton.setAttribute("aria-pressed", String(!revealed));
+    revealButton.setAttribute("aria-label", revealed ? "Passwort anzeigen" : "Passwort ausblenden");
+    revealButton.innerHTML = revealed ? MEMBER_ICON_EYE : MEMBER_ICON_EYE_OFF;
+    passwordInput.focus();
+  });
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    if (isBusy) return;
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    const remember = Boolean(rememberInput?.checked);
+
+    setNotice("");
+
+    // Dieselbe Mindestprüfung wie in der App: E-Mail und Passwort müssen da sein.
+    if (email.length <= 3 || password.trim().length <= 5) {
+      setError("Bitte gib E-Mail-Adresse und Passwort ein.", "Login unvollständig");
+      (email.length <= 3 ? emailInput : passwordInput).focus();
+      return;
+    }
+
+    setError("");
+    setBusy(true, "Wird geprüft...");
+    slowHintTimer = window.setTimeout(() => {
+      setNotice("Der Memberbereich wird gerade geweckt. Bitte kurz geöffnet lassen.");
+    }, SLOW_HINT_DELAY_MS);
+
+    try {
+      const result = await requestApi("/api/auth/login", { email, password });
+
+      if (!result.session) {
+        throw new MemberApiError("Der Login konnte nicht bestätigt werden.");
+      }
+
+      window.clearTimeout(slowHintTimer);
+
+      if (!storeSession(result.session, remember)) {
+        throw new MemberApiError(
+          "Dein Browser erlaubt keine lokale Speicherung — ohne sie kann die Member Area die Anmeldung nicht übernehmen."
+        );
+      }
+
+      openMemberApp(result.session);
+    } catch (error) {
+      window.clearTimeout(slowHintTimer);
+      setNotice("");
+      setError(errorMessageFor(error));
+      setBusy(false);
+    }
+  });
+
+  resetButton?.addEventListener("click", async () => {
+    const email = emailInput.value.trim().toLowerCase();
+
+    setError("");
+
+    if (!emailPattern.test(email)) {
+      setNotice("Bitte gib zuerst deine Login-E-Mail ein.");
+      emailInput.focus();
+      return;
+    }
+
+    resetButton.disabled = true;
+    const label = resetButton.textContent;
+    resetButton.textContent = "Wird gesendet...";
+
+    try {
+      const result = await requestApi("/api/auth/password-reset-request", { email }, 30000);
+      setNotice(
+        result.message ||
+          "Wenn zu dieser E-Mail ein Member-Zugang existiert, senden wir ein neues temporäres Passwort direkt an diese Adresse."
+      );
+    } catch (error) {
+      setNotice("");
+      setError(errorMessageFor(error), "Passwort konnte nicht zurückgesetzt werden");
+    } finally {
+      resetButton.disabled = false;
+      resetButton.textContent = label;
+    }
+  });
+};
+
+initMemberLogin();

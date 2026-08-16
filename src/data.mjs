@@ -41,7 +41,7 @@ export const navItems = [
   { label: "Home", href: "/" },
   { label: "Events", href: "/events/" },
   { label: "Firmenfitness", href: "/firmenfitness/" },
-  { label: "Fit werden", href: "/personal-training-ab-40-nuernberg/" },
+  { label: "Fit werden", href: "/fit-werden/" },
   { label: "Personal Trainer Nürnberg", href: "/personal-trainer-nürnberg/" },
   { label: "Partner", href: "/partner/" },
   { label: "Camp Dörfl App", href: "/app/" },

@@ -1,5 +1,6 @@
 import { navItems, site, sponsors } from "./data.mjs";
 import { contactTopics, resolveContactTopicKey } from "./contact-topics.js";
+import { MEMBER_BASE_PATH } from "./member-area.mjs";
 
 // Ein Markenzeichen, zwei Dateien mit klar getrennter Aufgabe:
 // - brandLogoSourcePath ist die 2000er Originaldatei für strukturierte Daten,
@@ -133,7 +134,7 @@ function breadcrumbSchema(path, pageName) {
     "/bodybuilding-wettkampfvorbereitung-dauer/": ["Bodybuilding Coaching", "/bodybuilding-coaching-wettkampfvorbereitung/"],
     "/bia-inbody-koerperanalyse-vergleich/": ["Körperanalyse Nürnberg", "/koerperanalyse-nuernberg/"],
     "/keynote-speaker-nuernberg/": ["Events", "/events/"],
-    "/personal-training-ab-40-nuernberg/": ["Personal Trainer Nürnberg", "/personal-trainer-nürnberg/"]
+    "/fit-werden/": ["Personal Trainer Nürnberg", "/personal-trainer-nürnberg/"]
   };
   const parent = parentPages[path];
   const itemListElement = [{
@@ -280,6 +281,13 @@ function uiIcon(name) {
         <path d="M5 5.5v13h14"></path>
         <path d="M15.5 6.5H19v3.5"></path>
       </svg>
+    `,
+    member: `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M14.5 4.5H18a1.5 1.5 0 0 1 1.5 1.5v12a1.5 1.5 0 0 1-1.5 1.5h-3.5"></path>
+        <path d="M10 16.5 14.5 12 10 7.5"></path>
+        <path d="M14.5 12H4.5"></path>
+      </svg>
     `
   };
 
@@ -288,6 +296,7 @@ function uiIcon(name) {
 
 function navIconForHref(href) {
   if (href === "/") return "home";
+  if (href === MEMBER_BASE_PATH + "/") return "member";
   if (href === "/events/") return "events";
   if (href === "/firmenfitness/") return "team";
   if (href === "/personal-trainer-nürnberg/") return "trainer";
@@ -870,7 +879,7 @@ function navbar(activePath) {
     "/",
     "/personal-trainer-nürnberg/",
     "/firmenfitness/",
-    "/personal-training-ab-40-nuernberg/",
+    "/fit-werden/",
     "/events/",
     "/partner/"
   ];
@@ -891,15 +900,27 @@ function navbar(activePath) {
     : null;
   const navSocials = socialProfileUrls();
   const mobileSocialMarkup = navSocials.length ? socialIconLinks(navSocials, { className: "social-link--chip social-link--nav-menu" }) : "";
-  const mobileNavItems = [...primaryNavItems, ...(appItem ? [appItem] : []), ...(contextualContactItem ? [contextualContactItem] : [])];
-  // Kurzform nur für die Desktop-Leiste. Mit sechs Hauptpunkten reicht die Breite
-  // sonst nicht und die Anfragen-Schaltfläche läuft über den Rand. Im Kompaktmenü
-  // und in der Fußzeile steht weiterhin die vollständige Bezeichnung.
+  // Member Area: Der Verweis zeigt auf /member/ und funktioniert damit auch ohne
+  // JavaScript. Ist JavaScript aktiv, fängt main.js den Klick ab und öffnet
+  // stattdessen das Login-Fenster — mit bestehender Sitzung geht es direkt in die App.
+  const memberItem = {
+    href: `${MEMBER_BASE_PATH}/`,
+    label: "Member Area",
+    isMember: true
+  };
+  const mobileNavItems = [
+    ...primaryNavItems,
+    ...(appItem ? [appItem] : []),
+    memberItem,
+    ...(contextualContactItem ? [contextualContactItem] : [])
+  ];
+  // Kurzformen nur für die Desktop-Leiste, wenn die volle Bezeichnung die Breite
+  // sprengt. Im Kompaktmenü und in der Fußzeile steht immer die vollständige.
   const desktopLabels = {
-    "/personal-trainer-nürnberg/": "Personal Training"
+    "/personal-trainer-nürnberg/": "Personal Training Nürnberg"
   };
   const renderNavItem = (item) => `
-    <a class="site-nav__entry${item.href === "/app/" || item.isContact ? " site-nav__entry--supplemental" : ""}${activePath === item.href ? " is-active" : ""}" href="${item.href}" ${activePath === item.href ? 'aria-current="page"' : ""}>
+    <a class="site-nav__entry${item.href === "/app/" || item.isContact || item.isMember ? " site-nav__entry--supplemental" : ""}${activePath === item.href ? " is-active" : ""}" href="${item.href}" ${item.isMember ? "data-member-login" : ""} ${activePath === item.href ? 'aria-current="page"' : ""}>
       <span class="site-nav__entry-main">
         <span class="site-nav__entry-icon">${uiIcon(navIconForHref(item.iconHref || item.href))}</span>
         <span class="site-nav__entry-label">
@@ -956,6 +977,7 @@ function navbar(activePath) {
         <div class="nav-extras">
           ${languageSwitcher("language-switcher--desktop")}
           ${appItem ? `<a class="nav-action nav-action--app${activePath === appItem.href ? " is-active" : ""}" href="${appItem.href}" ${activePath === appItem.href ? 'aria-current="page"' : ""}>App</a>` : ""}
+          <a class="nav-action nav-action--member" href="${MEMBER_BASE_PATH}/" data-member-login><span class="nav-action__icon" aria-hidden="true">${uiIcon("member")}</span><span>Member</span></a>
           ${contextualContactItem ? `<a class="nav-action nav-action--contact${activePath === "/kontakt/" ? " is-active" : ""}" href="${contextualContactItem.href}" ${activePath === "/kontakt/" ? 'aria-current="page"' : ""}><span>Anfragen</span><span aria-hidden="true">&nearr;</span></a>` : ""}
         </div>
       </div>
@@ -1029,6 +1051,116 @@ function footer() {
         <span class="footer-bottom__claim">Performance für Training, Ernährung, Gesundheit und Community.</span>
       </div>
     </footer>
+  `;
+}
+
+// Feather-Icons in derselben Strichstärke und Form wie im Login der App
+// (app/login.tsx). Bewusst inline: Das Login-Fenster darf auf keine weitere
+// Datei warten müssen.
+function memberIcon(name) {
+  const icons = {
+    mail: '<path d="M4 6h16v12H4z"></path><path d="m4 7 8 6 8-6"></path>',
+    lock: '<rect x="4.5" y="10.5" width="15" height="9.5" rx="2"></rect><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"></path>',
+    eye: '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"></path><circle cx="12" cy="12" r="3"></circle>',
+    "eye-off":
+      '<path d="M9.9 5.7A9.6 9.6 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a17 17 0 0 1-3.2 4"></path><path d="M6.6 7.6A16.9 16.9 0 0 0 2.5 12S6 18.5 12 18.5a9.4 9.4 0 0 0 3.9-.8"></path><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path><path d="m3.5 3.5 17 17"></path>',
+    check: '<path d="m5 12.5 4.5 4.5L19 7.5"></path>',
+    "log-in":
+      '<path d="M14.5 4.5H18a1.5 1.5 0 0 1 1.5 1.5v12a1.5 1.5 0 0 1-1.5 1.5h-3.5"></path><path d="M10 16.5 14.5 12 10 7.5"></path><path d="M14.5 12H4.5"></path>',
+    clock: '<circle cx="12" cy="12" r="8"></circle><path d="M12 7.5V12l3 1.8"></path>',
+    shield: '<path d="M12 3.5 19 6v5.5c0 4-3 7.2-7 9-4-1.8-7-5-7-9V6l7-2.5Z"></path>',
+    close: '<path d="m6.5 6.5 11 11"></path><path d="m17.5 6.5-11 11"></path>'
+  };
+
+  return `<svg class="member-login__icon" viewBox="0 0 24 24" aria-hidden="true">${icons[name] || ""}</svg>`;
+}
+
+// Das Login-Fenster der Member Area — dieselbe Bildsprache und derselbe Wortlaut
+// wie der Login-Screen der App (app/login.tsx). Nach der Anmeldung übernimmt die
+// App unter /member/ die Sitzung und öffnet den Member- bzw. Coach-Bereich.
+function memberLoginDialog() {
+  return `
+    <div class="member-login" data-member-login-root hidden>
+      <div class="member-login__backdrop" data-member-login-dismiss hidden></div>
+      <section
+        class="member-login__dialog"
+        data-member-login-dialog
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="member-login-title"
+        aria-describedby="member-login-lead"
+        hidden>
+        <button class="member-login__close" type="button" data-member-login-close aria-label="Login schließen">${memberIcon("close")}</button>
+
+        <div class="member-login__hero">
+          <span class="member-login__logo"><img src="${brandLogoDisplayPath}" width="96" height="96" alt="" loading="lazy" decoding="async"></span>
+          <p class="member-login__eyebrow">Member Area</p>
+          <h2 id="member-login-title">Herzlich Willkommen</h2>
+          <p class="member-login__lead" id="member-login-lead">Melde dich an, um deine persönlichen Inhalte, Termine und Coaching-Updates zu sehen.</p>
+        </div>
+
+        <form class="member-login__form" data-member-login-form novalidate>
+          <div class="member-login__field">
+            <label class="member-login__label" for="member-login-email">E-Mail</label>
+            <div class="member-login__input">
+              ${memberIcon("mail")}
+              <input
+                id="member-login-email"
+                name="email"
+                type="email"
+                inputmode="email"
+                autocomplete="username"
+                autocapitalize="none"
+                spellcheck="false"
+                placeholder="name@beispiel.de"
+                required>
+            </div>
+          </div>
+
+          <div class="member-login__field">
+            <label class="member-login__label" for="member-login-password">Passwort</label>
+            <div class="member-login__input">
+              ${memberIcon("lock")}
+              <input
+                id="member-login-password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                placeholder="Dein Passwort"
+                required>
+              <button class="member-login__reveal" type="button" data-member-login-reveal aria-label="Passwort anzeigen" aria-pressed="false">${memberIcon("eye")}</button>
+            </div>
+          </div>
+
+          <div class="member-login__options">
+            <label class="member-login__remember">
+              <input type="checkbox" name="remember" checked>
+              <span class="member-login__checkbox" aria-hidden="true">${memberIcon("check")}</span>
+              <span>Eingeloggt bleiben</span>
+            </label>
+            <button class="member-login__link" type="button" data-member-login-reset>Neues Passwort an meine E-Mail senden</button>
+          </div>
+
+          <p class="member-login__notice" data-member-login-notice role="status" hidden></p>
+
+          <div class="member-login__error" data-member-login-error role="alert" hidden>
+            <strong data-member-login-error-title>Login nicht möglich</strong>
+            <span data-member-login-error-text></span>
+          </div>
+
+          <button class="member-login__submit" type="submit" data-member-login-submit>
+            <span class="member-login__submit-icon" data-member-login-submit-icon>${memberIcon("log-in")}</span>
+            <span data-member-login-submit-label>Einloggen</span>
+          </button>
+        </form>
+
+        <div class="member-login__foot">
+          <p class="member-login__hint">${memberIcon("shield")}<span>Gleiche Zugangsdaten wie in der App. Die Anmeldung läuft verschlüsselt über das Camp-Dörfl-Backend.</span></p>
+          <p class="member-login__access"><strong>Noch keinen Zugang?</strong> <a href="/kontakt/">Melde dich bei Dominik</a> — dein Zugang wird persönlich freigegeben.</p>
+          __MEMBER_APP_BUILD_NOTE__
+        </div>
+      </section>
+    </div>
   `;
 }
 
@@ -1307,6 +1439,7 @@ export function layout({
     </main>
     ${footer()}
     ${mobileInquiryBar(path)}
+    ${memberLoginDialog()}
     ${consentManager()}
     <script type="module" src="/assets/__ASSET_VERSION__/main.js"></script>
   </body>

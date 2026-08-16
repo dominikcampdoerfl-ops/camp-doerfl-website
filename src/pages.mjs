@@ -1848,7 +1848,7 @@ function homePage() {
               detail: "12 Wochen · begleitet",
               title: "Wieder fit werden",
               text: "12-Wochen-Programm mit InBody-Messung, Ernährungs- und Trainingsplan, wöchentlichem Training und Endanalyse.",
-              href: "/personal-training-ab-40-nuernberg/",
+              href: "/fit-werden/",
               ctaLabel: "Programm ansehen"
             },
             {
@@ -1871,13 +1871,6 @@ function homePage() {
               text: "Ein erlebbarer Gesundheitstag mit Analyse, Aktivierung und persönlicher Einordnung.",
               href: "/gesundheitstag-nuernberg/",
               ctaLabel: "Gesundheitstag ansehen"
-            },
-            {
-              detail: "Preise & Formate",
-              title: "Personal Training Kosten",
-              text: "Leistungsumfang, Modelle und Investition für Personal Training transparent einordnen.",
-              href: "/personal-training-kosten-nuernberg/",
-              ctaLabel: "Kosten ansehen"
             },
             {
               detail: "Events · Bühne · Interviews",
@@ -2086,7 +2079,7 @@ function personalCoachingPage() {
         </p>
         <div class="ff-hero__actions" data-reveal>
           <a class="button button--primary" href="${contactHref("premium-training")}"><span>Beratung anfragen</span><span aria-hidden="true">&rarr;</span></a>
-          <a class="button button--secondary-light" href="/personal-training-ab-40-nuernberg/"><span>12-Wochen-Programm</span><span aria-hidden="true">&rarr;</span></a>
+          <a class="button button--secondary-light" href="/fit-werden/"><span>12-Wochen-Programm</span><span aria-hidden="true">&rarr;</span></a>
           <a class="button button--secondary-light" href="/koerperanalyse-nuernberg/"><span>Körperanalyse ansehen</span><span aria-hidden="true">&rarr;</span></a>
         </div>
         <dl class="ff-hero__facts" data-reveal aria-label="Leistungsbausteine im Premium Personal Training">
@@ -5826,7 +5819,7 @@ function personalTrainingAb40NuernbergPage() {
       step: "02",
       title: "Ernährungs- und Trainingsplan",
       text:
-        "Aus Messwerten und Ziel entsteht die Planung: Eiweißmenge, Trainingsreiz und Erholung abgestimmt auf Ihren Alltag, nicht aus einer Vorlage."
+        "Aus Messwerten und Ziel entsteht die Planung: Eiweißmenge, Trainingsreiz und Erholung abgestimmt auf deinen Alltag, nicht aus einer Vorlage."
     },
     {
       step: "03",
@@ -5838,7 +5831,7 @@ function personalTrainingAb40NuernbergPage() {
       step: "04",
       title: "Begleitung dazwischen",
       text:
-        "Fragen kommen selten zum Termin. Über die gesamten zwölf Wochen erreichen Sie mich direkt."
+        "Fragen kommen selten zum Termin. Über die gesamten zwölf Wochen erreichst du mich direkt."
     },
     {
       step: "05",
@@ -5852,12 +5845,12 @@ function personalTrainingAb40NuernbergPage() {
     {
       title: "Passt, wenn …",
       text:
-        "… Sie spürbar etwas verändern wollen und zwölf Wochen lang einen festen Termin pro Woche halten können. Studioerfahrung ist nicht nötig."
+        "… du spürbar etwas verändern willst und zwölf Wochen lang einen festen Termin pro Woche halten kannst. Studioerfahrung ist nicht nötig."
     },
     {
       title: "Passt nicht, wenn …",
       text:
-        "… Sie eine Diät ohne Training suchen oder die nächsten Wochen kaum planbar sind. Dann ist eine Einzelsession der ehrlichere Einstieg."
+        "… du eine Diät ohne Training suchst oder deine nächsten Wochen kaum planbar sind. Dann ist eine Einzelsession der ehrlichere Einstieg."
     }
   ];
 
@@ -5870,7 +5863,7 @@ function personalTrainingAb40NuernbergPage() {
     {
       question: "Wie oft wird trainiert?",
       answer:
-        "Einmal pro Woche gemeinsam, zwölf Wochen lang. Dazu kommen die Einheiten aus Ihrem Plan, die Sie selbst umsetzen. Umfang und Häufigkeit richten sich nach Ihrem Alltag."
+        "Einmal pro Woche gemeinsam, zwölf Wochen lang. Dazu kommen die Einheiten aus deinem Plan, die du selbst umsetzt. Umfang und Häufigkeit richten sich nach deinem Alltag."
     },
     {
       question: "Ich habe seit Jahren nicht trainiert. Ist das ein Problem?",
@@ -5885,7 +5878,7 @@ function personalTrainingAb40NuernbergPage() {
     {
       question: "Muss ich meine Ernährung komplett umstellen?",
       answer:
-        "Nein. Der Plan setzt an dem an, was Sie ohnehin essen, und verändert gezielt Eiweißmenge, Verteilung und Portionen. Was Sie nicht durchhalten, steht auch nicht im Plan."
+        "Nein. Der Plan setzt an dem an, was du ohnehin isst, und verändert gezielt Eiweißmenge, Verteilung und Portionen. Was du nicht durchhältst, steht auch nicht im Plan."
     },
     {
       question: "Wo findet das Training statt?",
@@ -5900,7 +5893,7 @@ function personalTrainingAb40NuernbergPage() {
     {
       question: "Wie melde ich mich an?",
       answer:
-        "Über das Kontaktformular, per Telefon oder WhatsApp. Danach folgt ein kurzes Gespräch, ob das Programm zu Ihrem Ziel passt."
+        "Über das Kontaktformular, per Telefon oder WhatsApp. Danach folgt ein kurzes Gespräch, ob das Programm zu deinem Ziel passt."
     }
   ];
 
@@ -5910,12 +5903,12 @@ function personalTrainingAb40NuernbergPage() {
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
         <p class="ff-hero__eyebrow" data-reveal>12-Wochen-Programm · Personal Training · Nürnberg</p>
-        <h1 class="ff-hero__title" data-reveal>Wieder fit werden.<br><span>In 12 Wochen.</span></h1>
+        <h1 class="ff-hero__title" data-reveal>Fit werden.<br><span>In 12 Wochen.</span></h1>
         <p class="ff-hero__lead" data-reveal>
           Für alle, die im Job funktionieren, zu Hause gebraucht werden und beim Blick in den Spiegel merken: So war das nicht gedacht.
         </p>
         <p class="ff-hero__support" data-reveal>
-          Gemessene Ausgangslage, ein Plan, der zu Ihrer Woche passt, und zwölf Wochen persönliche Begleitung. Kein Abo, keine Bindung.
+          Gemessene Ausgangslage, ein Plan, der zu deiner Woche passt, und zwölf Wochen persönliche Begleitung. Kein Abo, keine Bindung.
         </p>
         <div class="ff-hero__actions" data-reveal>
           <a class="button button--primary" href="${contactHref("premium-training")}"><span>Erstgespräch anfragen</span><span aria-hidden="true">&rarr;</span></a>
@@ -5933,7 +5926,7 @@ function personalTrainingAb40NuernbergPage() {
       <div class="section-shell">
         ${sectionHeader({
           eyebrow: "Warum es nicht mehr läuft wie früher",
-          title: "Sie haben sich nicht verändert. Ihr Stoffwechsel schon.",
+          title: "Du hast dich nicht verändert. Dein Stoffwechsel schon.",
           text:
             "Dieselbe Ernährung, dasselbe Training, ein anderes Ergebnis. Das ist kein fehlender Wille, sondern eine veränderte Ausgangslage.",
           align: "center"
@@ -6017,7 +6010,7 @@ function personalTrainingAb40NuernbergPage() {
             <span class="offer40-price__tag">Als Programm gebucht</span>
             <p class="offer40-price__was">
               <span class="offer40-price__strike">1.099 €</span>
-              <span class="offer40-price__save">Sie sparen 100 €</span>
+              <span class="offer40-price__save">Du sparst 100 €</span>
             </p>
             <p class="offer40-price__amount">999 €</p>
             <p class="offer40-price__rate">für 12 Wochen &middot; 333 € pro Monat</p>
@@ -6091,14 +6084,14 @@ function personalTrainingAb40NuernbergPage() {
       eyebrow: "Erstgespräch",
       title: "Die nächsten zwölf Wochen vergehen ohnehin.",
       text:
-        "Schreiben Sie kurz, wo Sie stehen und was Sie erreichen wollen. Danach folgt eine ehrliche Einschätzung.",
+        "Schreib kurz, wo du stehst und was du erreichen willst. Danach folgt eine ehrliche Einschätzung.",
       primary: { label: "Erstgespräch anfragen", href: contactHref("premium-training") },
       secondary: { label: "Körperanalyse ansehen", href: "/koerperanalyse-nuernberg/" }
     })}
   `;
 
   return layout({
-    path: "/personal-training-ab-40-nuernberg/",
+    path: "/fit-werden/",
     title: "Personal Training ab 40 in Nürnberg | 12-Wochen-Programm | Camp Dörfl",
     description:
       "12-Wochen-Programm in Nürnberg: InBody-Messung, Ernährungs- und Trainingsplan, wöchentliches Personal Training und Endanalyse. 999 € statt 1.099 €.",
@@ -6117,7 +6110,7 @@ function personalTrainingAb40NuernbergPage() {
     extraStructuredData: [
       {
         "@type": "Service",
-        "@id": `${site.url}/personal-training-ab-40-nuernberg/#service`,
+        "@id": `${site.url}/fit-werden/#service`,
         name: "12-Wochen-Programm – Camp Dörfl Nürnberg",
         serviceType: "Personal Training, Körperanalyse und Ernährungsberatung",
         description:
@@ -6133,11 +6126,11 @@ function personalTrainingAb40NuernbergPage() {
           price: "999",
           priceCurrency: "EUR",
           availability: "https://schema.org/InStock",
-          url: `${site.url}/personal-training-ab-40-nuernberg/`,
+          url: `${site.url}/fit-werden/`,
           description: "12-Wochen-Programm als Paket, statt 1.099 € für die Einzelleistungen."
         }
       },
-      faqSchema("/personal-training-ab-40-nuernberg/", offerFaq)
+      faqSchema("/fit-werden/", offerFaq)
     ],
     content
   });
@@ -8233,7 +8226,7 @@ export const pages = [
   { route: "/firmenfitness/", render: firmenfitnessPage, lastModified: "2026-08-11" },
   { route: "/events/", render: eventsPage },
   { route: "/keynote-speaker-nuernberg/", render: keynoteSpeakerNuernbergPage, lastModified: "2026-08-16" },
-  { route: "/personal-training-ab-40-nuernberg/", render: personalTrainingAb40NuernbergPage, lastModified: "2026-08-16" },
+  { route: "/fit-werden/", render: personalTrainingAb40NuernbergPage, lastModified: "2026-08-16" },
   { route: "/partner/", render: partnerPage },
   { route: "/bodybuilding-coaching-wettkampfvorbereitung/", render: bodybuildingCoachingPage, lastModified: "2026-08-11" },
   { route: "/bodybuilding-wettkaempfe-2026/", render: bodybuildingCalendarPage, lastModified: "2026-08-10" },

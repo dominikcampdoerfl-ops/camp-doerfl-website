@@ -8,6 +8,8 @@
 export const legacyRedirectRules = Object.freeze({
   exact: Object.freeze({
     "/agb/": "/impressum/",
+    // Kurz unter der langen Adresse veröffentlicht, bevor sie auf /fit-werden/ verkürzt wurde.
+    "/personal-training-ab-40-nuernberg/": "/fit-werden/",
     "/archiv/bodybuilding-wettkaempfe-2024/": "/bodybuilding-wettkaempfe-2026/",
     "/archiv/halbmarathon-termine-2024/": "/laufkalender-2026/",
     "/athletenbereich/archiv/bodybuilding-wettkaempfe-2024/": "/bodybuilding-wettkaempfe-2026/",
