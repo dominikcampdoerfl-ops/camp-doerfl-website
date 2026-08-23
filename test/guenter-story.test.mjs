@@ -31,21 +31,28 @@ test("Günter Preis has a dedicated, indexable success story", () => {
 
 test("all five supplied story images are used with descriptive alternatives", () => {
   const html = storyPage.render();
+  // Ohne Endung geprüft: Die Bilder liegen seit der Optimierung als WebP vor
+  // (scripts/optimize-images.mjs). Entscheidend ist, dass alle fünf Motive mit
+  // beschreibendem Alternativtext auf der Seite stehen.
   const images = [
-    "guenter-preis-coach-stage.jpg",
-    "guenter-preis-portrait-2024.jpg",
-    "guenter-preis-stage-2026.jpg",
-    "guenter-preis-training-front.jpg",
-    "guenter-preis-training-side.jpg"
+    "guenter-preis-coach-stage",
+    "guenter-preis-portrait-2024",
+    "guenter-preis-stage-2026",
+    "guenter-preis-training-front",
+    "guenter-preis-training-side"
   ];
 
   for (const image of images) {
-    assert.match(html, new RegExp(`<img[^>]+${image}[^>]+alt="[^"]+"`), `Missing image or alt text: ${image}`);
+    assert.match(
+      html,
+      new RegExp(`<img[^>]+${image}\\.(?:jpe?g|png|webp)[^>]+alt="[^"]+"`),
+      `Missing image or alt text: ${image}`
+    );
   }
 });
 
 test("Personal Training and team success pages link to the full story", () => {
-  for (const route of ["/personal-trainer-nürnberg/", "/erfolge-im-team/"]) {
+  for (const route of ["/personal-trainer-nuernberg/", "/erfolge-im-team/"]) {
     const page = pages.find((entry) => entry.route === route);
     assert.ok(page, `Missing source page: ${route}`);
     assert.match(page.render(), /href="\/erfolge-im-team\/guenter-preis\/"/);

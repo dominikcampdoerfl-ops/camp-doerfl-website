@@ -2946,6 +2946,10 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
   color: #15120b !important;
 }
 
+/* Leistungsnachweise: Cremekarten auf cremefarbenem Papier haben sich kaum vom
+   Grund abgehoben. Die Kacheln tragen jetzt eine deutlich tiefere Sandfläche,
+   eine goldene Haarlinie und eine goldene Oberkante — dieselbe Goldfamilie wie
+   die Einstiegskarten darüber, nur als Fläche statt nur als Rand. */
 .page-home-reboot .ed-proof__item,
 .page-home-reboot .ed-proof__item:nth-child(6n+1),
 .page-home-reboot .ed-proof__item:nth-child(6n+2),
@@ -2953,9 +2957,24 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
 .page-home-reboot .ed-proof__item:nth-child(6n+4),
 .page-home-reboot .ed-proof__item:nth-child(6n+5),
 .page-home-reboot .ed-proof__item:nth-child(6n+6) {
-  border-color: rgba(42, 33, 18, 0.1);
-  background: linear-gradient(145deg, #fffefa, #f5ecdc);
-  box-shadow: 0 20px 38px -30px rgba(43, 32, 12, 0.38);
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(155, 116, 26, 0.42);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(255, 255, 255, 0.72), transparent 42%),
+    linear-gradient(152deg, #fdf3df 0%, #f0dfba 100%);
+  box-shadow: 0 26px 48px -32px rgba(43, 32, 12, 0.52);
+}
+
+/* Die Oberkante gibt jeder Kachel eine klare Linie gegen das Papier. */
+.page-home-reboot .ed-proof__item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #b68727, #f2dfa8 52%, #b68727);
 }
 
 .page-home-reboot .ed-proof__item dt,
@@ -2965,11 +2984,11 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
 .page-home-reboot .ed-proof__item:nth-child(6n+4) dt,
 .page-home-reboot .ed-proof__item:nth-child(6n+5) dt,
 .page-home-reboot .ed-proof__item:nth-child(6n+6) dt {
-  color: #9b741a;
+  color: #7f5c0f;
 }
 
 .page-home-reboot .ed-proof__item dd {
-  color: rgba(25, 21, 14, 0.68);
+  color: rgba(25, 21, 14, 0.78);
 }
 
 .page-home-reboot .ed-app-banner {
@@ -3300,7 +3319,8 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
 /* Service heroes: strong, but no longer visually overpowering. */
 .page-events .ff-hero__title,
 .page-partner .ff-hero__title,
-.page-coaching .ff-hero__title {
+.page-coaching .ff-hero__title,
+.page-offer-40 .ff-hero__title {
   font-size: clamp(2.65rem, 6.35vw, 6.55rem) !important;
   line-height: 0.9 !important;
 }
@@ -4367,21 +4387,32 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
   box-shadow: 0 30px 68px -44px rgba(43, 32, 12, 0.42);
 }
 
+/* Der Kopf zieht über die volle Breite der Bühne und steht mittig; der
+   Fließtext behält eine lesbare Zeilenlänge. */
 .page-partner .premium-sponsor-stage__intro {
-  max-width: 720px;
+  max-width: none;
   margin-bottom: clamp(24px, 3vw, 38px);
+  text-align: center;
+}
+
+.page-partner .premium-sponsor-stage__intro .eyebrow {
+  justify-content: center;
 }
 
 .page-partner .premium-sponsor-stage__intro .section-header {
+  max-width: none;
   margin-bottom: 0;
 }
 
 .page-partner .premium-sponsor-stage__intro .section-header h2 {
-  max-width: 12ch;
+  max-width: none;
+  margin-inline: auto;
   color: #19150e !important;
 }
 
 .page-partner .premium-sponsor-stage__intro .section-header p:not(.eyebrow) {
+  max-width: 74ch;
+  margin-inline: auto;
   color: rgba(25, 21, 14, 0.72) !important;
 }
 
@@ -4481,17 +4512,16 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
   line-height: 1.58;
 }
 
+/* Die Zeile nennt jetzt die Rolle (Nutrition Partner, Gym Partner, Co-Founder,
+   CEO) statt einer Sponsorenstufe. Sie steht als ruhige Goldzeile über dem
+   Namen — eine gefüllte Pille macht aus einer Rolle eine Auszeichnung. */
 .page-partner .premium-sponsor-card__copy .premium-sponsor-card__tier {
   width: fit-content;
-  margin-bottom: 2px;
-  padding: 5px 9px;
-  border: 1px solid rgba(155, 116, 26, .34);
-  border-radius: 999px;
-  color: #76530d !important;
-  background: linear-gradient(115deg, #fff0b7, #d7b55f);
-  font-size: .62rem;
+  margin-bottom: 4px;
+  color: #9b741a !important;
+  font-size: .66rem;
   font-weight: 900;
-  letter-spacing: .09em;
+  letter-spacing: .12em;
   line-height: 1;
   text-transform: uppercase;
 }
@@ -7715,7 +7745,7 @@ html body.page-premium.page-bodybuilding-calendar main .bbcal-event p {
   margin-top: clamp(92px, 11vw, 160px);
 }
 
-.page-boxing-calendar .boxcal-empty {
+:is(.page-boxing-calendar, .page-mma-calendar) .boxcal-empty {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -7726,13 +7756,13 @@ html body.page-premium.page-bodybuilding-calendar main .bbcal-event p {
   background: rgba(255, 255, 255, 0.035);
 }
 
-.page-boxing-calendar .boxcal-empty strong {
+:is(.page-boxing-calendar, .page-mma-calendar) .boxcal-empty strong {
   color: #fffdf8;
   font: italic 800 clamp(1.2rem, 2vw, 1.65rem)/1 var(--font-cond);
   text-transform: uppercase;
 }
 
-.page-boxing-calendar .boxcal-empty span {
+:is(.page-boxing-calendar, .page-mma-calendar) .boxcal-empty span {
   color: rgba(255, 253, 248, 0.62);
   font-size: 0.92rem;
   line-height: 1.55;
@@ -11343,182 +11373,139 @@ html body.page-premium.page-team main section.coach-success .coach-success__year
   margin-inline: auto;
 }
 
+/* ============================================================
+   DREI FIRMENFITNESS-ANGEBOTE
+   Vorher standen hier zwei verschiedene Kartenformate nebeneinander
+   (eine hohe Karte links, zwei quer liegende rechts). Wer drei
+   Angebote vergleichen will, braucht drei gleiche Karten: gleicher
+   Bildausschnitt, gleiche Reihenfolge, gleiche Höhe.
+   ============================================================ */
+
 .page-firmenfitness .corporate-offer-showcase {
   display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
-  gap: 18px;
-  margin-top: clamp(34px, 4.5vw, 62px);
-}
-
-.page-firmenfitness .corporate-offer-showcase__stack {
-  display: grid;
-  grid-template-rows: repeat(2, minmax(0, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  gap: clamp(16px, 1.6vw, 22px);
+  margin-top: clamp(30px, 4vw, 52px);
 }
 
 .page-firmenfitness .corporate-offer-card {
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
-  border: 1px solid rgba(42, 33, 18, 0.13);
-  border-radius: 30px;
-  background: #fffdf8 !important;
-  box-shadow: 0 30px 72px -50px rgba(43, 32, 12, 0.48);
+  border: 1px solid rgba(155, 116, 26, 0.24);
+  border-radius: 20px;
+  background: linear-gradient(160deg, #fffefa 0%, #f9f1e0 100%) !important;
+  box-shadow: 0 24px 50px -38px rgba(43, 32, 12, 0.44);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-.page-firmenfitness .corporate-offer-card--featured {
-  display: grid;
-  grid-template-rows: minmax(290px, 0.86fr) minmax(0, 1.14fr);
-  min-height: 720px;
-}
-
-.page-firmenfitness .corporate-offer-card--compact {
-  display: grid;
-  grid-template-columns: minmax(190px, 0.78fr) minmax(0, 1.22fr);
-  min-height: 351px;
+.page-firmenfitness .corporate-offer-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(155, 116, 26, 0.5);
+  box-shadow: 0 32px 60px -38px rgba(43, 32, 12, 0.52);
 }
 
 .page-firmenfitness .corporate-offer-card__media {
   position: relative;
-  min-height: 0;
   margin: 0;
+  aspect-ratio: 16 / 10;
   overflow: hidden;
   background: #25231e;
-}
-
-.page-firmenfitness .corporate-offer-card__media::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(15, 15, 13, 0.02) 35%, rgba(15, 15, 13, 0.58) 100%);
-  pointer-events: none;
 }
 
 .page-firmenfitness .corporate-offer-card__media img {
   width: 100%;
   height: 100%;
-  min-height: 100%;
   object-fit: cover;
   transition: transform 600ms ease;
 }
 
 .page-firmenfitness .corporate-offer-card:hover .corporate-offer-card__media img {
-  transform: scale(1.025);
-}
-
-.page-firmenfitness .corporate-offer-card__media-label {
-  position: absolute;
-  z-index: 1;
-  left: 20px;
-  bottom: 18px;
-  padding: 8px 11px;
-  border: 1px solid rgba(255, 253, 248, 0.38);
-  border-radius: 999px;
-  color: #fffdf8 !important;
-  -webkit-text-fill-color: #fffdf8 !important;
-  background: rgba(22, 21, 18, 0.55);
-  backdrop-filter: blur(12px);
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
+  transform: scale(1.03);
 }
 
 .page-firmenfitness .corporate-offer-card__body {
   display: flex;
   flex-direction: column;
+  gap: 10px;
   min-width: 0;
-  padding: clamp(26px, 3vw, 42px);
+  padding: clamp(20px, 1.9vw, 28px);
 }
 
-.page-firmenfitness .corporate-offer-card--compact .corporate-offer-card__body {
-  padding: clamp(23px, 2.15vw, 32px);
-}
-
-.page-firmenfitness .corporate-offer-card__meta {
+/* Nummer und Kategorie stehen in einer ruhigen Zeile über dem Titel —
+   die Kategorie lag vorher als Pille auf dem Bild. */
+.page-firmenfitness .corporate-offer-card__kicker {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  margin-bottom: clamp(30px, 4vw, 54px);
-}
-
-.page-firmenfitness .corporate-offer-card--compact .corporate-offer-card__meta {
-  margin-bottom: 26px;
-}
-
-.page-firmenfitness .corporate-offer-card__meta span {
+  align-items: baseline;
+  gap: 9px;
+  margin: 0;
   color: #9b741a !important;
   -webkit-text-fill-color: #9b741a !important;
-  font-size: clamp(1.35rem, 2vw, 2rem);
-  font-style: italic;
-  font-weight: 850;
-  letter-spacing: -0.05em;
-}
-
-.page-firmenfitness .corporate-offer-card__meta small {
-  color: rgba(25, 21, 14, 0.48) !important;
-  -webkit-text-fill-color: rgba(25, 21, 14, 0.48) !important;
-  font-size: 0.65rem;
-  font-weight: 760;
-  letter-spacing: 0.1em;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
 }
 
+.page-firmenfitness .corporate-offer-card__kicker span {
+  color: rgba(155, 116, 26, 0.55) !important;
+  -webkit-text-fill-color: rgba(155, 116, 26, 0.55) !important;
+  font-family: var(--font-cond);
+  font-size: 1.02rem;
+  font-style: italic;
+  letter-spacing: 0;
+}
+
 .page-firmenfitness .corporate-offer-card h3 {
-  max-width: 15ch;
-  margin: 0 0 16px;
+  max-width: none;
+  margin: 0;
   color: #19150e !important;
   -webkit-text-fill-color: #19150e !important;
-  font-size: clamp(2.1rem, 3.4vw, 4rem);
-  letter-spacing: -0.06em;
-  line-height: 0.94;
+  font-size: clamp(1.3rem, 1.55vw, 1.62rem);
+  letter-spacing: -0.01em;
+  line-height: 1.14;
   text-transform: none;
 }
 
-.page-firmenfitness .corporate-offer-card--compact h3 {
-  font-size: clamp(1.65rem, 2.2vw, 2.65rem);
-}
-
-.page-firmenfitness .corporate-offer-card__body > p {
-  max-width: 58ch;
+.page-firmenfitness .corporate-offer-card__text {
+  max-width: none;
   margin: 0;
-  color: rgba(25, 21, 14, 0.69) !important;
-  -webkit-text-fill-color: rgba(25, 21, 14, 0.69) !important;
-  font-size: 0.95rem;
-  line-height: 1.62;
+  color: rgba(25, 21, 14, 0.72) !important;
+  -webkit-text-fill-color: rgba(25, 21, 14, 0.72) !important;
+  font-size: 0.94rem;
+  line-height: 1.6;
 }
 
+/* Die Leistungen als kurze Liste statt als Pillenwolke: drei Zeilen
+   untereinander lassen sich zwischen den Karten vergleichen. */
 .page-firmenfitness .corporate-offer-card__points {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  display: grid;
+  gap: 7px;
   margin: auto 0 0;
-  padding: 28px 0 0;
+  padding: 16px 0 0;
+  border-top: 1px solid rgba(155, 116, 26, 0.18);
   list-style: none;
 }
 
 .page-firmenfitness .corporate-offer-card__points li {
   position: relative;
-  padding: 8px 11px 8px 25px;
-  border: 1px solid rgba(155, 116, 26, 0.2);
-  border-radius: 999px;
-  color: #4a3a17 !important;
-  -webkit-text-fill-color: #4a3a17 !important;
-  background: rgba(215, 195, 148, 0.16) !important;
-  font-size: 0.74rem;
-  font-weight: 720;
-  line-height: 1.2;
+  padding-left: 20px;
+  color: rgba(25, 21, 14, 0.82) !important;
+  -webkit-text-fill-color: rgba(25, 21, 14, 0.82) !important;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.45;
 }
 
 .page-firmenfitness .corporate-offer-card__points li::before {
   content: "";
   position: absolute;
-  left: 11px;
-  top: 50%;
-  width: 6px;
-  height: 6px;
+  top: 0.5em;
+  left: 2px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: #b88a22;
-  transform: translateY(-50%);
+  background: linear-gradient(140deg, #f2dfa8, #b68727);
 }
 
 .page-firmenfitness .corporate-offers-cta {
@@ -11544,18 +11531,18 @@ html body.page-premium.page-team main section.coach-success .coach-success__year
 .page-firmenfitness .corporate-offers-cta strong { color: #19150e !important; }
 .page-firmenfitness .corporate-offers-cta .button { flex: 0 0 auto; }
 
-.page-firmenfitness .corporate-cases-section {
+:is(.page-firmenfitness, .page-app) .corporate-cases-section {
   background: #f5ecdc !important;
 }
 
-.page-firmenfitness .corporate-case-grid {
+:is(.page-firmenfitness, .page-app) .corporate-case-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
   margin-top: clamp(30px, 4vw, 52px);
 }
 
-.page-firmenfitness .corporate-case-card {
+:is(.page-firmenfitness, .page-app) .corporate-case-card {
   min-height: 430px;
   display: flex;
   flex-direction: column;
@@ -11566,14 +11553,14 @@ html body.page-premium.page-team main section.coach-success .coach-success__year
   box-shadow: 0 30px 60px -48px rgba(43, 32, 12, 0.5);
 }
 
-.page-firmenfitness .corporate-case-card--accent {
+:is(.page-firmenfitness, .page-app) .corporate-case-card--accent {
   border-color: rgba(155, 116, 26, 0.34);
   background:
     radial-gradient(circle at 100% 0%, rgba(215, 195, 148, 0.25), transparent 34%),
     linear-gradient(145deg, #fffdf8, #f2e1c2) !important;
 }
 
-.page-firmenfitness .corporate-case-card__sector {
+:is(.page-firmenfitness, .page-app) .corporate-case-card__sector {
   color: #9b741a !important;
   font-size: 0.72rem;
   font-weight: 820;
@@ -11581,7 +11568,7 @@ html body.page-premium.page-team main section.coach-success .coach-success__year
   text-transform: uppercase;
 }
 
-.page-firmenfitness .corporate-case-card h3 {
+:is(.page-firmenfitness, .page-app) .corporate-case-card h3 {
   margin: 34px 0 16px;
   color: #19150e !important;
   font-size: clamp(1.8rem, 2.4vw, 2.65rem);
@@ -11589,13 +11576,13 @@ html body.page-premium.page-team main section.coach-success .coach-success__year
   line-height: 0.98;
 }
 
-.page-firmenfitness .corporate-case-card p {
+:is(.page-firmenfitness, .page-app) .corporate-case-card p {
   margin: 0;
   color: rgba(25, 21, 14, 0.7) !important;
   line-height: 1.65;
 }
 
-.page-firmenfitness .corporate-case-card ul {
+:is(.page-firmenfitness, .page-app) .corporate-case-card ul {
   display: grid;
   gap: 9px;
   margin: auto 0 0;
@@ -11603,7 +11590,7 @@ html body.page-premium.page-team main section.coach-success .coach-success__year
   list-style: none;
 }
 
-.page-firmenfitness .corporate-case-card li {
+:is(.page-firmenfitness, .page-app) .corporate-case-card li {
   padding-top: 9px;
   border-top: 1px solid rgba(42, 33, 18, 0.11);
   color: #19150e !important;
@@ -11754,9 +11741,9 @@ html body.page-premium.page-firmenfitness main .corporate-process-section {
     grid-template-columns: 1fr;
     grid-template-rows: 220px minmax(0, 1fr);
   }
-  .page-firmenfitness .corporate-case-grid { grid-template-columns: 1fr; }
-  .page-firmenfitness .corporate-case-card { min-height: 0; }
-  .page-firmenfitness .corporate-case-card ul { margin-top: 26px; }
+  :is(.page-firmenfitness, .page-app) .corporate-case-grid { grid-template-columns: 1fr; }
+  :is(.page-firmenfitness, .page-app) .corporate-case-card { min-height: 0; }
+  :is(.page-firmenfitness, .page-app) .corporate-case-card ul { margin-top: 26px; }
   .page-firmenfitness .corporate-scale-grid,
   .page-firmenfitness .corporate-decision-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .page-firmenfitness .corporate-process-layout { grid-template-columns: 1fr; }
@@ -11786,8 +11773,8 @@ html body.page-premium.page-firmenfitness main .corporate-process-section {
   }
 
   .page-firmenfitness .corporate-offers-cta .button { width: 100%; }
-  .page-firmenfitness .corporate-case-card { padding: 24px 20px; border-radius: 22px; }
-  .page-firmenfitness .corporate-case-card h3 { margin-top: 24px; }
+  :is(.page-firmenfitness, .page-app) .corporate-case-card { padding: 24px 20px; border-radius: 22px; }
+  :is(.page-firmenfitness, .page-app) .corporate-case-card h3 { margin-top: 24px; }
   .page-firmenfitness .corporate-scale-grid,
   .page-firmenfitness .corporate-decision-grid { grid-template-columns: 1fr; }
   .page-firmenfitness .corporate-scale-grid article,
@@ -12492,5 +12479,1574 @@ html body.page-premium.page-bodybuilding-coaching main .bbc-inquiry {
   body.page-premium .site-nav .site-nav__entry,
   body.page-home-reboot .site-nav .site-nav__entry {
     padding-inline: 4px !important;
+  }
+}
+
+/* ============================================================
+   EINSTIEGSKARTE "GESUNDHEITSTAGE," — Zeile ohne Trennung
+   Das Wort ist länger als jedes andere in der Reihe und wurde
+   automatisch getrennt ("GESUNDHEITSTA-GE,"). Statt Trennung
+   bekommt diese eine Überschrift etwas weniger Grad und etwas
+   mehr Platz, damit sie in einer Zeile steht.
+   ============================================================ */
+
+@media (min-width: 1100px) {
+  .page-home-reboot .ed-entry:nth-child(2) .ed-entry__body h3 {
+    padding-right: 12px !important;
+    padding-left: 12px !important;
+    font-size: clamp(1.05rem, 1.78vw, 1.85rem) !important;
+    letter-spacing: 0.004em !important;
+  }
+}
+
+/* ============================================================
+   ÜBER DOMINIK — Kurzprofil im hellen System
+   Der Abschnitt ist als dunkles Band gebaut (.section--dark).
+   Die helle Seitenebene weiter oben nimmt jedem .section den
+   Hintergrund, seine Schriftfarben blieben aber die des dunklen
+   Bandes: weiße Überschrift, helle Absätze und weiße Einträge
+   in der Checkliste standen unsichtbar auf hellem Papier.
+   Andere Seiten mit dunklem Band (Bodybuilding, Günter, Golf)
+   setzen ihren Grund selbst und bleiben deshalb dunkel — nur
+   dieser eine Abschnitt zieht in die helle Welt um.
+   ============================================================ */
+
+.page-about .section--dark :is(h2, h3, h4),
+.page-about .section--dark .premium-checklist li {
+  color: #19150e !important;
+}
+
+.page-about .section--dark :is(p, dd, li) {
+  color: rgba(25, 21, 14, 0.72) !important;
+}
+
+.page-about .section--dark :is(.eyebrow, aside span) {
+  color: #9b741a !important;
+}
+
+/* Die Trennlinie der Fachgebiete war auf Weiß gesetzt und damit weg. */
+.page-about .section--dark aside {
+  border-color: rgba(42, 33, 18, 0.14) !important;
+}
+
+/* ============================================================
+   STARTSEITE — Farben dort, wo der Grund dunkel geblieben ist
+   Die helle Ebene setzt `.page-home-reboot h1, h2, h3` pauschal
+   auf Tinte. Das trifft auch die Fußzeile, die dunkel geblieben
+   ist: die Kategorien standen dort mit 1,05:1 praktisch
+   unsichtbar. Umgekehrt tragen einige Überzeilen noch das helle
+   Gold aus der dunklen Zeit und stehen jetzt auf hellem Papier.
+   ============================================================ */
+
+.page-home-reboot .site-footer h3 {
+  color: var(--accent);
+}
+
+/* Überzeilen auf hellem Grund brauchen das dunkle Gold — das helle
+   kommt aus dem dunklen Entwurf und liegt hier bei 1,6:1. */
+.page-home-reboot :is(.ed-section__head, .ed-proof__head, .ed-google-reviews__content) .eyebrow {
+  color: #9b741a;
+}
+
+/* Das ausgeklappte Menü ist auf allen Seiten hell (siehe .site-nav:
+   linear-gradient(150deg, #fffdf8, #f9efd9)). Seine Überschriften trugen
+   noch die Farben des früheren dunklen Menüs: das helle Gold der Kategorien
+   lag bei 1,7:1, die Verzeichnis-Überzeile bei 1,0:1. */
+.site-nav .site-nav__group-title {
+  color: #9b741a;
+}
+
+.site-nav .site-nav__directory-title {
+  color: rgba(25, 21, 14, 0.62);
+}
+
+/* ============================================================
+   PREISKARTEN AUF HELLEN SEITEN
+   Der Preis ist ein <p> und lief deshalb in die allgemeine
+   Fließtextfarbe der hellen Ebene — gedämpfte Tinte statt Gold.
+   Er trägt jetzt dasselbe dunkle Gold wie die übrigen Überzeilen.
+   ============================================================ */
+
+/* Die Regel weiter oben trifft den Preis über `.pricing-card p` und wiegt damit
+   eine Klasse mehr — hier muss die Auszeichnung mitgenannt werden, sonst
+   gewinnt die Fließtextfarbe trotz !important. */
+.page-premium:not(.page-home-reboot) .pricing-card p.pricing-card__price {
+  color: #9b741a !important;
+  font-size: 1.7rem;
+}
+
+/* Die Körperanalyse hat zwei Preise, das Raster ist auf drei Spalten
+   ausgelegt: die beiden Karten stehen deshalb mittig statt links mit
+   einer Lücke daneben. */
+@media (min-width: 900px) {
+  .page-body-analysis #preise .pricing-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 62rem;
+    margin-inline: auto;
+  }
+}
+
+/* ============================================================
+   PILLEN IM EINSTIEG (Firmenfitness, Events)
+   Sie liegen auf einem dunklen Foto, erbten auf den hellen
+   Unterseiten aber Tinte und eine dunkle Haarlinie
+   (styles.css: ".page-premium .premium-proof-pills span" mit
+   --cd-text und --cd-line, die hier hell umdefiniert sind).
+   Auf dem Bild war davon nichts zu lesen. Dunkle Auflage plus
+   helle Schrift trägt über jedem Bildausschnitt.
+   ============================================================ */
+
+.page-premium:not(.page-home-reboot) .ff-hero .premium-proof-pills span {
+  border-color: rgba(255, 253, 248, 0.42) !important;
+  color: #fffdf8 !important;
+  -webkit-text-fill-color: #fffdf8 !important;
+  background: rgba(18, 16, 12, 0.46) !important;
+  backdrop-filter: blur(10px);
+}
+
+/* ============================================================
+   EINSTIEGS-ÜBERSCHRIFT AUF DEM HANDY
+   "Deutschlandweit." lag mit 40 px bei 312 px Breite in einer
+   335-px-Box — rechnerisch passt das, praktisch nicht: Steht die
+   schmale Schnittschrift nicht zur Verfügung, ist die Ersatzschrift
+   breiter und das Wort bricht mitten durch. Weniger Grad schafft
+   den Puffer, und ohne Wortumbruch kann es nicht mehr zerreißen.
+   ============================================================ */
+
+@media (max-width: 700px) {
+  /* Gleiches Gewicht wie die seitenweite Regel (body.page-premium main
+     .ff-hero__title, 10,8 vw), die hier sonst gewinnt — nur später notiert. */
+  body.page-firmenfitness main .ff-hero__title {
+    font-size: clamp(1.75rem, 7.5vw, 2.45rem) !important;
+    word-break: normal !important;
+    hyphens: manual !important;
+  }
+}
+
+/* ============================================================
+   AUSGEKLAPPTES MENÜ AM HANDY
+   Die Einträge lagen mit 60 % Weiß auf einem fast weißen Panel —
+   Fläche und Eintrag waren praktisch dieselbe Farbe, das Menü
+   wirkte flach. Jetzt trägt das Panel einen tieferen Sandton und
+   die Einträge sind echte weiße Karten mit goldener Haarlinie.
+   Das Seitenverzeichnis darunter bleibt bewusst ruhiger, damit
+   die Hauptwege führen.
+   ============================================================ */
+
+@media (max-width: 979px) {
+  body.page-premium .site-nav,
+  body.page-home-reboot .site-nav {
+    background:
+      radial-gradient(circle at 88% 4%, rgba(215, 195, 148, 0.34), transparent 46%),
+      linear-gradient(158deg, #f6eeda 0%, #ece0c6 100%) !important;
+  }
+
+  /* Hauptwege: weiße Karten, die sich vom Grund abheben */
+  body .site-nav .site-nav__entry {
+    min-height: 58px;
+    border: 1px solid rgba(155, 116, 26, 0.26) !important;
+    border-radius: 15px !important;
+    background: #fffefb !important;
+    box-shadow: 0 14px 26px -20px rgba(43, 32, 12, 0.5) !important;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  body .site-nav .site-nav__entry:active {
+    transform: scale(0.985);
+  }
+
+  /* Symbolkachel als goldener Anker statt blasser Fläche */
+  body .site-nav .site-nav__entry-icon {
+    border: 1px solid rgba(155, 116, 26, 0.34) !important;
+    border-radius: 11px !important;
+    color: #4a3a17 !important;
+    background: linear-gradient(140deg, #f8e8bd, #e0c179) !important;
+  }
+
+  /* Die Symbole waren als helles Gold gezeichnet — auf der Kachel
+     standen sie bei 1,2:1 und waren praktisch nicht zu sehen. */
+  body .site-nav .site-nav__entry-icon svg,
+  body .site-nav .site-nav__entry-icon svg * {
+    stroke: #4a3a17 !important;
+    color: #4a3a17 !important;
+  }
+
+  /* Aktuelle Seite: bleibt Gold, bekommt aber einen Ring, damit sie
+     zwischen den jetzt helleren Nachbarn führt. */
+  body .site-nav .site-nav__entry.is-active,
+  body .site-nav .site-nav__entry[aria-current="page"] {
+    border-color: rgba(155, 116, 26, 0.62) !important;
+    box-shadow: 0 0 0 2px rgba(155, 116, 26, 0.28), 0 18px 30px -22px rgba(143, 97, 5, 0.55) !important;
+  }
+
+  body .site-nav .site-nav__entry.is-active .site-nav__entry-icon,
+  body .site-nav .site-nav__entry[aria-current="page"] .site-nav__entry-icon {
+    border-color: rgba(74, 58, 23, 0.32) !important;
+    background: rgba(255, 253, 248, 0.72) !important;
+  }
+
+  /* Zweite Ebene: Zeilen mit Trennlinie statt weiterer Kartenstapel */
+  body .site-nav .site-nav__group-links a {
+    min-height: 46px;
+    border: 0 !important;
+    border-bottom: 1px solid rgba(155, 116, 26, 0.18) !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  body .site-nav .site-nav__group-links a:last-child {
+    border-bottom: 0 !important;
+  }
+
+  body .site-nav .site-nav__directory {
+    margin-top: 30px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(155, 116, 26, 0.28);
+  }
+}
+
+/* ============================================================
+   PREISRASTER MIT FÜNF MODELLEN
+   Vier feste Spalten ließen die fünfte Karte allein in einer
+   zweiten Reihe stehen. Feste Spaltenbreiten mit zentrierter
+   Ausrichtung ergeben drei plus zwei — beide Reihen mittig,
+   alle Karten gleich breit.
+   ============================================================ */
+
+@media (min-width: 681px) {
+  /* Flex statt Grid: nur so rückt eine unvollständige letzte Reihe in die
+     Mitte, statt links zu kleben. */
+  .page-guide-pricing .pt-price-grid {
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .page-guide-pricing .pt-price-card {
+    flex: 1 1 19rem;
+    max-width: 22rem;
+  }
+}
+
+@media (min-width: 681px) and (max-width: 1180px) {
+  .page-guide-pricing .pt-price-card {
+    flex-basis: 20rem;
+    max-width: 20rem;
+  }
+}
+
+/* ============================================================
+   ÜBER DOMINIK — STICHPUNKTE UND FACHGEBIETE
+   Beide Listen liefen als Häkchenliste mit goldenem Punkt und
+   Leuchtring. Das ist die Formsprache von Feature-Listen, nicht
+   von einem Profil. Jetzt tragen sie eine editoriale Form:
+   Haarlinien geben den Takt, eine zurückgenommene Ziffer die
+   Ordnung — kein Aufzählungszeichen mehr.
+   ============================================================ */
+
+/* Eine Spalte über die volle Breite: bei zwei Spalten à 300 px brachen
+   die längeren Einträge dreizeilig um und die Zeilen wirkten gedrängt. */
+.page-about .fact-dossier {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  margin: clamp(20px, 2.4vw, 30px) 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: fakt;
+}
+
+.page-about .fact-dossier li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  align-items: baseline;
+  padding: 15px 2px;
+  border-top: 1px solid rgba(155, 116, 26, 0.22);
+  color: rgba(25, 21, 14, 0.86) !important;
+  -webkit-text-fill-color: rgba(25, 21, 14, 0.86) !important;
+  font-size: 1rem;
+  line-height: 1.5;
+  counter-increment: fakt;
+}
+
+/* Der frühere Punkt wird zur Ziffer — Position, Fläche und Schein
+   der alten Regel müssen dafür zurückgesetzt werden. */
+.page-about .fact-dossier li::before {
+  content: counter(fakt, decimal-leading-zero);
+  position: static;
+  top: auto;
+  left: auto;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  color: rgba(155, 116, 26, 0.7) !important;
+  -webkit-text-fill-color: rgba(155, 116, 26, 0.7) !important;
+  font-family: var(--font-cond);
+  font-size: 0.82rem;
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+/* Fachgebiete: reine Zeilen mit Trennlinie, ohne Zeichen davor. */
+.page-about .field-list {
+  display: grid;
+  gap: 0;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.page-about .field-list li {
+  padding: 13px 0;
+  border-top: 1px solid rgba(42, 33, 18, 0.16);
+  color: rgba(25, 21, 14, 0.84) !important;
+  -webkit-text-fill-color: rgba(25, 21, 14, 0.84) !important;
+  font-size: 0.98rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.page-about .field-list li:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.page-about .field-list li::before {
+  content: none;
+}
+
+/* Dieselbe Form im Einstieg — dort steht die Liste auf einer dunklen,
+   milchigen Karte, deshalb helle Haarlinien und goldene Ziffern. */
+.page-about .fact-dossier--onDark {
+  margin-top: 16px;
+}
+
+.page-about .fact-dossier--onDark li {
+  padding: 11px 0;
+  border-top-color: rgba(255, 255, 255, 0.16) !important;
+  color: rgba(255, 253, 248, 0.88) !important;
+  -webkit-text-fill-color: rgba(255, 253, 248, 0.88) !important;
+  font-size: 0.94rem;
+}
+
+.page-about .fact-dossier--onDark li:first-child {
+  padding-top: 0;
+  border-top: 0 !important;
+}
+
+.page-about .fact-dossier--onDark li::before {
+  color: rgba(215, 195, 148, 0.9) !important;
+  -webkit-text-fill-color: rgba(215, 195, 148, 0.9) !important;
+}
+
+/* ============================================================
+   ZWEI ÜBERSCHRIFTEN AUF DER HAUPTSEITE
+   Beide standen in einer Box von rund 600 px und brachen dadurch
+   auf drei bzw. vier Zeilen. Sie bekommen die volle Kopfbreite
+   und einen ausgeglichenen Umbruch — daraus werden zwei Zeilen.
+   ============================================================ */
+
+.page-coaching #pt-audience-title,
+.page-coaching .coaching-outcome-stage .section-header h2 {
+  max-width: none !important;
+  margin-inline: auto;
+  text-wrap: balance;
+}
+
+/* ============================================================
+   PREMIUM BEGLEITUNG ALS BREITE KACHEL
+   Vier Einstiege stehen als gleiche Kacheln nebeneinander; die
+   Premium Begleitung ist kein fünfter Einstieg, sondern die
+   Ausbaustufe darüber. Sie läuft deshalb als flache Bahn über die
+   volle Breite — in Gold, damit der Unterschied sichtbar ist.
+   ============================================================ */
+
+@media (min-width: 681px) {
+  .page-guide-pricing .pt-price-card--wide {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.35fr) auto;
+    gap: clamp(22px, 2.4vw, 40px);
+    align-items: center;
+    flex-basis: 100%;
+    max-width: none;
+    min-height: 0;
+    padding: clamp(24px, 2.2vw, 34px) clamp(26px, 2.4vw, 38px);
+  }
+
+  /* Ohne feste Zeilen bekäme jedes Kind eine eigene Zeile und die Bahn
+     wäre so hoch wie eine Kachel. Drei Zeilen, zwei Spalten, Knopf über
+     die volle Höhe rechts. */
+  .page-guide-pricing .pt-price-card--wide {
+    grid-template-rows: auto auto auto;
+    row-gap: 8px;
+  }
+
+  .page-guide-pricing .pt-price-card--wide .pt-price-card__top { grid-area: 1 / 1; margin: 0; }
+  .page-guide-pricing .pt-price-card--wide h3 { grid-area: 2 / 1; margin: 0; }
+  .page-guide-pricing .pt-price-card--wide .pt-price-card__price { grid-area: 3 / 1; margin: 0; align-self: start; }
+  .page-guide-pricing .pt-price-card--wide .pt-price-card__fit { grid-area: 1 / 2; margin: 0; }
+  .page-guide-pricing .pt-price-card--wide .pt-price-card__text { grid-area: 2 / 2; margin: 0; }
+  .page-guide-pricing .pt-price-card--wide ul { grid-area: 3 / 2; margin: 0; }
+
+  .page-guide-pricing .pt-price-card--wide .pt-price-card__link {
+    grid-area: 1 / 3 / 4 / 4;
+    align-self: center;
+    margin: 0;
+    white-space: nowrap;
+  }
+}
+
+/* Goldene Fläche für die Ausbaustufe — auf beiden Breiten. */
+.page-guide-pricing .pt-price-card--wide {
+  border-color: rgba(155, 116, 26, 0.46) !important;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(255, 255, 255, 0.6), transparent 40%),
+    linear-gradient(150deg, #fdf3df 0%, #f0dfba 100%) !important;
+  box-shadow: 0 26px 48px -34px rgba(43, 32, 12, 0.5) !important;
+}
+
+.page-guide-pricing .pt-price-card--wide .pt-price-card__tag {
+  color: #7f5c0f !important;
+  -webkit-text-fill-color: #7f5c0f !important;
+}
+
+/* ============================================================
+   EVENTS — REFERENZBAND MITTIG
+   Überzeile, Überschrift und Text standen linksbündig in einer
+   14-Zeichen-Box. Jetzt stehen sie mittig über der Logoreihe, die
+   Überschrift mit ausgeglichenem Umbruch.
+   ============================================================ */
+
+.page-events .event-reference-band__intro {
+  text-align: center;
+}
+
+.page-events .event-reference-band__intro .eyebrow {
+  justify-content: center;
+}
+
+.page-events .event-reference-band__intro h2 {
+  max-width: none !important;
+  margin-inline: auto;
+  text-wrap: balance;
+}
+
+.page-events .event-reference-band__intro p:not(.eyebrow) {
+  max-width: 62ch;
+  margin-inline: auto;
+}
+
+/* ============================================================
+   EVENTS — ÜBERSCHRIFT DER EVENT-FORMATE
+   "Welche Bühnenformate Camp Dörfl besonders stark trägt."
+   stand in einer 604-px-Box (13ch) und lief über fünf Zeilen,
+   während der Block darunter 1.412 px breit ist. Kopf und
+   Überschrift nutzen jetzt die Breite des Blocks, der Umbruch
+   ist ausgeglichen — daraus werden zwei Zeilen.
+   ============================================================ */
+
+.page-events .event-format-intro .section-header {
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+.page-events .event-format-intro .section-header h2 {
+  max-width: none !important;
+  margin-inline: auto;
+  text-wrap: balance;
+}
+
+/* Die Schriftgröße war ab 981 px fest bei 4,2 rem, die Blockbreite wächst
+   aber mit dem Fenster. Damit "Welche Bühnenformate Camp Dörfl" in jeder
+   Desktopbreite auf die erste Zeile passt, folgt die Größe bis zur alten
+   Obergrenze der Fensterbreite. */
+@media (min-width: 701px) {
+  .page-events .event-format-intro .section-header h2 {
+    font-size: min(4.2rem, 4.5vw);
+  }
+}
+
+.page-events .event-format-intro .section-header p:not(.eyebrow) {
+  max-width: 74ch;
+  margin-inline: auto;
+}
+
+/* ============================================================
+   KEYNOTE — WERKZEUGE, BÜHNENBILD UND FARBE
+   Die Seite bestand fast nur aus gleichförmigen Textblöcken.
+   Sie bekommt jetzt ein dunkles Band mit den beiden Werkzeugen
+   aus dem Vortrag, ein Bühnenfoto neben den Formaten, sichtbar
+   hervorgehobene Schlagworte und einen verbundenen Ablauf.
+   ============================================================ */
+
+/* --- Kopf über der Slideshow: zwei Zeilen über die volle Breite --- */
+
+.page-keynote .keynote-authority .section-header {
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+.page-keynote .keynote-authority .section-header h2 {
+  max-width: none !important;
+  margin-inline: auto;
+  text-wrap: balance;
+}
+
+.page-keynote .keynote-authority .section-header p:not(.eyebrow) {
+  max-width: 74ch;
+  margin-inline: auto;
+}
+
+/* Größer als die übrigen Zwischenüberschriften: erst dadurch füllen die zwei
+   Zeilen die Blockbreite, statt schmal in der Mitte zu stehen. */
+@media (min-width: 701px) {
+  .page-keynote .keynote-authority .section-header h2 {
+    font-size: clamp(3rem, 5.4vw, 5.2rem);
+  }
+}
+
+/* --- Dunkles Band mit den beiden Werkzeugen --- */
+
+/* Die helle Ebene setzt alle .section-Flächen mit !important auf transparent.
+   Für das dunkle Band braucht es deshalb die höhere Spezifität. */
+html body.page-premium.page-keynote main .section.keynote-tools-section {
+  color: #f6f3ec !important;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(215, 195, 148, 0.2), transparent 44%),
+    radial-gradient(circle at 94% 100%, rgba(215, 195, 148, 0.12), transparent 40%),
+    linear-gradient(158deg, #17140f 0%, #111114 54%, #0a0a0c 100%) !important;
+}
+
+.page-keynote .keynote-tools-section .section-header h2 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background: none !important;
+}
+
+.page-keynote .keynote-tools-section .section-header p:not(.eyebrow) {
+  color: rgba(246, 243, 236, 0.74) !important;
+}
+
+.page-keynote .keynote-tools-section .eyebrow {
+  color: #e8d5a4 !important;
+  -webkit-text-fill-color: #e8d5a4 !important;
+}
+
+.page-keynote .keynote-tools {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(18px, 2vw, 28px);
+  align-items: stretch;
+}
+
+.page-keynote .keynote-tool {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: clamp(24px, 2.6vw, 40px);
+  border: 1px solid rgba(215, 195, 148, 0.26);
+  border-radius: 26px;
+  background:
+    linear-gradient(155deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 46%, rgba(0, 0, 0, 0.16) 100%);
+  box-shadow: 0 34px 74px -52px rgba(0, 0, 0, 0.95);
+}
+
+.page-keynote .keynote-tool__index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  color: #12100b;
+  background: linear-gradient(140deg, #f2dfa8, #c9a34d);
+  font-family: var(--font-cond);
+  font-size: 0.9rem;
+  font-style: italic;
+  letter-spacing: 0.1em;
+}
+
+.page-keynote .keynote-tool h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(1.55rem, 2.3vw, 2.2rem);
+  line-height: 1.04;
+}
+
+.page-keynote .keynote-tool__claim {
+  margin: 0;
+  color: #ecd9a9;
+  font-size: clamp(1rem, 1.15vw, 1.14rem);
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.page-keynote .keynote-tool__text {
+  margin: 0;
+  color: rgba(246, 243, 236, 0.76);
+  font-size: 1rem;
+  line-height: 1.66;
+}
+
+.page-keynote .keynote-tool__points {
+  margin: 6px 0 0;
+  padding: 18px 0 0;
+  border-top: 1px solid rgba(215, 195, 148, 0.2);
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.page-keynote .keynote-tool__points li {
+  position: relative;
+  padding-left: 26px;
+  color: rgba(246, 243, 236, 0.86);
+  font-size: 0.97rem;
+  line-height: 1.45;
+}
+
+.page-keynote .keynote-tool__points li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: #d7c394;
+}
+
+
+/* Die vier Töpfe als eigene Fläche, nicht als weitere Aufzählung */
+.page-keynote .keynote-pots {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.page-keynote .keynote-pots li {
+  padding: 13px 15px;
+  border: 1px solid rgba(215, 195, 148, 0.24);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.045);
+  color: #f4efe4;
+  font-family: var(--font-cond);
+  font-size: 0.84rem;
+  font-style: italic;
+  letter-spacing: 0.05em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+/* Beide Fotos sitzen auf gleicher Höhe am Fuß der Karte. */
+.page-keynote .keynote-tool__media {
+  margin: auto 0 0;
+  padding-top: 14px;
+}
+
+/* Im Laufbild steht der Kopf im oberen Drittel — der 16:9-Ausschnitt
+   schneidet deshalb unten mehr weg als oben. */
+.page-keynote .keynote-tool--road .keynote-tool__media img {
+  object-position: center 38%;
+}
+
+.page-keynote .keynote-tool__media img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 18px;
+  object-fit: cover;
+}
+
+.page-keynote .keynote-tool__media figcaption {
+  margin-top: 10px;
+  color: rgba(246, 243, 236, 0.6);
+  font-size: 0.87rem;
+}
+
+/* --- Formate mit Bühnenfoto --- */
+
+.page-keynote .keynote-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  gap: clamp(26px, 3.4vw, 60px);
+  align-items: center;
+}
+
+.page-keynote .keynote-split .section-header {
+  max-width: none;
+}
+
+.page-keynote .keynote-split__media {
+  margin: 0;
+}
+
+.page-keynote .keynote-split__media img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 26px;
+  object-fit: cover;
+  object-position: center 26%;
+  box-shadow: 0 36px 72px -46px rgba(43, 32, 12, 0.6);
+}
+
+.page-keynote .keynote-split__media figcaption {
+  margin-top: 14px;
+  color: #6a5f4e;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+/* Hervorgehobene Schlagworte im Fließtext */
+.page-keynote main p strong {
+  color: #17130c;
+  font-weight: 700;
+  box-shadow: inset 0 -0.32em rgba(201, 163, 77, 0.3);
+}
+
+.page-keynote .keynote-tools-section p strong {
+  color: #f7ead0;
+  box-shadow: inset 0 -0.32em rgba(215, 195, 148, 0.22);
+}
+
+/* --- Ablauf als verbundene Strecke --- */
+
+.page-keynote .keynote-sequence .step-grid {
+  position: relative;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.page-keynote .keynote-sequence .step-grid::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 51px;
+  right: 8%;
+  left: 8%;
+  height: 2px;
+  background: linear-gradient(90deg, #c9a34d, #e8d29a 50%, #c9a34d);
+}
+
+.page-keynote .keynote-sequence .step-card {
+  z-index: 1;
+  min-width: 0;
+  padding: 28px;
+  border-color: rgba(42, 33, 18, 0.13);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(201, 163, 77, 0.14), transparent 38%),
+    linear-gradient(145deg, #fffefa, #f5ead7);
+  box-shadow: 0 24px 52px -38px rgba(43, 32, 12, 0.42);
+}
+
+.page-keynote .keynote-sequence .step-card__index {
+  position: relative;
+  z-index: 2;
+  width: 46px;
+  height: 46px;
+  margin-bottom: 24px;
+  padding: 0;
+  border: 1px solid rgba(201, 163, 77, 0.45);
+  border-radius: 50%;
+  color: #fffdf8;
+  background: #17140f;
+  font-family: var(--font-cond);
+  font-size: 0.88rem;
+  font-style: italic;
+  letter-spacing: 0.08em;
+}
+
+.page-keynote .keynote-sequence .step-card h3 {
+  color: #19150e;
+  font-size: clamp(1.12rem, 1.45vw, 1.38rem);
+  line-height: 1.1;
+}
+
+.page-keynote .keynote-sequence .step-card p {
+  color: #625747;
+  line-height: 1.6;
+}
+
+@media (max-width: 980px) {
+  .page-keynote .keynote-tools,
+  .page-keynote .keynote-split {
+    grid-template-columns: 1fr;
+  }
+
+  .page-keynote .keynote-split__media img {
+    aspect-ratio: 4 / 3;
+    object-position: center 20%;
+  }
+
+  .page-keynote .keynote-sequence .step-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .page-keynote .keynote-sequence .step-grid::before {
+    display: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .page-keynote .keynote-sequence .step-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .page-keynote .keynote-pots {
+    grid-template-columns: 1fr;
+  }
+
+  .page-keynote .keynote-split__media img {
+    aspect-ratio: 3 / 4;
+  }
+}
+
+/* ============================================================
+   KEYNOTE — TITELBILD DER SEITE
+   Neues Bühnenfoto (3:2, roter Vorhang). Die Klassen der
+   Events-Seite bleiben unberührt, deshalb eine eigene Klasse:
+   Dominik steht bei etwa 57 % der Bildbreite, sein Kopf dicht
+   am oberen Rand — der Ausschnitt richtet sich danach.
+   ============================================================ */
+
+.page-keynote .ff-hero--keynote-photo .ff-hero__img {
+  object-position: 52% 6%;
+  filter: saturate(0.96) contrast(1.02) brightness(0.88);
+}
+
+@media (max-width: 900px) {
+  .page-keynote .ff-hero--keynote-photo .ff-hero__img {
+    object-position: 57% 20%;
+  }
+}
+
+/* ============================================================
+   KEYNOTE — THEMEN ALS NUMMERIERTE STRECKE
+   Vorher drei gleiche Kacheln in einer engen Spalte neben einem
+   übergroßen Foto. Jetzt trägt der Kopf die volle Breite, die
+   drei Schwerpunkte stehen als nummerierte Zeilen mit Haarlinien
+   und Ghost-Ziffern, das Foto steht daneben in einem versetzten
+   Goldrahmen.
+   ============================================================ */
+
+.page-keynote .keynote-topics .section-header {
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+.page-keynote .keynote-topics .section-header h2 {
+  max-width: none !important;
+  margin-inline: auto;
+  text-wrap: balance;
+}
+
+.page-keynote .keynote-topics .section-header p:not(.eyebrow) {
+  max-width: 68ch;
+  margin-inline: auto;
+}
+
+@media (min-width: 701px) {
+  .page-keynote .keynote-topics .section-header h2 {
+    font-size: clamp(3rem, 5vw, 4.8rem);
+  }
+}
+
+.page-keynote .keynote-topics__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+  gap: clamp(28px, 3.6vw, 64px);
+  align-items: center;
+}
+
+.page-keynote .keynote-topic-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.page-keynote .keynote-topic {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(18px, 2vw, 34px);
+  align-items: start;
+  padding: clamp(20px, 2.2vw, 30px) clamp(12px, 1.4vw, 20px);
+  border-top: 1px solid rgba(42, 33, 18, 0.16);
+  transition: background 0.45s ease;
+}
+
+.page-keynote .keynote-topic:last-child {
+  border-bottom: 1px solid rgba(42, 33, 18, 0.16);
+}
+
+/* Ghost-Ziffer: nur Kontur, bis die Zeile berührt wird. */
+.page-keynote .keynote-topic__index {
+  color: transparent;
+  font-family: var(--font-cond);
+  font-size: clamp(2.1rem, 3.2vw, 3.4rem);
+  font-style: italic;
+  line-height: 0.9;
+  -webkit-text-stroke: 1.4px rgba(155, 116, 26, 0.55);
+  transition: color 0.35s ease, -webkit-text-stroke-color 0.35s ease;
+}
+
+.page-keynote .keynote-topic h3 {
+  margin: 0 0 10px;
+  color: #19150e;
+  font-size: clamp(1.3rem, 1.95vw, 1.8rem);
+  line-height: 1.05;
+}
+
+.page-keynote .keynote-topic p {
+  margin: 0;
+  max-width: 62ch;
+  color: #625747;
+  line-height: 1.62;
+}
+
+.page-keynote .keynote-topic:hover {
+  background: linear-gradient(100deg, rgba(201, 163, 77, 0.14), rgba(255, 255, 255, 0) 68%);
+}
+
+/* Vertiefung je Thema: Fließtext bleibt schmal, die Mitnahmen stehen als
+   abgesetzte Liste darunter — mehr Substanz, ohne die Zeile zuzuschütten. */
+.page-keynote .keynote-topic p.keynote-topic__detail {
+  margin-top: 12px;
+}
+
+.page-keynote .keynote-topic p.keynote-topic__label {
+  margin: 18px 0 8px;
+  color: #9b741a;
+  font-family: var(--font-cond);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.page-keynote .keynote-topic__takeaways {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  max-width: 62ch;
+  list-style: none;
+}
+
+.page-keynote .keynote-topic__takeaways li {
+  position: relative;
+  padding-left: 20px;
+  color: #625747;
+  line-height: 1.55;
+}
+
+.page-keynote .keynote-topic__takeaways li::before {
+  content: "";
+  position: absolute;
+  top: 0.62em;
+  left: 0;
+  width: 9px;
+  height: 1.5px;
+  background: rgba(155, 116, 26, 0.75);
+}
+
+/* Anlässe: sechs kurze Karten, bewusst ohne Ziffern — es ist keine Reihenfolge. */
+.page-keynote .keynote-occasions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: clamp(14px, 1.6vw, 22px);
+  margin-top: clamp(26px, 3vw, 44px);
+}
+
+.page-keynote .keynote-occasion {
+  padding: clamp(20px, 2vw, 28px);
+  border: 1px solid rgba(42, 33, 18, 0.14);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.page-keynote .keynote-occasion h3 {
+  margin: 0 0 9px;
+  color: #19150e;
+  font-size: clamp(1.12rem, 1.5vw, 1.32rem);
+  line-height: 1.15;
+}
+
+.page-keynote .keynote-occasion p {
+  margin: 0;
+  color: #625747;
+  line-height: 1.6;
+}
+
+
+.page-keynote .keynote-topic:hover .keynote-topic__index {
+  color: #9b741a;
+  -webkit-text-stroke-color: transparent;
+}
+
+/* Foto mit versetztem Goldrahmen statt randlosem Riesenbild. */
+.page-keynote .keynote-topics__media {
+  position: relative;
+  z-index: 0;
+  margin: 0;
+}
+
+.page-keynote .keynote-topics__media img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 24px;
+  object-fit: cover;
+  object-position: center 18%;
+  box-shadow: 0 34px 70px -46px rgba(43, 32, 12, 0.62);
+}
+
+.page-keynote .keynote-topics__media::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 22px -22px 30px 22px;
+  border: 1px solid rgba(155, 116, 26, 0.45);
+  border-radius: 24px;
+}
+
+.page-keynote .keynote-topics__media figcaption {
+  margin-top: 16px;
+  color: #6a5f4e;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   KEYNOTE — FORMATE ALS STEIGERUNG
+   "Vom Impuls bis zum ganzen Bühnentag" wird sichtbar: Die drei
+   Bahnen werden mit dem Umfang breiter und goldener.
+   ============================================================ */
+
+.page-keynote .keynote-scale {
+  display: grid;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.page-keynote .keynote-scale__item {
+  width: calc(61% + var(--stufe) * 13%);
+  min-width: 280px;
+  padding: clamp(18px, 1.9vw, 26px) clamp(20px, 2.1vw, 32px);
+  border: 1px solid rgba(155, 116, 26, 0.2);
+  border-left: 3px solid rgba(155, 116, 26, 0.4);
+  border-radius: 0 18px 18px 0;
+  background: linear-gradient(100deg, rgba(201, 163, 77, 0.07), rgba(255, 255, 255, 0.72) 74%);
+  box-shadow: 0 22px 46px -40px rgba(43, 32, 12, 0.55);
+}
+
+.page-keynote .keynote-scale__item:nth-child(2) {
+  border-color: rgba(155, 116, 26, 0.3);
+  border-left-color: rgba(155, 116, 26, 0.6);
+  background: linear-gradient(100deg, rgba(201, 163, 77, 0.14), rgba(255, 255, 255, 0.78) 74%);
+}
+
+.page-keynote .keynote-scale__item:nth-child(3) {
+  border-color: rgba(155, 116, 26, 0.44);
+  border-left-color: #9b741a;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(255, 255, 255, 0.6), transparent 42%),
+    linear-gradient(120deg, #fdf3df 0%, #f0dfba 100%);
+  box-shadow: 0 26px 50px -36px rgba(43, 32, 12, 0.5);
+}
+
+.page-keynote .keynote-scale__meta {
+  margin: 0 0 8px;
+  color: #8a6a14;
+  font-family: var(--font-cond);
+  font-size: 0.78rem;
+  font-style: italic;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.page-keynote .keynote-scale__item h3 {
+  margin: 0 0 8px;
+  color: #19150e;
+  font-size: clamp(1.15rem, 1.5vw, 1.5rem);
+  line-height: 1.06;
+}
+
+.page-keynote .keynote-scale__text {
+  margin: 0;
+  color: #625747;
+  line-height: 1.6;
+}
+
+@media (max-width: 980px) {
+  .page-keynote .keynote-topics__body {
+    grid-template-columns: 1fr;
+  }
+
+  .page-keynote .keynote-topics__media img {
+    aspect-ratio: 4 / 3;
+    object-position: center 16%;
+  }
+
+  .page-keynote .keynote-scale__item {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 620px) {
+  .page-keynote .keynote-topic {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding-inline: 0;
+  }
+}
+
+/* ============================================================
+   PERSONAL TRAINER NÜRNBERG — ZWEI BLÖCKE MIT EIGENER FARBE
+   "Personal Training für Nürnberg, Fürth und Erlangen" und die
+   FAQ standen direkt untereinander auf demselben Creme-Grund und
+   liefen ineinander. Der Ortsblock wird warm und golden, die FAQ
+   bekommt einen kühlen Steingrund. Beide Überschriften stehen
+   mittig auf zwei Zeilen statt schmal umgebrochen.
+   ============================================================ */
+
+.page-coaching .coaching-local .section-header,
+.page-coaching .coaching-faq .section-header {
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+.page-coaching .coaching-local .section-header h2,
+.page-coaching .coaching-faq .section-header h2 {
+  max-width: none !important;
+  margin-inline: auto;
+  text-wrap: balance;
+}
+
+.page-coaching .coaching-local .section-header p:not(.eyebrow),
+.page-coaching .coaching-faq .section-header p:not(.eyebrow) {
+  max-width: 68ch;
+  margin-inline: auto;
+}
+
+@media (min-width: 701px) {
+  .page-coaching .coaching-local .section-header h2 {
+    font-size: min(4.2rem, 4.4vw);
+  }
+
+  /* Fester Umbruch im Titel: zwei Zeilen, mittig, in großer Schrift. */
+  .page-coaching .coaching-faq .section-header h2 {
+    font-size: clamp(3rem, 6vw, 6rem);
+    line-height: 0.94;
+  }
+}
+
+/* Warmer Goldgrund für den Ortsblock. Die helle Ebene setzt alle
+   .section-Flächen mit !important auf transparent — daher die
+   höhere Spezifität. */
+html body.page-premium.page-coaching main .section.coaching-local-section {
+  border-top: 1px solid rgba(155, 116, 26, 0.2);
+  border-bottom: 1px solid rgba(155, 116, 26, 0.2);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(201, 163, 77, 0.2), transparent 46%),
+    radial-gradient(circle at 90% 100%, rgba(201, 163, 77, 0.14), transparent 44%),
+    linear-gradient(168deg, #fdf6e7 0%, #f7ecd5 100%) !important;
+}
+
+.page-coaching .coaching-local .feature-card {
+  border-color: rgba(155, 116, 26, 0.24) !important;
+  background: linear-gradient(160deg, #fffefb 0%, #fdf9f0 100%) !important;
+  box-shadow: 0 26px 52px -40px rgba(43, 32, 12, 0.45) !important;
+}
+
+/* Kühler Steingrund für die FAQ, damit sich die beiden Blöcke
+   klar voneinander absetzen. */
+html body.page-premium.page-coaching main .section.coaching-faq-section {
+  background:
+    radial-gradient(circle at 84% 0%, rgba(108, 116, 128, 0.12), transparent 46%),
+    linear-gradient(172deg, #f4f4f2 0%, #e8e9e9 100%) !important;
+}
+
+html body.page-premium.page-coaching main .coaching-faq .faq details {
+  border-color: rgba(28, 30, 34, 0.12) !important;
+  background: #ffffff !important;
+  box-shadow: 0 16px 34px -28px rgba(20, 22, 26, 0.34) !important;
+}
+
+html body.page-premium.page-coaching main .coaching-faq .faq summary::after {
+  color: #fffdf8;
+  background: #1c1a16;
+}
+
+html body.page-premium.page-coaching main .coaching-faq .eyebrow {
+  color: #7f5c0f !important;
+  -webkit-text-fill-color: #7f5c0f !important;
+}
+
+/* ============================================================
+   PERSONAL TRAINER NÜRNBERG — PREISBLOCK IN DER FARBFOLGE
+   "Was kostet ein Personal Trainer in Nürnberg?" stand auf
+   demselben Creme-Grund wie alles darunter. Der Block bekommt
+   den kühlen Steingrund, der Ortsblock danach bleibt warm und
+   golden — so wechseln sich die drei Blöcke sichtbar ab.
+   ============================================================ */
+
+.page-coaching .coaching-price .section-header {
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+.page-coaching .coaching-price .section-header h2 {
+  max-width: none !important;
+  margin-inline: auto;
+  text-wrap: balance;
+}
+
+.page-coaching .coaching-price .section-header p:not(.eyebrow) {
+  max-width: 68ch;
+  margin-inline: auto;
+}
+
+@media (min-width: 701px) {
+  .page-coaching .coaching-price .section-header h2 {
+    font-size: min(4.2rem, 4.6vw);
+  }
+}
+
+html body.page-premium.page-coaching main .section.coaching-price-section {
+  border-top: 1px solid rgba(28, 30, 34, 0.09);
+  background:
+    radial-gradient(circle at 16% 0%, rgba(108, 116, 128, 0.16), transparent 48%),
+    linear-gradient(170deg, #f1f2f1 0%, #e3e5e6 100%) !important;
+}
+
+html body.page-premium.page-coaching main .coaching-price .summary-row {
+  border-color: rgba(28, 30, 34, 0.1) !important;
+  border-left: 3px solid rgba(155, 116, 26, 0.55) !important;
+  border-radius: 0 18px 18px 0 !important;
+  background: #ffffff !important;
+  box-shadow: 0 18px 38px -30px rgba(20, 22, 26, 0.34) !important;
+}
+
+.page-coaching .coaching-price .ff-hero__actions {
+  justify-content: center;
+}
+
+/* Startseite, Einstieg "Personal Training vom Profi": engerer Bildausschnitt
+   (die dunkle Decke über dem Kopf ist weg), damit die Person mehr Fläche
+   einnimmt. Der Ausschnitt startet weiter oben, damit der Kopf auch im
+   querformatigen Rahmen mittlerer Breiten nicht anschneidet. */
+.page-home-reboot .ed-entry--coaching .ed-entry__media img {
+  object-position: 50% 12%;
+}
+
+/* Einstieg "Moderator & Gastgeber": ebenfalls enger geschnitten, damit der Kopf
+   auf derselben Höhe sitzt wie im Laufbild. In den querformatigen Rahmen
+   mittlerer Breiten bleibt oben genug Luft. */
+.page-home-reboot .ed-entry--accent .ed-entry__media img {
+  object-position: 50% 10%;
+}
+
+/* ============================================================
+   STARTSEITE — DRAMATURGIE IM KOPFBEREICH
+   Reihenfolge beim Einstieg: das Bild setzt sich sehr subtil
+   (3 % Zoom heraus), dann kommt die Überzeile, danach die drei
+   Zeilen im Abstand von 100 ms, zuletzt die beiden Knöpfe und
+   die Zahlenreihe. Nach rund 1,2 s steht alles. Keine
+   Buchstabenanimation — die drei Begriffe tragen selbst.
+   ============================================================ */
+
+@keyframes cd-hero-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cd-hero-settle {
+  from { scale: 1.03; }
+  to { scale: 1; }
+}
+
+/* Der Grundzoom von 1,025 bleibt als Reserve für den Parallax-Versatz
+   erhalten; darüber läuft die Beruhigung von 1,03 auf 1. Beide Zustände
+   sind gleich, damit beim Setzen von .is-hero-ready nichts springt. */
+.page-home-reboot .ff-hero--home-photo .ff-hero__img,
+.page-home-reboot .ff-hero--home-photo.is-hero-ready .ff-hero__img {
+  transform: translate3d(0, var(--parallax-y), 0) scale(1.025);
+  animation: cd-hero-settle 1000ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.page-home-reboot .ff-hero--home-photo .ff-hero__eyebrow {
+  animation: cd-hero-rise 420ms cubic-bezier(0.22, 1, 0.36, 1) 150ms both;
+}
+
+.page-home-reboot .ff-hero--home-photo .ff-hero__title--staged {
+  display: flex;
+  flex-direction: column;
+}
+
+.page-home-reboot .ff-hero--home-photo .ff-hero__title--staged > span.ff-hero__line {
+  display: block;
+  margin-top: 0;
+  background: none !important;
+  color: #fffdf8 !important;
+  -webkit-text-fill-color: #fffdf8;
+  animation: cd-hero-rise 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Gleiche Spezifität wie die Kurzschreibweise oben, sonst setzt diese die
+   Verzögerung wieder auf null. */
+.page-home-reboot .ff-hero--home-photo .ff-hero__title--staged > span.ff-hero__line:nth-child(1) { animation-delay: 280ms; }
+.page-home-reboot .ff-hero--home-photo .ff-hero__title--staged > span.ff-hero__line:nth-child(2) { animation-delay: 380ms; }
+.page-home-reboot .ff-hero--home-photo .ff-hero__title--staged > span.ff-hero__line:nth-child(3) { animation-delay: 480ms; }
+
+/* Die dritte Zeile bleibt golden — der Akzent sitzt jetzt eine Ebene tiefer. */
+.page-home-reboot .ff-hero--home-photo .ff-hero__title--staged .ff-hero__line > span {
+  display: inline-block;
+  background: none !important;
+  color: #f2dfa8 !important;
+  -webkit-text-fill-color: #f2dfa8;
+  -webkit-text-stroke: 0;
+  filter: none;
+  text-shadow: 0 5px 24px rgba(0, 0, 0, 0.88);
+}
+
+.page-home-reboot .ff-hero--home-photo .ff-hero__actions {
+  animation: cd-hero-rise 460ms cubic-bezier(0.22, 1, 0.36, 1) 620ms both;
+}
+
+.page-home-reboot .ff-hero--home-photo .ff-hero__mobile-welcome {
+  animation: cd-hero-rise 440ms cubic-bezier(0.22, 1, 0.36, 1) 700ms both;
+}
+
+.page-home-reboot .ff-hero--home-photo .ff-hero__facts {
+  animation: cd-hero-rise 440ms cubic-bezier(0.22, 1, 0.36, 1) 740ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-home-reboot .ff-hero--home-photo :is(.ff-hero__img, .ff-hero__eyebrow, .ff-hero__line, .ff-hero__actions, .ff-hero__mobile-welcome, .ff-hero__facts) {
+    animation: none !important;
+    opacity: 1;
+    scale: 1;
+    transform: translate3d(0, var(--parallax-y), 0) scale(1.025);
+  }
+
+  .page-home-reboot .ff-hero--home-photo :is(.ff-hero__eyebrow, .ff-hero__line, .ff-hero__actions, .ff-hero__mobile-welcome, .ff-hero__facts) {
+    transform: none;
+  }
+}
+
+/* ============================================================
+   MMA WETTKÄMPFE 2026 — TOP-KÄMPFE GANZ OBEN
+   Der nächste große Abend läuft als breite Bahn, darunter stehen
+   drei weitere Termine. Optik wie die übrigen Kalenderkacheln:
+   dunkle Fläche, goldene Kante, Countdown als Plakette.
+   ============================================================ */
+
+.page-mma-calendar .mmacal-top__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.page-mma-calendar .mmacal-top__card {
+  position: relative;
+  display: flex;
+  min-height: 300px;
+  flex-direction: column;
+  gap: 10px;
+  padding: clamp(24px, 2.2vw, 32px);
+  overflow: hidden;
+  border: 1px solid rgba(215, 195, 148, 0.24);
+  border-radius: 28px;
+  color: #fffdf8;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(215, 195, 148, 0.18), transparent 44%),
+    linear-gradient(145deg, #1c1b17, #0d1015);
+  box-shadow: 0 30px 58px -38px rgba(0, 0, 0, 0.8);
+  text-decoration: none;
+}
+
+/* Der nächste Termin bekommt die volle Breite und die größte Schrift. */
+.page-mma-calendar .mmacal-top__card:first-child {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  min-height: 0;
+  align-items: center;
+  align-content: center;
+  column-gap: clamp(22px, 3vw, 52px);
+  row-gap: 6px;
+  padding: clamp(26px, 2.6vw, 40px);
+}
+
+.page-mma-calendar .mmacal-top__index {
+  color: #d7c394;
+  font-family: var(--font-cond);
+  font-size: 1.05rem;
+  font-style: italic;
+  letter-spacing: 0.14em;
+}
+
+.page-mma-calendar .mmacal-top__card:first-child .mmacal-top__index {
+  display: none;
+}
+
+.page-mma-calendar .mmacal-top__countdown {
+  align-self: flex-start;
+  min-width: 86px;
+  min-height: 72px;
+}
+
+.page-mma-calendar .mmacal-top__card:first-child .mmacal-top__countdown {
+  grid-row: 1 / span 4;
+  align-self: center;
+  min-width: 128px;
+  min-height: 110px;
+  border-radius: 20px;
+}
+
+.page-mma-calendar .mmacal-top__card:first-child .mmacal-top__countdown strong {
+  font-size: 2.9rem;
+}
+
+.page-mma-calendar .mmacal-top__card:first-child .mmacal-top__countdown small {
+  font-size: 0.6rem;
+}
+
+.page-mma-calendar .mmacal-top__promo {
+  color: #d7c394;
+  font-family: var(--font-cond);
+  font-size: 0.8rem;
+  font-style: italic;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.page-mma-calendar .mmacal-top__card h3 {
+  margin: 0;
+  color: #fffdf8;
+  font-size: clamp(1.35rem, 1.9vw, 1.85rem);
+  line-height: 1.04;
+}
+
+.page-mma-calendar .mmacal-top__card:first-child h3 {
+  font-size: clamp(1.9rem, 3.4vw, 3.1rem);
+}
+
+.page-mma-calendar .mmacal-top__card time {
+  color: #f2dfa8;
+  font-family: var(--font-cond);
+  font-size: 1rem;
+  font-style: italic;
+  letter-spacing: 0.04em;
+}
+
+.page-mma-calendar .mmacal-top__card p {
+  margin: 0;
+  color: rgba(255, 253, 248, 0.66);
+  font-size: 0.95rem;
+}
+
+.page-mma-calendar .mmacal-top__arrow {
+  margin-top: auto;
+  color: #d7c394;
+  font-size: 1.3rem;
+}
+
+.page-mma-calendar .mmacal-top__card:first-child .mmacal-top__arrow {
+  margin: 0;
+  grid-row: 1 / span 4;
+  grid-column: 3;
+  align-self: center;
+}
+
+/* In der breiten Bahn stehen Überzeile, Titel, Datum und Ort untereinander
+   in der mittleren Spalte. */
+.page-mma-calendar .mmacal-top__card:first-child :is(.mmacal-top__promo, h3, time, p) {
+  grid-column: 2;
+}
+
+@media (max-width: 980px) {
+  .page-mma-calendar .mmacal-top__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .page-mma-calendar .mmacal-top__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .page-mma-calendar .mmacal-top__card:first-child {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .page-mma-calendar .mmacal-top__card:first-child .mmacal-top__countdown {
+    min-width: 96px;
+    min-height: 80px;
+  }
+
+  .page-mma-calendar .mmacal-top__card:first-child .mmacal-top__arrow {
+    margin-top: 6px;
+  }
+}
+
+/* ============================================================
+   STARTSEITE — ZWEI ZWISCHENÜBERSCHRIFTEN EINZEILIG
+   "Gebaut aus echter Leistung." stand in einer 720-px-Box,
+   "Was suchst du in Nürnberg?" in der 13ch-Box der hellen Ebene.
+   Beide brechen dadurch auf zwei Zeilen, obwohl der Block über
+   1.400 px breit ist. Jetzt tragen sie die Breite — und die
+   Suchüberschrift bekommt zusätzlich den goldenen Ortsakzent,
+   damit sie über der Slideshow nicht untergeht.
+   ============================================================ */
+
+.page-home-reboot .ed-proof__head {
+  max-width: none;
+}
+
+.page-home-reboot .ed-proof__head .ed-section__lead {
+  max-width: 62ch;
+  margin-inline: auto;
+}
+
+.page-home-reboot .home-search-paths .section-header {
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+.page-home-reboot .home-search-paths .section-header h2 {
+  max-width: none !important;
+  margin-inline: auto;
+}
+
+.page-home-reboot .home-search-paths .section-header p:not(.eyebrow) {
+  max-width: 66ch;
+  margin-inline: auto;
+}
+
+@media (min-width: 981px) {
+  .page-home-reboot .ed-proof__head .ed-section__title {
+    font-size: min(5rem, 5.6vw);
+  }
+
+  .page-home-reboot .home-search-paths .section-header h2 {
+    font-size: min(5rem, 5.6vw);
+  }
+}
+
+/* Zwischen 701 und 980 px bleibt die Schrift sonst bei 3 rem stehen und die
+   Suchüberschrift bricht wieder um. */
+@media (min-width: 701px) and (max-width: 980px) {
+  .page-home-reboot .home-search-paths .section-header h2 {
+    font-size: min(3rem, 5.5vw);
   }
 }

@@ -134,6 +134,13 @@ svg {
   display: block;
 }
 
+/* Zusammen mit den width/height-Angaben im Markup kennt der Browser das
+   Seitenverhältnis schon vor dem Laden und hält den Platz frei — sonst springt
+   das Layout, sobald ein Bild eintrifft. */
+img {
+  height: auto;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -2682,7 +2689,10 @@ p {
   }
 
   .site-nav__brand-block,
-  .site-nav__footer {
+  .site-nav__footer,
+  /* Das Seitenverzeichnis gehört ins ausgeklappte Menü, nicht in die
+     Leiste am Desktop — dort führt die Fußzeile durch dieselben Kategorien. */
+  .site-nav__directory {
     display: none !important;
   }
 
@@ -11094,6 +11104,11 @@ h1, h2, h3 {
   text-transform: uppercase;
   letter-spacing: 0.01em;
   color: #fff;
+  /* Automatische Trennung hat "GESUNDHEITSTA-GE," ergeben — falsch getrennt und
+     mitten in der Überschrift. Getrennt wird deshalb nur noch dort, wo im Text
+     ein weiches Trennzeichen steht; zu lange Zeilen regelt die Schriftgröße. */
+  hyphens: manual;
+  overflow-wrap: break-word;
 }
 .page-home-reboot .ed-entry__body p { color: var(--cd-dim); }
 .page-home-reboot .ed-entry__cta,
@@ -11295,12 +11310,19 @@ html { background: #0a0a0c; }
 }
 
 /* ---- Typography ---- */
+/* Hier stand früher zusätzlich "color: #fff". Das war der Grund für die immer
+   wiederkehrenden unlesbaren Überschriften: Die Regel galt für jede Seite mit
+   hellen Flächen und schlug den dunklen Standard aus mobile-overrides.css
+   (dessen :where(...) keine Spezifität hat). Jede helle Komponente brauchte
+   deshalb eine eigene Gegenregel — und wer eine vergaß, bekam Weiß auf Weiß.
+   Die Schriftfarbe kommt jetzt aus dem Standard für Inhaltsabschnitte; dunkle
+   Flächen setzen sie wie gehabt selbst. Geprüft wird das von
+   "npm run kontrast". */
 .page-premium h1,
 .page-premium h2,
 .page-premium h3,
 .page-premium h4 {
   font-family: var(--font-cond);
-  color: #fff;
 }
 .page-premium h1,
 .page-premium h2 {
@@ -11317,15 +11339,26 @@ html { background: #0a0a0c; }
   letter-spacing: 0.015em;
   line-height: 1.08;
 }
-.page-premium p,
-.page-premium li,
-.page-premium dd,
-.page-premium summary,
-.page-premium figcaption,
-.page-premium blockquote p,
-.page-premium .section-header p:not(.eyebrow) { color: var(--cd-dim); }
+/* Grundfarbe für Fließtext — bewusst in :where() und damit ohne Spezifität.
+   Vorher stand hier ".page-premium p", was jede Komponentenregel schlug: Der
+   dunkle Standard gewann selbst in dunklen Bereichen wie dem Bodybuilding-Kopf,
+   wo helle Schrift gesetzt war. Jetzt gilt: Wer eine Farbe setzt, bekommt sie;
+   wer keine setzt, erbt diesen Standard. */
+:where(.page-premium) :is(p, li, dd, summary, figcaption),
+:where(.page-premium) blockquote p,
+:where(.page-premium) .section-header p:not(.eyebrow) { color: var(--cd-dim); }
+/* --cd-gold ist das helle Gold für dunkle Flächen. Als Standard für alle
+   Überzeilen war es auf hellem Grund praktisch unlesbar (1,7:1). Standard ist
+   deshalb das dunkle Gold; auf dunklen Flächen gilt weiter das helle. */
 .page-premium .eyebrow,
-.page-premium .card-tag { color: var(--cd-gold); font-family: var(--font-sans); }
+.page-premium .card-tag { color: var(--accent-strong); font-family: var(--font-sans); }
+
+.page-premium .ff-hero .eyebrow,
+.page-premium .ff-hero .card-tag,
+.page-premium .section--dark .eyebrow,
+.page-premium .section--dark .card-tag,
+.page-premium [data-color-scheme="dark"] .eyebrow,
+.page-premium [data-color-scheme="dark"] .card-tag { color: var(--cd-gold); }
 
 .page-premium .summary-row,
 .page-premium .proof-mosaic__body,
@@ -11447,9 +11480,17 @@ html { background: #0a0a0c; }
   color: var(--cd-text);
 }
 .page-premium .pricing-card--featured { border-color: rgba(215, 195, 148, 0.55); }
+/* Diese Karten stehen auf hellem Grund — mit dem hellen Gold lagen die
+   Detailzeilen bei 1,6:1 und waren kaum zu entziffern. Die dunklen Varianten
+   der App-Karten setzen ihre Farbe direkt darunter selbst. */
 .page-premium .feature-card__detail,
 .page-premium .app-system-card__detail,
-.page-premium .app-system-card__number { color: var(--cd-gold); }
+.page-premium .app-system-card__number { color: var(--accent-strong); }
+
+.page-premium .section--dark .app-system-card__detail,
+.page-premium .section--dark .app-system-card__number,
+.page-premium [data-color-scheme="dark"] .app-system-card__detail,
+.page-premium [data-color-scheme="dark"] .app-system-card__number { color: var(--cd-gold); }
 .page-premium .stat-card__value,
 .page-premium .pricing-card__price,
 .page-premium .start-card__price {
@@ -11457,6 +11498,12 @@ html { background: #0a0a0c; }
   font-family: var(--font-cond);
   font-style: italic;
   font-weight: 800;
+}
+
+/* Die Kennzahlen-Karten stehen auf hellem Weiß. Das helle Gold der dunklen
+   Flächen (--cd-gold) verschwindet dort — hier gilt der dunklere Ton. */
+.page-premium .stat-card__value {
+  color: var(--accent-strong);
 }
 
 .page-guide-pricing .section--pricing-overview {
@@ -11896,6 +11943,15 @@ html { background: #0a0a0c; }
   background:
     linear-gradient(90deg, rgba(7, 8, 12, 0.86) 0%, rgba(7, 8, 12, 0.8) 20%, rgba(7, 8, 12, 0.54) 38%, rgba(7, 8, 12, 0.16) 56%, rgba(7, 8, 12, 0.06) 70%, rgba(7, 8, 12, 0.18) 100%),
     linear-gradient(180deg, rgba(7, 8, 12, 0.52) 0%, rgba(7, 8, 12, 0.12) 24%, rgba(7, 8, 12, 0.06) 58%, rgba(7, 8, 12, 0.8) 100%);
+}
+/* Das 12-Wochen-Programm hat einen reinen Foto-Kopf ohne Freisteller rechts.
+   Ohne diese Angaben erbt er den Versatz der geteilten Heroes und rutscht mit
+   der halben Überschrift aus dem Bild. */
+.offer40-hero .ff-hero__inner {
+  width: min(100% - 40px, var(--shell));
+  max-width: none;
+  margin-inline: auto;
+  --hero-copy-shift: 0px;
 }
 .ff-hero__portrait {
   position: absolute;
@@ -13563,6 +13619,25 @@ body.page-premium.page-events .editorial-stage--event-video .event-interview-car
   filter: drop-shadow(0 42px 86px rgba(0, 0, 0, 0.34));
 }
 
+/* Partnerlogo statt Bühnenfoto: Die editorial-stage erzwingt für ihre Bilder
+   min-height: 420px und object-fit: cover. Bei einem 259x194-Logo schneidet das
+   zu — am Desktop rund ein Fünftel, auf dem Handy fast die Hälfte der Breite.
+   Deshalb hier ohne Mindesthöhe, ohne Beschnitt und deutlich kleiner. */
+.partner-hero__visual--logo {
+  width: min(100%, 340px);
+  margin-inline: auto;
+  justify-self: center;
+}
+
+.partner-hero__visual--logo img {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 0;
+}
+
 .partner-hero__logo {
   height: 52px;
   display: inline-flex;
@@ -13673,7 +13748,9 @@ body.page-premium.page-events .editorial-stage--event-video .event-interview-car
 }
 
 .page-home-reboot .ed-section--hero-sync .ed-section__head {
-  max-width: 760px;
+  /* Volle Breite: Die Überschrift der vier Einstiege soll auf einer Zeile
+     stehen und nicht nach "4 Wege" umbrechen. */
+  max-width: none;
   margin-inline: auto;
   margin-bottom: clamp(28px, 3.4vw, 42px);
   text-align: center;
@@ -13774,7 +13851,9 @@ body.page-premium.page-events .editorial-stage--event-video .event-interview-car
 .page-home-reboot .ed-entry:nth-child(1) .ed-entry__media img { object-position: center 18%; }
 .page-home-reboot .ed-entry:nth-child(2) .ed-entry__media img { object-position: center 42%; }
 .page-home-reboot .ed-entry:nth-child(3) .ed-entry__media img { object-position: center 26%; }
-.page-home-reboot .ed-entry:nth-child(4) .ed-entry__media img { object-position: center 28%; }
+/* Das Handy gehört in die Mitte der Kachel — es ist die Überleitung zur App.
+   Der Ausschnitt wandert deshalb nach links ins Bild, wo Dominik es hält. */
+.page-home-reboot .ed-entry:nth-child(4) .ed-entry__media img { object-position: 30% 42%; }
 .page-home-reboot .ed-entry:nth-child(3) .ed-entry__body h3 {
   max-width: 18ch;
   font-size: clamp(1.08rem, 1.32vw, 1.42rem);
@@ -13856,11 +13935,13 @@ body.page-premium.page-events .editorial-stage--event-video .event-interview-car
   line-height: 1.72;
 }
 
+/* Auf der hellen Karte braucht die Auszeichnung einen dunklen Grundton —
+   weiß auf hell war schlicht nicht zu lesen. */
 .legal-card code {
   padding: 0.15em 0.42em;
   border-radius: 0.45rem;
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  background: rgba(155, 116, 26, 0.1);
+  color: var(--color-ink);
   font-size: 0.92em;
 }
 
@@ -14065,16 +14146,28 @@ body.consent-modal-open {
   overflow: hidden;
 }
 
+/* Die Rechtsseiten liegen auf hellem Grund. Schrift- und Verweisfarben stammten
+   noch aus dem früheren dunklen Layout — Überschriften, Links und die
+   Kennzeichnungen waren dadurch praktisch unsichtbar. */
+.page-legal main :is(h1, h2, h3, h4) {
+  color: var(--color-ink);
+}
+
+.page-legal main .eyebrow {
+  color: var(--accent-strong);
+}
+
 .page-legal .section a {
-  color: #fff;
+  color: var(--accent-strong);
   text-decoration: underline;
-  text-decoration-color: rgba(215, 195, 148, 0.55);
+  text-decoration-color: rgba(155, 116, 26, 0.5);
   text-underline-offset: 0.18em;
 }
 
 .page-legal .section a:hover,
 .page-legal .section a:focus-visible {
-  color: var(--cd-gold);
+  color: #7d5c11;
+  text-decoration-color: currentColor;
 }
 
 @media (max-width: 1180px) {
@@ -15609,7 +15702,7 @@ body.consent-modal-open {
 .expert-hero--hub {
   background:
     linear-gradient(90deg, rgba(13, 11, 8, .97) 0%, rgba(13, 11, 8, .9) 48%, rgba(13, 11, 8, .62) 100%),
-    url("/assets/images/dominik-about-gym-portrait.jpg") center 28% / cover;
+    url("/assets/images/dominik-about-gym-portrait.webp") center 28% / cover;
 }
 
 .expert-hero__grid,
@@ -15679,9 +15772,23 @@ body.consent-modal-open {
 /* Reines Textmaß liegt bei 21 px und damit unter der 24-px-Mindestgröße
    für Bedienelemente (WCAG 2.5.8). Etwas Innenabstand hebt die Trefferfläche. */
 .expert-policy-link a { display: inline-block; padding-block: 4px; }
-.expert-principles { grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); }
+/* 12rem ergaben bei vier Karten Spalten von 202 px — darin brach "Ausgangslage"
+   mitten im Wort um ("AUSGA / NGSLA / GE"). 15rem lässt vier Karten erst ab rund
+   1000 px Textbreite nebeneinander stehen und bricht sonst sauber um. */
+.expert-principles { grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+/* Die vier Phasen stehen in der schmalen Artikelspalte (rund 865 px). Drei
+   nebeneinander und eine allein darunter sieht nach Fehler aus — zwei mal zwei
+   ist die ruhigere Aufteilung und lässt den Überschriften Platz. */
+.expert-principles--phasen { grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); }
 .expert-principles > article { min-height: 0; }
 .expert-principles b { color: var(--accent-strong); font-size: 1.6rem; }
+/* Eigener Grad für die schmalen Phasen-Karten: die gemeinsame Regel weiter oben
+   ist für die breiten Karten gedacht. Umbruch nur an Leerzeichen. */
+.expert-principles h3 {
+  font-size: clamp(1.1rem, 1.35vw, 1.45rem);
+  overflow-wrap: normal;
+  hyphens: manual;
+}
 
 .expert-article__header {
   position: relative;
@@ -15733,7 +15840,10 @@ body.consent-modal-open {
 .expert-author__links { display: flex; flex-wrap: wrap; gap: .8rem 1.4rem; font-weight: 800; }
 .expert-article__rail { position: sticky; top: 7rem; padding: 1.7rem; border: 1px solid rgba(215,195,148,.28); border-top: .35rem solid var(--accent); border-radius: 8px 8px 22px 22px; background: linear-gradient(145deg, #0f0d09, #2b2112); color: #fff; box-shadow: 0 28px 70px -40px rgba(0,0,0,.65); }
 .expert-article__rail > span { color: var(--accent); text-transform: uppercase; letter-spacing: .1em; font-size: .72rem; font-weight: 800; }
-.expert-article__rail h2 { margin: .8rem 0; font-size: 1.7rem; }
+/* 1,7rem waren breiter als die 248-px-Spalte: "Wettkampfvorbereitung" stand
+   über den rechten Rand hinaus. Kleinerer Grad, und als Netz ein Umbruch,
+   falls ein noch längeres Wort kommt. */
+.expert-article__rail h2 { margin: .8rem 0; font-size: clamp(1.2rem, 1.2vw, 1.4rem); overflow-wrap: break-word; }
 .expert-article__rail p { color: rgba(255,255,255,.72); line-height: 1.6; }
 .expert-article__rail .button { margin-top: 1rem; }
 
@@ -16056,36 +16166,27 @@ body.consent-modal-open {
    ============================================================ */
 
 @media (min-width: 980px) {
+  /* Gold wie die Einloggen-Schaltfläche im Login-Fenster, das dieser Knopf
+     öffnet — und kräftig genug, um sich von der goldenen Leiste abzuheben. */
   .nav-extras .nav-action--member {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
-    color: #19140b;
-    border: 1px solid rgba(155, 116, 26, 0.42);
-    background: rgba(255, 253, 239, 0.86);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.66);
+    color: #1a1206;
+    border: 1px solid #a9781a;
+    background: linear-gradient(180deg, #ffd76b 0%, #e8b53c 52%, #cf9a22 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.6),
+      0 10px 20px -14px rgba(120, 82, 4, 0.9);
   }
 
   .nav-extras .nav-action--member:hover,
-  .nav-extras .nav-action--member:focus-visible {
-    border-color: #b68727;
-    background: #fff6db;
-  }
-
-  .nav-extras .nav-action--member .program-icon {
-    width: 18px;
-    height: 18px;
-    flex: 0 0 18px;
-    border-radius: 5px;
-    color: #9b741a;
-    background: none;
-    box-shadow: none;
-  }
-
-  .nav-extras .nav-action--member .program-icon svg {
-    width: 17px;
-    height: 17px;
-    stroke-width: 1.9;
+  .nav-extras .nav-action--member:focus-visible,
+  .nav-extras .nav-action--member.is-active {
+    border-color: #8f6410;
+    background: linear-gradient(180deg, #ffe28c 0%, #f0c04c 52%, #d9a527 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      0 14px 24px -14px rgba(120, 82, 4, 0.95);
   }
 }
 
@@ -16585,4 +16686,668 @@ body.member-login-open {
   .member-login__submit.is-busy .member-login__submit-icon {
     animation: none;
   }
+}
+
+/* ============================================================
+   SPRACHWAHL MIT FLAGGEN
+   Steht direkt neben der Wortmarke. Die Flagge trägt die Bedeutung,
+   der Name der Sprache bleibt als unsichtbarer Text für Screenreader.
+   ============================================================ */
+
+.language-switcher--brand {
+  display: inline-flex;
+  gap: 2px;
+  margin-right: auto;
+  margin-left: clamp(8px, 1.2vw, 16px);
+  padding: 3px;
+  border-radius: 11px;
+  background: rgba(38, 31, 20, 0.05);
+}
+
+.language-switcher--brand .language-switcher__button {
+  display: inline-grid;
+  place-items: center;
+  min-width: 34px;
+  min-height: 30px;
+  padding: 3px 5px;
+  border-radius: 8px;
+  opacity: 0.55;
+  transition:
+    opacity 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.language-switcher--brand .language-switcher__button:hover,
+.language-switcher--brand .language-switcher__button:focus-visible {
+  opacity: 1;
+}
+
+.language-switcher--brand .language-switcher__button.is-active {
+  opacity: 1;
+  background: rgba(255, 253, 239, 0.86);
+  box-shadow: 0 5px 14px -11px rgba(38, 28, 10, 0.65);
+}
+
+.language-switcher__flag {
+  display: block;
+  width: 24px;
+  height: 16px;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(21, 18, 11, 0.16);
+}
+
+.language-switcher__name {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+  clip-path: inset(50%);
+}
+
+@media (max-width: 979px) {
+  .language-switcher--brand {
+    margin-right: 0;
+  }
+}
+
+/* ============================================================
+   APP-SEITE — Testphase und Preis im Einstieg
+   Steht bewusst zwischen Kurztext und den Store-Schaltflächen:
+   die kaufentscheidende Information, bevor jemand weiterklickt.
+   ============================================================ */
+
+.app-hero-offer {
+  display: inline-grid;
+  gap: 3px;
+  max-width: 30rem;
+  /* Der Einstieg der App-Seite ist zentriert, der Text im Block bleibt aber
+     linksbündig — sonst bricht die Goldlinie den Rhythmus. */
+  margin: 22px auto 0;
+  padding: 14px 0 14px 18px;
+  border-left: 3px solid var(--accent);
+  text-align: left;
+}
+
+.app-hero-offer strong {
+  color: #fffdf8;
+  font-size: clamp(1.05rem, 1.5vw, 1.28rem);
+  font-weight: 800;
+  letter-spacing: -0.005em;
+}
+
+.app-hero-offer span {
+  color: rgba(255, 253, 248, 0.78);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 760px) {
+  .app-hero-offer {
+    margin-top: 18px;
+    padding: 12px 0 12px 14px;
+  }
+}
+
+/* ============================================================
+   NAVIGATION NACH KATEGORIEN
+   Menü und Fußzeile führen dieselbe Gliederung (src/data.mjs,
+   navCategories), damit die Auswahl nicht in einer langen Liste endet.
+   ============================================================ */
+
+.site-nav__directory {
+  display: grid;
+  gap: 18px;
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.site-nav__directory-title {
+  margin: 0;
+  color: rgba(255, 253, 248, 0.58);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.site-nav__group {
+  display: grid;
+  gap: 8px;
+}
+
+.site-nav__group-title {
+  margin: 0;
+  color: var(--accent);
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.site-nav__group-links {
+  display: grid;
+  gap: 2px;
+}
+
+.site-nav__group-links a {
+  display: block;
+  padding: 9px 12px;
+  border-radius: 10px;
+  color: rgba(255, 253, 248, 0.78);
+  font-size: 0.92rem;
+  font-weight: 620;
+  line-height: 1.35;
+}
+
+.site-nav__group-links a:hover,
+.site-nav__group-links a:focus-visible,
+.site-nav__group-links a.is-active {
+  color: #fffdf8;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.footer-nav-groups {
+  display: grid;
+  gap: 22px;
+}
+
+.footer-nav-group {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+}
+
+.footer-nav-group h3 {
+  margin: 0;
+  color: var(--accent);
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+/* Die Kategorien stehen selbst schon nebeneinander — innerhalb einer Kategorie
+   bleiben die Seiten deshalb untereinander, sonst zerfällt die Fußzeile in ein
+   Raster aus halben Zeilen. Gewicht schlägt hier die Regel aus mobile-overrides.css. */
+.page-premium .footer-nav-group .footer-nav-links,
+.footer-nav-group .footer-nav-links {
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 2px;
+}
+
+@media (min-width: 760px) {
+  .footer-nav-groups {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 26px 30px;
+  }
+}
+
+/* Zwischen 980 und 1400 px wird die Leiste eng: sechs Hauptpunkte mit dem
+   vollen Namen "Personal Training Nürnberg", Sprachwahl, App, Member und
+   Anfragen. Hier rücken die Elemente zusammen, statt dass die Anfragen-
+   Schaltfläche über den Rand läuft. */
+/* Unter 1200 px reicht die Zeile nicht für sechs Hauptpunkte, Sprachwahl und
+   drei Schaltflächen. Die App-Schaltfläche entfällt dort zuerst: Die Camp Dörfl
+   App steht weiterhin im Menü, in der Fußzeile und in den Einstiegen auf der
+   Startseite — Member-Zugang und Anfrage haben in der Leiste Vorrang. */
+@media (min-width: 980px) and (max-width: 1199px) {
+  .nav-extras .nav-action--app {
+    display: none;
+  }
+
+  .site-nav__entry {
+    font-size: 0.78rem;
+  }
+
+  .nav-extras .nav-action--member,
+  .nav-extras .nav-action--contact {
+    min-width: 0;
+    padding-inline: 9px;
+  }
+
+  .language-switcher--brand {
+    margin-left: 4px;
+    padding: 2px;
+  }
+
+  .language-switcher--brand .language-switcher__button {
+    min-width: 26px;
+    padding-inline: 3px;
+  }
+
+  .language-switcher__flag {
+    width: 21px;
+    height: 14px;
+  }
+}
+
+@media (min-width: 980px) and (max-width: 1400px) {
+  .site-nav__entry {
+    padding-inline: 8px;
+  }
+
+  .site-nav {
+    gap: 4px;
+  }
+
+  .nav-extras {
+    gap: 5px;
+    padding-left: 8px;
+  }
+
+  .nav-action {
+    padding-inline: 10px;
+  }
+
+  .language-switcher--brand {
+    margin-left: 6px;
+  }
+
+  .language-switcher--brand .language-switcher__button {
+    min-width: 30px;
+  }
+}
+
+/* Ortsname in der Leiste erst ab genügend Breite (siehe desktopLabels in
+   src/components.mjs). Im Menü und in der Fußzeile steht er immer. */
+@media (max-width: 1199px) {
+  .site-nav__label-city {
+    display: none;
+  }
+}
+
+/* ============================================================
+   LEISTUNGS-SLIDESHOW (Startseite)
+   Fasst alle Angebote noch einmal durchblätterbar zusammen —
+   eine Leistung pro Folie, mit mehr Tiefe als die Kacheln oben.
+   Ohne JavaScript bleibt die Spur horizontal scrollbar.
+   ============================================================ */
+
+.path-slider {
+  margin-top: clamp(26px, 3.4vw, 44px);
+}
+
+.path-slider__frame {
+  overflow: hidden;
+}
+
+.path-slider__track {
+  display: flex;
+  gap: clamp(14px, 1.6vw, 22px);
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.path-slider__track::-webkit-scrollbar {
+  display: none;
+}
+
+.path-slide {
+  display: grid;
+  flex: 0 0 100%;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+  gap: clamp(22px, 3.2vw, 52px);
+  align-items: center;
+  min-height: clamp(260px, 24vw, 330px);
+  padding: clamp(24px, 3.2vw, 46px);
+  border: 1px solid rgba(155, 116, 26, 0.36);
+  border-radius: 20px;
+  background: linear-gradient(152deg, #fffdf7 0%, #f6ead2 100%);
+  box-shadow: 0 26px 52px -38px rgba(43, 32, 12, 0.5);
+  scroll-snap-align: start;
+}
+
+.path-slide__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.path-slide__count {
+  margin: 0;
+  color: rgba(25, 21, 14, 0.5);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.path-slide__count span {
+  color: #7f5c0f;
+}
+
+.path-slide__detail {
+  margin: 0;
+  color: #7f5c0f;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* Auf der hellen Folie würden Überschrift und Fließtext sonst die helle
+   Grundfarbe der Premium-Seiten erben und wären kaum lesbar. */
+.path-slide__title {
+  margin: 0;
+  color: #19150e;
+  font-size: clamp(1.55rem, 2.5vw, 2.3rem);
+  line-height: 1.04;
+}
+
+.path-slide__text {
+  margin: 0;
+  max-width: 42ch;
+  color: rgba(25, 21, 14, 0.78);
+  font-size: clamp(0.98rem, 1.15vw, 1.08rem);
+  line-height: 1.6;
+}
+
+.path-slide__cta {
+  margin-top: 6px;
+}
+
+.path-slide__points {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.path-slide__points li {
+  position: relative;
+  padding: 0 0 12px 26px;
+  border-bottom: 1px solid rgba(155, 116, 26, 0.22);
+  color: rgba(25, 21, 14, 0.82);
+  font-size: 0.97rem;
+  line-height: 1.5;
+}
+
+.path-slide__points li:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.path-slide__points li::before {
+  content: "";
+  position: absolute;
+  top: 0.62em;
+  left: 2px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: linear-gradient(140deg, #f2dfa8, #b68727);
+}
+
+.path-slider__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 2vw, 22px);
+  margin-top: clamp(16px, 2vw, 24px);
+}
+
+.path-slider__arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 1px solid rgba(155, 116, 26, 0.42);
+  border-radius: 50%;
+  background: #fffdf7;
+  color: #7f5c0f;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  appearance: none;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+
+.path-slider__arrow:hover {
+  border-color: rgba(155, 116, 26, 0.72);
+  background: #f6ead2;
+  transform: translateY(-1px);
+}
+
+.path-slider__dots {
+  display: flex;
+  align-items: center;
+}
+
+/* Der Punkt bleibt klein, die Trefferfläche nicht: 24 × 24 px sind das
+   Mindestmaß für Bedienelemente (WCAG 2.5.8). Sichtbar ist nur das ::before. */
+.path-slider__dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+  appearance: none;
+}
+
+.path-slider__dot::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border: 1px solid rgba(155, 116, 26, 0.5);
+  border-radius: 50%;
+  background: transparent;
+  transition: background 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+}
+
+.path-slider__dot.is-active::before {
+  border-color: #b68727;
+  background: #b68727;
+  transform: scale(1.2);
+}
+
+.path-slider__dot:hover::before {
+  border-color: rgba(155, 116, 26, 0.85);
+}
+
+.path-slider__arrow:focus-visible,
+.path-slider__dot:focus-visible {
+  outline: 2px solid #7f5c0f;
+  outline-offset: 2px;
+}
+
+@media (max-width: 860px) {
+  .path-slide {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+    min-height: 0;
+  }
+
+  .path-slide__text {
+    max-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .path-slider__track {
+    scroll-behavior: auto;
+  }
+
+  .path-slider__arrow,
+  .path-slider__dot::before {
+    transition: none;
+  }
+}
+
+/* ============================================================
+   COUNTDOWN-PLAKETTE DER KALENDER
+   Über einer Woche zählt sie Wochen, darunter Tage, am Tag selbst
+   steht die Zielmarke. Die Bodybuilding-Variante (.bbcal-weeks-out)
+   bringt ihre eigene Fassung mit; diese hier gilt für Triathlon,
+   Lauf, Golf und Boxen.
+   ============================================================ */
+
+.event-countdown {
+  display: grid;
+  min-width: 74px;
+  min-height: 62px;
+  place-content: center;
+  padding: 8px 10px;
+  border: 1px solid rgba(155, 116, 26, 0.3);
+  border-radius: 13px;
+  background:
+    radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.5), transparent 36%),
+    linear-gradient(135deg, #f5e5b7, #d7bd78);
+  color: #17120a;
+  text-align: center;
+  box-shadow: 0 12px 22px -18px rgba(76, 51, 7, 0.65);
+}
+
+.event-countdown strong {
+  color: #17120a;
+  font-family: var(--font-cond);
+  font-size: 1.5rem;
+  font-style: italic;
+  font-weight: 900;
+  line-height: 0.85;
+}
+
+.event-countdown small {
+  margin-top: 5px;
+  color: #634b17;
+  font-size: 0.49rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* Die letzte Woche bekommt einen wärmeren Ton — es wird ernst. */
+.event-countdown.is-days-out {
+  border-color: rgba(155, 87, 26, 0.42);
+  background: linear-gradient(135deg, #f7dcae, #e0a962);
+}
+
+/* Wettkampftag. */
+.event-countdown.is-show-day {
+  border-color: rgba(94, 126, 80, 0.48);
+  background: linear-gradient(135deg, #dce8c8, #a6bf8c);
+}
+
+.event-countdown.is-show-day strong {
+  font-size: 1.15rem;
+}
+
+/* Vorbei: zurückgenommen, damit die kommenden Termine führen. */
+.event-countdown.is-show-over {
+  border-color: rgba(20, 18, 13, 0.12);
+  background: linear-gradient(135deg, #ece8df, #cfc7b8);
+  box-shadow: none;
+}
+
+.event-countdown.is-show-over strong {
+  font-size: 1.15rem;
+}
+
+/* Golf-Karten sind reine Stapel ohne Meta-Spalte: dort steht die
+   Plakette links über dem Quellenverweis statt am rechten Rand. */
+.golfcal-event .event-countdown {
+  align-self: flex-start;
+  justify-self: start;
+  margin-top: 4px;
+}
+
+/* Die Box-Karte bekommt dieselbe rechte Spalte wie die Bodybuilding-Karte. */
+.bbcal-event__meta {
+  display: grid;
+  justify-items: end;
+  align-content: space-between;
+  gap: 10px;
+}
+
+/* ============================================================
+   RABATTCODE-KARTE
+   Der Code ist der Grund, warum jemand die Seite öffnet — er steht
+   deshalb im Einstieg, groß und mit einer Schaltfläche zum Kopieren.
+   Der Einstieg ist dunkel, die Karte hält sich an dessen Sprache:
+   dunkle Fläche, goldene Schrift.
+   ============================================================ */
+
+.code-card {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+  max-width: 30rem;
+  margin-top: clamp(20px, 2.4vw, 30px);
+  padding: clamp(20px, 2.4vw, 28px);
+  border: 1px solid rgba(215, 195, 148, 0.38);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(215, 195, 148, 0.16), transparent 44%),
+    linear-gradient(152deg, rgba(28, 26, 21, 0.96), rgba(14, 13, 11, 0.98));
+  box-shadow: 0 30px 60px -38px rgba(0, 0, 0, 0.8);
+}
+
+/* Die Überzeile trägt das Gold der Marke; der Code selbst bleibt in der
+   hellen Grundfarbe des Einstiegs — dort zählt maximale Lesbarkeit. */
+.page-partner .ff-hero .code-card__label,
+.code-card__label {
+  margin: 0;
+  color: #d7c394 !important;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.code-card__value {
+  margin: 0;
+  color: #f2dfa8;
+  font-family: var(--font-cond);
+  font-size: clamp(2.4rem, 4.5vw, 3.4rem);
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+  user-select: all;
+}
+
+.code-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.code-card__hint {
+  min-height: 1.2em;
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+/* Der Hinweis auf der Partnerseite steht unter dem Sponsorenraster. */
+.premium-sponsor-stage__note {
+  margin: clamp(18px, 2vw, 26px) 0 0;
+  color: rgba(25, 21, 14, 0.72);
+  text-align: center;
 }

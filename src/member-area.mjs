@@ -65,8 +65,13 @@ export function memberAssetCandidates(pathname) {
 
   const trimmed = pathname.replace(/\/+$/, "") || "/member";
 
+  // Wichtig: immer zuerst die saubere Adresse, erst danach die Datei.
+  // Cloudflare beantwortet eine Anfrage auf ".../index.html" mit einer
+  // 307-Weiterleitung auf die saubere Adresse — käme sie zuerst, liefe der
+  // Browser unter /member/ in eine Weiterleitungsschleife. Der lokale
+  // Vorschau-Server kennt umgekehrt nur Dateien und nimmt den zweiten Eintrag.
   if (trimmed === "/member") {
-    return ["/member/index.html"];
+    return ["/member/", "/member/index.html"];
   }
 
   const lastSegment = trimmed.slice(trimmed.lastIndexOf("/") + 1);
@@ -79,7 +84,7 @@ export function memberAssetCandidates(pathname) {
 
   // Expo exportiert jede Route als eigene HTML-Datei. Was dort fehlt (z. B. eine
   // erst zur Laufzeit gebaute Route), übernimmt der Router im index.html.
-  return [trimmed, `${trimmed}.html`, "/member/index.html"];
+  return [trimmed, `${trimmed}.html`, "/member/", "/member/index.html"];
 }
 
 // Gehashte Dateinamen dürfen dauerhaft im Cache liegen, HTML nie.

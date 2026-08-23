@@ -1,5 +1,6 @@
 import {
   achievements,
+  encodePath,
   appFunctionRows,
   corporateSteps,
   dominikFacts,
@@ -19,6 +20,7 @@ import {
   featureGrid,
   imageLoadingAttributes,
   layout,
+  pathSlider,
   pricingCards,
   processList,
   proofMosaic,
@@ -41,13 +43,14 @@ import {
 } from "./sports-calendar-data.mjs";
 import { popularSportSpotCategoryIds, sportSpotCategories } from "./sport-spots-data.mjs";
 
-function serviceSchema({ path, name, serviceType, description, areaServed }) {
+function serviceSchema({ path, name, serviceType, description, areaServed, offers }) {
   return {
     "@type": "Service",
-    "@id": `${site.url}${path}#service`,
+    "@id": `${site.url}${encodePath(path)}#service`,
     name,
     serviceType,
     description,
+    ...(offers ? { offers } : {}),
     provider: { "@id": `${site.url}/#business` },
     areaServed: areaServed || [
       { "@type": "City", name: "Nürnberg" },
@@ -56,7 +59,7 @@ function serviceSchema({ path, name, serviceType, description, areaServed }) {
     ],
     availableChannel: {
       "@type": "ServiceChannel",
-      serviceUrl: `${site.url}${path}`
+      serviceUrl: `${site.url}${encodePath(path)}`
     }
   };
 }
@@ -69,7 +72,7 @@ function absoluteUrl(pathOrUrl) {
 function faqSchema(path, items) {
   return {
     "@type": "FAQPage",
-    "@id": `${site.url}${path}#faq`,
+    "@id": `${site.url}${encodePath(path)}#faq`,
     mainEntity: items.map(({ question, answer }) => ({
       "@type": "Question",
       name: question,
@@ -88,7 +91,7 @@ function videoObjectSchema({ path, id, name, description, thumbnailUrl, embedUrl
 
   return {
     "@type": "VideoObject",
-    "@id": `${site.url}${path}#${id}`,
+    "@id": `${site.url}${encodePath(path)}#${id}`,
     name,
     description,
     thumbnailUrl: [absoluteUrl(thumbnailUrl)],
@@ -191,45 +194,26 @@ function corporateModuleShowcase(items) {
 }
 
 function corporateOfferShowcase(items) {
-  const [featured, ...supporting] = items;
-  const points = (item) => `
-    <ul class="corporate-offer-card__points" aria-label="${item.detail} Leistungen">
-      ${item.points.map((point) => `<li>${point}</li>`).join("")}
-    </ul>`;
-
   return `
     <div class="corporate-offer-showcase" aria-label="Drei Firmenfitness-Angebote">
-      <article class="corporate-offer-card corporate-offer-card--featured" data-reveal>
-        <figure class="corporate-offer-card__media">
-          <img src="${featured.image}" alt="${featured.alt}" style="object-position:${featured.imagePosition || "center"}"${imageLoadingAttributes()}>
-          <span class="corporate-offer-card__media-label">${featured.detail}</span>
-        </figure>
-        <div class="corporate-offer-card__body">
-          <div class="corporate-offer-card__meta"><span>${featured.number}</span><small>Firmenfitness-Angebot</small></div>
-          <h3>${featured.shortTitle || featured.title}</h3>
-          <p>${featured.text}</p>
-          ${points(featured)}
-        </div>
-      </article>
-      <div class="corporate-offer-showcase__stack">
-        ${supporting
-          .map(
-            (item) => `
-              <article class="corporate-offer-card corporate-offer-card--compact" data-reveal>
-                <figure class="corporate-offer-card__media">
-                  <img src="${item.image}" alt="${item.alt}" style="object-position:${item.imagePosition || "center"}"${imageLoadingAttributes()}>
-                  <span class="corporate-offer-card__media-label">${item.detail}</span>
-                </figure>
-                <div class="corporate-offer-card__body">
-                  <div class="corporate-offer-card__meta"><span>${item.number}</span><small>Firmenfitness-Angebot</small></div>
-                  <h3>${item.shortTitle || item.title}</h3>
-                  <p>${item.text}</p>
-                  ${points(item)}
-                </div>
-              </article>`
-          )
-          .join("")}
-      </div>
+      ${items
+        .map(
+          (item) => `
+            <article class="corporate-offer-card" data-reveal>
+              <figure class="corporate-offer-card__media">
+                <img src="${item.image}" alt="${item.alt}" style="object-position:${item.imagePosition || "center"}"${imageLoadingAttributes()}>
+              </figure>
+              <div class="corporate-offer-card__body">
+                <p class="corporate-offer-card__kicker"><span>${item.number}</span>${item.detail}</p>
+                <h3>${item.shortTitle || item.title}</h3>
+                <p class="corporate-offer-card__text">${item.text}</p>
+                <ul class="corporate-offer-card__points" aria-label="Leistungen ${item.detail}">
+                  ${item.points.map((point) => `<li>${point}</li>`).join("")}
+                </ul>
+              </div>
+            </article>`
+        )
+        .join("")}
     </div>`;
 }
 
@@ -245,7 +229,7 @@ function corporateOutcomeShowcase(items) {
           </p>
         </div>
         <figure class="corporate-outcome-hero__media">
-          <img src="/assets/images/dominik-gym-grey.webp" alt="Dominik Dörfl in einer professionellen Coaching-Szene"${imageLoadingAttributes()} />
+          <img src="/assets/images/dominik-gym-grey.webp" width="1800" height="1351" alt="Dominik Dörfl in einer professionellen Coaching-Szene"${imageLoadingAttributes()} />
         </figure>
       </article>
       <div class="corporate-outcome-grid">
@@ -359,6 +343,21 @@ const appPreviewCards = [
 ];
 
 const coachingFaq = [
+  {
+    question: "Ist Personal Training in Nürnberg auch für Einsteiger geeignet?",
+    answer:
+      "Ja. Ein großer Teil der Zusammenarbeit beginnt ohne Trainingserfahrung. Übungsauswahl, Umfang und Tempo richten sich nach deiner Ausgangslage — Vorkenntnisse sind keine Voraussetzung, sondern das Ergebnis der ersten Wochen."
+  },
+  {
+    question: "Kann ich mit Personal Training in Nürnberg abnehmen?",
+    answer:
+      "Ja. Grundlage sind eine Körperanalyse zu Beginn, ein Ernährungsrahmen, der zu deinem Alltag passt, und ein Training, das Muskulatur erhält. Die Entwicklung wird regelmäßig gemessen statt geschätzt."
+  },
+  {
+    question: "Wie oft trainieren wir pro Woche?",
+    answer:
+      "Das hängt von Ziel, Kalender und Belastbarkeit ab. Manche trainieren einmal pro Woche gemeinsam und den Rest eigenständig nach Plan, andere häufiger. Der Rahmen wird im Erstgespräch festgelegt."
+  },
   {
     question: "Für wen ist Personal Training in Nürnberg bei Camp Dörfl gedacht?",
     answer:
@@ -565,11 +564,11 @@ const homeEntryCards = [
     titleHtml: "MODERATOR &amp;<br><span>GASTGEBER</span>",
     text:
       "INTERVIEWS, OPENINGS UND BÜHNENFÜHRUNG MIT KLARER WIRKUNG.",
-    image: "/assets/images/dominik-stage-suit.webp",
-    srcset: "/assets/images/dominik-stage-suit-480.webp 480w, /assets/images/dominik-stage-suit-768.webp 768w, /assets/images/dominik-stage-suit.webp 1650w",
+    image: "/assets/images/dominik-stage-suit-home.webp",
+    srcset: "/assets/images/dominik-stage-suit-home-480.webp 480w, /assets/images/dominik-stage-suit-home-768.webp 768w, /assets/images/dominik-stage-suit-home.webp 1374w",
     alt: "Dominik Dörfl als Moderator bei einem Firmenevent",
     theme: "accent",
-    href: "/events/",
+    href: "/moderator-nuernberg/",
     buttonLabel: "EVENT PLANEN"
   },
   {
@@ -589,11 +588,11 @@ const homeEntryCards = [
     titleHtml: "PERSONAL TRAINING<br><span>VOM PROFI.</span>",
     text:
       "TRAINING UND ERNÄHRUNG IN PERSÖNLICHER PREMIUM-BEGLEITUNG.",
-    image: "/assets/images/dominik-personal-coaching-client.webp",
-    srcset: "/assets/images/dominik-personal-coaching-client-480.webp 480w, /assets/images/dominik-personal-coaching-client-768.webp 768w, /assets/images/dominik-personal-coaching-client.webp 1707w",
-    alt: "Dominik Dörfl mit einem Klienten im Personal Training im Studio",
+    image: "/assets/images/dominik-ironman-run-home.webp",
+    srcset: "/assets/images/dominik-ironman-run-home.webp 1263w",
+    alt: "Dominik Dörfl auf der Laufstrecke des Ironman 70.3 in Nürnberg",
     theme: "coaching",
-    href: "/personal-trainer-nürnberg/",
+    href: "/personal-trainer-nuernberg/",
     buttonLabel: "TRAINIERE MIT MIR"
   },
   {
@@ -644,9 +643,9 @@ const corporateModuleCards = [
     text:
       "Der Vortrag ‚Warum Dranbleiben für unsere Gesundheit kein Nice-to-have ist‘ verbindet gesunde Ernährung mit realistischen Möglichkeiten, Sport in das jeweilige Berufsfeld zu integrieren.",
     points: ["berufsfeldbezogene Inhalte", "Ernährung ohne Dogmen", "Sport realistisch integrieren"],
-    image: "/assets/images/dominik-athlete-nutrition.webp",
-    alt: "Dominik Dörfl bei einer persönlichen Beratung zu Ernährung und Leistungsfähigkeit",
-    imagePosition: "center 24%"
+    image: "/assets/images/dominik-ironman-run-nuernberg.webp",
+    alt: "Dominik Dörfl auf der Laufstrecke des Ironman 70.3 in Nürnberg",
+    imagePosition: "center 30%"
   },
   {
     number: "03",
@@ -658,7 +657,7 @@ const corporateModuleCards = [
     points: ["direkt im Unternehmen", "an Belastung und Team angepasst", "einzeln oder kombinierbar"],
     image: "/assets/images/dominik-athlete-bike-yellow.webp",
     alt: "Dominik Dörfl im Radtrikot neben seinem Zeitfahrrad auf einer Landstraße",
-    imagePosition: "center 20%"
+    imagePosition: "center 36%"
   }
 ];
 
@@ -692,63 +691,63 @@ const corporateOutcomeRows = [
 const corporateReferenceLogos = [
   {
     name: "Mathias-von-Flurl-Schule",
-    image: "/assets/images/reference-mathias-von-flurl-schule.png",
+    image: "/assets/images/reference-mathias-von-flurl-schule.webp",
     alt: "Mathias-von-Flurl-Schule Logo",
     url: "https://www.bs2-straubing.de/",
     text: "Berufliche Bildung mit einem Setting, in dem Gesundheit verständlich, nahbar und professionell vermittelt werden soll."
   },
   {
     name: "LWL",
-    image: "/assets/images/reference-lwl.png",
+    image: "/assets/images/reference-lwl.webp",
     alt: "LWL Logo",
     url: "https://www.lwl.org/",
     text: "Öffentliche Institution mit Fokus auf hochwertige Gesundheitsimpulse für Menschen, Teams und moderne Arbeitswelten."
   },
   {
     name: "Clever Fit",
-    image: "/assets/images/reference-clever-fit.png",
+    image: "/assets/images/reference-clever-fit.webp",
     alt: "Clever Fit Logo",
     url: "https://www.clever-fit.com/de/",
     text: "Fitnessnahes Umfeld, in dem Analyse, Beratung und Aktivierung direkt im Trainingskontext wirksam werden."
   },
   {
     name: "NAF",
-    image: "/assets/images/reference-naf.png",
+    image: "/assets/images/reference-naf.webp",
     alt: "NAF Logo",
     url: "https://www.nafaxles.com/de/",
     text: "Industrie- und Unternehmensumfeld, in dem Gesundheitstage klar, effizient und mit echter Alltagstauglichkeit umgesetzt werden."
   },
   {
     name: "Heidelberg Materials",
-    image: "/assets/images/reference-heidelberg-materials.png",
+    image: "/assets/images/reference-heidelberg-materials.webp",
     alt: "Heidelberg Materials Logo",
     url: "https://www.heidelbergmaterials.de/de",
     text: "Großes Unternehmensumfeld mit Anspruch an professionelle Kommunikation, gute Struktur und spürbaren Mehrwert vor Ort."
   },
   {
     name: "VLB",
-    image: "/assets/images/reference-vlb.png",
+    image: "/assets/images/reference-vlb.webp",
     alt: "VLB Logo",
     url: "https://www.vlbbayern.de/",
     text: "Verbandsnahes Umfeld, in dem Inhalte verständlich, hochwertig und mit klarer Praxisnähe transportiert werden müssen."
   },
   {
     name: "Stadt Nürnberg",
-    image: "/assets/images/reference-stadt-nuernberg.png",
+    image: "/assets/images/reference-stadt-nuernberg.webp",
     alt: "Stadt Nürnberg Logo",
     url: "https://www.nuernberg.de/internet/stadtportal/index.html",
     text: "Kommunales Umfeld, in dem Gesundheitskommunikation professionell, zugänglich und für unterschiedliche Zielgruppen anschlussfähig sein muss."
   },
   {
     name: "CCC Erlangen-EMN",
-    image: "/assets/images/reference-ccc-erlangen-emn.png",
+    image: "/assets/images/reference-ccc-erlangen-emn.webp",
     alt: "CCC Erlangen-EMN Logo",
     url: "https://ccc-emn.de/",
     text: "Medizinisches und wissenschaftliches Umfeld mit Anspruch an Sorgfalt, Qualität und eine sensible, klare Ansprache."
   },
   {
     name: "alfafood GmbH",
-    image: "/assets/images/reference-alfafood.png",
+    image: "/assets/images/reference-alfafood.webp",
     alt: "alfafood GmbH Logo",
     url: "https://alfafood.eu",
     text: "Ernährungsnaher Kontext, in dem Produktbezug, Beratung und glaubwürdige Umsetzung sinnvoll zusammengeführt werden."
@@ -791,42 +790,42 @@ const eventFormatCards = [
 const eventReferenceLogos = [
   {
     name: "NRW BBKV e.V.",
-    image: "/assets/images/event-reference-nrw-bbkv.jpg",
+    image: "/assets/images/event-reference-nrw-bbkv.webp",
     alt: "NRW BBKV e.V. Logo",
     url: "https://www.instagram.com/nrw_bbkv/",
     text: "Landesverband für Bodybuilding und Fitness in Nordrhein-Westfalen mit starkem Bühnen- und Wettkampfbezug."
   },
   {
     name: "BLV BFK e.V.",
-    image: "/assets/images/event-reference-blv-bfk.png",
+    image: "/assets/images/event-reference-blv-bfk.webp",
     alt: "Logo des Bayerischen Landesverbands für Bodybuilding, Fitness und Kraftsport im DBFV e.V.",
     url: "https://blv-bfk.de/",
     text: "Bayerischer Landesverband für Bodybuilding, Fitness und Kraftsport mit professioneller Event- und Bühnenstruktur."
   },
   {
     name: "DBFV e.V.",
-    image: "/assets/images/event-reference-dbfv.png",
+    image: "/assets/images/event-reference-dbfv.webp",
     alt: "DBFV e.V. Logo",
     url: "https://www.dbfv.de/",
     text: "Deutscher Bodybuilding und Fitness Verband e.V. mit offiziellen Meisterschaften, Wertungen und Bühnenformaten."
   },
   {
     name: "VBB e.V.",
-    image: "/assets/images/event-reference-vbb.jpg",
+    image: "/assets/images/event-reference-vbb.webp",
     alt: "VBB e.V. Logo",
     url: "https://www.instagram.com/vbb_ev/",
     text: "Verband mit sportnahen Live-Formaten, bei denen Präsenz, Timing und saubere Moderation direkt zählen."
   },
   {
     name: "Segmüller",
-    image: "/assets/images/event-reference-segmueller.png",
+    image: "/assets/images/event-reference-segmueller.webp",
     alt: "Segmüller Logo",
     url: "https://www.segmueller.de/",
     text: "Große Marken- und Veranstaltungsumgebung mit Anspruch an Auftreten, Ablauf und einen professionellen Gastgeberrahmen."
   },
   {
     name: "BZKF",
-    image: "/assets/images/event-reference-bzkf.png",
+    image: "/assets/images/event-reference-bzkf.webp",
     alt: "BZKF Logo",
     url: "https://bzkf.de/",
     text: "Formate mit Verbandshintergrund, in denen Vertrauen, klare Führung und ein würdiger Bühnenrahmen wichtig sind."
@@ -855,7 +854,7 @@ const partnerBrandCards = [
   {
     name: "XXL Nutrition",
     label: "Nutrition Partner",
-    image: "/assets/images/partner-xxl-nutrition-logo.png",
+    image: "/assets/images/partner-xxl-nutrition-logo.webp",
     alt: "XXL Nutrition Logo",
     href: "https://www.xxlnutrition.com/",
     linkLabel: "Zur Website",
@@ -874,7 +873,7 @@ const partnerBrandCards = [
   {
     name: "AEKE",
     label: "Smart Gym Partner",
-    image: "/assets/images/partner-aeke-logo.png",
+    image: "/assets/images/partner-aeke-logo.webp",
     alt: "AEKE Logo",
     href: "https://eu.aeke.com/products/buy-aeke-k1?sca_ref=11019964.wKUJzkQCK3",
     linkLabel: "Zum AEKE K1",
@@ -987,10 +986,10 @@ const bodybuildingCalendarSources = [
       { date: "2026-10-11", label: "11. Oktober 2026", name: "Int. Süddeutsche Meisterschaft", location: "Hofheim", type: "inkl. Junioren & Masters" },
       { date: "2026-10-17", label: "17. Oktober 2026", name: "Int. Deutsche Jugend-, Junioren- & Masters-Meisterschaft", location: "Petersberg", type: "Nationale Meisterschaft" },
       { date: "2026-10-18", label: "18. Oktober 2026", name: "Pure Classics", location: "Petersberg", type: "Classic Wettkampf" },
-      { date: "2026-10-25", label: "25. Oktober 2026", name: "Int. Großer Preis von Hessen", location: "Stadthalle Fritzlar", type: "Regionalmeisterschaft" },
       { date: "2026-11-01", label: "1. November 2026", name: "Int. Berliner Meisterschaft", location: "Fontane-Haus, Berlin", type: "Regionalmeisterschaft" },
       { date: "2026-11-07", label: "7. November 2026", name: "Int. Ostdeutsche Meisterschaft", location: "Stadthalle Apolda", type: "Regionalmeisterschaft" },
       { date: "2026-11-14", label: "14. November 2026", name: "Int. BaWü Meisterschaft", location: "Staufenhalle Plüderhausen", type: "Regionalmeisterschaft" },
+      { date: "2026-11-15", label: "15. November 2026", name: "Int. Großer Preis von Hessen", location: "Butzbach", type: "Regionalmeisterschaft" },
       { date: "2026-11-21", label: "21. November 2026", name: "Int. NRW Landesmeisterschaft", location: "Rheinhausenhalle Duisburg", type: "Landesmeisterschaft" },
       { date: "2026-11-22", label: "22. November 2026", name: "Int. Bayerische Meisterschaft", location: "Gersthofen", type: "Landesmeisterschaft" },
       { date: "2026-11-28", label: "28. November 2026", name: "Int. Deutsche Meisterschaft", location: "Wiesloch", type: "Deutsche Meisterschaft" },
@@ -1702,19 +1701,19 @@ function homePage() {
     <section class="ff-hero ff-hero--home-photo">
       <picture>
         <source media="(max-width: 900px)" srcset="/assets/images/home-hero-ironman-interview-mobile-480.webp 480w, /assets/images/home-hero-ironman-interview-mobile-720.webp 720w, /assets/images/home-hero-ironman-interview-mobile.webp 900w" sizes="100vw">
-        <img class="ff-hero__img" src="/assets/images/home-hero-ironman-interview.webp" srcset="/assets/images/home-hero-ironman-interview-960.webp 960w, /assets/images/home-hero-ironman-interview.webp 1920w" sizes="100vw" alt="Dominik Dörfl als Ironman-70.3-Finisher mit Medaille bei einem Interview im Stadion"${imageLoadingAttributes({ eager: true })}>
+        <img class="ff-hero__img" src="/assets/images/home-hero-ironman-interview.webp" width="1800" height="960" srcset="/assets/images/home-hero-ironman-interview-960.webp 960w, /assets/images/home-hero-ironman-interview.webp 1920w" sizes="100vw" alt="Dominik Dörfl als Ironman-70.3-Finisher mit Medaille bei einem Interview im Stadion"${imageLoadingAttributes({ eager: true })}>
       </picture>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
         <div class="ff-hero__home-card">
-          <p class="ff-hero__eyebrow" data-reveal>Personal Training · Firmenfitness · Events · Nürnberg</p>
-          <h1 class="ff-hero__title" data-reveal>Gesundheit.<br>Leistung.<br><span>Präsenz.</span></h1>
-          <div class="ff-hero__actions" data-reveal>
+          <p class="ff-hero__eyebrow">Personal Training · Firmenfitness · Events · Nürnberg</p>
+          <h1 class="ff-hero__title ff-hero__title--staged"><span class="ff-hero__line">Gesundheit.</span><span class="ff-hero__line">Leistung.</span><span class="ff-hero__line"><span>Präsenz.</span></span></h1>
+          <div class="ff-hero__actions">
             <a class="button button--primary" href="${contactHref()}"><span>Beratung anfragen</span><span aria-hidden="true">&rarr;</span></a>
             <a class="button button--ghost" href="#einstiege"><span>Vier Einstiege ansehen</span><span aria-hidden="true">&rarr;</span></a>
           </div>
-          <p class="ff-hero__mobile-welcome" data-reveal>Willkommen bei Camp Dörfl</p>
-          <dl class="ff-hero__facts" data-reveal aria-label="Camp Dörfl in Zahlen">
+          <p class="ff-hero__mobile-welcome">Willkommen bei Camp Dörfl</p>
+          <dl class="ff-hero__facts" aria-label="Camp Dörfl in Zahlen">
             <div><dt>Moderator</dt><dd>knapp 100 Events</dd></div>
             <div><dt>Firmenfitness</dt><dd>für gesunde Unternehmen</dd></div>
             <div><dt>Fitness Trainer</dt><dd>ausgebildet & zertifiziert</dd></div>
@@ -1837,17 +1836,24 @@ function homePage() {
       <div class="section-shell">
         ${sectionHeader({
           eyebrow: "Direkt zum passenden Angebot",
-          title: "Was suchst du in Nürnberg?",
+          title: "Was suchst du in <span>Nürnberg?</span>",
           text:
             "Wähle deinen konkreten Einstieg – vom persönlichen Coaching über die Körperanalyse bis zum Gesundheitstag für Unternehmen.",
           align: "center"
         }).replace("<h2", '<h2 id="home-search-paths-title"')}
-        ${featureGrid(
+        ${pathSlider(
           [
             {
               detail: "12 Wochen · begleitet",
               title: "Wieder fit werden",
-              text: "12-Wochen-Programm mit InBody-Messung, Ernährungs- und Trainingsplan, wöchentlichem Training und Endanalyse.",
+              text:
+                "Das begleitete 12-Wochen-Programm für alle, die nicht weiter ausprobieren, sondern ankommen wollen.",
+              points: [
+                "InBody-Messung zum Start und Endanalyse nach zwölf Wochen",
+                "Ernährungs- und Trainingsplan auf deinen Alltag zugeschnitten",
+                "Wöchentliches Personal Training mit persönlicher Führung",
+                "899 € als Paket statt 1.158 € für die Einzelleistungen"
+              ],
               href: "/fit-werden/",
               ctaLabel: "Programm ansehen"
             },
@@ -1855,13 +1861,23 @@ function homePage() {
               detail: "1:1 Coaching",
               title: "Personal Trainer Nürnberg",
               text: "Individuelles Training, Ernährung und persönliche Führung für ambitionierte Ziele.",
-              href: "/personal-trainer-nürnberg/",
+              points: [
+                "Personal Training ohne Bindung oder als Premium-Begleitung",
+                "Training und Ernährung aus einer Hand",
+                "Persönliche Termine in Nürnberg, Fürth und Erlangen"
+              ],
+              href: "/personal-trainer-nuernberg/",
               ctaLabel: "Personal Training ansehen"
             },
             {
               detail: "2D · InBody · BIA",
               title: "Körperanalyse Nürnberg",
               text: "Körperzusammensetzung messen, Ergebnisse verstehen und klare nächste Schritte ableiten.",
+              points: [
+                "InBody-BIA-Messung zu Muskelmasse und Körperfett",
+                "2D-Analyse macht die Entwicklung sichtbar",
+                "Persönliche Einordnung statt unkommentiertem Ausdruck"
+              ],
               href: "/koerperanalyse-nuernberg/",
               ctaLabel: "Körperanalyse ansehen"
             },
@@ -1869,25 +1885,41 @@ function homePage() {
               detail: "Für Unternehmen",
               title: "Gesundheitstag Nürnberg",
               text: "Ein erlebbarer Gesundheitstag mit Analyse, Aktivierung und persönlicher Einordnung.",
+              points: [
+                "2D-Körperanalyse und InBody direkt im Unternehmen",
+                "Individuelle Beratung für jede Mitarbeiterin und jeden Mitarbeiter",
+                "Ein Format, das Beteiligung schafft statt Pflichtprogramm"
+              ],
               href: "/gesundheitstag-nuernberg/",
               ctaLabel: "Gesundheitstag ansehen"
             },
             {
               detail: "Events · Bühne · Interviews",
               title: "Moderator Nürnberg",
-              text: "Knapp 100 moderierte Events: professionelle Moderation für Business-, Sport- und Bühnenformate mit Präsenz und Timing.",
-              href: "/events/",
+              text:
+                "Knapp 100 moderierte Events: Moderation für Business-, Sport- und Bühnenformate mit Präsenz und Timing.",
+              points: [
+                "Firmenveranstaltung, Sportevent und Gala",
+                "Interviews, Openings und Bühnenführung",
+                "Podiumsdiskussion mit sicherer Gesprächsführung"
+              ],
+              href: "/moderator-nuernberg/",
               ctaLabel: "Moderation ansehen"
             },
             {
               detail: "Keynote · Vortrag · Bühne",
               title: "Keynote Speaker Nürnberg",
               text: "Vorträge über Leistung unter Druck, Gesundheit im Unternehmen und Disziplin, die trägt.",
+              points: [
+                "Inhalte aus dem eigenen Weg als Athlet, Coach und Unternehmer",
+                "Auf Anlass und Publikum zugeschnitten statt Standardvortrag",
+                "Mitnehmbare nächste Schritte statt kurzer Motivation"
+              ],
               href: "/keynote-speaker-nuernberg/",
               ctaLabel: "Keynote ansehen"
             }
           ],
-          "feature-grid--search-paths"
+          "Alle Leistungen im Überblick"
         )}
       </div>
     </section>
@@ -1906,7 +1938,7 @@ function homePage() {
     bodyClass: "page-premium page-home-reboot",
     title: "Camp Dörfl | Performance System Nürnberg",
     description:
-      "Camp Dörfl ist das Performance System von Dominik Dörfl in Nürnberg – für persönliche Leistungsentwicklung, Firmenfitness, Event-Moderation und die Camp Dörfl App.",
+      "Das Performance System von Dominik Dörfl in Nürnberg: Leistungsentwicklung, Firmenfitness, Event-Moderation und die Camp Dörfl App.",
     pageName: "Camp Dörfl",
     dateModified: "2026-08-10",
     socialImage: "/assets/images/home-hero-ironman-interview-social.jpg",
@@ -1925,7 +1957,7 @@ function homePage() {
 function appPage() {
   const content = `
     <section class="ff-hero ff-hero--app ff-hero--text-only">
-      <img class="ff-hero__img" src="/assets/images/home-app-preview.webp" alt="Vorschau der Camp Dörfl App mit Training, Ernährung, Check-ins und Performance-Funktionen"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/home-app-preview.webp" width="1254" height="1254" alt="Vorschau der Camp Dörfl App mit Training, Ernährung, Check-ins und Performance-Funktionen"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
         <div class="ff-hero__app-copy">
@@ -1935,6 +1967,10 @@ function appPage() {
             Die Fitness App von Camp Dörfl verbindet deinen Trainingsplan, Ernährung, praktische Alltagstools, Community und persönliche Begleitung in einem professionellen System.
           </p>
           <p class="ff-hero__support" data-reveal>10 Jahre Erfahrung. 13 Deutsche-Meister-Titel. Eine Vision: dich immer weiterzuentwickeln.</p>
+          <p class="app-hero-offer" data-reveal>
+            <strong>7 Tage kostenlos testen.</strong>
+            <span>Danach alle Funktionen für 9,99 € im Monat – monatlich kündbar.</span>
+          </p>
           <div class="ff-hero__actions" data-reveal>
             <a class="app-store-symbol app-store-symbol--apple" href="https://apps.apple.com/de/app/camp-d%C3%B6rfl/id6767655689" target="_blank" rel="noopener noreferrer" aria-label="Camp Dörfl App im Apple App Store öffnen" title="Im Apple App Store öffnen">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.58 9.05 7.3c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.1l.02-.01zM12.03 7.25C11.88 5.02 13.69 3.18 15.77 3c.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
@@ -2045,7 +2081,7 @@ function appPage() {
 
   return layout({
     path: "/app/",
-    title: "Fitness App für Training, Ernährung & Fortschritt | Camp Dörfl",
+    title: "Fitness App für Training & Ernährung | Camp Dörfl",
     description:
       "Fitness App von Camp Dörfl: Trainingsplan, Ernährungsplan, Coach-Zugang, Scans, GPS-Routen, Community und Fortschrittsanalyse in einer App.",
     keywords: ["Fitness App", "Fitness App mit Trainingsplan", "Fitness App mit Ernährungsplan", "Fitness App mit Coach", "Camp Dörfl App"],
@@ -2069,13 +2105,13 @@ function appPage() {
 function personalCoachingPage() {
   const content = `
     <section class="ff-hero ff-hero--coaching ff-hero--coaching-photo">
-      <img class="ff-hero__img" src="/assets/images/premium-training-hero-wide.webp" srcset="/assets/images/premium-training-hero-wide-960.webp 960w, /assets/images/premium-training-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl als Personal Trainer in Nürnberg beim Training mit einem Kunden im Studio"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/premium-training-hero-wide.webp" width="1774" height="887" srcset="/assets/images/premium-training-hero-wide-960.webp 960w, /assets/images/premium-training-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl als Personal Trainer in Nürnberg beim Training mit einem Kunden im Studio"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
         <p class="ff-hero__eyebrow" data-reveal>Personal Trainer Nürnberg · 1:1 Coaching</p>
         <h1 class="ff-hero__title" data-reveal>Personal Trainer <br><span>Nürnberg.</span></h1>
         <p class="ff-hero__lead" data-reveal>
-          Dein Personal Trainer in Nürnberg für Premium 1:1 Coaching: Training, 2D-Körperanalyse, InBody, Ernährung und persönliche Steuerung in einem klaren System.
+          Dein Personal Trainer in Nürnberg für alle, deren Woche schon voll ist: 1:1 Training, Körperanalyse und Ernährung, abgestimmt auf Beruf, Familie und dein Ziel — ob Abnehmen, Kraft oder einfach wieder Energie.
         </p>
         <div class="ff-hero__actions" data-reveal>
           <a class="button button--primary" href="${contactHref("premium-training")}"><span>Beratung anfragen</span><span aria-hidden="true">&rarr;</span></a>
@@ -2105,101 +2141,9 @@ function personalCoachingPage() {
         <dl class="pt-authority__facts" data-reveal aria-label="Erfahrung und Referenzen von Personal Trainer Dominik Dörfl">
           <div><dt>10+</dt><dd>Jahre Coaching-Erfahrung</dd></div>
           <div><dt>13</dt><dd>Deutsche Meistertitel im betreuten Team</dd></div>
-          <div><dt>${coachSuccessStats.placements}</dt><dd>dokumentierte Wettkampfplatzierungen</dd></div>
           <div><dt>5,0</dt><dd>Sterne aus 34 Google-Bewertungen</dd></div>
+          <div><dt>1:1</dt><dd>Betreuung statt Gruppenprogramm</dd></div>
         </dl>
-      </div>
-    </section>
-
-    <section class="section section--tight">
-      <div class="section-shell editorial-stage">
-        <div class="editorial-stage__copy" data-reveal>
-          ${sectionHeader({
-            eyebrow: "Personal Training in Nürnberg",
-            title: "1:1 Coaching, das zu deinem Alltag passt.",
-            text:
-              "Als Personal Trainer in Nürnberg begleite ich dich persönlich: mit ehrlichem Feedback, einem nachvollziehbaren Plan und einer Struktur, die auch außerhalb des Trainings funktioniert."
-          })}
-          <div class="summary-rows summary-rows--compact">
-            <article class="summary-row">
-              <h3>Erfahrung, die in dein Training einfließt</h3>
-              <p>Leistungssport, Bühnenerfahrung und die praktische Arbeit mit Menschen mit anspruchsvollen Zielen bilden die Basis für dein individuelles Personal Training.</p>
-            </article>
-            <article class="summary-row">
-              <h3>Steuerung statt isolierter Einzeltermine</h3>
-              <p>Analyse, Training, Ernährung und regelmäßige Anpassung greifen ineinander, damit Fortschritt nicht vom Zufall oder kurzfristiger Motivation abhängt.</p>
-            </article>
-          </div>
-        </div>
-        <div class="editorial-stage__media editorial-stage__media--video" data-reveal>
-          ${deferredVideoEmbed({
-            embedUrl: "https://www.youtube-nocookie.com/embed/KTvHOvTNJ8w?autoplay=1&rel=0&modestbranding=1&playsinline=1",
-            watchUrl: "https://www.youtube.com/watch?v=KTvHOvTNJ8w",
-            title: "Camp Dörfl Premium Personal Training",
-            image: "/assets/images/dominik-personal-coaching-client.webp",
-            alt: "Dominik Dörfl im Premium Personal Training mit einem Kunden",
-            headline: "Premium Personal Training im echten Einsatz.",
-            actionLabel: "Video laden"
-          })}
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--coaching-start">
-      <div class="section-shell section-shell--wide coaching-start-stage">
-        <div class="coaching-start-stage__top">
-          <div class="coaching-start-stage__head">
-            ${sectionHeader({
-              eyebrow: "Drei Wege",
-              title: "Vom Einzeltraining bis zur <span>Premium-Begleitung.</span>",
-              text:
-                "Du kannst über Einzelstunden, Premium Coaching oder die Camp Dörfl App in das System einsteigen."
-            })}
-          </div>
-          <figure class="coaching-start-stage__photo" data-reveal>
-            <img src="/assets/images/dominik-bike-road-yellow.webp" alt="Dominik Doerfl mit Rennrad im gelb-weissen Trikot"${imageLoadingAttributes()}>
-          </figure>
-        </div>
-        ${featureGrid(coachingIncludedCards, "feature-grid--coaching-start")}
-      </div>
-    </section>
-
-    <section class="section section--muted section--coaching-outcome">
-      <div class="section-shell section-shell--wide">
-        <div class="coaching-outcome-stage">
-          ${sectionHeader({
-            eyebrow: "Ergebnis",
-            title: "Was am Ende <span>spürbar anders</span> ist.",
-            text:
-              "Ziel des Trainings ist nicht nur mehr Wissen, sondern ein Zustand, den du in deinem Alltag wirklich merkst.",
-            align: "center"
-          })}
-          ${summaryRows(coachingOutcomeRows)}
-        </div>
-      </div>
-    </section>
-
-    ${guenterStoryPreview("coaching")}
-
-    <section class="section section--tight coaching-success-proof-section">
-      <div class="section-shell section-shell--wide">
-        <a class="coaching-success-proof" href="/erfolge-im-team/" data-reveal aria-label="Alle Erfolge im Team ansehen">
-          <div class="coaching-success-proof__copy">
-            <p class="eyebrow">Erfolge aus dem Camp Dörfl</p>
-            <h2>Coaching, das sich <span>auf der Bühne beweist.</span></h2>
-            <p>Vom ersten Wettkampf bis zur internationalen Pro Card: Ein kurzer Einblick in die dokumentierten Resultate der Athletinnen und Athleten aus dem Camp.</p>
-            <span class="coaching-success-proof__cta">Alle Erfolge im Team ansehen <span aria-hidden="true">&rarr;</span></span>
-          </div>
-          <dl class="coaching-success-proof__stats" aria-label="Erfolgsbilanz im Camp Dörfl">
-            <div><strong>${coachSuccessStats.placements}</strong><span>Platzierungen</span></div>
-            <div><strong>${coachSuccessStats.wins}</strong><span>Siege</span></div>
-            <div><strong>${coachSuccessStats.podiums}</strong><span>Podiumsplätze</span></div>
-            <div><strong>IFBB</strong><span>Pro Card 2026</span></div>
-          </dl>
-          <figure class="coaching-success-proof__media">
-            <img src="/assets/images/team-success-hero-960.jpg" alt="Camp-Dörfl-Athlet in erfolgreicher Wettkampfform"${imageLoadingAttributes()}>
-          </figure>
-        </a>
       </div>
     </section>
 
@@ -2234,7 +2178,7 @@ function personalCoachingPage() {
               embedUrl: "https://www.youtube-nocookie.com/embed/bP7DKqZu5xc?autoplay=1&rel=0&modestbranding=1&playsinline=1",
               watchUrl: "https://youtube.com/shorts/bP7DKqZu5xc?si=VaGdauquMqCuWNyE",
               title: "Camp Dörfl Premium Personal Training",
-              image: "/assets/images/premium-training-short-reference.jpg",
+              image: "/assets/images/premium-training-short-reference.webp",
             alt: "Vorschaubild eines YouTube-Shorts über das Premium Personal Training bei Camp Dörfl",
               headline: "Premium Personal Training als Short-Referenz.",
               actionLabel: "Short laden",
@@ -2246,13 +2190,143 @@ function personalCoachingPage() {
       </div>
     </section>
 
-    <section class="section">
+    <section class="section section--tight">
+      <div class="section-shell editorial-stage">
+        <div class="editorial-stage__copy" data-reveal>
+          ${sectionHeader({
+            eyebrow: "Personal Training in Nürnberg",
+            title: "1:1 Coaching, das zu deinem Alltag passt.",
+            text:
+              "Als Personal Trainer in Nürnberg begleite ich dich persönlich: mit ehrlichem Feedback, einem nachvollziehbaren Plan und einer Struktur, die auch außerhalb des Trainings funktioniert."
+          })}
+          <div class="summary-rows summary-rows--compact">
+            <article class="summary-row">
+              <h3>Erfahrung, die in dein Training einfließt</h3>
+              <p>Über zehn Jahre Arbeit mit Menschen zwischen Beruf, Familie und Training — vom ersten Trainingstag bis zum sportlichen Ziel — fließen in deinen Plan ein.</p>
+            </article>
+            <article class="summary-row">
+              <h3>Steuerung statt isolierter Einzeltermine</h3>
+              <p>Analyse, Training, Ernährung und regelmäßige Anpassung greifen ineinander, damit Fortschritt nicht vom Zufall oder kurzfristiger Motivation abhängt.</p>
+            </article>
+          </div>
+        </div>
+        <div class="editorial-stage__media editorial-stage__media--video" data-reveal>
+          ${deferredVideoEmbed({
+            embedUrl: "https://www.youtube-nocookie.com/embed/KTvHOvTNJ8w?autoplay=1&rel=0&modestbranding=1&playsinline=1",
+            watchUrl: "https://www.youtube.com/watch?v=KTvHOvTNJ8w",
+            title: "Camp Dörfl Premium Personal Training",
+            image: "/assets/images/dominik-personal-coaching-client.webp",
+            alt: "Dominik Dörfl im Premium Personal Training mit einem Kunden",
+            headline: "Premium Personal Training im echten Einsatz.",
+            actionLabel: "Video laden"
+          })}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted" aria-labelledby="pt-audience-title">
       <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Für wen",
+          title: "Für Menschen mitten im Leben.",
+          text:
+            "Die meisten, die hier trainieren, haben einen Beruf, eine Familie und eine Woche, die ohnehin voll ist — und wollen einen Körper, der da mithält.",
+          align: "center"
+        }).replace("<h2", '<h2 id="pt-audience-title"')}
+        ${featureGrid(
+          [
+            {
+              detail: "Wiedereinstieg",
+              title: "Nach Jahren ohne Training",
+              text: "Ob nach langer Pause oder zum ersten Mal überhaupt: Der Einstieg beginnt bei deiner Ausgangslage und nicht bei einem Standardplan."
+            },
+            {
+              detail: "Abnehmen",
+              title: "Weniger Körperfett, mehr Kraft",
+              text: "Eine Ernährung, die Beruf, Familie und Restaurantbesuche aushält — statt einer Diät, die nach drei Wochen kippt."
+            },
+            {
+              detail: "Büroalltag",
+              title: "Kraft für einen Alltag im Sitzen",
+              text: "Haltung, Beweglichkeit und Belastbarkeit zurückholen, wenn der Tag überwiegend am Schreibtisch stattfindet."
+            },
+            {
+              detail: "Ambition",
+              title: "Wenn du weiter willst",
+              text: "Wer ein sportliches Ziel verfolgt, findet dieselbe Struktur — vom ersten Wettkampf bis zur Bühne."
+            }
+          ],
+          "feature-grid--audience"
+        )}
+      </div>
+    </section>
+
+    <section class="section section--coaching-start">
+      <div class="section-shell section-shell--wide coaching-start-stage">
+        <div class="coaching-start-stage__top">
+          <div class="coaching-start-stage__head">
+            ${sectionHeader({
+              eyebrow: "Drei Wege",
+              title: "Vom Einzeltraining bis zur <span>Premium-Begleitung.</span>",
+              text:
+                "Du kannst über Einzelstunden, Premium Coaching oder die Camp Dörfl App in das System einsteigen."
+            })}
+          </div>
+          <figure class="coaching-start-stage__photo" data-reveal>
+            <img src="/assets/images/dominik-bike-road-yellow.webp" width="1351" height="1800" alt="Dominik Doerfl mit Rennrad im gelb-weissen Trikot"${imageLoadingAttributes()}>
+          </figure>
+        </div>
+        ${featureGrid(coachingIncludedCards, "feature-grid--coaching-start")}
+      </div>
+    </section>
+
+    <section class="section section--muted section--coaching-outcome">
+      <div class="section-shell section-shell--wide">
+        <div class="coaching-outcome-stage">
+          ${sectionHeader({
+            eyebrow: "Ergebnis",
+            title: "Was am Ende <span>spürbar anders</span> ist.",
+            text:
+              "Ziel des Trainings ist nicht nur mehr Wissen, sondern ein Zustand, den du in deinem Alltag wirklich merkst.",
+            align: "center"
+          })}
+          ${summaryRows(coachingOutcomeRows)}
+        </div>
+      </div>
+    </section>
+
+    ${guenterStoryPreview("coaching")}
+
+    <section class="section section--tight coaching-success-proof-section">
+      <div class="section-shell section-shell--wide">
+        <a class="coaching-success-proof" href="/erfolge-im-team/" data-reveal aria-label="Alle Erfolge im Team ansehen">
+          <div class="coaching-success-proof__copy">
+            <p class="eyebrow">Nachweisbare Ergebnisse</p>
+            <h2>Coaching, das sich <span>überprüfen lässt.</span></h2>
+            <p>Die meisten hier trainieren für Alltag, Gesundheit und Form. Wer ein sportliches Ziel verfolgt, arbeitet nach derselben Struktur — nachvollziehbar an den dokumentierten Resultaten aus dem Camp.</p>
+            <span class="coaching-success-proof__cta">Alle Erfolge im Team ansehen <span aria-hidden="true">&rarr;</span></span>
+          </div>
+          <dl class="coaching-success-proof__stats" aria-label="Erfolgsbilanz im Camp Dörfl">
+            <div><strong>${coachSuccessStats.placements}</strong><span>Platzierungen</span></div>
+            <div><strong>${coachSuccessStats.wins}</strong><span>Siege</span></div>
+            <div><strong>${coachSuccessStats.podiums}</strong><span>Podiumsplätze</span></div>
+            <div><strong>IFBB</strong><span>Pro Card 2026</span></div>
+          </dl>
+          <figure class="coaching-success-proof__media">
+            <img src="/assets/images/team-success-hero-960.webp" width="960" height="960" alt="Camp-Dörfl-Athlet in erfolgreicher Wettkampfform"${imageLoadingAttributes()}>
+          </figure>
+        </a>
+      </div>
+    </section>
+
+    <section class="section coaching-price-section">
+      <div class="section-shell section-shell--wide coaching-price">
         ${sectionHeader({
           eyebrow: "Preis & Einstieg",
           title: "Was kostet ein Personal Trainer in Nürnberg?",
           text:
-            "Wenn du Personal Trainer in Nürnberg vergleichst, hilft dir unser Kosten-Guide dabei, Formate, Betreuungsumfang und den passenden Einstieg klar einzuordnen."
+            "Wenn du Personal Trainer in Nürnberg vergleichst, hilft dir unser Kosten-Guide dabei, Formate, Betreuungsumfang und den passenden Einstieg klar einzuordnen.",
+          align: "center"
         })}
         <div class="summary-rows summary-rows--compact">
           <article class="summary-row" data-reveal>
@@ -2270,13 +2344,14 @@ function personalCoachingPage() {
       </div>
     </section>
 
-    <section class="section section--muted">
-      <div class="section-shell">
+    <section class="section section--muted coaching-local-section">
+      <div class="section-shell section-shell--wide coaching-local">
         ${sectionHeader({
           eyebrow: "Vor Ort in der Metropolregion",
           title: "Personal Training für Nürnberg, Fürth und Erlangen.",
           text:
-            "Der persönliche Ausgangspunkt liegt in Nürnberg. Auch Kundinnen und Kunden aus Fürth, Erlangen und der Metropolregion nutzen die Kombination aus 1:1 Training, Körperanalyse, Ernährungsstruktur und App-Begleitung."
+            "Der persönliche Ausgangspunkt liegt in Nürnberg. Auch Kundinnen und Kunden aus Fürth, Erlangen und der Metropolregion nutzen die Kombination aus 1:1 Training, Körperanalyse, Ernährungsstruktur und App-Begleitung.",
+          align: "center"
         })}
         ${featureGrid(
           [
@@ -2289,13 +2364,14 @@ function personalCoachingPage() {
       </div>
     </section>
 
-    <section class="section">
-      <div class="section-shell">
+    <section class="section coaching-faq-section">
+      <div class="section-shell coaching-faq">
         ${sectionHeader({
           eyebrow: "FAQ",
-          title: "Passt das zu deinem Leben?",
+          title: "Passt das zu<br>deinem Leben?",
           text:
-            "Wenn du Verantwortung trägst, muss das Training zu deinem Kalender passen und nicht umgekehrt."
+            "Wenn du Verantwortung trägst, muss das Training zu deinem Kalender passen und nicht umgekehrt.",
+          align: "center"
         })}
         ${faq(coachingFaq)}
       </div>
@@ -2312,11 +2388,11 @@ function personalCoachingPage() {
   `;
 
   return layout({
-    path: "/personal-trainer-nürnberg/",
-    title: "Personal Trainer Nürnberg | Dominik Dörfl – echte Erfolge",
+    path: "/personal-trainer-nuernberg/",
+    title: "Personal Trainer Nürnberg | 1:1 Coaching · Dominik Dörfl",
     description:
-      "Personal Trainer Nürnberg: über 10 Jahre Erfahrung, 13 Deutsche Meistertitel im betreuten Team und 126 Platzierungen. 1:1 Coaching mit Dominik Dörfl.",
-    keywords: ["Personal Trainer Nürnberg", "Personal Training Nürnberg", "Premium Personal Training Nürnberg", "1:1 Personal Training Nürnberg", "Ernährungscoaching Nürnberg"],
+      "Personal Trainer in Nürnberg für Abnehmen, Kraft und mehr Energie im Alltag: 1:1 Training, Körperanalyse und Ernährung, persönlich geführt von Dominik Dörfl.",
+    keywords: ["Personal Trainer Nürnberg", "Personal Training Nürnberg", "Personal Trainer Nürnberg Abnehmen", "1:1 Personal Training Nürnberg", "Personal Trainer Nürnberg Einsteiger", "Ernährungscoaching Nürnberg"],
     bodyClass: "page-premium page-coaching",
     pageName: "Personal Trainer Nürnberg",
     dateModified: "2026-08-11",
@@ -2324,11 +2400,11 @@ function personalCoachingPage() {
     socialImageAlt: "Dominik Dörfl beim Personal Training mit einem Kunden in Nürnberg",
     extraStructuredData: [
       serviceSchema({
-        path: "/personal-trainer-nürnberg/",
+        path: "/personal-trainer-nuernberg/",
         name: "Personal Trainer Nürnberg – Camp Dörfl",
         serviceType: "Personal Training in Nürnberg",
         description:
-          "Persönlich geführtes Personal Training in Nürnberg mit Analyse, Ernährungsplanung, App und laufender Anpassung."
+          "Persönlich geführtes 1:1 Personal Training in Nürnberg für Abnehmen, Kraftaufbau und mehr Energie im Alltag — mit Körperanalyse, Ernährungsplanung und laufender Anpassung."
       }),
       {
         "@type": "Person",
@@ -2344,9 +2420,10 @@ function personalCoachingPage() {
         knowsAbout: [
           "Personal Training",
           "Krafttraining",
-          "Bodybuilding",
-          "Ernährungsplanung",
+          "Gewichtsreduktion",
+          "Ernährungsberatung",
           "Körperanalyse",
+          "Gesundheitsorientiertes Training",
           "Wettkampfvorbereitung"
         ],
         subjectOf: [
@@ -2354,9 +2431,9 @@ function personalCoachingPage() {
           { "@type": "WebPage", "@id": `${site.url}/erfolge-im-team/guenter-preis/#webpage` }
         ]
       },
-      faqSchema("/personal-trainer-nürnberg/", coachingFaq),
+      faqSchema("/personal-trainer-nuernberg/", coachingFaq),
       videoObjectSchema({
-        path: "/personal-trainer-nürnberg/",
+        path: "/personal-trainer-nuernberg/",
         id: "premium-training-video",
         name: "Camp Dörfl Premium Personal Training",
         description:
@@ -2367,12 +2444,12 @@ function personalCoachingPage() {
         watchUrl: "https://www.youtube.com/watch?v=KTvHOvTNJ8w"
       }),
       videoObjectSchema({
-        path: "/personal-trainer-nürnberg/",
+        path: "/personal-trainer-nuernberg/",
         id: "premium-training-short",
         name: "Camp Dörfl Premium Personal Training Short",
         description:
           "Kurzer Videoeinblick in die direkte 1:1 Zusammenarbeit im Premium Personal Training von Camp Dörfl.",
-        thumbnailUrl: "/assets/images/premium-training-short-reference.jpg",
+        thumbnailUrl: "/assets/images/premium-training-short-reference.webp",
         uploadDate: "2026-06-16T13:34:05-07:00",
         embedUrl: "https://www.youtube-nocookie.com/embed/bP7DKqZu5xc?autoplay=1&rel=0&modestbranding=1&playsinline=1",
         watchUrl: "https://youtube.com/shorts/bP7DKqZu5xc?si=VaGdauquMqCuWNyE"
@@ -2388,7 +2465,7 @@ function guenterStoryPreview(context = "team") {
       <div class="section-shell section-shell--wide">
         <a class="guenter-story-preview" href="/erfolge-im-team/guenter-preis/" data-reveal aria-label="Die Erfolgsgeschichte von Günter Preis lesen">
           <figure class="guenter-story-preview__media">
-            <img src="/assets/images/guenter-preis-coach-stage.jpg" alt="Dominik Dörfl gemeinsam mit Günter Preis und seiner Medaille nach einem Bodybuilding-Wettkampf"${imageLoadingAttributes()}>
+            <img src="/assets/images/guenter-preis-coach-stage.webp" width="1194" height="1400" alt="Dominik Dörfl gemeinsam mit Günter Preis und seiner Medaille nach einem Bodybuilding-Wettkampf"${imageLoadingAttributes()}>
             <span class="guenter-story-preview__badge">Neue Erfolgsgeschichte</span>
           </figure>
           <div class="guenter-story-preview__copy">
@@ -2410,7 +2487,7 @@ function guenterStoryPreview(context = "team") {
 function firmenfitnessPage() {
   const content = `
     <section class="ff-hero ff-hero--photo ff-hero--firmenfitness ff-hero--firmenfitness-photo ff-hero--text-only">
-      <img class="ff-hero__img" src="/assets/images/firmenfitness-hero-wide.webp" srcset="/assets/images/firmenfitness-hero-wide-960.webp 960w, /assets/images/firmenfitness-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl im Firmenfitness-Kontext mit Analyse und Beratung für Unternehmen"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/firmenfitness-hero-wide.webp" width="1774" height="887" srcset="/assets/images/firmenfitness-hero-wide-960.webp 960w, /assets/images/firmenfitness-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl im Firmenfitness-Kontext mit Analyse und Beratung für Unternehmen"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
           <p class="ff-hero__eyebrow" data-reveal>Aus Nürnberg · Deutschlandweit im Einsatz</p>
@@ -2676,7 +2753,7 @@ function firmenfitnessPage() {
 function eventsPage() {
   const content = `
     <section class="ff-hero ff-hero--photo ff-hero--events ff-hero--events-photo ff-hero--text-only">
-      <img class="ff-hero__img" src="/assets/images/events-hero-wide.webp" srcset="/assets/images/events-hero-wide-960.webp 960w, /assets/images/events-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl als Moderator auf einer Eventbühne mit Publikum"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/events-hero-wide.webp" width="1774" height="887" srcset="/assets/images/events-hero-wide-960.webp 960w, /assets/images/events-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl als Moderator auf einer Eventbühne mit Publikum"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
           <p class="ff-hero__eyebrow" data-reveal>Events · Moderation · Hosting</p>
@@ -2821,10 +2898,10 @@ function eventsPage() {
     </section>
 
     <section class="section">
-      <div class="section-shell section-shell--wide">
+      <div class="section-shell section-shell--wide event-format-intro">
         ${sectionHeader({
           eyebrow: "Event-Formate",
-          title: "Welche Bühnenformate Camp Dörfl besonders stark trägt.",
+          title: "Welche Bühnenformate Camp&nbsp;Dörfl besonders stark trägt.",
           text:
             "Für Veranstalter, die einen Moderator suchen, der Ablauf, Publikum und Marke nicht nur zusammenbringt, sondern sichtbar aufwertet.",
           align: "center"
@@ -2854,19 +2931,19 @@ function eventsPage() {
         </div>
         <div class="event-rule-stage__gallery" data-reveal aria-label="Formate mit klarem Regelwerk bei Camp Dörfl Events">
           <figure class="event-rule-stage__card event-rule-stage__card--award">
-            <img src="/assets/images/event-rule-award.avif" alt="Dominik Dörfl bei einer Ehrung im Gespräch mit einem Preisträger auf der Bühne"${imageLoadingAttributes()}>
+            <img src="/assets/images/event-rule-award.avif" width="907" height="1220" alt="Dominik Dörfl bei einer Ehrung im Gespräch mit einem Preisträger auf der Bühne"${imageLoadingAttributes()}>
             <figcaption>
               <p>Interviews und Übergaben, die Protokoll und Live-Moment gleichzeitig tragen.</p>
             </figcaption>
           </figure>
           <figure class="event-rule-stage__card event-rule-stage__card--stage">
-            <img src="/assets/images/event-rule-stage.avif" alt="Dominik Dörfl moderiert auf einer Wettkampfbühne mit Mikrofon vor einem Verbands-Backdrop"${imageLoadingAttributes()}>
+            <img src="/assets/images/event-rule-stage.avif" width="1600" height="1066" alt="Dominik Dörfl moderiert auf einer Wettkampfbühne mit Mikrofon vor einem Verbands-Backdrop"${imageLoadingAttributes()}>
             <figcaption>
               <p>Klare Ansagen, saubere Calls und Führung mit Autorität ohne unnötige Härte.</p>
             </figcaption>
           </figure>
           <figure class="event-rule-stage__card event-rule-stage__card--podium">
-            <img src="/assets/images/event-rule-podium.avif" alt="Dominik Dörfl mit Mikrofon und Unterlagen an einem Rednerpult bei einem offiziellen Ablauf"${imageLoadingAttributes()}>
+            <img src="/assets/images/event-rule-podium.avif" width="1066" height="1599" alt="Dominik Dörfl mit Mikrofon und Unterlagen an einem Rednerpult bei einem offiziellen Ablauf"${imageLoadingAttributes()}>
             <figcaption>
               <p>Auch in dichten Programmen bleibt der Ton ruhig, verständlich und präsent.</p>
             </figcaption>
@@ -2892,21 +2969,21 @@ function eventsPage() {
         </div>
         <div class="event-fun-stage__gallery" data-reveal aria-label="Formate mit Spaß-Faktor bei Camp Dörfl Events">
           <figure class="event-fun-stage__card event-fun-stage__card--lead">
-            <img src="/assets/images/event-fun-segmueller-poster.webp" alt="Dominik Dörfl beim Segmüller Bayern-Wochenende neben einem Veranstaltungsaufsteller"${imageLoadingAttributes()}>
+            <img src="/assets/images/event-fun-segmueller-poster.webp" width="1350" height="1800" alt="Dominik Dörfl beim Segmüller Bayern-Wochenende neben einem Veranstaltungsaufsteller"${imageLoadingAttributes()}>
             <figcaption>
               <span>Segmüller</span>
               <h3>Bayern-Wochenende mit Challenge-Charakter.</h3>
             </figcaption>
           </figure>
           <figure class="event-fun-stage__card event-fun-stage__card--stemmen">
-            <img src="/assets/images/event-fun-segmueller-stemmen.webp" alt="Dominik Dörfl mit zwei Maßkrügen vor einem Maßkrugstemmen-Stand"${imageLoadingAttributes()}>
+            <img src="/assets/images/event-fun-segmueller-stemmen.webp" width="1350" height="1800" alt="Dominik Dörfl mit zwei Maßkrügen vor einem Maßkrugstemmen-Stand"${imageLoadingAttributes()}>
             <figcaption>
               <span>Mitmachformat</span>
               <h3>Publikumsmomente mit Energie und Augenzwinkern.</h3>
             </figcaption>
           </figure>
           <figure class="event-fun-stage__card event-fun-stage__card--hosting">
-            <img src="/assets/images/event-fun-segmueller-hosting.webp" alt="Dominik Dörfl moderiert ein Maßkrugstemmen mit einem Kind auf der Bühne"${imageLoadingAttributes()}>
+            <img src="/assets/images/event-fun-segmueller-hosting.webp" width="1350" height="1800" alt="Dominik Dörfl moderiert ein Maßkrugstemmen mit einem Kind auf der Bühne"${imageLoadingAttributes()}>
             <figcaption>
               <span>Nah dran</span>
               <h3>Moderation, die Menschen direkt ins Erlebnis holt.</h3>
@@ -2940,8 +3017,8 @@ function eventsPage() {
   `;
 
   return layout({
-    path: "/events/",
-    title: "Moderator Nürnberg für Events, Bühne & Interviews | Camp Dörfl",
+    path: "/moderator-nuernberg/",
+    title: "Moderator Nürnberg für Events & Bühne | Camp Dörfl",
     description:
       "Moderator in Nürnberg für Events, Interviews, Panels und Bühnenformate mit klarer Führung, Timing und professioneller Präsenz.",
     keywords: ["Moderator Nürnberg", "Eventmoderator Nürnberg", "Bühnenmoderation Nürnberg", "Interview Moderator Nürnberg"],
@@ -2950,15 +3027,15 @@ function eventsPage() {
     socialImageAlt: "Dominik Dörfl als Moderator auf einer Eventbühne in Nürnberg",
     extraStructuredData: [
       serviceSchema({
-        path: "/events/",
+        path: "/moderator-nuernberg/",
         name: "Moderator in Nürnberg – Camp Dörfl",
         serviceType: "Event-Moderation",
         description:
           "Moderation für Sport-, Fitness- und Business-Events mit Interviews, Panels, Eröffnungen und Hosting."
       }),
-      faqSchema("/events/", eventFaq),
+      faqSchema("/moderator-nuernberg/", eventFaq),
       videoObjectSchema({
-        path: "/events/",
+        path: "/moderator-nuernberg/",
         id: "events-video",
         name: "Camp Dörfl Events Video",
         description:
@@ -2969,7 +3046,7 @@ function eventsPage() {
         watchUrl: "https://youtu.be/1kpl2HrShto"
       }),
       videoObjectSchema({
-        path: "/events/",
+        path: "/moderator-nuernberg/",
         id: "events-short",
         name: "Camp Dörfl Events Short",
         description:
@@ -2980,7 +3057,7 @@ function eventsPage() {
         watchUrl: "https://www.youtube.com/watch?v=oTRIacnkFPc"
       }),
       videoObjectSchema({
-        path: "/events/",
+        path: "/moderator-nuernberg/",
         id: "interview-video",
         name: "Camp Dörfl Interview Beispiel",
         description:
@@ -3011,7 +3088,7 @@ function guenterPreisStoryPage() {
           </dl>
         </div>
         <figure class="guenter-story-hero__media" data-reveal>
-          <img src="/assets/images/guenter-preis-coach-stage.jpg" alt="Dominik Dörfl und Günter Preis mit Medaille bei einer Bodybuilding-Meisterschaft"${imageLoadingAttributes({ eager: true })}>
+          <img src="/assets/images/guenter-preis-coach-stage.webp" width="1194" height="1400" alt="Dominik Dörfl und Günter Preis mit Medaille bei einer Bodybuilding-Meisterschaft"${imageLoadingAttributes({ eager: true })}>
           <span class="guenter-story-hero__seal" aria-hidden="true"><strong>63</strong><span>Jahre · heute</span></span>
           <figcaption>Dominik und Günter: aus einer Begegnung 2021 wurden drei gemeinsame Saisons.</figcaption>
         </figure>
@@ -3132,7 +3209,7 @@ function guenterPreisStoryPage() {
     <section class="section section--dark guenter-story-health" id="heute">
       <div class="section-shell section-shell--wide guenter-story-health__grid">
         <figure class="guenter-story-health__media" data-reveal>
-          <img src="/assets/images/guenter-preis-portrait-2024.jpg" alt="Günter Preis in athletischer Form während einer Wettkampfvorbereitung"${imageLoadingAttributes()}>
+          <img src="/assets/images/guenter-preis-portrait-2024.webp" width="975" height="1300" alt="Günter Preis in athletischer Form während einer Wettkampfvorbereitung"${imageLoadingAttributes()}>
         </figure>
         <div class="guenter-story-health__copy" data-reveal>
           <p class="eyebrow">Der größte Erfolg</p>
@@ -3162,7 +3239,7 @@ function guenterPreisStoryPage() {
           <blockquote>Die Medaillen machen diese Geschichte sichtbar. Ihr eigentlicher Wert liegt darin, dass Günter sich heute stärker und gesünder fühlt als vor einigen Jahren.</blockquote>
         </div>
         <figure class="guenter-story-competition__media" data-reveal>
-          <img src="/assets/images/guenter-preis-stage-2026.jpg" alt="Günter Preis in Wettkampfform auf der Bühne der NABBA European Championship"${imageLoadingAttributes()}>
+          <img src="/assets/images/guenter-preis-stage-2026.webp" width="1067" height="1600" alt="Günter Preis in Wettkampfform auf der Bühne der NABBA European Championship"${imageLoadingAttributes()}>
           <figcaption>Günter Preis auf der internationalen Wettkampfbühne.</figcaption>
         </figure>
       </div>
@@ -3178,15 +3255,15 @@ function guenterPreisStoryPage() {
         })}
         <div class="guenter-story-gallery">
           <figure data-reveal>
-            <img src="/assets/images/guenter-preis-training-front.jpg" alt="Günter Preis während eines Formchecks im Fitnessstudio von vorn"${imageLoadingAttributes()}>
+            <img src="/assets/images/guenter-preis-training-front.webp" width="975" height="1300" alt="Günter Preis während eines Formchecks im Fitnessstudio von vorn"${imageLoadingAttributes()}>
             <figcaption>Formcheck im Training</figcaption>
           </figure>
           <figure data-reveal>
-            <img src="/assets/images/guenter-preis-training-side.jpg" alt="Günter Preis während eines seitlichen Formchecks im Fitnessstudio"${imageLoadingAttributes()}>
+            <img src="/assets/images/guenter-preis-training-side.webp" width="975" height="1300" alt="Günter Preis während eines seitlichen Formchecks im Fitnessstudio"${imageLoadingAttributes()}>
             <figcaption>Konsequenz zwischen den Wettkämpfen</figcaption>
           </figure>
           <figure data-reveal>
-            <img src="/assets/images/guenter-preis-coach-stage.jpg" alt="Dominik Dörfl und Günter Preis nach einer erfolgreichen Meisterschaft"${imageLoadingAttributes()}>
+            <img src="/assets/images/guenter-preis-coach-stage.webp" width="1194" height="1400" alt="Dominik Dörfl und Günter Preis nach einer erfolgreichen Meisterschaft"${imageLoadingAttributes()}>
             <figcaption>Drei Saisons als Team</figcaption>
           </figure>
         </div>
@@ -3210,19 +3287,19 @@ function guenterPreisStoryPage() {
       text:
         "Gesundheitliche Voraussetzungen, Alltag, Training und Ziele müssen zusammen betrachtet werden. Genau dort beginnt die persönliche Zusammenarbeit bei Camp Dörfl.",
       primary: { label: "Beratung anfragen", href: contactHref("premium-training") },
-      secondary: { label: "Personal Training ansehen", href: "/personal-trainer-nürnberg/" }
+      secondary: { label: "Personal Training ansehen", href: "/personal-trainer-nuernberg/" }
     })}
   `;
 
   return layout({
     path: "/erfolge-im-team/guenter-preis/",
-    title: "Günter Preis: Gesundheit & Wettkampferfolg mit 63 | Camp Dörfl",
+    title: "Günter Preis: Wettkampferfolg mit 63 | Camp Dörfl",
     pageName: "Erfolgsgeschichte Günter Preis",
     description:
       "Die Erfolgsgeschichte von Günter Preis: gesundheitliche Stabilisierung bei Typ-2-Diabetes, drei gemeinsame Wettkampfsaisons und Vizeweltmeister mit 63 Jahren.",
     keywords: ["Günter Preis Bodybuilding", "Erfolgsgeschichte Personal Training", "Bodybuilding mit 63", "Camp Dörfl Erfolge"],
     bodyClass: "page-premium page-guenter-story",
-    socialImage: "/assets/images/guenter-preis-coach-stage.jpg",
+    socialImage: "/assets/images/guenter-preis-coach-stage.webp",
     socialImageAlt: "Dominik Dörfl gemeinsam mit Günter Preis und Wettkampfmedaille",
     extraStructuredData: [
       {
@@ -3231,7 +3308,7 @@ function guenterPreisStoryPage() {
         headline: "Günter Preis: Gesundheit zuerst, dann die Bühne",
         description:
           "Günters persönliche Entwicklung vom gesundheitlichen Neustart bis zu internationalen Bodybuilding-Erfolgen mit 63 Jahren.",
-        image: [absoluteUrl("/assets/images/guenter-preis-coach-stage.jpg")],
+        image: [absoluteUrl("/assets/images/guenter-preis-coach-stage.webp")],
         datePublished: "2026-08-04",
         dateModified: "2026-08-04",
         author: { "@id": `${site.url}/#person` },
@@ -3246,7 +3323,7 @@ function guenterPreisStoryPage() {
 function teamSuccessPage() {
   const content = `
     <section class="ff-hero ff-hero--split ff-hero--photo ff-hero--team">
-      <img class="ff-hero__img" src="/assets/images/team-success-hero.jpg" srcset="/assets/images/team-success-hero-960.jpg 960w, /assets/images/team-success-hero.jpg 1920w" sizes="100vw" alt="Dominik Dörfl als erfolgreicher Bodybuilding-Athlet bei einem Outdoor-Shooting"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/team-success-hero.webp" width="1800" height="1800" srcset="/assets/images/team-success-hero-960.webp 960w, /assets/images/team-success-hero.webp 1920w" sizes="100vw" alt="Dominik Dörfl als erfolgreicher Bodybuilding-Athlet bei einem Outdoor-Shooting"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__shell">
         <div class="ff-hero__inner">
@@ -3264,7 +3341,7 @@ function teamSuccessPage() {
           </p>
           <div class="ff-hero__actions" data-reveal>
             <a class="button button--primary" href="${contactHref("erfolge-im-team")}"><span>Zusammenarbeit anfragen</span><span aria-hidden="true">&rarr;</span></a>
-            <a class="button button--secondary-light" href="/personal-trainer-nürnberg/"><span>Training ansehen</span><span aria-hidden="true">&rarr;</span></a>
+            <a class="button button--secondary-light" href="/personal-trainer-nuernberg/"><span>Training ansehen</span><span aria-hidden="true">&rarr;</span></a>
           </div>
           <dl class="ff-hero__facts" data-reveal aria-label="Erfolge bei Camp Dörfl">
             <div><dt>2×</dt><dd>Deutscher Meister</dd></div>
@@ -3274,7 +3351,7 @@ function teamSuccessPage() {
         </div>
         <div class="ff-hero__showcase ff-hero__showcase--photo" data-reveal>
           <figure class="ff-hero__photo-card">
-            <img src="/assets/images/team-success-hero-960.jpg" alt="Dominik Dörfl in Wettkampfform bei einem Bodybuilding-Shooting"${imageLoadingAttributes()}>
+            <img src="/assets/images/team-success-hero-960.webp" width="960" height="960" alt="Dominik Dörfl in Wettkampfform bei einem Bodybuilding-Shooting"${imageLoadingAttributes()}>
           </figure>
           <article class="ff-hero__aside">
             <span class="card-tag">Im Team sichtbar</span>
@@ -3342,7 +3419,7 @@ function teamSuccessPage() {
           ${summaryRows(teamSuccessRows)}
         </div>
         <div class="editorial-stage__media" data-reveal>
-          <img src="/assets/images/dominik-coaching-bikeerg.webp" alt="Dominik Dörfl bei der Arbeit mit einem Klienten"${imageLoadingAttributes()}>
+          <img src="/assets/images/dominik-coaching-bikeerg.webp" width="1800" height="1199" alt="Dominik Dörfl bei der Arbeit mit einem Klienten"${imageLoadingAttributes()}>
         </div>
       </div>
     </section>
@@ -3431,7 +3508,7 @@ function executivePerformancePage() {
 
   const content = `
     <section class="ff-hero ff-hero--coaching ff-hero--coaching-photo ff-hero--executive">
-      <img class="ff-hero__img" src="/assets/images/dominik-gym-grey.webp" alt="Dominik Dörfl beim Krafttraining im Studio"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/dominik-gym-grey.webp" width="1800" height="1351" alt="Dominik Dörfl beim Krafttraining im Studio"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
         <div class="premium-badge">
@@ -3448,7 +3525,7 @@ function executivePerformancePage() {
         </p>
         <div class="ff-hero__actions" data-reveal>
           <a class="button button--primary" href="${contactHref("executive-performance")}"><span>Platz anfragen</span><span aria-hidden="true">&rarr;</span></a>
-          <a class="button button--secondary-light" href="/personal-trainer-nürnberg/"><span>Personal Training ansehen</span><span aria-hidden="true">&rarr;</span></a>
+          <a class="button button--secondary-light" href="/personal-trainer-nuernberg/"><span>Personal Training ansehen</span><span aria-hidden="true">&rarr;</span></a>
         </div>
         <dl class="ff-hero__facts" data-reveal aria-label="Eckdaten Executive Performance">
           <div><dt>12</dt><dd>Wochen Programm</dd></div>
@@ -3481,7 +3558,7 @@ function executivePerformancePage() {
           ${processList(executiveSteps)}
         </div>
         <div class="editorial-stage__media" data-reveal>
-          <img src="/assets/images/dominik-athlete-nutrition.webp" alt="Dominik Dörfl bei der Ernährungs- und Leistungsplanung"${imageLoadingAttributes()}>
+          <img src="/assets/images/dominik-athlete-nutrition.webp" width="1351" height="1800" alt="Dominik Dörfl bei der Ernährungs- und Leistungsplanung"${imageLoadingAttributes()}>
         </div>
       </div>
     </section>
@@ -3561,7 +3638,7 @@ function executivePerformancePage() {
 function expertAuthorBlock({ reviewed = "11. August 2026" } = {}) {
   return `
     <aside class="expert-author" data-reveal aria-label="Autor und redaktionelle Verantwortung">
-      <img src="/assets/images/dominik-about-gym-portrait.jpg" alt="Dominik Dörfl, Personal Trainer und Performance Coach in Nürnberg"${imageLoadingAttributes()}>
+      <img src="/assets/images/dominik-about-gym-portrait.webp" width="1200" height="1800" alt="Dominik Dörfl, Personal Trainer und Performance Coach in Nürnberg"${imageLoadingAttributes()}>
       <div>
         <p class="eyebrow">Autor &amp; Praxisexperte</p>
         <h2>Dominik Dörfl</h2>
@@ -3575,7 +3652,7 @@ function expertAuthorBlock({ reviewed = "11. August 2026" } = {}) {
 function expertArticleSchema({ path, headline, description, image, datePublished = "2026-08-11", dateModified = "2026-08-11" }) {
   return {
     "@type": "Article",
-    "@id": `${site.url}${path}#article`,
+    "@id": `${site.url}${encodePath(path)}#article`,
     headline,
     description,
     image: [absoluteUrl(image)],
@@ -3583,7 +3660,7 @@ function expertArticleSchema({ path, headline, description, image, datePublished
     dateModified,
     author: { "@id": `${site.url}/#person` },
     publisher: { "@id": `${site.url}/#organization` },
-    mainEntityOfPage: { "@id": `${site.url}${path}#webpage` }
+    mainEntityOfPage: { "@id": `${site.url}${encodePath(path)}#webpage` }
   };
 }
 
@@ -3614,7 +3691,7 @@ function expertKnowledgePage() {
     </div></section>
     ${ctaSection({ eyebrow: "Persönliche Einordnung", title: "Du brauchst keine allgemeine Antwort, sondern eine für deinen Ausgangspunkt?", text: "Dann klären wir Ziel, Alltag und sinnvolle nächsten Schritte persönlich.", primary: { label: "Beratung anfragen", href: contactHref("premium-training") }, secondary: { label: "Über Dominik", href: "/ueber-dominik/" } })}`;
 
-  return layout({ path: "/expertenwissen/", title: "Expertenwissen: Training, Bodybuilding & Analyse | Dominik Dörfl", description: "Fundierte Leitfäden von Dominik Dörfl zu Personal Training, Bodybuilding-Wettkampfvorbereitung, BIA, InBody und Körperanalyse.", keywords: ["Fitness Expertenwissen", "Personal Training Ratgeber", "Bodybuilding Coach Wissen", "Körperanalyse Ratgeber"], bodyClass: "page-premium page-expert-hub", pageType: "CollectionPage", pageName: "Expertenwissen", dateModified: "2026-08-11", socialImage: "/assets/images/dominik-about-gym-portrait.jpg", socialImageAlt: "Dominik Dörfl – Expertenwissen zu Training und Performance", content });
+  return layout({ path: "/expertenwissen/", title: "Expertenwissen: Training & Bodybuilding | Dominik Dörfl", description: "Fundierte Leitfäden von Dominik Dörfl zu Personal Training, Bodybuilding-Wettkampfvorbereitung, BIA, InBody und Körperanalyse.", keywords: ["Fitness Expertenwissen", "Personal Training Ratgeber", "Bodybuilding Coach Wissen", "Körperanalyse Ratgeber"], bodyClass: "page-premium page-expert-hub", pageType: "CollectionPage", pageName: "Expertenwissen", dateModified: "2026-08-11", socialImage: "/assets/images/dominik-about-gym-portrait.webp", socialImageAlt: "Dominik Dörfl – Expertenwissen zu Training und Performance", content });
 }
 
 function choosePersonalTrainerGuidePage() {
@@ -3624,10 +3701,10 @@ function choosePersonalTrainerGuidePage() {
     { question: "Sollte ein Personal Trainer Probetraining anbieten?", answer: "Ein Kennenlern- oder Starttermin ist sinnvoll, damit Ziel, Arbeitsweise, Kommunikation und organisatorischer Rahmen vor einer längerfristigen Zusammenarbeit geprüft werden können." },
     { question: "Ist der günstigste Personal Trainer die beste Wahl?", answer: "Der Stundenpreis allein sagt wenig aus. Entscheidend sind Betreuungsumfang, Vorbereitung, Analyse, Nachbereitung, Erreichbarkeit und die Qualität der laufenden Anpassung." }
   ];
-  const description = "Sieben überprüfbare Kriterien, mit denen du einen qualifizierten Personal Trainer in Nürnberg auswählen und Angebote fair vergleichen kannst.";
+  const description = "Sieben überprüfbare Kriterien, mit denen du Trainerinnen und Trainer einordnest, Angebote fair vergleichst und die Auswahl in 20 Minuten triffst.";
   const content = `
     <article class="expert-article" data-color-scheme="light">
-      <header class="expert-article__header" data-color-scheme="dark"><div class="section-shell section-shell--wide expert-article__hero-grid"><div><p class="eyebrow">Personal Trainer auswählen · Nürnberg</p><h1>Woran erkennt man einen guten Personal Trainer?</h1><p class="expert-article__dek">Sieben überprüfbare Kriterien für eine Entscheidung, bei der nicht nur Sympathie und Marketing zählen.</p><div class="expert-article__meta"><span>Von Dominik Dörfl</span><span>Veröffentlicht und geprüft am 11. August 2026</span><span>7 Min. Lesezeit</span></div></div><figure class="expert-article__hero-media"><img src="/assets/images/dominik-personal-coaching-client.webp" alt="Dominik Dörfl begleitet einen Kunden beim Personal Training"${imageLoadingAttributes({ eager: true })}></figure></div></header>
+      <header class="expert-article__header" data-color-scheme="dark"><div class="section-shell section-shell--wide expert-article__hero-grid"><div><p class="eyebrow">Ratgeber · Personal Trainer auswählen</p><h1>Woran erkennt man einen guten Personal Trainer?</h1><p class="expert-article__dek">Sieben überprüfbare Kriterien für eine Entscheidung, bei der nicht nur Sympathie und Marketing zählen.</p><div class="expert-article__meta"><span>Von Dominik Dörfl</span><span>Veröffentlicht und geprüft am 11. August 2026</span><span>7 Min. Lesezeit</span></div></div><figure class="expert-article__hero-media"><img src="/assets/images/dominik-personal-coaching-client.webp" width="1200" height="1800" alt="Dominik Dörfl begleitet einen Kunden beim Personal Training"${imageLoadingAttributes({ eager: true })}></figure></div></header>
       <div class="section-shell section-shell--wide expert-article__layout" data-color-scheme="light"><div class="expert-article__body">
         <section class="answer-box" aria-labelledby="pt-direct-answer"><p class="eyebrow">Kurzantwort</p><h2 id="pt-direct-answer">Ein guter Personal Trainer verbindet Qualifikation mit einem nachvollziehbaren Prozess.</h2><p>Er fragt vor dem Training nach Ziel, Erfahrung, Beschwerden und Alltag, erklärt seinen Plan verständlich, dokumentiert Fortschritt und passt die Belastung laufend an. Referenzen müssen zur gewünschten Aufgabe passen. Bei gesundheitlichen Fragen erkennt er die Grenze seines Tätigkeitsfeldes und arbeitet gegebenenfalls mit ärztlichen oder therapeutischen Fachpersonen zusammen.</p></section>
         <h2>Die sieben Kriterien im Vergleich</h2>
@@ -3637,9 +3714,9 @@ function choosePersonalTrainerGuidePage() {
         <section class="source-panel"><h2>Quellen und weiterführende Originalseiten</h2><ol><li><a href="https://www.acsm.org/wp-content/uploads/2025/02/Investing-in-a-personal-trainer-handout.pdf" target="_blank" rel="noopener noreferrer">American College of Sports Medicine: Investing in a Personal Trainer</a></li><li><a href="/personal-training-kosten-nuernberg/">Camp Dörfl: Personal-Training-Preise und Leistungsumfang</a></li><li><a href="/erfolge-im-team/">Camp Dörfl: dokumentierte Erfolge im Team</a></li></ol></section>
         ${expertAuthorBlock()}
         <section><h2>Häufige Fragen</h2>${faq(guideFaq)}</section>
-      </div><aside class="expert-article__rail"><span>Passender nächster Schritt</span><h2>Personal Training in Nürnberg</h2><p>Leistungsumfang, Vorgehen und persönliche Betreuung mit Dominik kennenlernen.</p><a class="button button--primary" href="/personal-trainer-nürnberg/"><span>Angebot ansehen</span><span aria-hidden="true">→</span></a></aside></div>
+      </div><aside class="expert-article__rail"><span>Passender nächster Schritt</span><h2>Training mit Dominik Dörfl</h2><p>Wie die Kriterien in der Praxis aussehen: Leistungsumfang, Vorgehen und persönliche Betreuung in Nürnberg.</p><a class="button button--primary" href="/personal-trainer-nuernberg/"><span>Personal Trainer Nürnberg ansehen</span><span aria-hidden="true">→</span></a></aside></div>
     </article>`;
-  return layout({ path, title: "Guten Personal Trainer in Nürnberg finden: 7 Kriterien", description, keywords: ["guter Personal Trainer Nürnberg", "Personal Trainer auswählen", "Personal Trainer Qualifikation", "Personal Training Vergleich"], bodyClass: "page-premium page-expert-article", pageType: "Article", pageName: "Guten Personal Trainer auswählen", dateModified: "2026-08-11", socialImage: "/assets/images/dominik-personal-coaching-client.webp", socialImageAlt: "Dominik Dörfl begleitet einen Kunden beim Personal Training", extraStructuredData: [expertArticleSchema({ path, headline: "Woran erkennt man einen guten Personal Trainer?", description, image: "/assets/images/dominik-personal-coaching-client.webp" }), faqSchema(path, guideFaq)], content });
+  return layout({ path, title: "Guten Personal Trainer erkennen: 7 Kriterien im Check", description, keywords: ["Personal Trainer auswählen", "guten Personal Trainer erkennen", "Personal Trainer Qualifikation", "Personal Trainer Angebote vergleichen", "Personal Training Vergleich"], bodyClass: "page-premium page-expert-article", pageType: "Article", pageName: "Guten Personal Trainer auswählen", dateModified: "2026-08-11", socialImage: "/assets/images/dominik-personal-coaching-client.webp", socialImageAlt: "Dominik Dörfl begleitet einen Kunden beim Personal Training", extraStructuredData: [expertArticleSchema({ path, headline: "Woran erkennt man einen guten Personal Trainer?", description, image: "/assets/images/dominik-personal-coaching-client.webp" }), faqSchema(path, guideFaq)], content });
 }
 
 function contestPrepDurationGuidePage() {
@@ -3651,12 +3728,12 @@ function contestPrepDurationGuidePage() {
   ];
   const description = "Wie lange eine Bodybuilding-Wettkampfvorbereitung dauern sollte: Ausgangslage, Abnahmerate, Phasen und Entscheidungskriterien aus Coaching-Praxis und Forschung.";
   const content = `
-    <article class="expert-article" data-color-scheme="light"><header class="expert-article__header" data-color-scheme="dark"><div class="section-shell section-shell--wide expert-article__hero-grid"><div><p class="eyebrow">Bodybuilding · Wettkampfvorbereitung</p><h1>Wie lange dauert eine gute Contest Prep?</h1><p class="expert-article__dek">Nicht der Kalender bestimmt die Vorbereitung, sondern der Abstand zwischen Ausgangslage und realistischer Bühnenform.</p><div class="expert-article__meta"><span>Von Dominik Dörfl</span><span>Veröffentlicht und geprüft am 11. August 2026</span><span>8 Min. Lesezeit</span></div></div><figure class="expert-article__hero-media"><img src="/assets/images/team-success-hero.jpg" alt="Dominik Dörfl in Bodybuilding-Wettkampfform"${imageLoadingAttributes({ eager: true })}></figure></div></header>
+    <article class="expert-article" data-color-scheme="light"><header class="expert-article__header" data-color-scheme="dark"><div class="section-shell section-shell--wide expert-article__hero-grid"><div><p class="eyebrow">Bodybuilding · Wettkampfvorbereitung</p><h1>Wie lange dauert eine gute Contest Prep?</h1><p class="expert-article__dek">Nicht der Kalender bestimmt die Vorbereitung, sondern der Abstand zwischen Ausgangslage und realistischer Bühnenform.</p><div class="expert-article__meta"><span>Von Dominik Dörfl</span><span>Veröffentlicht und geprüft am 11. August 2026</span><span>8 Min. Lesezeit</span></div></div><figure class="expert-article__hero-media"><img src="/assets/images/team-success-hero.webp" width="1800" height="1800" alt="Dominik Dörfl in Bodybuilding-Wettkampfform"${imageLoadingAttributes({ eager: true })}></figure></div></header>
       <div class="section-shell section-shell--wide expert-article__layout" data-color-scheme="light"><div class="expert-article__body">
         <section class="answer-box"><p class="eyebrow">Kurzantwort</p><h2>Für viele Athletinnen und Athleten sind 16 bis 24 Wochen ein sinnvoller Planungsrahmen.</h2><p>Die tatsächliche Dauer ergibt sich aus Ausgangsform, Wettkampfklasse, Diäterfahrung und notwendigem Gewichtsverlust. Forschung zur Natural-Bodybuilding-Vorbereitung nennt ungefähr 0,5 bis 1 Prozent Körpergewichtsverlust pro Woche als Orientierungsbereich, um Muskelmasse möglichst zu erhalten. Je näher die Bühnenform rückt, desto individueller muss gesteuert werden.</p></section>
         <h2>Die Dauer wird rückwärts gerechnet</h2><p>Eine seriöse Planung beginnt nicht mit „noch 16 Wochen“, sondern mit vier Fragen: Wie viel Gewicht muss voraussichtlich verloren werden? Welche Klasse ist vorgesehen? Wie hat der Körper auf frühere Diäten reagiert? Welcher Puffer wird für Plateaus, Reisen oder gesundheitliche Veränderungen benötigt?</p>
         <div class="expert-formula"><span>Planungslogik</span><strong>notwendiger Gewichtsverlust ÷ realistische Wochenrate + Sicherheitspuffer</strong><p>Das Ergebnis ist eine erste Arbeitshypothese – keine Garantie für eine bestimmte Bühnenform.</p></div>
-        <h2>Vier Phasen einer kontrollierten Vorbereitung</h2><div class="expert-principles"><article><b>01</b><h3>Ausgangslage</h3><p>Gesundheit, Training, Körperdaten, Klasse und Alltag einordnen.</p></article><article><b>02</b><h3>Hauptphase</h3><p>Moderates Defizit, Leistung erhalten, Entwicklung regelmäßig prüfen.</p></article><article><b>03</b><h3>Feinsteuerung</h3><p>Tempo und Belastung auf tatsächliche Form statt Wunschdatum abstimmen.</p></article><article><b>04</b><h3>Wettkampfwoche</h3><p>Keine ungetesteten Extreme. Präsentation und bekannte Routinen priorisieren.</p></article></div>
+        <h2>Vier Phasen einer kontrollierten Vorbereitung</h2><div class="expert-principles expert-principles--phasen"><article><b>01</b><h3>Ausgangslage</h3><p>Gesundheit, Training, Körperdaten, Klasse und Alltag einordnen.</p></article><article><b>02</b><h3>Hauptphase</h3><p>Moderates Defizit, Leistung erhalten, Entwicklung regelmäßig prüfen.</p></article><article><b>03</b><h3>Feinsteuerung</h3><p>Tempo und Belastung auf tatsächliche Form statt Wunschdatum abstimmen.</p></article><article><b>04</b><h3>Wettkampfwoche</h3><p>Keine ungetesteten Extreme. Präsentation und bekannte Routinen priorisieren.</p></article></div>
         <h2>Warum schneller nicht automatisch besser ist</h2><p>Aggressive Defizite können Trainingsleistung, Regeneration und den Erhalt fettfreier Masse erschweren. Die Übersichtsarbeit von Helms, Aragon und Fitschen empfiehlt, die Abnahmerate individuell zu kontrollieren. Dehydrierung und riskante Elektrolytmanipulationen werden ausdrücklich kritisch eingeordnet.</p>
         <blockquote class="expert-quote">„Eine gute Vorbereitung beginnt früh genug, damit wir nicht jede Abweichung mit mehr Hunger und mehr Cardio beantworten müssen. Zeit ist kein Luxus, sondern ein Steuerungsinstrument.“</blockquote>
         <h2>Praktische Entscheidungsmatrix</h2><div class="expert-table-wrap"><table class="expert-table"><thead><tr><th>Ausgangslage</th><th>Planungstendenz</th><th>Priorität</th></tr></thead><tbody><tr><td>Nahe an der Wettkampfform</td><td>Kürzer möglich</td><td>Form erhalten, Details steuern</td></tr><tr><td>Moderater Abstand</td><td>16–24 Wochen häufig sinnvoll</td><td>Leistung und Abnahmerate balancieren</td></tr><tr><td>Großer Abstand oder erste Prep</td><td>Mehr Zeit oder späterer Wettkampf</td><td>Gesundheit, Lernkurve und Puffer</td></tr></tbody></table></div>
@@ -3664,7 +3741,7 @@ function contestPrepDurationGuidePage() {
         ${expertAuthorBlock()}
         <section><h2>Häufige Fragen</h2>${faq(guideFaq)}</section>
       </div><aside class="expert-article__rail"><span>Contest Prep</span><h2>Individuelle Wettkampfvorbereitung</h2><p>Klasse, Ausgangsform und Zeitfenster persönlich einordnen.</p><a class="button button--primary" href="/bodybuilding-coaching-wettkampfvorbereitung/"><span>Coaching ansehen</span><span aria-hidden="true">→</span></a></aside></div></article>`;
-  return layout({ path, title: "Contest Prep: Wie lange dauert eine Wettkampfvorbereitung?", description, keywords: ["Wettkampfvorbereitung Dauer", "Contest Prep Wochen", "Bodybuilding Wettkampfvorbereitung", "Bodybuilding Diät Dauer"], bodyClass: "page-premium page-expert-article", pageType: "Article", pageName: "Dauer einer Bodybuilding-Wettkampfvorbereitung", dateModified: "2026-08-11", socialImage: "/assets/images/team-success-hero.jpg", socialImageAlt: "Dominik Dörfl in Bodybuilding-Wettkampfform", extraStructuredData: [expertArticleSchema({ path, headline: "Wie lange dauert eine gute Bodybuilding-Wettkampfvorbereitung?", description, image: "/assets/images/team-success-hero.jpg" }), faqSchema(path, guideFaq)], content });
+  return layout({ path, title: "Contest Prep: Wie lange dauert eine Wettkampfvorbereitung?", description, keywords: ["Wettkampfvorbereitung Dauer", "Contest Prep Wochen", "Bodybuilding Wettkampfvorbereitung", "Bodybuilding Diät Dauer"], bodyClass: "page-premium page-expert-article", pageType: "Article", pageName: "Dauer einer Bodybuilding-Wettkampfvorbereitung", dateModified: "2026-08-11", socialImage: "/assets/images/team-success-hero.webp", socialImageAlt: "Dominik Dörfl in Bodybuilding-Wettkampfform", extraStructuredData: [expertArticleSchema({ path, headline: "Wie lange dauert eine gute Bodybuilding-Wettkampfvorbereitung?", description, image: "/assets/images/team-success-hero.webp" }), faqSchema(path, guideFaq)], content });
 }
 
 function biaComparisonGuidePage() {
@@ -3676,7 +3753,7 @@ function biaComparisonGuidePage() {
   ];
   const description = "BIA, InBody und 2D-Körperanalyse verständlich verglichen: Messprinzip, Nutzen, Grenzen und Standardisierung für aussagekräftige Verlaufsdaten.";
   const content = `
-    <article class="expert-article" data-color-scheme="light"><header class="expert-article__header" data-color-scheme="dark"><div class="section-shell section-shell--wide expert-article__hero-grid"><div><p class="eyebrow">Körperanalyse · BIA · InBody</p><h1>Was misst welches Verfahren – und was nicht?</h1><p class="expert-article__dek">Ein fairer Vergleich von bioelektrischer Impedanz, InBody-Systemen und optischer 2D-Körperanalyse.</p><div class="expert-article__meta"><span>Von Dominik Dörfl</span><span>Veröffentlicht und geprüft am 11. August 2026</span><span>7 Min. Lesezeit</span></div></div><figure class="expert-article__hero-media"><img src="/assets/images/dominik-coaching-bikeerg.webp" alt="Dominik Dörfl erklärt Ergebnisse einer Körperanalyse"${imageLoadingAttributes({ eager: true })}></figure></div></header>
+    <article class="expert-article" data-color-scheme="light"><header class="expert-article__header" data-color-scheme="dark"><div class="section-shell section-shell--wide expert-article__hero-grid"><div><p class="eyebrow">Körperanalyse · BIA · InBody</p><h1>Was misst welches Verfahren – und was nicht?</h1><p class="expert-article__dek">Ein fairer Vergleich von bioelektrischer Impedanz, InBody-Systemen und optischer 2D-Körperanalyse.</p><div class="expert-article__meta"><span>Von Dominik Dörfl</span><span>Veröffentlicht und geprüft am 11. August 2026</span><span>7 Min. Lesezeit</span></div></div><figure class="expert-article__hero-media"><img src="/assets/images/dominik-coaching-bikeerg.webp" width="1800" height="1199" alt="Dominik Dörfl erklärt Ergebnisse einer Körperanalyse"${imageLoadingAttributes({ eager: true })}></figure></div></header>
       <div class="section-shell section-shell--wide expert-article__layout" data-color-scheme="light"><div class="expert-article__body">
         <section class="answer-box"><p class="eyebrow">Kurzantwort</p><h2>BIA und 2D-Analyse beantworten unterschiedliche Fragen.</h2><p>Eine BIA – etwa mit einem InBody-System – misst elektrische Impedanz und schätzt daraus Körperwasser, fettfreie Masse und Fettmasse. Eine 2D-Körperanalyse erfasst äußere Form, Umfänge und Haltung über standardisierte Aufnahmen. Beide Verfahren sind indirekt. Besonders wertvoll werden sie als Verlauf, wenn Gerät, Zeitpunkt und Vorbereitung vergleichbar bleiben.</p></section>
         <h2>Der direkte Vergleich</h2><div class="expert-table-wrap"><table class="expert-table"><thead><tr><th>Verfahren</th><th>Stärke</th><th>Wichtige Grenze</th></tr></thead><tbody><tr><td>BIA / InBody</td><td>Schnelle Schätzung von Körperwasser und Körperzusammensetzung</td><td>Hydration, Messprotokoll und Gerätemodell beeinflussen Ergebnisse</td></tr><tr><td>2D-Körperanalyse</td><td>Sichtbare Veränderungen, Umfänge und Proportionen dokumentieren</td><td>Keine direkte Messung von Fett- oder Muskelgewebe</td></tr><tr><td>Waage</td><td>Einfacher Gewichtsverlauf</td><td>Keine Aussage darüber, wodurch sich Gewicht verändert</td></tr><tr><td>DXA</td><td>Detailliertes klinisches Referenzverfahren</td><td>Aufwendiger, nicht für jedes regelmäßige Coaching-Check-in nötig</td></tr></tbody></table></div>
@@ -3729,7 +3806,7 @@ function ueberDominikPage() {
 
   const content = `
     <section class="ff-hero ff-hero--split ff-hero--photo ff-hero--about">
-      <img class="ff-hero__img" src="/assets/images/dominik-about-training-hero.jpg" alt="Dominik Dörfl beim intensiven Ausdauertraining im Fitnessstudio"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/dominik-about-training-hero.webp" width="1200" height="1800" alt="Dominik Dörfl beim intensiven Ausdauertraining im Fitnessstudio"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__shell">
         <p class="ff-hero__mobile-role" aria-hidden="true">Unternehmer · Athlet · Coach</p>
@@ -3758,12 +3835,12 @@ function ueberDominikPage() {
         </div>
         <div class="ff-hero__showcase ff-hero__showcase--photo" data-reveal>
           <figure class="ff-hero__photo-card">
-            <img src="/assets/images/dominik-about-training-hero.jpg" alt="Dominik Dörfl beim Ausdauertraining im Fitnessstudio"${imageLoadingAttributes()}>
+            <img src="/assets/images/dominik-about-training-hero.webp" width="1200" height="1800" alt="Dominik Dörfl beim Ausdauertraining im Fitnessstudio"${imageLoadingAttributes()}>
           </figure>
           <article class="ff-hero__aside">
             <span class="card-tag">Auf einen Blick</span>
             <h2>Mehr als eine Rolle.</h2>
-            <ul class="premium-checklist">
+            <ul class="fact-dossier fact-dossier--onDark">
               <li>Unternehmer und Gründer von Camp Dörfl</li>
               <li>Ex-Profi-Athlet auf Spitzenniveau</li>
               <li>Coach von Olympia- und Spitzenathleten</li>
@@ -3804,16 +3881,16 @@ function ueberDominikPage() {
             eyebrow: "Kurzprofil",
             title: "Dominik Dörfl in Stichpunkten."
           })}
-          <ul class="premium-checklist premium-checklist--columns">
+          <ul class="fact-dossier">
             ${facts.map((fact) => `<li>${fact}</li>`).join("")}
           </ul>
         </div>
         <div class="editorial-stage__media editorial-stage__media--duo" data-reveal>
           <figure>
-            <img src="/assets/images/dominik-bodybuilding-desert.webp" alt="Dominik Dörfl als Bodybuilder bei einem Outdoor-Shooting"${imageLoadingAttributes()}>
+            <img src="/assets/images/dominik-bodybuilding-desert.webp" width="1409" height="1800" alt="Dominik Dörfl als Bodybuilder bei einem Outdoor-Shooting"${imageLoadingAttributes()}>
           </figure>
           <figure>
-            <img src="/assets/images/dominik-about-gym-portrait.jpg" alt="Dominik Dörfl in Sportkleidung im Fitnessstudio"${imageLoadingAttributes()}>
+            <img src="/assets/images/dominik-about-gym-portrait.webp" width="1200" height="1800" alt="Dominik Dörfl in Sportkleidung im Fitnessstudio"${imageLoadingAttributes()}>
           </figure>
         </div>
       </div>
@@ -3830,7 +3907,7 @@ function ueberDominikPage() {
         </div>
         <aside data-reveal>
           <span>Fachgebiete</span>
-          <ul class="premium-checklist">
+          <ul class="field-list">
             <li>Personal Training und Krafttraining</li>
             <li>Bodybuilding und Wettkampfvorbereitung</li>
             <li>Körperanalyse und Fortschrittssteuerung</li>
@@ -3927,9 +4004,10 @@ function impressumPage() {
           </article>
           <article class="legal-card" data-reveal>
             <h2>Kontakt</h2>
+            <p><span class="legal-label">Telefon:</span> <a href="tel:${site.phone}">${site.phoneDisplay}</a></p>
             <p><span class="legal-label">E-Mail:</span> <a href="mailto:${site.email}">${site.email}</a></p>
             <p><span class="legal-label">Instagram:</span> ${socialIconLink(site.instagram, { className: "social-link--chip social-link--inline" })}</p>
-            <p>Eine unmittelbare elektronische Kontaktaufnahme ist per E-Mail möglich. Das Kontaktformular dieser Website übermittelt eingegebene Daten über den Formular-Dienst FormSubmit an ${site.email}.</p>
+            <p>Eine unmittelbare Kontaktaufnahme ist telefonisch und per E-Mail möglich. Das Kontaktformular dieser Website übermittelt eingegebene Daten über den Formular-Dienst FormSubmit an ${site.email}.</p>
           </article>
           <article class="legal-card" data-reveal>
             <h2>Rechtliche Schnellnavigation</h2>
@@ -4684,13 +4762,13 @@ function partnerPage() {
           </p>
           <div class="ff-hero__actions partner-hero__actions" data-reveal>
             <a class="button button--primary" href="${contactHref("kooperation")}"><span>Kooperation anfragen</span><span aria-hidden="true">&rarr;</span></a>
-            <a class="button button--secondary-light" href="/events/"><span>Events ansehen</span><span aria-hidden="true">&rarr;</span></a>
+            <a class="button button--secondary-light" href="/moderator-nuernberg/"><span>Events ansehen</span><span aria-hidden="true">&rarr;</span></a>
             <div class="partner-hero__logos" aria-label="Aktuelle Partner">
               <a class="partner-hero__logo" href="https://www.xxlnutrition.com/" target="_blank" rel="sponsored noopener noreferrer" aria-label="XXL Nutrition öffnen">
-                <img src="/assets/images/partner-xxl-nutrition-logo.png" alt=""${imageLoadingAttributes()}>
+                <img src="/assets/images/partner-xxl-nutrition-logo.webp" width="259" height="194" alt=""${imageLoadingAttributes()}>
               </a>
               <a class="partner-hero__logo partner-hero__logo--aeke" href="https://eu.aeke.com/products/buy-aeke-k1?sca_ref=11019964.wKUJzkQCK3" target="_blank" rel="sponsored noopener noreferrer" aria-label="AEKE öffnen">
-                <img src="/assets/images/partner-aeke-logo.png" alt=""${imageLoadingAttributes()}>
+                <img src="/assets/images/partner-aeke-logo.webp" width="311" height="162" alt=""${imageLoadingAttributes()}>
               </a>
             </div>
             ${advertisingNote("ad-note ad-note--hero", "Werbung: Der AEKE-Link ist ein Partnerlink")}
@@ -4703,7 +4781,7 @@ function partnerPage() {
         </div>
         <div class="ff-hero__showcase ff-hero__showcase--partner" data-reveal>
           <figure class="partner-hero__visual partner-hero__visual--portrait">
-            <img src="/assets/images/partner-hero-dominik-gym.webp" alt="Dominik Dörfl im Fitnessstudio als Ansprechpartner für Partnerschaften"${imageLoadingAttributes({ eager: true })}>
+            <img src="/assets/images/partner-hero-dominik-gym.webp" width="1200" height="1800" alt="Dominik Dörfl im Fitnessstudio als Ansprechpartner für Partnerschaften"${imageLoadingAttributes({ eager: true })}>
           </figure>
         </div>
       </div>
@@ -4713,6 +4791,7 @@ function partnerPage() {
       <div class="section-shell section-shell--wide premium-sponsor-stage">
         <div class="premium-sponsor-stage__intro" data-reveal>
           ${sectionHeader({
+            align: "center",
             eyebrow: "Partner im Performance System",
             title: "Premium Partner im Camp",
             text:
@@ -4722,9 +4801,10 @@ function partnerPage() {
         <div class="premium-sponsor-stage__grid" aria-label="Premium Sponsoren">
           <a class="premium-sponsor-card premium-sponsor-card--xxl" href="https://www.xxlnutrition.com/de" target="_blank" rel="sponsored noopener noreferrer" data-reveal>
             <span class="premium-sponsor-card__logo">
-              <img src="/assets/images/partner-xxl-nutrition-logo.png" alt=""${imageLoadingAttributes()}>
+              <img src="/assets/images/partner-xxl-nutrition-logo.webp" width="259" height="194" alt=""${imageLoadingAttributes()}>
             </span>
             <span class="premium-sponsor-card__copy">
+              <span class="premium-sponsor-card__tier">Nutrition Partner</span>
               <strong>XXL Nutrition</strong>
               <span>Sporternährung und Supplements für Leistung, Regeneration und klare Ziele.</span>
             </span>
@@ -4732,10 +4812,10 @@ function partnerPage() {
           </a>
           <a class="premium-sponsor-card premium-sponsor-card--aeke" href="https://www.aeke.com" target="_blank" rel="sponsored noopener noreferrer" data-reveal>
             <span class="premium-sponsor-card__logo">
-              <img src="/assets/images/partner-aeke-logo.png" alt=""${imageLoadingAttributes()}>
+              <img src="/assets/images/partner-aeke-logo.webp" width="311" height="162" alt=""${imageLoadingAttributes()}>
             </span>
             <span class="premium-sponsor-card__copy">
-              <span class="ad-note ad-note--sponsor">Werbung</span>
+              <span class="premium-sponsor-card__tier">Gym Partner</span>
               <strong>AEKE</strong>
               <span>Smarte Trainingshardware für präzise Bewegung und messbare Entwicklung.</span>
             </span>
@@ -4743,35 +4823,39 @@ function partnerPage() {
           </a>
           <a class="premium-sponsor-card premium-sponsor-card--trueformance" href="https://www.trueformance.de" target="_blank" rel="sponsored noopener noreferrer" data-reveal>
             <span class="premium-sponsor-card__logo">
-              <img src="/assets/images/partner-trueformance-logo.png" alt=""${imageLoadingAttributes()}>
+              <img src="/assets/images/partner-trueformance-logo.webp" width="1254" height="1254" alt=""${imageLoadingAttributes()}>
             </span>
             <span class="premium-sponsor-card__copy">
-              <span class="premium-sponsor-card__tier">Gold Partner</span>
+              <span class="premium-sponsor-card__tier">Co-Founder</span>
               <strong>Trueformance</strong>
-              <span>Gold Partner von Camp Dörfl für gemeinsame Performance- und Markenprojekte.</span>
+              <span>Von Dominik Dörfl mitgegründet: gemeinsame Performance- und Markenprojekte.</span>
             </span>
             <span class="premium-sponsor-card__action">Zur Website <b aria-hidden="true">→</b></span>
           </a>
           <a class="premium-sponsor-card premium-sponsor-card--clever-fit" href="https://www.clever-fit.com/de/fitnessstudio/nuernberg-sued/" target="_blank" rel="sponsored noopener noreferrer" data-reveal>
             <span class="premium-sponsor-card__logo">
-              <img src="/assets/images/partner-clever-fit-nuernberg-sued.jpg" alt=""${imageLoadingAttributes()}>
+              <img src="/assets/images/partner-clever-fit-nuernberg-sued.webp" width="447" height="447" alt=""${imageLoadingAttributes()}>
             </span>
             <span class="premium-sponsor-card__copy">
+              <span class="premium-sponsor-card__tier">CEO</span>
               <strong>Clever Fit Nürnberg-Süd</strong>
               <span>Kraft-, Ausdauer- und Functional Training mit Trainingsbetreuung in Nürnberg-Süd.</span>
             </span>
             <span class="premium-sponsor-card__action">Studio ansehen <b aria-hidden="true">→</b></span>
           </a>
         </div>
+        <p class="premium-sponsor-stage__note" data-reveal>
+          Du suchst den <a href="/xxl-nutrition-rabattcode/">XXL Nutrition Rabattcode</a>? Er steht mit Anleitung auf einer eigenen Seite.
+        </p>
         <div class="basis-partner-stage" data-reveal>
           <div class="basis-partner-stage__intro">
-            <p class="eyebrow">Basis Partner</p>
+            <p class="eyebrow">Performance Partner</p>
             <h3>Verbunden in Bewegung.</h3>
             <p>Partner für digitale Aktivitäten, Routen und gemeinsame sportliche Herausforderungen.</p>
           </div>
           <a class="basis-partner-card basis-partner-card--strava" href="https://strava.app.link/ajkmFixCe5b" target="_blank" rel="sponsored noopener noreferrer">
-            <span class="basis-partner-card__logo"><img src="/assets/images/partner-strava.png" alt=""${imageLoadingAttributes()}></span>
-            <span class="basis-partner-card__copy"><small>Basis Partner</small><strong>Strava</strong><span>Aktivitäten aufzeichnen, Routen entdecken und sportliche Fortschritte teilen.</span></span>
+            <span class="basis-partner-card__logo"><img src="/assets/images/partner-strava.webp" width="1200" height="338" alt=""${imageLoadingAttributes()}></span>
+            <span class="basis-partner-card__copy"><small>Performance Partner</small><strong>Strava</strong><span>Aktivitäten aufzeichnen, Routen entdecken und sportliche Fortschritte teilen.</span></span>
             <span class="basis-partner-card__action" aria-hidden="true">↗</span>
           </a>
         </div>
@@ -4833,7 +4917,7 @@ function partnerPage() {
       text:
         "Kooperationen funktionieren dann am besten, wenn Produkt, Haltung und Zielgruppe wirklich zusammenpassen.",
       primary: { label: "Kooperation anfragen", href: contactHref("kooperation") },
-      secondary: { label: "Events ansehen", href: "/events/" }
+      secondary: { label: "Events ansehen", href: "/moderator-nuernberg/" }
     })}
   `;
 
@@ -4854,7 +4938,7 @@ function partnerPage() {
 function contactPage() {
   const content = `
     <section class="ff-hero ff-hero--split ff-hero--contact">
-      <img class="ff-hero__img" src="/assets/images/dominik-gym-grey.webp" alt="Dominik Dörfl im Studio als Ansprechpartner für Kontakt und Beratung"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/dominik-gym-grey.webp" width="1800" height="1351" alt="Dominik Dörfl im Studio als Ansprechpartner für Kontakt und Beratung"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__shell">
         <div class="ff-hero__inner">
@@ -4891,7 +4975,7 @@ function contactPage() {
           <article class="summary-row" data-reveal>
             <h3>Für Privatpersonen</h3>
             <p>Wenn es um Premium Personal Training, Training ohne Bindung, Ernährung oder App-Zugang geht, hilft eine kurze Beschreibung von Ziel, Ausgangslage und gewünschter Begleitung.</p>
-            <p><a href="/personal-trainer-nürnberg/">Personal Trainer Nürnberg: Leistungen und Erfolge ansehen <span aria-hidden="true">→</span></a></p>
+            <p><a href="/personal-trainer-nuernberg/">Personal Trainer Nürnberg: Leistungen und Erfolge ansehen <span aria-hidden="true">→</span></a></p>
           </article>
           <article class="summary-row" data-reveal>
             <h3>Für Unternehmen</h3>
@@ -5002,14 +5086,28 @@ function personalTrainingCostPage() {
     },
     {
       number: "04",
+      tag: "Digitaler Einstieg",
+      title: "App Zugang",
+      price: "9,99 €<small>monatlich</small>",
+      sessionPrice: "9,99 € monatlich",
+      fit: "Struktur für Training und Ernährung ohne feste Termine",
+      text:
+        "Für alle, die ohne Terminbindung anfangen wollen: Trainings- und Ernährungssteuerung, Check-ins und Fortschritt in der Camp Dörfl App.",
+      items: ["Alle Funktionen der App", "Monatlich kündbar"],
+      href: "/app/",
+      cta: "App ansehen"
+    },
+    {
+      number: "05",
       tag: "Laufende Führung",
       title: "Premium Begleitung",
       price: "ab 200 €<small>monatlich</small>",
       sessionPrice: "ab 200 € monatlich",
       fit: "Training, Ernährung, Analyse, App und laufende Anpassung",
       text:
-        "Für ein abgestimmtes System aus Training, Ernährung, Analyse, App und laufender Anpassung.",
-      items: ["Persönliche laufende Begleitung", "Umfang passend zu Ziel und Alltag"],
+        "Für ein abgestimmtes System aus Training, Ernährung, Analyse, App und laufender Anpassung — der Rahmen wird individuell vereinbart.",
+      items: ["Persönliche laufende Begleitung", "Umfang passend zu Ziel und Alltag", "Analyse, App und Steuerung inklusive"],
+      wide: true,
       cta: "Premium Begleitung anfragen"
     }
   ];
@@ -5052,7 +5150,7 @@ function personalTrainingCostPage() {
     {
       question: "Wie teuer ist ein Personal Trainer in Nürnberg?",
       answer:
-        "Bei Camp Dörfl kostet eine einzelne Personal-Training-Session 120 Euro; inklusive 2D-Körperanalyse sind es 150 Euro. Mit der 5er-Karte liegt eine Session bei 100 Euro, mit der 10er-Karte bei 80 Euro. Die Premium Begleitung startet ab 200 Euro monatlich."
+        "Bei Camp Dörfl kostet eine einzelne Personal-Training-Session 120 Euro; inklusive 2D-Körperanalyse sind es 150 Euro. Mit der 5er-Karte liegt eine Session bei 100 Euro, mit der 10er-Karte bei 80 Euro. Der digitale Einstieg über die Camp Dörfl App kostet 9,99 Euro monatlich. Die Premium Begleitung startet ab 200 Euro monatlich."
     },
     {
       question: "Was kostet Personal Training pro Stunde?",
@@ -5084,7 +5182,7 @@ function personalTrainingCostPage() {
   const pricingMarkup = priceCards
     .map(
       (card) => `
-        <article class="pt-price-card${card.featured ? " pt-price-card--featured" : ""}" data-reveal>
+        <article class="pt-price-card${card.featured ? " pt-price-card--featured" : ""}${card.wide ? " pt-price-card--wide" : ""}" data-reveal>
           <div class="pt-price-card__top">
             <span class="pt-price-card__number">${card.number}</span>
             <span class="pt-price-card__tag">${card.tag}</span>
@@ -5094,7 +5192,7 @@ function personalTrainingCostPage() {
           <p class="pt-price-card__fit">Ideal für: ${card.fit}</p>
           <p class="pt-price-card__text">${card.text}</p>
           <ul>${card.items.map((item) => `<li>${item}</li>`).join("")}</ul>
-          <a class="pt-price-card__link" href="${contactHref("premium-training")}">${card.cta}<span aria-hidden="true">&rarr;</span></a>
+          <a class="pt-price-card__link" href="${card.href || contactHref("premium-training")}">${card.cta}<span aria-hidden="true">&rarr;</span></a>
         </article>`
     )
     .join("");
@@ -5108,7 +5206,8 @@ function personalTrainingCostPage() {
       { name: "Einzelsession mit 2D-Körperanalyse", price: "150", description: "Einzelsession inklusive 2D-Körperanalyse" },
       { name: "5er-Karte Personal Training", price: "500", description: "Fünf persönliche Sessions" },
       { name: "10er-Karte Personal Training", price: "800", description: "Zehn persönliche Sessions" },
-      { name: "Premium Begleitung", price: "200", description: "Laufende persönliche Begleitung ab 200 Euro monatlich" }
+      { name: "Premium Begleitung", price: "200", description: "Laufende persönliche Begleitung ab 200 Euro monatlich" },
+      { name: "Camp Dörfl App Zugang", price: "9.99", description: "Digitaler Zugang mit allen App-Funktionen, monatlich kündbar" }
     ].map((offer) => ({
       "@type": "Offer",
       name: offer.name,
@@ -5122,25 +5221,26 @@ function personalTrainingCostPage() {
 
   const content = `
     <section class="ff-hero ff-hero--coaching ff-hero--coaching-photo ff-hero--text-only">
-      <img class="ff-hero__img" src="/assets/images/premium-training-hero-wide.webp" srcset="/assets/images/premium-training-hero-wide-960.webp 960w, /assets/images/premium-training-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl beim Personal Training mit einem Kunden im Studio"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/premium-training-hero-wide.webp" width="1774" height="887" srcset="/assets/images/premium-training-hero-wide-960.webp 960w, /assets/images/premium-training-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl beim Personal Training mit einem Kunden im Studio"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
         <p class="ff-hero__eyebrow" data-reveal>Personal Trainer Nürnberg · Preise transparent</p>
         <h1 class="ff-hero__title" data-reveal>Personal Training Kosten <br><span>in Nürnberg.</span></h1>
         <p class="ff-hero__lead" data-reveal>
-          Einzelsession ab 120 Euro, 5er-Karte für 500 Euro oder 10er-Karte für 800 Euro. Hier siehst du auf einen Blick, welches Modell zu deinem Ziel und deinem Alltag passt.
+          Fünf Wege, von 9,99 Euro im Monat für den App-Zugang über Einzelsession und Karten bis zur Premium Begleitung ab 200 Euro monatlich. Hier siehst du auf einen Blick, welches Modell zu deinem Ziel und deinem Alltag passt.
         </p>
         <p class="ff-hero__support" data-reveal>
           Transparent vergleichen, passend entscheiden und direkt mit Dominik klären, welcher Einstieg wirklich sinnvoll ist.
         </p>
         <div class="ff-hero__actions" data-reveal>
           <a class="button button--primary" href="${contactHref("premium-training")}"><span>Preiseinschätzung anfragen</span><span aria-hidden="true">&rarr;</span></a>
-          <a class="button button--secondary-light" href="/personal-trainer-nürnberg/"><span>Personal Training ansehen</span><span aria-hidden="true">&rarr;</span></a>
+          <a class="button button--secondary-light" href="/personal-trainer-nuernberg/"><span>Personal Training ansehen</span><span aria-hidden="true">&rarr;</span></a>
         </div>
         <dl class="ff-hero__facts" data-reveal aria-label="Wichtige Preisfaktoren bei Personal Training in Nürnberg">
+          <div><dt>ab 9,99 €</dt><dd>monatlich mit App-Zugang</dd></div>
           <div><dt>ab 80 €</dt><dd>pro Session mit 10er-Karte</dd></div>
           <div><dt>120 €</dt><dd>Einzelsession</dd></div>
-          <div><dt>150 €</dt><dd>inklusive 2D-Analyse</dd></div>
+          <div><dt>ab 200 €</dt><dd>monatlich Premium</dd></div>
         </dl>
       </div>
     </section>
@@ -5149,7 +5249,7 @@ function personalTrainingCostPage() {
       <div class="section-shell section-shell--wide">
         ${sectionHeader({
           eyebrow: "Preise auf einen Blick",
-          title: "Vier klare Wege. Kein Preisrätsel.",
+          title: "Fünf klare Wege. Kein Preisrätsel.",
           text:
             "Vom flexiblen Einzeltermin bis zur laufenden Betreuung: Du siehst sofort, was enthalten ist, für wen das Modell gedacht ist und welcher Preis pro Session entsteht.",
           align: "center"
@@ -5177,6 +5277,7 @@ function personalTrainingCostPage() {
               <tr><th>Einzelsession</th><td>Check, Technik, erster Impuls</td><td>1 Termin</td><td>120 € / 150 € inkl. 2D</td><td>120 € / 150 €</td></tr>
               <tr><th>5er-Karte</th><td>Strukturierter Einstieg</td><td>5 Sessions</td><td>500 €</td><td>100 €</td></tr>
               <tr class="is-recommended"><th>10er-Karte <span>Empfehlung</span></th><td>Regelmäßige 1:1 Führung</td><td>10 Sessions</td><td>800 €</td><td>80 €</td></tr>
+              <tr><th>App Zugang</th><td>Digitaler Start ohne feste Termine</td><td>Alle App-Funktionen</td><td>9,99 € / Monat</td><td>ohne Session</td></tr>
               <tr><th>Premium Begleitung</th><td>Ganzheitliche laufende Steuerung</td><td>Individuell</td><td>ab 200 € / Monat</td><td>nach Umfang</td></tr>
             </tbody>
           </table>
@@ -5205,7 +5306,7 @@ function personalTrainingCostPage() {
           <p>Personal Training ist Vertrauenssache. Deshalb kannst du Erfahrung, dokumentierte Coaching-Erfolge und Kundenstimmen vor deiner Entscheidung nachvollziehen.</p>
           <div class="pt-pricing-proof__links">
             <a href="/erfolge-im-team/">Alle Coaching-Erfolge <span aria-hidden="true">&rarr;</span></a>
-            <a href="/personal-trainer-nürnberg/">Personal Trainer Nürnberg <span aria-hidden="true">&rarr;</span></a>
+            <a href="/personal-trainer-nuernberg/">Personal Trainer Nürnberg <span aria-hidden="true">&rarr;</span></a>
           </div>
         </div>
         <dl class="pt-pricing-proof__facts" data-reveal>
@@ -5227,11 +5328,11 @@ function personalTrainingCostPage() {
           ${processList(pricingSteps)}
           <div class="pt-setup-links">
             <a href="/koerperanalyse-nuernberg/">Körperanalyse Nürnberg ansehen <span aria-hidden="true">&rarr;</span></a>
-            <a href="/personal-trainer-nürnberg/">Alle Leistungen im Personal Training <span aria-hidden="true">&rarr;</span></a>
+            <a href="/personal-trainer-nuernberg/">Alle Leistungen im Personal Training <span aria-hidden="true">&rarr;</span></a>
           </div>
         </div>
         <div class="editorial-stage__media" data-reveal>
-          <img src="/assets/images/dominik-personal-coaching-client.webp" alt="Dominik Dörfl bei der persönlichen Trainingsbetreuung eines Kunden in Nürnberg"${imageLoadingAttributes()}>
+          <img src="/assets/images/dominik-personal-coaching-client.webp" width="1200" height="1800" alt="Dominik Dörfl bei der persönlichen Trainingsbetreuung eines Kunden in Nürnberg"${imageLoadingAttributes()}>
         </div>
       </div>
     </section>
@@ -5254,15 +5355,15 @@ function personalTrainingCostPage() {
       text:
         "Wenn du kurz beschreibst, wie dein Alltag aussieht und welche Begleitung du suchst, lässt sich schnell einordnen, welches Setup zu dir passt.",
       primary: { label: "Preiseinschätzung anfragen", href: contactHref("premium-training") },
-      secondary: { label: "Premium Personal Training", href: "/personal-trainer-nürnberg/" }
+      secondary: { label: "Premium Personal Training", href: "/personal-trainer-nuernberg/" }
     })}
   `;
 
   return layout({
     path: "/personal-training-kosten-nuernberg/",
-    title: "Personal Trainer Nürnberg: Preise & Kosten | Camp Dörfl",
+    title: "Personal Training Kosten Nürnberg: Preise im Überblick",
     description:
-      "Personal Trainer Nürnberg: 10er-Karte 80 € je Session, Einzeltraining ab 120 € und Premium-Begleitung ab 200 € monatlich. Alle Modelle im Vergleich.",
+      "Was Personal Training in Nürnberg kostet: 10er-Karte 80 € je Session, Einzeltraining ab 120 €, Premium ab 200 € monatlich — alle Modelle im Vergleich.",
     keywords: [
       "Personal Training Kosten Nürnberg",
       "Was kostet Personal Training in Nürnberg",
@@ -5360,7 +5461,7 @@ function gesundheitstagNuernbergPage() {
 
   const content = `
     <section class="ff-hero ff-hero--photo ff-hero--firmenfitness ff-hero--firmenfitness-photo ff-hero--text-only">
-      <img class="ff-hero__img" src="/assets/images/firmenfitness-hero-wide.webp" srcset="/assets/images/firmenfitness-hero-wide-960.webp 960w, /assets/images/firmenfitness-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl im Gesundheitstag- und Firmenfitness-Kontext bei Analyse und Beratung"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/firmenfitness-hero-wide.webp" width="1774" height="887" srcset="/assets/images/firmenfitness-hero-wide-960.webp 960w, /assets/images/firmenfitness-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl im Gesundheitstag- und Firmenfitness-Kontext bei Analyse und Beratung"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
         <p class="ff-hero__eyebrow" data-reveal>Ratgeber · Gesundheitstag Nürnberg</p>
@@ -5418,7 +5519,7 @@ function gesundheitstagNuernbergPage() {
           ${processList(corporateSteps)}
         </div>
         <div class="editorial-stage__media" data-reveal>
-          <img src="/assets/images/dominik-coaching-bikeerg.webp" alt="Dominik Dörfl bei einer Firmenfitness- und Gesundheitstag-Beratung"${imageLoadingAttributes()}>
+          <img src="/assets/images/dominik-coaching-bikeerg.webp" width="1800" height="1199" alt="Dominik Dörfl bei einer Firmenfitness- und Gesundheitstag-Beratung"${imageLoadingAttributes()}>
         </div>
       </div>
     </section>
@@ -5593,7 +5694,7 @@ function koerperanalyseNuernbergPage() {
 
   const content = `
     <section class="ff-hero ff-hero--photo ff-hero--firmenfitness ff-hero--firmenfitness-photo ff-hero--text-only">
-      <img class="ff-hero__img" src="/assets/images/firmenfitness-hero-wide.webp" srcset="/assets/images/firmenfitness-hero-wide-960.webp 960w, /assets/images/firmenfitness-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl bei einer Körperanalyse und persönlichen Auswertung in Nürnberg"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/firmenfitness-hero-wide.webp" width="1774" height="887" srcset="/assets/images/firmenfitness-hero-wide-960.webp 960w, /assets/images/firmenfitness-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl bei einer Körperanalyse und persönlichen Auswertung in Nürnberg"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
         <p class="ff-hero__eyebrow" data-reveal>2D-Körperanalyse · InBody · BIA-Messung</p>
@@ -5606,7 +5707,7 @@ function koerperanalyseNuernbergPage() {
         </p>
         <div class="ff-hero__actions" data-reveal>
           <a class="button button--primary" href="${contactHref("koerperanalyse")}"><span>Körperanalyse anfragen</span><span aria-hidden="true">&rarr;</span></a>
-          <a class="button button--secondary-light" href="/personal-trainer-nürnberg/"><span>Personal Training ansehen</span><span aria-hidden="true">&rarr;</span></a>
+          <a class="button button--secondary-light" href="/personal-trainer-nuernberg/"><span>Personal Training ansehen</span><span aria-hidden="true">&rarr;</span></a>
         </div>
         <dl class="ff-hero__facts" data-reveal aria-label="Bestandteile der Körperanalyse in Nürnberg">
           <div><dt>2D</dt><dd>Form sichtbar machen</dd></div>
@@ -5641,7 +5742,7 @@ function koerperanalyseNuernbergPage() {
           ${summaryRows(measurementRows)}
         </div>
         <div class="editorial-stage__media" data-reveal>
-          <img src="/assets/images/dominik-coaching-bikeerg.webp" alt="Persönliche Auswertung einer InBody BIA-Messung bei Camp Dörfl in Nürnberg"${imageLoadingAttributes()}>
+          <img src="/assets/images/dominik-coaching-bikeerg.webp" width="1800" height="1199" alt="Persönliche Auswertung einer InBody BIA-Messung bei Camp Dörfl in Nürnberg"${imageLoadingAttributes()}>
         </div>
       </div>
     </section>
@@ -5695,6 +5796,43 @@ function koerperanalyseNuernbergPage() {
       </div>
     </section>
 
+    <section class="section" id="preise" aria-labelledby="analyse-preise-title">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Preise",
+          title: "Was die Körperanalyse kostet.",
+          text:
+            "Zwei Wege: die reine Messung mit deinen Werten — oder die Messung mit persönlicher Auswertung, in der die Zahlen für dein Ziel eingeordnet werden.",
+          align: "center"
+        }).replace("<h2", '<h2 id="analyse-preise-title"')}
+        ${pricingCards([
+          {
+            tag: "Messung",
+            title: "InBody-Analyse",
+            price: "39 €",
+            text: "Die Messung deiner Körperzusammensetzung — dokumentiert und jederzeit als Vergleichsmessung wiederholbar.",
+            items: [
+              "InBody BIA-Messung",
+              "Deine Werte dokumentiert zum Mitnehmen",
+              "Als Verlaufsmessung wiederholbar"
+            ]
+          },
+          {
+            tag: "Messung mit Beratung",
+            title: "InBody-Analyse mit Auswertung",
+            price: "59 €",
+            featured: true,
+            text: "Zusätzlich die persönliche Einordnung: was deine Werte bedeuten und welcher Schritt als Nächstes sinnvoll ist.",
+            items: [
+              "Alles aus der reinen Messung",
+              "Persönliche Auswertung im Gespräch",
+              "Konkrete Ansatzpunkte für Training und Ernährung"
+            ]
+          }
+        ])}
+      </div>
+    </section>
+
     <section class="section">
       <div class="section-shell">
         ${sectionHeader({
@@ -5740,7 +5878,27 @@ function koerperanalyseNuernbergPage() {
         name: "Körperanalyse Nürnberg – Camp Dörfl",
         serviceType: "2D-Körperanalyse und InBody BIA-Messung",
         description:
-          "Körperanalyse für Privatpersonen in Nürnberg mit 2D-Analyse, InBody BIA-Messung und persönlicher Auswertung."
+          "Körperanalyse für Privatpersonen in Nürnberg mit 2D-Analyse, InBody BIA-Messung und persönlicher Auswertung.",
+        offers: [
+          {
+            "@type": "Offer",
+            name: "InBody-Analyse",
+            price: "39",
+            priceCurrency: "EUR",
+            availability: "https://schema.org/InStock",
+            url: `${site.url}/koerperanalyse-nuernberg/#preise`,
+            description: "InBody BIA-Messung mit dokumentierten Werten."
+          },
+          {
+            "@type": "Offer",
+            name: "InBody-Analyse mit Beratung",
+            price: "59",
+            priceCurrency: "EUR",
+            availability: "https://schema.org/InStock",
+            url: `${site.url}/koerperanalyse-nuernberg/#preise`,
+            description: "InBody BIA-Messung mit persönlicher Auswertung der Werte."
+          }
+        ]
       }),
       faqSchema("/koerperanalyse-nuernberg/", analysisFaq),
       videoObjectSchema({
@@ -5761,7 +5919,8 @@ function koerperanalyseNuernbergPage() {
 
 function personalTrainingAb40NuernbergPage() {
   const priceLines = [
-    { label: "InBody-Analyse mit Beratung", value: "39 €" },
+    { label: "InBody-Analyse mit Beratung", value: "59 €" },
+    { label: "InBody-Analyse", value: "39 €" },
     { label: "Ernährungs- und Trainingsplan", value: "100 €" },
     { label: "12 × Personal Training à 80 €", value: "960 €" }
   ];
@@ -5858,7 +6017,7 @@ function personalTrainingAb40NuernbergPage() {
     {
       question: "Was kostet das Programm?",
       answer:
-        "999 € für zwölf Wochen, also 333 € pro Monat. Einzeln gerechnet wären es 1.099 €: 39 € InBody-Analyse mit Beratung, 100 € Ernährungs- und Trainingsplan, 960 € für zwölf Personal-Training-Einheiten."
+        "899 € für zwölf Wochen, also rund 300 € pro Monat. Einzeln gerechnet wären es 1.158 €: 59 € InBody-Analyse mit Beratung zu Beginn, 39 € InBody-Analyse am Ende, 100 € Ernährungs- und Trainingsplan und 960 € für zwölf Personal-Training-Einheiten."
     },
     {
       question: "Wie oft wird trainiert?",
@@ -5899,7 +6058,7 @@ function personalTrainingAb40NuernbergPage() {
 
   const content = `
     <section class="ff-hero ff-hero--photo ff-hero--text-only offer40-hero">
-      <img class="ff-hero__img" src="/assets/images/premium-training-hero-wide.webp" srcset="/assets/images/premium-training-hero-wide-960.webp 960w, /assets/images/premium-training-hero-wide.webp 1774w" sizes="100vw" alt="Personal Training bei Camp Dörfl in Nürnberg"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/premium-training-hero-wide.webp" width="1774" height="887" srcset="/assets/images/premium-training-hero-wide-960.webp 960w, /assets/images/premium-training-hero-wide.webp 1774w" sizes="100vw" alt="Personal Training bei Camp Dörfl in Nürnberg"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
         <p class="ff-hero__eyebrow" data-reveal>12-Wochen-Programm · Personal Training · Nürnberg</p>
@@ -5917,7 +6076,7 @@ function personalTrainingAb40NuernbergPage() {
         <dl class="ff-hero__facts" data-reveal aria-label="Das Programm in Zahlen">
           <div><dt>12</dt><dd>Wochen Begleitung</dd></div>
           <div><dt>1×</dt><dd>pro Woche gemeinsam</dd></div>
-          <div><dt>999 €</dt><dd>statt 1.099 €</dd></div>
+          <div><dt>899 €</dt><dd>statt 1.158 €</dd></div>
         </dl>
       </div>
     </section>
@@ -5948,7 +6107,7 @@ function personalTrainingAb40NuernbergPage() {
           <p class="offer40-disclaimer">Allgemeine Einordnung, keine medizinische Beratung. Beschwerden gehören ärztlich abgeklärt.</p>
         </div>
         <div class="editorial-stage__media" data-reveal>
-          <img src="/assets/images/dominik-personal-coaching-client.webp" srcset="/assets/images/dominik-personal-coaching-client-480.webp 480w, /assets/images/dominik-personal-coaching-client-768.webp 768w, /assets/images/dominik-personal-coaching-client.webp 1200w" sizes="(max-width: 900px) 100vw, 46vw" alt="Dominik Dörfl korrigiert eine Übungsausführung im Personal Training"${imageLoadingAttributes()}>
+          <img src="/assets/images/dominik-personal-coaching-client.webp" width="1200" height="1800" srcset="/assets/images/dominik-personal-coaching-client-480.webp 480w, /assets/images/dominik-personal-coaching-client-768.webp 768w, /assets/images/dominik-personal-coaching-client.webp 1200w" sizes="(max-width: 900px) 100vw, 46vw" alt="Dominik Dörfl korrigiert eine Übungsausführung im Personal Training"${imageLoadingAttributes()}>
         </div>
       </div>
     </section>
@@ -6002,18 +6161,18 @@ function personalTrainingAb40NuernbergPage() {
                 .join("")}
               <div class="offer40-price__line offer40-price__line--sum">
                 <dt>Summe</dt>
-                <dd>1.099 €</dd>
+                <dd>1.158 €</dd>
               </div>
             </dl>
           </div>
           <div class="offer40-price__offer">
             <span class="offer40-price__tag">Als Programm gebucht</span>
             <p class="offer40-price__was">
-              <span class="offer40-price__strike">1.099 €</span>
-              <span class="offer40-price__save">Du sparst 100 €</span>
+              <span class="offer40-price__strike">1.158 €</span>
+              <span class="offer40-price__save">Du sparst 259 €</span>
             </p>
-            <p class="offer40-price__amount">999 €</p>
-            <p class="offer40-price__rate">für 12 Wochen &middot; 333 € pro Monat</p>
+            <p class="offer40-price__amount">899 €</p>
+            <p class="offer40-price__rate">für 12 Wochen &middot; rund 300 € pro Monat</p>
             <ul class="offer40-price__includes">
               <li>InBody-Messung zu Beginn und am Ende</li>
               <li>Ernährungs- und Trainingsplan nach Messwerten</li>
@@ -6065,7 +6224,7 @@ function personalTrainingAb40NuernbergPage() {
           <p class="expert-policy-link"><a href="/personal-training-kosten-nuernberg/">Alle Preise für Personal Training ansehen →</a></p>
         </div>
         <div class="editorial-stage__media" data-reveal>
-          <img src="/assets/images/dominik-coaching-bikeerg.webp" srcset="/assets/images/dominik-coaching-bikeerg-480.webp 480w, /assets/images/dominik-coaching-bikeerg-768.webp 768w, /assets/images/dominik-coaching-bikeerg.webp 1200w" sizes="(max-width: 900px) 100vw, 46vw" alt="Trainingseinheit mit persönlicher Betreuung bei Camp Dörfl"${imageLoadingAttributes()}>
+          <img src="/assets/images/dominik-coaching-bikeerg.webp" width="1800" height="1199" srcset="/assets/images/dominik-coaching-bikeerg-480.webp 480w, /assets/images/dominik-coaching-bikeerg-768.webp 768w, /assets/images/dominik-coaching-bikeerg.webp 1200w" sizes="(max-width: 900px) 100vw, 46vw" alt="Trainingseinheit mit persönlicher Betreuung bei Camp Dörfl"${imageLoadingAttributes()}>
         </div>
       </div>
     </section>
@@ -6092,9 +6251,9 @@ function personalTrainingAb40NuernbergPage() {
 
   return layout({
     path: "/fit-werden/",
-    title: "Personal Training ab 40 in Nürnberg | 12-Wochen-Programm | Camp Dörfl",
+    title: "Personal Training ab 40 Nürnberg | 12 Wochen | Camp Dörfl",
     description:
-      "12-Wochen-Programm in Nürnberg: InBody-Messung, Ernährungs- und Trainingsplan, wöchentliches Personal Training und Endanalyse. 999 € statt 1.099 €.",
+      "12-Wochen-Programm in Nürnberg: InBody-Messung, Ernährungs- und Trainingsplan, wöchentliches Personal Training und Endanalyse. 899 € statt 1.158 €.",
     keywords: [
       "Personal Training ab 40 Nürnberg",
       "Muskelaufbau ab 40",
@@ -6123,11 +6282,11 @@ function personalTrainingAb40NuernbergPage() {
         ],
         offers: {
           "@type": "Offer",
-          price: "999",
+          price: "899",
           priceCurrency: "EUR",
           availability: "https://schema.org/InStock",
           url: `${site.url}/fit-werden/`,
-          description: "12-Wochen-Programm als Paket, statt 1.099 € für die Einzelleistungen."
+          description: "12-Wochen-Programm als Paket, statt 1.158 € für die Einzelleistungen."
         }
       },
       faqSchema("/fit-werden/", offerFaq)
@@ -6142,25 +6301,45 @@ function keynoteSpeakerNuernbergPage() {
       detail: "Gelebte Praxis",
       title: "Erfahrung statt Theoriefolien",
       text:
-        "Die Inhalte kommen aus dem eigenen Weg als Profi-Athlet, Coach und Unternehmer. Publikum merkt schnell, ob jemand über Leistung spricht oder sie selbst durchlaufen hat."
+        "Die Inhalte kommen aus dem eigenen Weg als Profi-Athlet, Coach und Unternehmer. Publikum merkt schnell, ob jemand über Leistung spricht oder sie selbst durchlaufen hat.",
+      points: [
+        "Zweifacher Deutscher Meister im Wettkampfsport",
+        "Coach mit täglicher Arbeit an echten Fällen",
+        "Unternehmer mit eigener Verantwortung"
+      ]
     },
     {
       detail: "Bühnensicherheit",
       title: "Knapp 100 Events auf der Bühne",
       text:
-        "Aus der Moderation von Business-, Sport- und Bühnenformaten kommt die Routine für Timing, Publikumsführung und den ruhigen Umgang mit dem, was live schiefgeht."
+        "Aus der Moderation von Business-, Sport- und Bühnenformaten kommt die Routine für Timing, Publikumsführung und den ruhigen Umgang mit dem, was live schiefgeht.",
+      points: [
+        "Moderation von Business- und Sportformaten",
+        "Timing, Publikumsführung, ruhige Hand bei Pannen",
+        "Vortrag und Moderation aus einer Hand möglich"
+      ]
     },
     {
       detail: "Anschluss",
       title: "Auf Ihr Thema zugeschnitten",
       text:
-        "Vorab wird geklärt, wer im Publikum sitzt und was danach anders sein soll. Die Keynote wird darauf zugeschnitten statt als fertiger Standardvortrag gehalten."
+        "Vorab wird geklärt, wer im Publikum sitzt und was danach anders sein soll. Die Keynote wird darauf zugeschnitten statt als fertiger Standardvortrag gehalten.",
+      points: [
+        "Vorgespräch zu Anlass, Publikum und Ziel",
+        "Beispiele aus dem Berufsfeld der Zuhörenden",
+        "Länge vom Impuls bis zur vollen Keynote"
+      ]
     },
     {
       detail: "Wirkung danach",
       title: "Mitnehmbare nächste Schritte",
       text:
-        "Statt kurzfristiger Motivation bleiben konkrete Ansatzpunkte, die Zuhörende am nächsten Arbeitstag tatsächlich anwenden können."
+        "Statt kurzfristiger Motivation bleiben konkrete Ansatzpunkte, die Zuhörende am nächsten Arbeitstag tatsächlich anwenden können.",
+      points: [
+        "Werkzeuge wie die Straße der Mitte",
+        "Die 4-Töpfe-Regel für den eigenen Alltag",
+        "Anschluss über Gesundheitstag oder Firmenfitness"
+      ]
     }
   ];
 
@@ -6168,17 +6347,73 @@ function keynoteSpeakerNuernbergPage() {
     {
       title: "Leistung unter Druck",
       text:
-        "Wie Wettkampfsport mit Belastung, Rückschlägen und Erwartungsdruck umgeht und was davon auf Führung, Projekte und Arbeitsalltag übertragbar ist."
+        "Wie Wettkampfsport mit Belastung, Rückschlägen und Erwartungsdruck umgeht und was davon auf Führung, Projekte und Arbeitsalltag übertragbar ist.",
+      detail:
+        "Im Wettkampf entscheidet selten der beste Tag, sondern der Umgang mit dem schlechten. Der Vortrag zeigt an konkreten Situationen aus Wettkampfvorbereitung und Rennen, wie Belastung planbar wird, warum Rückschläge eingerechnet gehören und woran man erkennt, dass eine Struktur trägt statt nur gut auszusehen. Übertragen wird das auf das, was Ihr Publikum kennt: Projekte unter Termindruck, Führung in unruhigen Phasen, Entscheidungen mit unvollständigen Informationen.",
+      takeaways: [
+        "Belastungsspitzen erkennen, bevor sie zur Dauerlast werden",
+        "Rückschläge als Teil der Planung statt als Betriebsunfall",
+        "Woran man merkt, dass man an der falschen Stelle kämpft"
+      ]
     },
     {
       title: "Gesundheit als Unternehmensfaktor",
       text:
-        "Warum körperliche Leistungsfähigkeit kein privates Nebenthema ist, sondern Konzentration, Ausfalltage und Belastbarkeit im Team direkt beeinflusst."
+        "Warum körperliche Leistungsfähigkeit kein privates Nebenthema ist, sondern Konzentration, Ausfalltage und Belastbarkeit im Team direkt beeinflusst.",
+      detail:
+        "Gesundheit wird in Unternehmen gern als Privatsache behandelt und taucht trotzdem in jeder Kennzahl auf: in Ausfalltagen, in der Konzentration am Nachmittag, in der Frage, wer eine anstrengende Phase noch mitträgt. Der Vortrag macht diesen Zusammenhang sichtbar, ohne den Zeigefinger zu heben — und ohne zu behaupten, ein Vortrag ersetze eine Maßnahme. Er schafft die Bereitschaft, mit der ein Gesundheitstag oder ein Firmenfitness-Angebot danach überhaupt erst ankommt.",
+      takeaways: [
+        "Der Zusammenhang zwischen Erholung und Entscheidungsqualität",
+        "Warum Angebote scheitern, wenn die Haltung dahinter fehlt",
+        "Was Führungskräfte vorleben müssen, damit es Wirkung hat"
+      ]
     },
     {
       title: "Disziplin, die trägt",
       text:
-        "Was Motivation wirklich leistet, wo sie zuverlässig versagt und welche Strukturen Veränderung über Monate statt über zwei Wochen tragen."
+        "Was Motivation wirklich leistet, wo sie zuverlässig versagt und welche Strukturen Veränderung über Monate statt über zwei Wochen tragen.",
+      detail:
+        "Motivation ist ein guter Starter und ein schlechter Motor. Wer sich auf sie verlässt, hört im Februar wieder auf. Der Vortrag trennt beides sauber: Was Motivation leisten kann, wo sie berechenbar zusammenbricht und welche Strukturen den Unterschied machen, wenn die erste Begeisterung weg ist. Hier greifen die beiden Werkzeuge aus dem Vortrag ineinander — die Straße der Mitte für den Kurs, die 4-Töpfe-Regel für die Balance.",
+      takeaways: [
+        "Der Unterschied zwischen Vorsatz und tragfähiger Struktur",
+        "Warum kleine Schritte gewinnen und große Vorsätze scheitern",
+        "Wie man nach einem Rückfall wieder anschließt statt aufzugeben"
+      ]
+    }
+  ];
+
+  // Konkrete Anlässe: Wer eine Keynote sucht, sucht sie fast immer für einen
+  // bestimmten Termin — nicht nach dem Thema, sondern nach der Gelegenheit.
+  const keynoteOccasions = [
+    {
+      title: "Tagung und Jahresauftakt",
+      text:
+        "Der inhaltliche Höhepunkt, der einen Tag voller Zahlen und Präsentationen zusammenbindet und dem Programm einen gemeinsamen Nenner gibt."
+    },
+    {
+      title: "Kundenveranstaltung",
+      text:
+        "Ein Beitrag, der nicht verkauft, sondern etwas gibt. Ihre Gäste nehmen einen Gedanken mit nach Hause statt nur einen Abend."
+    },
+    {
+      title: "Führungskreis",
+      text:
+        "Für kleinere Runden, in denen es um Belastung, Vorbildwirkung und die eigene Haltung geht — mit Raum für Diskussion statt nur Vortrag."
+    },
+    {
+      title: "Gesundheitstag",
+      text:
+        "Der Impuls am Morgen, der den Tag rahmt und erklärt, warum die Angebote danach überhaupt einen Unterschied machen."
+    },
+    {
+      title: "Jubiläum und Festakt",
+      text:
+        "Ein Vortrag mit Anlassbezug, der zum feierlichen Rahmen passt und trotzdem etwas Handfestes hinterlässt."
+    },
+    {
+      title: "Interne Konferenz",
+      text:
+        "Für Teams in Veränderung: ein Blick von außen, der ausspricht, was intern alle spüren, und einen Weg nach vorn zeigt."
     }
   ];
 
@@ -6209,18 +6444,23 @@ function keynoteSpeakerNuernbergPage() {
     }
   ];
 
+  // Aufsteigend nach Umfang: Die Stufen tragen im Frontend unterschiedlich
+  // breite Bahnen, damit "vom Impuls bis zum ganzen Bühnentag" sichtbar wird.
   const keynoteFormats = [
     {
-      title: "Keynote",
-      text:
-        "Der klassische Vortrag von etwa 30 bis 60 Minuten als inhaltlicher Höhepunkt einer Tagung, Kundenveranstaltung oder internen Konferenz."
-    },
-    {
+      meta: "Kurzformat",
       title: "Impulsvortrag",
       text:
         "Kürzeres Format für Gesundheitstage, Teamevents oder Führungskreise, wenn ein klarer Denkanstoß gesetzt werden soll."
     },
     {
+      meta: "30 bis 60 Minuten",
+      title: "Keynote",
+      text:
+        "Der klassische Vortrag als inhaltlicher Höhepunkt einer Tagung, Kundenveranstaltung oder internen Konferenz."
+    },
+    {
+      meta: "Ganzer Bühnentag",
       title: "Keynote und Moderation kombiniert",
       text:
         "Vortrag und Moderation aus einer Hand: inhaltlicher Einstieg am Anfang, danach Führung durch das Programm des Tages."
@@ -6257,12 +6497,42 @@ function keynoteSpeakerNuernbergPage() {
       question: "Wie läuft die Anfrage ab?",
       answer:
         "Nach der Anfrage mit Anlass, Termin, Ort und Publikum folgt ein kurzes Gespräch zur Einordnung. Danach kommt ein konkretes Angebot mit Format, Länge und Ablauf."
+    },
+    {
+      question: "Was kostet eine Keynote?",
+      answer:
+        "Es gibt keine Pauschale, weil sich die Vorbereitung je Anlass deutlich unterscheidet. Das Honorar richtet sich nach Format und Länge, dem Aufwand für die inhaltliche Abstimmung, Anfahrt und Termin sowie danach, ob zusätzlich moderiert wird. Nach dem Vorgespräch erhalten Sie ein konkretes Angebot statt einer Spanne."
+    },
+    {
+      question: "Wie viel Vorlauf wird benötigt?",
+      answer:
+        "Vier bis sechs Wochen sind komfortabel, weil dann genug Zeit für Vorgespräch und Zuschnitt bleibt. Kurzfristigere Termine sind möglich, sofern der Kalender es zulässt — dann fällt die Abstimmung knapper aus. Eine frühe Anfrage sichert vor allem das Datum."
+    },
+    {
+      question: "Welche Technik wird gebraucht?",
+      answer:
+        "Ein Headset oder Handmikrofon und, wenn Bilder gezeigt werden, eine Projektionsmöglichkeit. Der Vortrag funktioniert auch ohne Folien. Was Ihre Location mitbringt, wird vorab kurz abgeglichen, damit am Veranstaltungstag nichts improvisiert werden muss."
+    },
+    {
+      question: "Ab welcher Gruppengröße lohnt sich ein Vortrag?",
+      answer:
+        "Nach oben gibt es keine Grenze. Nach unten funktioniert das Format ab etwa fünfzehn Personen gut; bei kleineren Runden ist ein Impuls mit anschließender Diskussion meist wirksamer als eine klassische Keynote von der Bühne."
+    },
+    {
+      question: "Was unterscheidet den Vortrag von einem Motivationsvortrag?",
+      answer:
+        "Motivation hält nach aller Erfahrung wenige Tage. Deshalb steht hier nicht die Stimmung im Vordergrund, sondern übertragbare Struktur: Werkzeuge wie die Straße der Mitte und die 4-Töpfe-Regel lassen sich ohne Notizen merken und am nächsten Arbeitstag anwenden."
+    },
+    {
+      question: "Darf der Vortrag aufgezeichnet werden?",
+      answer:
+        "In der Regel ja, wenn es vorab vereinbart wird. Wie die Aufzeichnung anschließend verwendet werden darf — intern, im Intranet oder öffentlich — wird gemeinsam festgelegt, bevor die Kamera läuft."
     }
   ];
 
   const content = `
-    <section class="ff-hero ff-hero--photo ff-hero--events ff-hero--events-photo ff-hero--text-only">
-      <img class="ff-hero__img" src="/assets/images/events-hero-wide.webp" srcset="/assets/images/events-hero-wide-960.webp 960w, /assets/images/events-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl als Redner auf einer Bühne vor Publikum in Nürnberg"${imageLoadingAttributes({ eager: true })}>
+    <section class="ff-hero ff-hero--photo ff-hero--events ff-hero--events-photo ff-hero--keynote-photo ff-hero--text-only">
+      <img class="ff-hero__img" src="/assets/images/keynote-hero-buehne.webp" width="1536" height="1024" srcset="/assets/images/keynote-hero-buehne-960.webp 960w, /assets/images/keynote-hero-buehne.webp 1536w" sizes="100vw" alt="Dominik Dörfl als Keynote Speaker auf einer Bühne vor rotem Vorhang"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
         <p class="ff-hero__eyebrow" data-reveal>Keynote · Vortrag · Bühne · Nürnberg</p>
@@ -6275,7 +6545,7 @@ function keynoteSpeakerNuernbergPage() {
         </p>
         <div class="ff-hero__actions" data-reveal>
           <a class="button button--primary" href="${contactHref("events")}"><span>Keynote anfragen</span><span aria-hidden="true">&rarr;</span></a>
-          <a class="button button--secondary-light" href="/events/"><span>Moderation ansehen</span><span aria-hidden="true">&rarr;</span></a>
+          <a class="button button--secondary-light" href="/moderator-nuernberg/"><span>Moderation ansehen</span><span aria-hidden="true">&rarr;</span></a>
         </div>
         <dl class="ff-hero__facts" data-reveal aria-label="Keynote Speaker Nürnberg in Zahlen">
           <div><dt>knapp 100</dt><dd>moderierte Events</dd></div>
@@ -6286,7 +6556,7 @@ function keynoteSpeakerNuernbergPage() {
     </section>
 
     <section class="section section--tight">
-      <div class="section-shell">
+      <div class="section-shell section-shell--wide keynote-authority">
         ${sectionHeader({
           eyebrow: "Warum dieser Vortrag",
           title: "Ein Redner, der die Strecke selbst gelaufen ist.",
@@ -6294,41 +6564,182 @@ function keynoteSpeakerNuernbergPage() {
             "Leistung, Rückschläge und Belastungsgrenzen lassen sich glaubwürdiger erklären, wenn man sie im Wettkampf, im Coaching und im eigenen Unternehmen erlebt hat.",
           align: "center"
         })}
-        ${featureGrid(keynoteValue, "feature-grid--coaching-flow")}
+        ${pathSlider(keynoteValue, "Warum dieser Vortrag", { autoplay: 6500, itemLabel: "Folie" })}
       </div>
     </section>
 
-    <section class="section section--muted">
-      <div class="section-shell editorial-stage">
-        <div class="editorial-stage__copy" data-reveal>
-          ${sectionHeader({
-            eyebrow: "Themen",
-            title: "Drei Schwerpunkte, die im Unternehmen ankommen.",
-            text:
-              "Die Themen lassen sich einzeln buchen oder kombinieren. Entscheidend ist, was Ihr Publikum nach dem Vortrag anders machen soll."
-          })}
-          ${summaryRows(keynoteTopics)}
+    <section class="section section--dark keynote-tools-section">
+      <div class="section-shell section-shell--wide">
+        ${sectionHeader({
+          eyebrow: "Werkzeuge aus dem Vortrag",
+          title: "Zwei Bilder, die im Kopf bleiben.",
+          text:
+            "Ein Vortrag wirkt dann, wenn am nächsten Arbeitstag noch etwas davon übrig ist. Deshalb bekommt jedes Publikum Werkzeuge mit, die sich ohne Notizen merken lassen. Zwei davon sind fester Bestandteil fast jeder Keynote.",
+          align: "center"
+        })}
+        <div class="keynote-tools">
+          <article class="keynote-tool keynote-tool--road" data-reveal>
+            <span class="keynote-tool__index" aria-hidden="true">01</span>
+            <h3>Die Straße der Mitte</h3>
+            <p class="keynote-tool__claim">Auf Kurs bleiben, wenn Abbiegen gerade vernünftig klingt.</p>
+            <p class="keynote-tool__text">
+              Auf dem Weg zum Ziel wird jeder herausgefordert und auf die Probe gestellt: Will ich wirklich auf dieser Straße bleiben oder biege ich vielleicht doch einmal ab? Das Bild macht sichtbar, wo die Abzweigungen liegen, warum sie im Moment so verlockend wirken und wie man nach einem Umweg zurück auf die Straße findet.
+            </p>
+            <ul class="keynote-tool__points">
+              <li>Abzweigungen erkennen, bevor man sie nimmt</li>
+              <li>Entscheidungen bewusst treffen statt nebenbei</li>
+              <li>Nach dem Umweg zurück in die Spur kommen</li>
+            </ul>
+            <figure class="keynote-tool__media">
+              <img src="/assets/images/dominik-strasse-der-mitte-lauf.webp" width="1535" height="1024" alt="Dominik Dörfl läuft auf einer schnurgeraden Landstraße während eines Ironman-Wettkampfs"${imageLoadingAttributes()}>
+              <figcaption>Die Straße der Mitte, wörtlich genommen: Ironman-Laufstrecke.</figcaption>
+            </figure>
+          </article>
+          <article class="keynote-tool keynote-tool--pots" data-reveal>
+            <span class="keynote-tool__index" aria-hidden="true">02</span>
+            <h3>Die 4-Töpfe-Regel</h3>
+            <p class="keynote-tool__claim">Ausgeglichenheit ist keine Stimmung, sondern eine Entscheidung.</p>
+            <p class="keynote-tool__text">
+              Wir alle brauchen Ausgeglichenheit, um uns gut zu fühlen, und trotzdem vernachlässigen wir Dinge oft so lange, bis sie uns zum Verhängnis werden. Die 4-Töpfe-Regel hakt genau hier ein: Sie zeigt in Sekunden, welcher Topf gerade leer läuft, und hilft dabei, die nächste Entscheidung danach zu treffen.
+            </p>
+            <ul class="keynote-pots" aria-label="Die vier Töpfe">
+              <li>Familie &amp; Freunde</li>
+              <li>Arbeit &amp; Beruf</li>
+              <li>Erholung &amp; Schlaf</li>
+              <li>Gesundheit &amp; eigene Ziele</li>
+            </ul>
+            <figure class="keynote-tool__media">
+              <img src="/assets/images/dominik-keynote-vier-toepfe.webp" width="1599" height="899" alt="Dominik Dörfl erklärt in einem Vortrag die 4-Töpfe-Regel vor der Projektion mit vier Töpfen"${imageLoadingAttributes()}>
+              <figcaption>Die 4-Töpfe-Regel live im Vortrag.</figcaption>
+            </figure>
+          </article>
         </div>
-        <div class="editorial-stage__media" data-reveal>
-          <img src="/assets/images/dominik-moderator-mic.webp" alt="Dominik Dörfl mit Mikrofon während eines Vortrags"${imageLoadingAttributes()}>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="section-shell section-shell--wide event-reference-band" data-reveal>
+        <div class="event-reference-band__intro">
+          <p class="eyebrow">Referenzen</p>
+          <h2>Bühnen, auf denen bereits gesprochen wurde.</h2>
+          <p>Verbände, Marken und Veranstalter, für die Camp&nbsp;Dörfl auf der Bühne stand — als Redner, Moderator oder beides an einem Tag.</p>
+        </div>
+        <div class="event-reference-band__logos" aria-label="Referenzen für Bühnenauftritte">
+          ${eventReferenceLogos
+            .map(
+              ({ name, image, alt, url, text }) => `
+                <a class="event-reference-card" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="Website von ${name} öffnen">
+                  <span class="event-reference-card__logo">
+                    <img src="${image}" alt="${alt}"${imageLoadingAttributes()}>
+                  </span>
+                  <span class="event-reference-card__divider" aria-hidden="true"></span>
+                  <span class="event-reference-card__copy">
+                    <span class="reference-card__name">${name}</span>
+                    <span>${text}</span>
+                  </span>
+                  <span class="event-reference-card__arrow" aria-hidden="true">&rsaquo;</span>
+                </a>
+              `
+            )
+            .join("")}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted keynote-topics-section">
+      <div class="section-shell section-shell--wide keynote-topics">
+        ${sectionHeader({
+          eyebrow: "Themen",
+          title: "Drei Schwerpunkte, die im Unternehmen ankommen.",
+          text:
+            "Die Themen lassen sich einzeln buchen oder kombinieren; entscheidend ist, was Ihr Publikum nach dem Vortrag anders machen soll.",
+          align: "center"
+        })}
+        <div class="keynote-topics__body">
+          <ol class="keynote-topic-list">
+            ${keynoteTopics
+              .map(
+                (item, index) => `
+                  <li class="keynote-topic" data-reveal>
+                    <span class="keynote-topic__index" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span>
+                    <div class="keynote-topic__body">
+                      <h3>${item.title}</h3>
+                      <p>${item.text}</p>
+                      <p class="keynote-topic__detail">${item.detail}</p>
+                      <p class="keynote-topic__label">Was Ihr Publikum mitnimmt</p>
+                      <ul class="keynote-topic__takeaways">
+                        ${item.takeaways.map((t) => `<li>${t}</li>`).join("")}
+                      </ul>
+                    </div>
+                  </li>
+                `
+              )
+              .join("")}
+          </ol>
+          <figure class="keynote-topics__media" data-reveal>
+            <img src="/assets/images/dominik-moderator-mic.webp" width="1199" height="1800" alt="Dominik Dörfl mit Mikrofon während eines Vortrags"${imageLoadingAttributes()}>
+            <figcaption>Themen, die dort ankommen, wo gearbeitet wird.</figcaption>
+          </figure>
         </div>
       </div>
     </section>
 
     <section class="section">
-      <div class="section-shell">
+      <div class="section-shell section-shell--wide keynote-split">
+        <div class="keynote-split__copy">
+          ${sectionHeader({
+            eyebrow: "Formate",
+            title: "Vom Impuls bis zum ganzen Bühnentag.",
+            text:
+              "Je nach Anlass reicht ein kurzer <strong>Impulsvortrag</strong> oder es braucht die <strong>Keynote</strong> als inhaltlichen Höhepunkt der Veranstaltung. Beides ist möglich, auch zusammen mit der <strong>Moderation</strong>."
+          })}
+          <div class="keynote-scale">
+            ${keynoteFormats
+              .map(
+                (item, index) => `
+                  <article class="keynote-scale__item" style="--stufe: ${index + 1};" data-reveal>
+                    <p class="keynote-scale__meta">${item.meta}</p>
+                    <h3>${item.title}</h3>
+                    <p class="keynote-scale__text">${item.text}</p>
+                  </article>
+                `
+              )
+              .join("")}
+          </div>
+        </div>
+        <figure class="keynote-split__media" data-reveal>
+          <img src="/assets/images/dominik-keynote-buehne-interview.webp" width="907" height="1220" alt="Dominik Dörfl im Bühneninterview mit Mikrofon bei einer Abendveranstaltung"${imageLoadingAttributes()}>
+          <figcaption>Auf der Bühne: Vortrag, Interview und Moderation aus einer Hand.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section keynote-occasions-section">
+      <div class="section-shell section-shell--wide">
         ${sectionHeader({
-          eyebrow: "Formate",
-          title: "Vom Impuls bis zum ganzen Bühnentag.",
+          eyebrow: "Anlässe",
+          title: "Wofür der Vortrag gebucht wird.",
           text:
-            "Je nach Anlass reicht ein kurzer Denkanstoß oder es braucht den inhaltlichen Höhepunkt einer Veranstaltung. Beides ist möglich, auch zusammen mit der Moderation."
+            "Eine Keynote wird selten nach Thema gesucht, sondern für einen konkreten Termin. Diese sechs Anlässe kommen am häufigsten vor — der Zuschnitt unterscheidet sich jeweils deutlich.",
+          align: "center"
         })}
-        ${summaryRows(keynoteFormats)}
+        <div class="keynote-occasions">
+          ${keynoteOccasions
+            .map(
+              (item) => `
+                <article class="keynote-occasion" data-reveal>
+                  <h3>${item.title}</h3>
+                  <p>${item.text}</p>
+                </article>
+              `
+            )
+            .join("")}
+        </div>
       </div>
     </section>
 
     <section class="section section--muted">
-      <div class="section-shell">
+      <div class="section-shell keynote-sequence">
         ${sectionHeader({
           eyebrow: "Ablauf",
           title: "So entsteht Ihr Vortrag.",
@@ -6347,7 +6758,7 @@ function keynoteSpeakerNuernbergPage() {
           text: "Das Wichtigste zu Themen, Länge, Region, Formaten und Ablauf einer Anfrage."
         })}
         ${faq(keynoteFaq)}
-        <p class="expert-policy-link" data-reveal><a href="/events/">Moderation und Bühnenformate ansehen →</a></p>
+        <p class="expert-policy-link" data-reveal><a href="/moderator-nuernberg/">Moderation und Bühnenformate ansehen →</a></p>
       </div>
     </section>
 
@@ -6363,7 +6774,7 @@ function keynoteSpeakerNuernbergPage() {
 
   return layout({
     path: "/keynote-speaker-nuernberg/",
-    title: "Keynote Speaker Nürnberg | Vortrag über Leistung & Gesundheit | Camp Dörfl",
+    title: "Keynote Speaker Nürnberg | Vortrag zu Leistung | Camp Dörfl",
     description:
       "Keynote Speaker in Nürnberg: Vorträge über Leistung unter Druck, Gesundheit im Unternehmen und Disziplin – von Profi-Athlet, Coach und Moderator Dominik Dörfl.",
     keywords: [
@@ -6378,7 +6789,7 @@ function keynoteSpeakerNuernbergPage() {
     // dunklen Bühnen-Panels der Events-Seite geschrieben sind und Überschriften in
     // .editorial-stage weiß färben. Hier stehen sie auf hellem Grund.
     bodyClass: "page-premium page-keynote",
-    socialImage: "/assets/images/events-hero-wide-social.jpg",
+    socialImage: "/assets/images/keynote-hero-buehne-social.jpg",
     socialImageAlt: "Dominik Dörfl als Keynote Speaker auf einer Bühne in Nürnberg",
     extraStructuredData: [
       serviceSchema({
@@ -6404,7 +6815,7 @@ function bodybuildingCompetitionCard(event) {
         <p><span aria-hidden="true">⌖</span>${event.location}</p>
       </div>
       <div class="bbcal-event__meta">
-        <span class="bbcal-weeks-out" data-weeks-out data-event-date="${event.date}" aria-label="Vorbereitungszeit wird berechnet"><strong>–</strong><small>Weeks out</small></span>
+        <span class="bbcal-weeks-out" data-weeks-out data-event-date="${event.date}" data-countdown-day="SHOW" data-countdown-day-label="DAY" data-countdown-over="SHOW" data-countdown-over-label="OVER" aria-label="Vorbereitungszeit wird berechnet"><strong>–</strong><small>Weeks out</small></span>
         <span class="bbcal-event__status">${event.past ? "Ausgetragen" : "Bestätigt"}</span>
       </div>
     </article>
@@ -6417,7 +6828,7 @@ function appTrafficPromo({ eyebrow, text, ref }) {
       <div class="section-shell section-shell--wide">
         <article class="app-traffic-promo__card" data-reveal>
           <figure class="app-traffic-promo__media">
-            <img src="/assets/images/home-app-banner-coaching.webp" srcset="/assets/images/home-app-banner-coaching-480.webp 480w, /assets/images/home-app-banner-coaching-768.webp 768w, /assets/images/home-app-banner-coaching.webp 1200w" sizes="(max-width: 760px) 92vw, 48vw" alt="Dominik Dörfl zeigt auf seinem Smartphone die Camp Dörfl App im Training"${imageLoadingAttributes()}>
+            <img src="/assets/images/home-app-banner-coaching.webp" width="1536" height="1024" srcset="/assets/images/home-app-banner-coaching-480.webp 480w, /assets/images/home-app-banner-coaching-768.webp 768w, /assets/images/home-app-banner-coaching.webp 1200w" sizes="(max-width: 760px) 92vw, 48vw" alt="Dominik Dörfl zeigt auf seinem Smartphone die Camp Dörfl App im Training"${imageLoadingAttributes()}>
             <figcaption><span>Camp Dörfl App</span><strong>Training. Ernährung. Fortschritt.</strong></figcaption>
           </figure>
           <div class="app-traffic-promo__content">
@@ -6452,7 +6863,7 @@ function bodybuildingCoachingPage() {
 
   const content = `
     <section class="bbc-hero">
-      <img class="bbc-hero__image" src="/assets/images/dominik-stage-suit.webp" alt="Bodybuilding Coach Dominik Dörfl in Wettkampfform auf der Bühne"${imageLoadingAttributes({ eager: true })}>
+      <img class="bbc-hero__image" src="/assets/images/dominik-stage-suit.webp" width="1350" height="1800" alt="Bodybuilding Coach Dominik Dörfl in Wettkampfform auf der Bühne"${imageLoadingAttributes({ eager: true })}>
       <div class="bbc-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell section-shell--wide bbc-hero__inner">
         <div class="bbc-hero__copy">
@@ -6475,7 +6886,7 @@ function bodybuildingCoachingPage() {
     </div></section>
 
     <section class="section section--dark bbc-authority"><div class="section-shell section-shell--wide bbc-authority__grid">
-      <figure data-reveal><img src="/assets/images/dominik-bodybuilding-desert.webp" alt="Dominik Dörfl als erfolgreicher Bodybuilder in Wettkampfform"${imageLoadingAttributes()}></figure>
+      <figure data-reveal><img src="/assets/images/dominik-bodybuilding-desert.webp" width="1409" height="1800" alt="Dominik Dörfl als erfolgreicher Bodybuilder in Wettkampfform"${imageLoadingAttributes()}></figure>
       <div class="bbc-authority__copy" data-reveal><p class="eyebrow">Athlet. Coach. Nicht nur Theorie.</p><h2>Ich kenne die Vorbereitung<br><span>von beiden Seiten.</span></h2><p class="bbc-authority__lead">Ich war selbst Profi-Athlet auf europäischem Spitzenlevel, bin IFBB Pro und Deutscher Meister im Bodybuilding. Heute verbinde ich diese eigene Bühnenerfahrung mit der Verantwortung als Coach.</p>
         <div class="bbc-authority__facts"><article><strong>Eigene Erfolge</strong><p>IFBB Pro Bodybuilding und zweifacher Deutscher Meister in Bodybuilding und Powerlifting.</p></article><article><strong>Erfolge als Coach</strong><p>Begleitung von Olympia-Athleten, deutschen Meistern, Vize-Weltmeistern und internationalen Top-Platzierungen.</p></article><article><strong>Praxis in Nürnberg</strong><p>Persönliches Training, Formchecks und Analysen vor Ort – verbunden mit digitaler Steuerung.</p></article></div>
         <a class="bbc-text-link" href="/erfolge-im-team/"><span>Erfolge im Team ansehen</span><span aria-hidden="true">→</span></a>
@@ -6528,14 +6939,32 @@ function bodybuildingCoachingPage() {
 }
 
 function bodybuildingCalendarPage() {
-  const allEvents = bodybuildingCalendarSources.flatMap((source) =>
+  // Der Status wird bei jedem Build neu bestimmt: Eine Show gilt ab dem Tag nach
+  // ihrem letzten Wettkampftag als ausgetragen. Vorher hing das an einem von Hand
+  // gepflegten past-Flag — dadurch standen im August 2026 vier längst gelaufene
+  // Shows unter "Die nächsten bestätigten Shows". Ein manuelles past: true bleibt
+  // als Override gültig, etwa für abgesagte Termine.
+  const buildDay = new Date().toISOString().slice(0, 10);
+  const calendarSources = bodybuildingCalendarSources.map((source) => ({
+    ...source,
+    events: source.events.map((event) => ({
+      ...event,
+      past: event.past === true || (event.endDate ?? event.date) < buildDay
+    }))
+  }));
+  const allEvents = calendarSources.flatMap((source) =>
     source.events.map((event) => ({ ...event, source }))
   );
   const upcomingEvents = allEvents
     .filter((event) => !event.past)
     .sort((a, b) => a.date.localeCompare(b.date));
   const pastEvents = allEvents.filter((event) => event.past);
-  const nextEvents = upcomingEvents.slice(0, 4);
+  // Der Aufmacher zeigt bewusst nur deutsche Termine: Wer hier sucht, plant eine
+  // Saison in Deutschland. Die internationalen Shows stehen vollständig im
+  // eigenen Block weiter unten.
+  const nextEvents = upcomingEvents
+    .filter((event) => event.source.scope !== "international")
+    .slice(0, 4);
   const sourceLinkFor = (source) => `
         <a class="bbcal-source-link${source.scope === "international" ? " bbcal-source-link--international" : ""}" href="#${source.id}">
           <span>${source.number}</span>
@@ -6544,11 +6973,11 @@ function bodybuildingCalendarPage() {
           <b aria-hidden="true">↓</b>
         </a>
       `;
-  const nationalSourceNavigation = bodybuildingCalendarSources
+  const nationalSourceNavigation = calendarSources
     .filter((source) => source.scope !== "international")
     .map(sourceLinkFor)
     .join("");
-  const internationalSourceNavigation = bodybuildingCalendarSources
+  const internationalSourceNavigation = calendarSources
     .filter((source) => source.scope === "international")
     .map(sourceLinkFor)
     .join("");
@@ -6598,11 +7027,11 @@ function bodybuildingCalendarPage() {
         </section>
       `;
     };
-  const nationalCalendarSections = bodybuildingCalendarSources
+  const nationalCalendarSections = calendarSources
     .filter((source) => source.scope !== "international")
     .map(calendarSectionFor)
     .join("");
-  const internationalCalendarSections = bodybuildingCalendarSources
+  const internationalCalendarSections = calendarSources
     .filter((source) => source.scope === "international")
     .map(calendarSectionFor)
     .join("");
@@ -6639,7 +7068,7 @@ function bodybuildingCalendarPage() {
 
   const content = `
     <section class="bbcal-hero">
-      <img class="bbcal-hero__image" src="/assets/images/dominik-bodybuilding-desert.webp" alt="Dominik Dörfl als Bodybuilder auf der Wettkampfbühne"${imageLoadingAttributes({ eager: true })}>
+      <img class="bbcal-hero__image" src="/assets/images/dominik-bodybuilding-desert.webp" width="1409" height="1800" alt="Dominik Dörfl als Bodybuilder auf der Wettkampfbühne"${imageLoadingAttributes({ eager: true })}>
       <div class="bbcal-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell bbcal-hero__inner">
         <div class="bbcal-hero__copy">
@@ -6648,11 +7077,11 @@ function bodybuildingCalendarPage() {
           <p class="bbcal-hero__lead" data-reveal>Deutsche Verbandstermine, internationale Profi-Shows der IFBB Pro League, NPC Worldwide Pro Qualifier und offizielle IFBB-Meisterschaften – getrennt nach System und direkt mit den Originalquellen verknüpft.</p>
           <div class="bbcal-hero__actions" data-reveal>
             <a class="button button--primary" href="#termine"><span>Alle Termine ansehen</span><span aria-hidden="true">↓</span></a>
-            <span class="bbcal-hero__updated">International erweitert am 10. August 2026</span>
+            <span class="bbcal-hero__updated">Deutsche Verbände geprüft am 21. August 2026</span>
           </div>
         </div>
         <dl class="bbcal-hero__facts" data-reveal>
-          <div><dt>${bodybuildingCalendarSources.length}</dt><dd>offizielle Kalender</dd></div>
+          <div><dt>${calendarSources.length}</dt><dd>offizielle Kalender</dd></div>
           <div><dt>${upcomingEvents.length}</dt><dd>kommende Shows</dd></div>
           <div><dt>${pastEvents.length}</dt><dd>bereits ausgetragen</dd></div>
         </dl>
@@ -6687,8 +7116,9 @@ function bodybuildingCalendarPage() {
     <section class="section section--muted bbcal-next">
       <div class="section-shell section-shell--wide">
         <div class="bbcal-section-heading" data-reveal>
-          <p class="eyebrow">Als Nächstes</p>
+          <p class="eyebrow">Als Nächstes in Deutschland</p>
           <h2>Die nächsten bestätigten Shows.</h2>
+          <p>Die vier nächsten Termine der deutschen Verbände. Die internationalen Profi-Shows stehen vollständig im Block darunter.</p>
         </div>
         <div class="bbcal-next-grid">
           ${nextEvents
@@ -6696,7 +7126,7 @@ function bodybuildingCalendarPage() {
               (event, index) => `
                 <a href="#${event.source.id}" class="bbcal-next-card" data-reveal>
                   <span class="bbcal-next-card__index">0${index + 1}</span>
-                  <span class="bbcal-weeks-out bbcal-weeks-out--next" data-weeks-out data-event-date="${event.date}" aria-label="Vorbereitungszeit wird berechnet"><strong>–</strong><small>Weeks out</small></span>
+                  <span class="bbcal-weeks-out bbcal-weeks-out--next" data-weeks-out data-event-date="${event.date}" data-countdown-day="SHOW" data-countdown-day-label="DAY" data-countdown-over="SHOW" data-countdown-over-label="OVER" aria-label="Vorbereitungszeit wird berechnet"><strong>–</strong><small>Weeks out</small></span>
                   <time datetime="${event.date}">${event.label}</time>
                   <h3>${event.name}</h3>
                   <p>${event.source.name} · ${event.location}</p>
@@ -6738,7 +7168,7 @@ function bodybuildingCalendarPage() {
           <h2>Unabhängig gesammelt.<br>Offiziell gegengeprüft.</h2>
         </div>
         <div class="bbcal-method__copy" data-reveal>
-          <p>Die deutschen Termine wurden am <strong>1. August 2026</strong> geprüft. Die internationalen Kalender von IFBB Professional League, NPC Worldwide und IFBB wurden am <strong>10. August 2026</strong> ergänzt. Bereits ausgetragene deutsche Shows bleiben sichtbar, damit die Seite das komplette Wettkampfjahr abbildet.</p>
+          <p>Die Kalender von NPC Germany, DBFV, GNBF und NAC Germany wurden am <strong>21. August 2026</strong> gegen die offiziellen Verbandsseiten geprüft. Dabei wurde der Große Preis von Hessen auf den 15. November 2026 in Butzbach korrigiert. WFF / NABBA und PCA Germany stehen auf dem Stand vom 1. August 2026, die internationalen Kalender von IFBB Professional League, NPC Worldwide und IFBB auf dem Stand vom 10. August 2026. Bereits ausgetragene Shows bleiben sichtbar, damit die Seite das komplette Wettkampfjahr abbildet.</p>
           <p>Camp Dörfl ist nicht Veranstalter dieser Wettkämpfe. Maßgeblich sind ausschließlich die Angaben des jeweiligen Verbandes. Fehlt ein Termin oder wurde etwas verschoben, genügt ein kurzer Hinweis.</p>
           <a class="button button--secondary-light" href="${contactHref()}"><span>Änderung melden</span><span aria-hidden="true">→</span></a>
         </div>
@@ -6847,7 +7277,7 @@ function bodybuildingClassesPage() {
   const classFaq = [
     {
       question: "Ist Classic Physique bei jedem Verband gleich?",
-      answer: "Nein. DBFV, NAC Germany und NPC Worldwide nutzen unterschiedliche Formeln beziehungsweise Größentabellen. Auch Posinghose, Pflichtposen und Klassenaufteilung unterscheiden sich. Maßgeblich bleibt immer die aktuelle Ausschreibung der konkreten Meisterschaft."
+      answer: "Nein. DBFV, NAC Germany, GNBF und NPC Worldwide nutzen unterschiedliche Formeln beziehungsweise Größentabellen, NABBA verzichtet ganz auf ein Gewichtslimit. Auch Posinghose, Pflichtposen und Klassenaufteilung unterscheiden sich. Maßgeblich bleibt immer die aktuelle Ausschreibung der konkreten Meisterschaft."
     },
     {
       question: "Gibt es in Bikini, Wellness oder Figure ein Gewichtslimit?",
@@ -6860,6 +7290,14 @@ function bodybuildingClassesPage() {
     {
       question: "Kann ich bei mehreren Verbänden in derselben Saison starten?",
       answer: "Das hängt von Mitgliedschaft, Qualifikation, Newcomer-Status und den Regeln des jeweiligen Veranstalters ab. Besonders Doppelstarts und verbandsübergreifender Newcomer-Status sollten vor der Anmeldung direkt geprüft werden."
+    },
+    {
+      question: "Was ist der FFMI und warum begrenzt ihn die GNBF?",
+      answer: "Der Fat Free Mass Index setzt die fettfreie Masse ins Verhältnis zur Körpergröße. Die GNBF lässt bei nationalen Bodybuilding-Klassen höchstens einen FFMI von 26,0 zu und ermittelt den Wert beim Einschreiben. Wer darüber liegt, wird nicht zur Meisterschaft zugelassen. Statt das Gewicht zu deckeln, begrenzt der Natural-Verband damit die Körperzusammensetzung selbst. Bei internationalen Wettkämpfen gilt der Grenzwert nicht."
+    },
+    {
+      question: "Hat NABBA ein Gewichtslimit?",
+      answer: "Nein. NABBA teilt die Männerklassen ausschließlich nach Körpergröße ein: Mr Class 3 bis 1,72 Meter, Mr Class 2 über 1,72 bis 1,79 Meter und Mr Class 1 über 1,79 Meter. Auch Classic wird ohne Gewichtsobergrenze gewertet, weil die Jury auf den klassischen Look schaut. In Deutschland schreibt der DFFV e. V. die NABBA-Klassen aus."
     },
     {
       question: "Welche Klasse passt zu meinem aktuellen Körperbau?",
@@ -6883,11 +7321,11 @@ function bodybuildingClassesPage() {
 
   const content = `
     <section class="bbcal-hero bbclass-hero">
-      <img class="bbcal-hero__image" src="/assets/images/dominik-stage-suit.webp" alt="Dominik Dörfl in Wettkampfform auf der Bodybuilding-Bühne"${imageLoadingAttributes({ eager: true })}>
+      <img class="bbcal-hero__image" src="/assets/images/dominik-stage-suit.webp" width="1350" height="1800" alt="Dominik Dörfl in Wettkampfform auf der Bodybuilding-Bühne"${imageLoadingAttributes({ eager: true })}>
       <div class="bbcal-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell bbcal-hero__inner">
         <div class="bbcal-hero__copy">
-          <p class="eyebrow" data-reveal>DBFV · NAC Germany · NPC Worldwide</p>
+          <p class="eyebrow" data-reveal>DBFV · NAC Germany · GNBF · NABBA · NPC Worldwide</p>
           <h1 data-reveal>Bodybuilding-<br>Klassen &amp; <span>Limits.</span></h1>
           <p class="bbcal-hero__lead" data-reveal>Welcher Verband? Welche Klasse? Welches Maximalgewicht? Diese Übersicht bringt Männer- und Frauenklassen, Bewertungskriterien und die wichtigsten Größen-Gewichts-Limits in ein verständliches System.</p>
           <div class="bbcal-hero__actions" data-reveal>
@@ -6896,7 +7334,7 @@ function bodybuildingClassesPage() {
           </div>
         </div>
         <dl class="bbcal-hero__facts" data-reveal>
-          <div><dt>03</dt><dd>Regelwerke im Vergleich</dd></div>
+          <div><dt>05</dt><dd>Regelwerke im Vergleich</dd></div>
           <div><dt>11</dt><dd>zentrale Divisionen erklärt</dd></div>
           <div><dt>01</dt><dd>interaktiver Limit-Check</dd></div>
         </dl>
@@ -6911,7 +7349,7 @@ function bodybuildingClassesPage() {
             <h2>Gleicher Name.<br><span>Andere Regeln.</span></h2>
           </div>
           <div class="bbcal-intro__copy">
-            <p><strong>Classic Physique ist nicht überall dieselbe Klasse.</strong> Beim NPC Worldwide gelten feste Größenstufen mit Pfund-/Kilogramm-Limits, der DBFV arbeitet mit eigenen Zuschlägen zur Körpergröße und NAC Germany mit einer weiteren Formel.</p>
+            <p><strong>Classic Physique ist nicht überall dieselbe Klasse.</strong> Beim NPC Worldwide gelten feste Größenstufen mit Pfund-/Kilogramm-Limits, der DBFV arbeitet mit eigenen Zuschlägen zur Körpergröße und NAC Germany mit einer weiteren Formel. NABBA verzichtet ganz auf ein Gewichtslimit und teilt allein nach Körpergröße ein. Die GNBF begrenzt im Bodybuilding gar nicht das Gewicht, sondern über den FFMI die Körperzusammensetzung selbst.</p>
             <p>Auch „Bikini“, „Figure/Figur“ oder „Men’s Physique“ unterscheiden sich in Muskulatur, Härte, Posing und Kleidung. Deshalb beginnt die Klassenwahl immer mit dem Verband – nicht nur mit dem Namen.</p>
           </div>
         </div>
@@ -6932,7 +7370,7 @@ function bodybuildingClassesPage() {
         </div>
         <form class="bbclass-calculator" data-class-calculator data-reveal>
           <div class="bbclass-calculator__fields">
-            <label><span>Verband</span><select name="federation"><option value="dbfv">DBFV e.V.</option><option value="nac">NAC Germany</option><option value="npc">NPC Worldwide</option></select></label>
+            <label><span>Verband</span><select name="federation"><option value="dbfv">DBFV e.V.</option><option value="nac">NAC Germany</option><option value="gnbf">GNBF e.V.</option><option value="nabba">NABBA</option><option value="npc">NPC Worldwide</option></select></label>
             <label><span>Klasse</span><select name="division"><option value="classic-physique">Classic Physique</option><option value="classic-bodybuilding">Classic Bodybuilding</option><option value="mens-physique">Men’s Physique</option><option value="bodybuilding">Bodybuilding</option></select></label>
             <label><span>Körpergröße</span><span class="bbclass-input"><input name="height" type="number" min="150" max="210" step="0.1" value="180" inputmode="decimal"><b>cm</b></span></label>
             <label><span>Bühnengewicht</span><span class="bbclass-input"><input name="weight" type="number" min="45" max="180" step="0.1" value="90" inputmode="decimal"><b>kg</b></span></label>
@@ -6948,7 +7386,7 @@ function bodybuildingClassesPage() {
       <div class="section-shell section-shell--wide">
         <div class="bbcal-section-heading" data-reveal>
           <p class="eyebrow">Verbandsvergleich</p>
-          <h2>Drei Systeme. Klar getrennt.</h2>
+          <h2>Fünf Systeme. Klar getrennt.</h2>
           <p>Die Klassenanzahl einer konkreten Show kann wegen Teilnehmerzahl, Altersgruppe oder Ausschreibung abweichen. Die folgenden Übersichten zeigen das Grundsystem für Open-Athleten.</p>
         </div>
 
@@ -6969,8 +7407,24 @@ function bodybuildingClassesPage() {
             </div>
           </article>
 
+          <article class="bbclass-federation" id="gnbf" data-reveal>
+            <header><span class="bbclass-federation__number">03</span><div><p class="eyebrow">Deutschland · Natural · INBA Global</p><h2>GNBF e.V.</h2><p>Der Natural-Verband mit Dopingkontrollen. Statt eines reinen Gewichtslimits begrenzt die GNBF bei den Bodybuilding-Klassen die Körperzusammensetzung selbst – über den FFMI. Classic Physique läuft über die strengste Größenformel im Vergleich.</p></div><a href="https://gnbf.net/klassen-wertungskriterien/" target="_blank" rel="noopener noreferrer">Regelwerk <span aria-hidden="true">↗</span></a></header>
+            <div class="bbclass-federation__body">
+              <div class="bbclass-classlist"><h3>Angebotene Klassen</h3><div class="bbclass-sex-grid"><div><b>Frauen</b><ul><li>Women’s Bikini Divas</li><li>Women’s Fitness Figure</li><li>Women’s Sport Model</li><li>Women’s Wellness</li><li>Women’s Physique</li><li>Frauen Athletik</li><li>Women’s Bodybuilding</li></ul></div><div><b>Männer</b><ul><li>Men’s Natural Bodybuilding</li><li>Men’s Classic Physique</li><li>Men’s Physique</li><li>Men’s Athletik</li></ul></div></div><p class="bbclass-note">Dazu Pairs und Physically Challenged. Alters­klassen im Bodybuilding: Teen bis 17, Junior 18–22, Masters 40–49, Grand Masters 50–59, Ultra Masters ab 60. Die Einteilung erfolgt vor Ort nach Körpergröße aufsteigend.</p></div>
+              <div class="bbclass-limit-card"><h3>Men’s Classic Physique</h3><p><strong>Körpergröße in cm − 98 = Maximalgewicht.</strong> Beispiel 180 cm: maximal 82 kg. Das ist die strengste Größenformel in diesem Vergleich.</p><h3>Men’s Bodybuilding: FFMI statt Gewicht</h3><p>Kein Gewichtslimit, dafür ein <strong>FFMI von höchstens 26,0</strong>. Der Wert wird beim Einschreiben ermittelt; wer darüber liegt, wird nicht zur Meisterschaft zugelassen.</p><p class="bbclass-note"><strong>Wichtig:</strong> Beide Regeln gelten nur für <strong>nationale</strong> Wettkämpfe. Bei internationalen Starts – etwa der Internationalen Deutschen Meisterschaft oder Welt- und Europameisterschaften – gelten die Kriterien von INBA Global, und der FFMI-Grenzwert entfällt. Stand der Klassenregeln laut GNBF: 23.06.2026 (Classic Physique) bzw. 19.02.2023 (Bodybuilding).</p></div>
+            </div>
+          </article>
+
+          <article class="bbclass-federation" id="nabba" data-reveal>
+            <header><span class="bbclass-federation__number">04</span><div><p class="eyebrow">Deutschland · NABBA International</p><h2>NABBA</h2><p>Das einzige System im Vergleich ganz ohne Gewichtslimit. Die Männerklassen werden ausschließlich nach Körpergröße eingeteilt. In Deutschland schreibt der DFFV e.&nbsp;V. die NABBA-Klassen gemeinsam mit den WFF-Klassen aus.</p></div><a href="https://nabbaofficial.com/pages/category-rules" target="_blank" rel="noopener noreferrer">Regelwerk <span aria-hidden="true">↗</span></a></header>
+            <div class="bbclass-federation__body">
+              <div class="bbclass-classlist"><h3>Angebotene Klassen</h3><div class="bbclass-sex-grid"><div><b>Frauen</b><ul><li>NABBA Bikini</li><li>NABBA Damen Figur/Body</li></ul></div><div><b>Männer</b><ul><li>Bodybuilding (Mr Class 1–3)</li><li>Classic Bodybuilding</li><li>Men’s Physique Open</li><li>Men’s Physique Over 45</li></ul></div></div><p class="bbclass-note">Deutsche Klassenliste laut DFFV e.&nbsp;V. Derselbe Verband schreibt zusätzlich eigene WFF-Klassen aus – darunter Bikinimodel, Sportmodel, Aerobic, Wellness, Glamour Model und Bermuda. Das sind <strong>keine</strong> NABBA-Klassen. Einzelne Klassen können je Meisterschaft entfallen oder zusammengelegt werden.</p></div>
+              <div class="bbclass-limit-card"><h3>Mr Classes nach Körpergröße</h3><table><thead><tr><th>Klasse</th><th>Körpergröße</th></tr></thead><tbody>${limitRows([["Mr Class 3", "bis 1,72 m"],["Mr Class 2", "über 1,72–1,79 m"],["Mr Class 1", "über 1,79 m"]])}</tbody></table><h3>Kein Gewichtslimit</h3><p>Classic Bodybuilding wird <strong>ohne Gewichtsobergrenze</strong> gewertet – entscheidend ist der klassische Look. Auch die übrigen NABBA-Klassen kennen keine Größen-Gewichts-Formel.</p><p class="bbclass-note"><strong>Altersklassen:</strong> Teenagers bis 19 Jahre, Junior Bodybuilding und Junior Men’s Physique bis 23 Jahre – maßgeblich ist das Alter am Wettkampftag. Seit Juni 2024 vergibt NABBA wieder Pro-Karten in Miss Bikini Pro, Mr Physique Pro und Mr Classic Pro. Eine gültige NABBA-Mitgliedschaft ist Startvoraussetzung; pro Wettkampf sind höchstens zwei Klassen möglich, die vorab gemeldet werden müssen.</p></div>
+            </div>
+          </article>
+
           <article class="bbclass-federation" id="npc" data-reveal>
-            <header><span class="bbclass-federation__number">03</span><div><p class="eyebrow">International · IFBB Pro League Weg</p><h2>NPC Worldwide</h2><p>Die Divisionen werden veranstaltungsabhängig in unterschiedlich viele Größenklassen aufgeteilt. Classic Physique nutzt eine feste Inch-/Pfund-Tabelle.</p></div><a href="https://www.ifbbpro.com/npc-worldwide/rules/" target="_blank" rel="noopener noreferrer">Regelwerk <span aria-hidden="true">↗</span></a></header>
+            <header><span class="bbclass-federation__number">05</span><div><p class="eyebrow">International · IFBB Pro League Weg</p><h2>NPC Worldwide</h2><p>Die Divisionen werden veranstaltungsabhängig in unterschiedlich viele Größenklassen aufgeteilt. Classic Physique nutzt eine feste Inch-/Pfund-Tabelle.</p></div><a href="https://www.ifbbpro.com/npc-worldwide/rules/" target="_blank" rel="noopener noreferrer">Regelwerk <span aria-hidden="true">↗</span></a></header>
             <div class="bbclass-federation__body bbclass-federation__body--npc">
               <div class="bbclass-classlist"><h3>Angebotene Klassen</h3><div class="bbclass-sex-grid"><div><b>Frauen</b><ul><li>Bikini</li><li>Wellness</li><li>Figure</li><li>Physique</li><li>Fitness</li><li>Fit Model</li><li>Women’s Bodybuilding</li></ul></div><div><b>Männer</b><ul><li>Bodybuilding</li><li>Classic Physique</li><li>Men’s Physique</li><li>Wheelchair Bodybuilding</li></ul></div></div><p class="bbclass-note">Mögliche Kategorien: True Novice, Novice, Junior, Masters und Open. Welche davon angeboten werden, steht in der Show-Ausschreibung.</p></div>
               <details class="bbclass-npc-table"><summary><span>Classic Physique: alle Größenlimits</span><strong>Tabelle öffnen <b aria-hidden="true">↓</b></strong></summary><div class="bbclass-table-wrap"><table><thead><tr><th>Körpergröße</th><th>Maximalgewicht</th></tr></thead><tbody>${limitRows(npcClassicRows)}</tbody></table></div><p>Die offizielle Tabelle rechnet in Zoll und Pfund; Kilogrammwerte sind die veröffentlichten Umrechnungen.</p></details>
@@ -7030,7 +7484,7 @@ function bodybuildingClassesPage() {
   return layout({
     path: "/bodybuilding-klassen-gewichtslimits/",
     title: "Bodybuilding-Klassen &amp; Gewichtslimits: NPC, DBFV, NAC",
-    description: "Bodybuilding-Klassen und Gewichtslimits im Vergleich: NPC Worldwide, DBFV e.V. und NAC Germany. Frauen- und Männerklassen, Anforderungen und Limit-Check.",
+    description: "Bodybuilding-Klassen und Gewichtslimits im Vergleich: DBFV, NAC Germany, GNBF, NABBA und NPC Worldwide. Frauen- und Männerklassen, FFMI-Grenze und Limit-Check.",
     keywords: ["Bodybuilding Klassen", "Bodybuilding Gewichtslimits", "NPC Classic Physique Gewichtslimit", "DBFV Klassen", "NAC Germany Klassen", "Bikini Wellness Figure Unterschied", "Classic Physique Gewicht Größe"],
     bodyClass: "page-premium page-bodybuilding-calendar page-bodybuilding-classes",
     pageName: "Bodybuilding-Klassen und Gewichtslimits",
@@ -7053,7 +7507,10 @@ function boxingCompetitionCard(event) {
         <h3>${event.name}</h3>
         <p><span aria-hidden="true">⌖</span>${event.location}</p>
       </div>
-      <span class="bbcal-event__status${event.status ? " bbcal-event__status--live" : ""}">${status}</span>
+      <div class="bbcal-event__meta">
+        <span class="event-countdown" data-weeks-out data-event-date="${event.date}" aria-label="Countdown wird berechnet"><strong>–</strong><small>Weeks out</small></span>
+        <span class="bbcal-event__status${event.status ? " bbcal-event__status--live" : ""}">${status}</span>
+      </div>
     </article>
   `;
 }
@@ -7172,7 +7629,7 @@ function boxingCalendarPage() {
 
   const content = `
     <section class="bbcal-hero boxcal-hero">
-      <img class="bbcal-hero__image" src="/assets/images/boxing-calendar-hero.png" alt="Leerer Boxring mit Boxhandschuhen vor einem großen Kampf"${imageLoadingAttributes({ eager: true })}>
+      <img class="bbcal-hero__image" src="/assets/images/boxing-calendar-hero.webp" width="1672" height="941" alt="Leerer Boxring mit Boxhandschuhen vor einem großen Kampf"${imageLoadingAttributes({ eager: true })}>
       <div class="bbcal-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell bbcal-hero__inner">
         <div class="bbcal-hero__copy">
@@ -7297,7 +7754,7 @@ function boxingCalendarPage() {
       text:
         "Kraft, Kondition, Körperkomposition und Regeneration brauchen eine Struktur, die zum Boxtraining und zum echten Alltag passt.",
       primary: { label: "Performance anfragen", href: contactHref("premium-training") },
-      secondary: { label: "Personal Training ansehen", href: "/personal-trainer-nürnberg/" }
+      secondary: { label: "Personal Training ansehen", href: "/personal-trainer-nuernberg/" }
     })}
   `;
 
@@ -7321,11 +7778,518 @@ function boxingCalendarPage() {
     bodyClass: "page-premium page-bodybuilding-calendar page-boxing-calendar",
     pageName: "Boxen Wettkämpfe 2026",
     pageType: "CollectionPage",
-    socialImage: "/assets/images/boxing-calendar-hero.png",
+    socialImage: "/assets/images/boxing-calendar-hero.webp",
     socialImageAlt: "Boxen Wettkämpfe 2026 – Profi und Amateur im Überblick",
     extraStructuredData: [
       itemListSchema,
       faqSchema("/boxen-wettkaempfe-2026/", boxingCalendarFaq)
+    ],
+    content
+  });
+}
+
+/* ============================================================
+   MMA WETTKÄMPFE 2026
+   Neun Organisationen in einem Kalender. Stand der Recherche:
+   20. August 2026, jeweils gegen die offizielle Quelle geprüft.
+   ============================================================ */
+const mmaCalendarSources = [
+  {
+    id: "ufc",
+    number: "01",
+    name: "UFC",
+    shortName: "UFC",
+    descriptor: "Ultimate Fighting Championship · Weltspitze",
+    sourceUrl: "https://www.ufc.com/events",
+    note: "Nummerierte Pay-per-View-Events, Fight Nights und Noche UFC – die größte MMA-Organisation der Welt.",
+    events: [
+      { date: "2026-09-05", label: "5. September 2026", name: "UFC Fight Night: Hooker vs. Parnasse", location: "Paris, Frankreich", type: "Fight Night" },
+      { date: "2026-09-12", label: "12. September 2026", name: "Noche UFC: Rodriguez vs. Silva", location: "Glendale, USA", type: "Noche UFC" },
+      { date: "2026-09-19", label: "19. September 2026", name: "UFC 331: Van vs. Pantoja 2", location: "Los Angeles, USA", type: "Pay-per-View", top: true },
+      { date: "2026-09-26", label: "26. September 2026", name: "UFC Fight Night: Rosas Jr. vs. Barcelos", location: "Las Vegas, USA", type: "Fight Night" },
+      { date: "2026-10-03", label: "3. Oktober 2026", name: "UFC 332", location: "Salt Lake City, USA", type: "Pay-per-View" },
+      { date: "2026-10-17", label: "17. Oktober 2026", name: "UFC Fight Night: Buckley vs. Malott", location: "Edmonton, Kanada", type: "Fight Night" },
+      { date: "2026-10-24", label: "24. Oktober 2026", name: "UFC 333: Volkanovski vs. Evloev", location: "Abu Dhabi, VAE", type: "Titelkampf · Pay-per-View", top: true },
+      { date: "2026-11-07", label: "7. November 2026", name: "UFC Fight Night", location: "Las Vegas, USA", type: "Fight Night" }
+    ]
+  },
+  {
+    id: "pfl",
+    number: "02",
+    name: "PFL",
+    shortName: "PFL",
+    descriptor: "Professional Fighters League · Weltweit",
+    sourceUrl: "https://pflmma.com/events",
+    note: "Hauptserie, PFL MENA und PFL Africa. Seit der Übernahme laufen auch die früheren Bellator-Kämpfer unter dieser Flagge.",
+    events: [
+      { date: "2026-08-22", label: "22. August 2026", name: "PFL Tampa: Cyborg vs. Vieira", location: "Tampa, USA", type: "Main Card", top: true },
+      { date: "2026-10-02", label: "2. Oktober 2026", name: "PFL MENA 11", location: "Riad, Saudi-Arabien", type: "PFL MENA" },
+      { date: "2026-10-10", label: "10. Oktober 2026", name: "PFL Africa: Morocco", location: "Casablanca, Marokko", type: "PFL Africa" },
+      { date: "2026-10-16", label: "16. Oktober 2026", name: "PFL Chicago: Carmouche vs. Bishop 2", location: "Chicago, USA", type: "Main Card" }
+    ]
+  },
+  {
+    id: "one-championship",
+    number: "03",
+    name: "ONE Championship",
+    shortName: "ONE",
+    descriptor: "Asiens größte Kampfsportbühne · Singapur",
+    sourceUrl: "https://www.onefc.com/events/",
+    note: "ONE Fight Night, ONE Friday Fights und die Samurai-Serie in Japan – MMA, Muay Thai und Kickboxen auf einer Karte.",
+    events: [
+      { date: "2026-09-04", label: "4. September 2026", name: "ONE Friday Fights 169", location: "Bangkok, Thailand", type: "Friday Fights" },
+      { date: "2026-09-05", label: "5. September 2026", name: "ONE Fight Night 47", location: "Bangkok, Thailand", type: "Fight Night" },
+      { date: "2026-09-12", label: "12. September 2026", name: "ONE Samurai 3", location: "Yokohama, Japan", type: "ONE Samurai" },
+      { date: "2026-10-03", label: "3. Oktober 2026", name: "ONE Fight Night 48", location: "Bangkok, Thailand", type: "Fight Night" },
+      { date: "2026-10-17", label: "17. Oktober 2026", name: "ONE Samurai 4", location: "Tokio, Japan", type: "ONE Samurai" },
+      { date: "2026-11-07", label: "7. November 2026", name: "ONE Fight Night 49", location: "Bangkok, Thailand", type: "Fight Night" },
+      { date: "2026-11-18", label: "18. November 2026", name: "ONE Samurai 5", location: "Tokio, Japan", type: "ONE Samurai" },
+      { date: "2026-12-02", label: "2. Dezember 2026", name: "ONE Samurai 6", location: "Yokohama, Japan", type: "ONE Samurai" },
+      { date: "2026-12-12", label: "12. Dezember 2026", name: "ONE Fight Night 50", location: "Bangkok, Thailand", type: "Fight Night" }
+    ]
+  },
+  {
+    id: "bellator",
+    number: "04",
+    name: "Bellator",
+    shortName: "Bellator",
+    descriptor: "Marke ruht · Kämpfe laufen unter PFL",
+    sourceUrl: "https://pflmma.com/events",
+    note: "Die PFL hat Bellator 2023 übernommen und den eigenständigen Betrieb im Januar 2025 eingestellt. Die Kader wurden zusammengelegt, eigene Bellator-Termine gibt es 2026 nicht.",
+    emptyTitle: "2026 kein eigener Bellator-Termin.",
+    emptyText: "Die ehemaligen Bellator-Kämpfer treten unter PFL an. Sobald die Marke zurückkehrt, steht der Termin hier.",
+    events: []
+  },
+  {
+    id: "rizin",
+    number: "05",
+    name: "RIZIN",
+    shortName: "RIZIN",
+    descriptor: "RIZIN Fighting Federation · Japan",
+    sourceUrl: "https://jp.rizinff.com/",
+    note: "Japans größte MMA-Serie mit Super RIZIN, der Landmark-Reihe und dem traditionellen Silvester-Event.",
+    events: [
+      { date: "2026-09-10", label: "10. September 2026", name: "Super RIZIN 5", location: "Kyocera Dome, Osaka", type: "Super RIZIN", top: true },
+      { date: "2026-10-03", label: "3. Oktober 2026", name: "RIZIN Landmark 16", location: "Nagasaki, Japan", type: "Landmark" },
+      { date: "2026-11-08", label: "8. November 2026", name: "RIZIN Landmark 17", location: "Funabashi, Japan", type: "Landmark" },
+      { date: "2026-12-31", label: "31. Dezember 2026", name: "RIZIN Silvester-Event", location: "Vantelin Dome, Nagoya", type: "Jahresabschluss" },
+      { date: "2026-03-07", label: "7. März 2026", name: "RIZIN 52", location: "Ariake Arena, Tokio", type: "Nummeriertes Event", past: true },
+      { date: "2026-04-12", label: "12. April 2026", name: "RIZIN Landmark 13", location: "Marine Messe Fukuoka", type: "Landmark", past: true },
+      { date: "2026-05-10", label: "10. Mai 2026", name: "RIZIN 53", location: "Glion Arena Kobe", type: "Nummeriertes Event", past: true },
+      { date: "2026-06-06", label: "6. Juni 2026", name: "RIZIN Landmark 14", location: "Xebio Arena Sendai", type: "Landmark", past: true },
+      { date: "2026-07-18", label: "18. Juli 2026", name: "RIZIN Landmark 15", location: "Hiroshima, Japan", type: "Landmark", past: true },
+      { date: "2026-08-11", label: "11. August 2026", name: "RIZIN 54", location: "Toyota Arena Tokio", type: "Nummeriertes Event", past: true }
+    ]
+  },
+  {
+    id: "cage-warriors",
+    number: "06",
+    name: "Cage Warriors",
+    shortName: "Cage Warriors",
+    descriptor: "Europas Sprungbrett in die UFC",
+    sourceUrl: "https://cagewarriors.com/cage-warriors-events/",
+    note: "Dublin, London, Manchester, Rom: Cage Warriors ist die Bühne, über die viele europäische Kämpfer in die UFC gehen.",
+    events: [
+      { date: "2026-09-26", label: "26. September 2026", name: "Cage Warriors 210", location: "Shelbourne Hall, Dublin", type: "Main Card" },
+      { date: "2026-10-17", label: "17. Oktober 2026", name: "Cage Warriors 211", location: "PalaPellicone, Rom", type: "Main Card" },
+      { date: "2026-11-28", label: "28. November 2026", name: "Cage Warriors Manchester", location: "BEC Arena, Manchester", type: "Triple-Header-Wochenende" },
+      { date: "2026-02-21", label: "21. Februar 2026", name: "Cage Warriors 200", location: "RDS Simmonscourt, Dublin", type: "Jubiläumsshow", past: true },
+      { date: "2026-03-13", label: "13. März 2026", name: "Cage Warriors 201", location: "BEC Arena, Manchester", type: "Main Card", past: true },
+      { date: "2026-03-14", label: "14. März 2026", name: "Cage Warriors 202", location: "BEC Arena, Manchester", type: "Main Card", past: true },
+      { date: "2026-03-20", label: "20. März 2026", name: "Cage Warriors 203", location: "Indigo at The O2, London", type: "Main Card", past: true },
+      { date: "2026-04-11", label: "11. April 2026", name: "Cage Warriors 204", location: "PalaPellicone, Rom", type: "Main Card", past: true },
+      { date: "2026-04-25", label: "25. April 2026", name: "Cage Warriors 205", location: "Braehead Arena, Glasgow", type: "Main Card", past: true },
+      { date: "2026-06-19", label: "19. Juni 2026", name: "Cage Warriors 206", location: "BEC Arena, Manchester", type: "Main Card", past: true },
+      { date: "2026-06-20", label: "20. Juni 2026", name: "Cage Warriors 207", location: "BEC Arena, Manchester", type: "Main Card", past: true },
+      { date: "2026-06-27", label: "27. Juni 2026", name: "Cage Warriors 208", location: "Indigo at The O2, London", type: "Main Card", past: true },
+      { date: "2026-07-04", label: "4. Juli 2026", name: "Cage Warriors 209", location: "Vertu Motors Arena, Newcastle", type: "Main Card", past: true }
+    ]
+  },
+  {
+    id: "oktagon",
+    number: "07",
+    name: "OKTAGON MMA",
+    shortName: "OKTAGON",
+    descriptor: "Mitteleuropas Nummer eins · Deutschland, Tschechien, Slowakei",
+    sourceUrl: "https://oktagonmma.com/events",
+    note: "Die Serie mit den meisten Terminen in Deutschland: Frankfurt, München, Hannover, Dortmund und Köln stehen 2026 ebenso im Kalender wie Prag, Brünn und Bratislava.",
+    events: [
+      { date: "2026-09-12", label: "12. September 2026", name: "OKTAGON 93: Roušal vs. Mågård", location: "Winning Group Arena, Brünn", type: "Main Card" },
+      { date: "2026-09-26", label: "26. September 2026", name: "OKTAGON 94: The Biggest Comeback Ever", location: "Deutsche Bank Park, Frankfurt", type: "Stadion-Event", top: true },
+      { date: "2026-10-17", label: "17. Oktober 2026", name: "OKTAGON 95: Karlovy Vary", location: "Mattoni Arena, Karlsbad", type: "Main Card" },
+      { date: "2026-10-31", label: "31. Oktober 2026", name: "OKTAGON 96: Gogoladze vs. Klinkhammer", location: "SAP Garden, München", type: "Main Card" },
+      { date: "2026-11-07", label: "7. November 2026", name: "OKTAGON 97: Severino vs. Holzer", location: "ZAG-Arena, Hannover", type: "Main Card" },
+      { date: "2026-11-21", label: "21. November 2026", name: "OKTAGON 98: Třinec", location: "Werk Arena, Třinec", type: "Main Card" },
+      { date: "2026-12-05", label: "5. Dezember 2026", name: "OKTAGON 99: Dortmund", location: "Westfalenhalle, Dortmund", type: "Main Card" },
+      { date: "2026-12-29", label: "29. Dezember 2026", name: "OKTAGON 100: Prag", location: "O2 Arena, Prag", type: "Jubiläumsshow" },
+      { date: "2026-01-17", label: "17. Januar 2026", name: "OKTAGON 82: Engizek vs. Jotko", location: "PSD Bank Dome, Düsseldorf", type: "Main Card", past: true },
+      { date: "2026-01-31", label: "31. Januar 2026", name: "OKTAGON 83: Samsonidse vs. Machaev", location: "Schleyer-Halle, Stuttgart", type: "Main Card", past: true },
+      { date: "2026-02-14", label: "14. Februar 2026", name: "OKTAGON 84: Paradeiser vs. Brito", location: "Ostravar Aréna, Ostrava", type: "Main Card", past: true },
+      { date: "2026-03-07", label: "7. März 2026", name: "OKTAGON 85: Severino vs. Kakhorov", location: "Barclays Arena, Hamburg", type: "Main Card", past: true },
+      { date: "2026-04-11", label: "11. April 2026", name: "OKTAGON 86: Materla vs. Jungwirth", location: "Enea Arena, Stettin", type: "Main Card", past: true },
+      { date: "2026-04-25", label: "25. April 2026", name: "OKTAGON 87: Szabová vs. Fernandes", location: "Home Credit Arena, Liberec", type: "Main Card", past: true },
+      { date: "2026-05-16", label: "16. Mai 2026", name: "OKTAGON 88: Holzer vs. Taha", location: "ZAG-Arena, Hannover", type: "Main Card", past: true },
+      { date: "2026-06-09", label: "9. Juni 2026", name: "OKTAGON 89: Severino vs. Zhumagulov", location: "Tipos Aréna, Bratislava", type: "Main Card", past: true },
+      { date: "2026-06-20", label: "20. Juni 2026", name: "OKTAGON 90: Fleury vs. Aras", location: "Uber Arena, Berlin", type: "Main Card", past: true },
+      { date: "2026-07-11", label: "11. Juli 2026", name: "OKTAGON 91: Engizek vs. Jotko 2", location: "Lanxess Arena, Köln", type: "Main Card", past: true },
+      { date: "2026-08-01", label: "1. August 2026", name: "OKTAGON 92: Szabová vs. Pudilová", location: "Štvanice, Prag", type: "Open Air", past: true }
+    ]
+  },
+  {
+    id: "smesh-mma",
+    number: "08",
+    name: "SMESH MMA",
+    shortName: "SMESH",
+    descriptor: "Deutsche Serie · Nürnberg und Ludwigsburg",
+    sourceUrl: "https://smesh-mma.de/",
+    note: "Die jüngste deutsche MMA-Serie kämpft unter anderem in der Kia Metropol Arena in Nürnberg – der einzige Verband dieser Liste mit fester Station in der Metropolregion.",
+    emptyTitle: "Nächster Termin noch nicht veröffentlicht.",
+    emptyText: "Sobald SMESH die nächste Fight Night bestätigt, steht der Termin hier.",
+    events: [
+      { date: "2026-02-07", label: "7. Februar 2026", name: "SMESH MMA 2", location: "Kia Metropol Arena, Nürnberg", type: "Fight Night", past: true },
+      { date: "2026-05-02", label: "2. Mai 2026", name: "SMESH MMA 3", location: "MHP Arena, Ludwigsburg", type: "Fight Night", past: true }
+    ]
+  },
+  {
+    id: "aca",
+    number: "09",
+    name: "ACA",
+    shortName: "ACA",
+    descriptor: "Absolute Championship Akhmat · Osteuropa & Zentralasien",
+    sourceUrl: "https://acamma.com/",
+    note: "Events in Russland, Belarus, Usbekistan und Kasachstan. Für Oktober ist zusätzlich eine Show in Duschanbe, Tadschikistan, angekündigt – ohne festen Termin.",
+    events: [
+      { date: "2026-09-12", label: "12. September 2026", name: "ACA 207: Goncharov vs. Almeida", location: "Basket-Hall, Krasnodar", type: "Main Card" },
+      { date: "2026-01-09", label: "9. Januar 2026", name: "ACA 198: Omarov vs. Suleymanov 2", location: "Grozny, Russland", type: "Main Card", past: true },
+      { date: "2026-01-16", label: "16. Januar 2026", name: "ACA 199: Frolov vs. Emeev", location: "Krasnodar, Russland", type: "Main Card", past: true },
+      { date: "2026-02-06", label: "6. Februar 2026", name: "ACA 200: Gasanov vs. Tumenov", location: "Megasport, Moskau", type: "Jubiläumsshow", past: true },
+      { date: "2026-03-27", label: "27. März 2026", name: "ACA 201: Silva vs. Podlesniy", location: "Falcon Club Arena, Minsk", type: "Main Card", past: true },
+      { date: "2026-04-12", label: "12. April 2026", name: "ACA 202: Johnson vs. Kornilov", location: "Sankt Petersburg, Russland", type: "Main Card", past: true },
+      { date: "2026-05-08", label: "8. Mai 2026", name: "ACA 203: Gaforov vs. Akopyan", location: "Humo Arena, Taschkent", type: "Main Card", past: true },
+      { date: "2026-06-19", label: "19. Juni 2026", name: "ACA 204: Shlemenko vs. Dipchikov", location: "G-Drive Arena, Omsk", type: "Main Card", past: true },
+      { date: "2026-07-17", label: "17. Juli 2026", name: "ACA 205: Magomedov vs. Gasanov", location: "Almaty Arena, Almaty", type: "Main Card", past: true },
+      { date: "2026-08-15", label: "15. August 2026", name: "ACA 206: Vakhaev vs. Aliakbari", location: "CSKA Arena, Moskau", type: "Main Card", past: true }
+    ]
+  },
+  {
+    id: "lfa",
+    number: "10",
+    name: "LFA",
+    shortName: "LFA",
+    descriptor: "Legacy Fighting Alliance · USA & Brasilien",
+    sourceUrl: "https://www.lfa.com/events/",
+    note: "Die wichtigste Talentschmiede Nordamerikas: Wer hier gewinnt, steht oft kurz vor einem UFC-Vertrag.",
+    events: [
+      { date: "2026-08-21", label: "21. August 2026", name: "LFA 239: Mecate vs. Exposito", location: "Ventura, USA", type: "Main Card" },
+      { date: "2026-08-28", label: "28. August 2026", name: "LFA 240: Sanders vs. Gomez", location: "Clarksville, USA", type: "Main Card" },
+      { date: "2026-09-11", label: "11. September 2026", name: "LFA 241", location: "Belo Horizonte, Brasilien", type: "Main Card" },
+      { date: "2026-09-18", label: "18. September 2026", name: "LFA 242: Lozej vs. Bittencourt", location: "Prior Lake, USA", type: "Main Card" }
+    ]
+  }
+];
+
+const mmaCalendarFaq = [
+  {
+    question: "Welche MMA-Wettkämpfe stehen 2026 als Nächstes an?",
+    answer:
+      "Die nächsten bestätigten Termine stehen oben in der Übersicht „Top-Kämpfe“ – aktuell unter anderem Super RIZIN 5 am 10. September, UFC 331 am 19. September, OKTAGON 94 im Deutsche Bank Park in Frankfurt am 26. September und UFC 333 mit Volkanovski gegen Evloev am 24. Oktober. Der Countdown an jedem Termin zeigt, wie viele Wochen bis zum Kampftag bleiben."
+  },
+  {
+    question: "Welche MMA-Verbände gibt es und wie unterscheiden sie sich?",
+    answer:
+      "UFC ist die weltweite Spitze, PFL arbeitet mit Turnierformat und regionalen Ablegern, ONE Championship kombiniert MMA mit Muay Thai und Kickboxen, RIZIN prägt Japan, OKTAGON füllt in Mitteleuropa ganze Arenen und Stadien, Cage Warriors ist Europas Sprungbrett in die UFC, ACA dominiert Osteuropa und Zentralasien, LFA gilt als US-Talentschmiede und SMESH MMA ist die junge deutsche Serie. Bellator ruht seit Januar 2025, die Kämpfer starten unter PFL."
+  },
+  {
+    question: "Gibt es 2026 MMA-Events in Deutschland?",
+    answer:
+      "Ja, und zwar reichlich: OKTAGON MMA kämpft 2026 unter anderem in Frankfurt (Deutsche Bank Park), München, Hannover, Dortmund, Köln, Berlin, Hamburg, Stuttgart und Düsseldorf. Dazu kommt die deutsche SMESH-Serie mit Terminen in der Kia Metropol Arena in Nürnberg und in Ludwigsburg."
+  },
+  {
+    question: "Was bedeutet die Angabe „Weeks out“?",
+    answer:
+      "Weeks out zeigt, wie viele Wochen noch bis zum jeweiligen Kampftag bleiben. Der Wert wird täglich neu berechnet. In der letzten Woche zählt die Anzeige in Tagen, am Kampftag selbst steht dort „Fight Day“."
+  },
+  {
+    question: "Wo kann man die Kämpfe in Deutschland sehen?",
+    answer:
+      "Die Übertragungsrechte unterscheiden sich je Organisation und ändern sich regelmäßig. Verbindlich ist immer die Ankündigung des jeweiligen Verbandes; jeder Kalenderblock verlinkt deshalb direkt auf die offizielle Quelle."
+  },
+  {
+    question: "Wie oft wird der MMA-Kalender aktualisiert?",
+    answer:
+      "Die Termine werden gegen die offiziellen Kalender der Organisationen geprüft und ergänzt, sobald neue Events bestätigt sind. Kurzfristige Verschiebungen, Verletzungen und Kartenänderungen sind im MMA üblich – deshalb vor Reise oder Ticketkauf immer noch einmal an der Quelle gegenprüfen."
+  }
+];
+
+function mmaCompetitionCard(event) {
+  return `
+    <article class="bbcal-event${event.past ? " bbcal-event--past" : ""}">
+      <time class="bbcal-event__date" datetime="${event.date}">${event.label}</time>
+      <div class="bbcal-event__body">
+        <span class="bbcal-event__type">${event.type}</span>
+        <h3>${event.name}</h3>
+        <p><span aria-hidden="true">⌖</span>${event.location}</p>
+      </div>
+      <div class="bbcal-event__meta">
+        <span class="event-countdown" data-weeks-out data-event-date="${event.date}" data-countdown-day="FIGHT" data-countdown-day-label="DAY" data-countdown-over="EVENT" data-countdown-over-label="OVER" aria-label="Countdown wird berechnet"><strong>–</strong><small>Weeks out</small></span>
+        <span class="bbcal-event__status">${event.past ? "Ausgetragen" : "Bestätigt"}</span>
+      </div>
+    </article>
+  `;
+}
+
+function mmaCalendarPage() {
+  const allEvents = mmaCalendarSources.flatMap((source) =>
+    source.events.map((event) => ({ ...event, source }))
+  );
+  const upcomingEvents = allEvents
+    .filter((event) => !event.past)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  const pastEvents = allEvents.filter((event) => event.past);
+  const topFights = upcomingEvents.filter((event) => event.top).slice(0, 4);
+
+  const sourceNavigation = mmaCalendarSources
+    .map(
+      (source) => `
+        <a class="bbcal-source-link" href="#${source.id}">
+          <span>${source.number}</span>
+          <strong>${source.shortName || source.name}</strong>
+          <small>${
+            source.events.filter((event) => !event.past).length
+              ? `${source.events.filter((event) => !event.past).length} ${
+                  source.events.filter((event) => !event.past).length === 1 ? "kommender Termin" : "kommende Termine"
+                }`
+              : source.events.length
+                ? "2026-Ergebnisse"
+                : "Offiziellen Kalender öffnen"
+          }</small>
+          <b aria-hidden="true">↓</b>
+        </a>
+      `
+    )
+    .join("");
+
+  const sectionFor = (source) => {
+    const upcoming = source.events.filter((event) => !event.past);
+    const completed = source.events.filter((event) => event.past);
+    return `
+      <section class="bbcal-federation" id="${source.id}" data-reveal>
+        <header class="bbcal-federation__header">
+          <span class="bbcal-federation__number">${source.number}</span>
+          <div>
+            <p class="eyebrow">${source.descriptor}</p>
+            <h2>${source.name}</h2>
+            <p>${source.note}</p>
+          </div>
+          <a href="${source.sourceUrl}" target="_blank" rel="noopener noreferrer">
+            <span>Offizielle Quelle</span><span aria-hidden="true">↗</span>
+          </a>
+        </header>
+        ${
+          upcoming.length
+            ? `<div class="bbcal-event-list">${upcoming.map(mmaCompetitionCard).join("")}</div>`
+            : `<div class="boxcal-empty"><strong>${source.emptyTitle || "Noch kein weiterer Termin veröffentlicht."}</strong><span>${source.emptyText || `Neue ${source.shortName || source.name}-Termine ergänzen wir, sobald sie offiziell bestätigt sind.`}</span></div>`
+        }
+        ${
+          completed.length
+            ? `<details class="bbcal-archive">
+                <summary><span>Bereits ausgetragen in 2026</span><strong>${completed.length} Termine</strong></summary>
+                <div class="bbcal-event-list bbcal-event-list--archive">
+                  ${completed.map(mmaCompetitionCard).join("")}
+                </div>
+              </details>`
+            : ""
+        }
+      </section>
+    `;
+  };
+
+  const itemListSchema = {
+    "@type": "ItemList",
+    "@id": `${site.url}/mma-wettkaempfe-2026/#mmakalender`,
+    name: "MMA Wettkämpfe 2026 – alle Termine der wichtigsten Organisationen",
+    numberOfItems: allEvents.length,
+    itemListElement: allEvents
+      .slice()
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .map((event, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "SportsEvent",
+          name: `${event.name} – ${event.source.name}`,
+          startDate: event.date,
+          eventStatus: event.past
+            ? "https://schema.org/EventCompleted"
+            : "https://schema.org/EventScheduled",
+          location: { "@type": "Place", name: event.location },
+          organizer: {
+            "@type": "Organization",
+            name: event.source.name,
+            url: event.source.sourceUrl
+          }
+        }
+      }))
+  };
+
+  const content = `
+    <section class="bbcal-hero mmacal-hero">
+      <img class="bbcal-hero__image" src="/assets/images/dominik-gym-grey.webp" width="1800" height="1351" alt="Dominik Dörfl im Trainingsbereich – MMA Wettkampftermine 2026 im Überblick"${imageLoadingAttributes({ eager: true })}>
+      <div class="bbcal-hero__scrim" aria-hidden="true"></div>
+      <div class="section-shell bbcal-hero__inner">
+        <div class="bbcal-hero__copy">
+          <p class="eyebrow" data-reveal>Unabhängiger Kalender · UFC · PFL · ONE · OKTAGON</p>
+          <h1 data-reveal>MMA<br>Wettkämpfe <span>2026.</span></h1>
+          <p class="bbcal-hero__lead" data-reveal>Alle bestätigten Termine der zehn wichtigsten MMA-Organisationen in einer Übersicht – von der UFC über PFL, ONE Championship und RIZIN bis zu OKTAGON, Cage Warriors, ACA, LFA und der deutschen SMESH-Serie. Mit Countdown bis zum Kampftag.</p>
+          <div class="bbcal-hero__actions" data-reveal>
+            <a class="button button--primary" href="#top-kaempfe"><span>Top-Kämpfe ansehen</span><span aria-hidden="true">↓</span></a>
+            <span class="bbcal-hero__updated">Stand: 20. August 2026</span>
+          </div>
+        </div>
+        <dl class="bbcal-hero__facts" data-reveal>
+          <div><dt>${mmaCalendarSources.length}</dt><dd>Organisationen</dd></div>
+          <div><dt>${upcomingEvents.length}</dt><dd>kommende Events</dd></div>
+          <div><dt>${pastEvents.length}</dt><dd>bereits ausgetragen</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section mmacal-top" id="top-kaempfe">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-section-heading" data-reveal>
+          <p class="eyebrow">Top-Kämpfe</p>
+          <h2>Die Abende, auf die alles zuläuft.</h2>
+          <p>Vier Termine, die das MMA-Jahr 2026 prägen – mit Countdown bis zum Kampftag.</p>
+        </div>
+        <div class="mmacal-top__grid">
+          ${topFights
+            .map(
+              (event, index) => `
+                <a class="mmacal-top__card" href="#${event.source.id}" data-reveal>
+                  <span class="mmacal-top__index" aria-hidden="true">0${index + 1}</span>
+                  <span class="event-countdown mmacal-top__countdown" data-weeks-out data-event-date="${event.date}" data-countdown-day="FIGHT" data-countdown-day-label="DAY" data-countdown-over="EVENT" data-countdown-over-label="OVER" aria-label="Countdown wird berechnet"><strong>–</strong><small>Weeks out</small></span>
+                  <span class="mmacal-top__promo">${event.source.shortName || event.source.name}</span>
+                  <h3>${event.name}</h3>
+                  <time datetime="${event.date}">${event.label}</time>
+                  <p>${event.location}</p>
+                  <span class="mmacal-top__arrow" aria-hidden="true">→</span>
+                </a>
+              `
+            )
+            .join("")}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted bbcal-intro" id="termine">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-intro__head" data-reveal>
+          <div>
+            <p class="eyebrow">Ein Kalender. Zehn Organisationen.</p>
+            <h2>Ein Sport,<br><span>viele Bühnen.</span></h2>
+          </div>
+          <div class="bbcal-intro__copy">
+            <p>MMA hat keine gemeinsame Weltliga. Jede Organisation plant ihr eigenes Kampfjahr, mit eigenen Titeln, eigenen Regeln im Detail und eigener Übertragung. Diese Übersicht bündelt die Termine und führt bei jedem Block direkt zur offiziellen Quelle.</p>
+            <p><strong>Wichtig:</strong> Kampfansetzungen ändern sich im MMA häufiger als in jeder anderen Sportart. Vor Reise, Ticketkauf oder Übertragung immer beim Veranstalter gegenprüfen.</p>
+          </div>
+        </div>
+        <nav class="bbcal-source-navigation" aria-label="Direkt zu einer Organisation" data-reveal>
+          <div class="bbcal-source-group">
+            <p><span>01</span> Alle Organisationen</p>
+            <div class="bbcal-source-grid">${sourceNavigation}</div>
+          </div>
+        </nav>
+      </div>
+    </section>
+
+    <section class="section bbcal-directory" id="mmakalender">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-section-heading" data-reveal>
+          <p class="eyebrow">MMA-Kalender 2026</p>
+          <h2>Alle Termine nach Organisation.</h2>
+          <p>Bestätigte Kampfabende, sortiert nach Verband. Bereits ausgetragene Events bleiben im Archiv sichtbar, damit die Seite das ganze Wettkampfjahr abbildet.</p>
+          <p class="bbcal-weeks-note"><span aria-hidden="true">↻</span><strong>Weeks out aktualisiert sich täglich:</strong> So siehst du sofort, wie viele Wochen bis zum jeweiligen Kampftag bleiben.</p>
+        </div>
+        <div class="bbcal-federations">
+          ${mmaCalendarSources.map(sectionFor).join("")}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted bbcal-method">
+      <div class="section-shell bbcal-method__grid">
+        <div data-reveal>
+          <p class="eyebrow">Redaktioneller Stand</p>
+          <h2>Unabhängig gesammelt.<br>Offiziell gegengeprüft.</h2>
+        </div>
+        <div class="bbcal-method__copy" data-reveal>
+          <p>Die Termine wurden am <strong>20. August 2026</strong> mit den offiziellen Kalendern und Ergebnisdiensten der zehn Organisationen abgeglichen. Angekündigte Events ohne festen Termin – etwa die ACA-Show in Duschanbe – stehen im jeweiligen Verbandstext statt als Datum.</p>
+          <p>Camp Dörfl ist weder Veranstalter noch Ticketanbieter. Maßgeblich sind ausschließlich die verlinkten Originalquellen. Fehlt ein Termin oder wurde etwas verschoben, genügt ein kurzer Hinweis.</p>
+          <a class="button button--secondary-light" href="${contactHref()}"><span>Änderung melden</span><span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    ${appTrafficPromo({
+      eyebrow: "Vom Kampftermin zur Vorbereitung",
+      text: "Ein Kampftermin verlangt Kraft, Kondition, Gewichtsmanagement und Regeneration in einem Plan. Genau dafür ist die Camp Dörfl App gebaut.",
+      ref: "mma-kalender"
+    })}
+
+    <section class="section bbcal-faq">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Fragen zum MMA-Jahr",
+          title: "Was vor dem Kampftermin zählt.",
+          text: "Der Kalender schafft Orientierung. Karten, Tickets und Übertragung bleiben Sache der jeweiligen Organisation."
+        })}
+        ${faq(mmaCalendarFaq)}
+      </div>
+    </section>
+
+    ${ctaSection({
+      eyebrow: "Performance für den Käfig",
+      title: "Der Termin steht. Die Form entsteht davor.",
+      text:
+        "Kraft, Kondition, Körperkomposition und Regeneration brauchen eine Struktur, die zum Kampfsporttraining und zum echten Alltag passt.",
+      primary: { label: "Performance anfragen", href: contactHref("premium-training") },
+      secondary: { label: "Personal Training ansehen", href: "/personal-trainer-nuernberg/" }
+    })}
+  `;
+
+  return layout({
+    path: "/mma-wettkaempfe-2026/",
+    title: "MMA Wettkämpfe 2026: UFC, PFL, ONE &amp; alle Termine",
+    description:
+      "MMA Wettkämpfe 2026: alle Termine von UFC, PFL, ONE, OKTAGON, RIZIN, Cage Warriors, ACA, LFA und SMESH – mit Countdown bis zum Kampftag.",
+    keywords: [
+      "MMA Wettkämpfe 2026",
+      "MMA Termine 2026",
+      "MMA Kalender 2026",
+      "UFC Termine 2026",
+      "UFC Kalender 2026",
+      "PFL Termine 2026",
+      "ONE Championship 2026",
+      "RIZIN 2026",
+      "Cage Warriors 2026",
+      "ACA MMA 2026",
+      "LFA Termine 2026",
+      "MMA Events Deutschland 2026",
+      "Oktagon MMA Termine 2026",
+      "Oktagon 94 Frankfurt",
+      "SMESH MMA Nürnberg"
+    ],
+    // Die Kalender-Optik hängt an .page-bodybuilding-calendar; sie wird hier wie
+    // bei Boxen und Triathlon bewusst mitgenommen.
+    bodyClass: "page-premium page-bodybuilding-calendar page-mma-calendar",
+    pageName: "MMA Wettkämpfe 2026",
+    pageType: "CollectionPage",
+    dateModified: "2026-08-20",
+    socialImage: "/assets/images/dominik-gym-grey-social.jpg",
+    socialImageAlt: "MMA Wettkämpfe 2026 – Termine aller wichtigen Organisationen",
+    extraStructuredData: [
+      itemListSchema,
+      faqSchema("/mma-wettkaempfe-2026/", mmaCalendarFaq)
     ],
     content
   });
@@ -7370,11 +8334,37 @@ const triathlonCalendarFaq = [
     question: "Sind Anmeldung und Termin verbindlich?",
     answer:
       "Nein. Ausschreibung, Startplätze, Strecken, Altersklassen und mögliche Terminänderungen müssen immer beim verlinkten Veranstalter oder Verband geprüft werden."
+  },
+  {
+    question: "Welche Triathlon-Distanzen gibt es?",
+    answer:
+      "Der Volkstriathlon liegt meist bei rund 500 Metern Schwimmen, 20 Kilometern Rad und 5 Kilometern Laufen. Der Sprint umfasst 750 Meter, 20 und 5 Kilometer, die olympische Distanz 1,5 Kilometer, 40 und 10 Kilometer. Die Mitteldistanz entspricht 1,9 Kilometern, 90 und 21,1 Kilometern, die Langdistanz 3,8 Kilometern, 180 und 42,2 Kilometern."
+  },
+  {
+    question: "Womit sollte ich als Einsteiger beginnen?",
+    answer:
+      "Mit einem Volks- oder Sprinttriathlon. Die Schwimmstrecke bleibt überschaubar, der Wettkampf dauert unter anderthalb Stunden, und der Ablauf mit Wechselzone lässt sich ohne Spezialausrüstung kennenlernen. Viele Veranstaltungen im Kalender bieten mehrere Distanzen am selben Tag an."
+  },
+  {
+    question: "Wann läuft die deutsche Triathlon-Saison?",
+    answer:
+      "Der Kern liegt zwischen Mai und September, weil die Wassertemperaturen im Freiwasser erst dann verlässlich hoch genug sind. Einzelne Hallentriathlons und Duathlon-Formate finden im Frühjahr statt. Ab Oktober verlagert sich der Kalender ins Ausland."
+  },
+  {
+    question: "Was ist der Unterschied zwischen Ironman und Langdistanz?",
+    answer:
+      "Die Distanzen sind identisch: 3,8 Kilometer Schwimmen, 180 Kilometer Rad und ein Marathon. Ironman ist dabei ein geschützter Markenname einer bestimmten Rennserie, Langdistanz die neutrale Bezeichnung für dasselbe Format. Beide stehen im Kalender."
+  },
+  {
+    question: "Wie lange dauert die Vorbereitung auf eine Mitteldistanz?",
+    answer:
+      "Aus der Coaching-Praxis: Wer in allen drei Disziplinen Grundlagen hat, plant vier bis sechs Monate. Der begrenzende Faktor ist fast immer das Schwimmen, weil Technik dort mehr zählt als Ausdauer. Ohne Freiwassererfahrung sollte diese vor dem Wettkampf mehrfach geübt werden — Neoprenanzug und Massenstart verändern das Schwimmgefühl deutlich."
   }
 ];
 
 function triathlonEventCard(event) {
-  const past = event.date < "2026-08-01";
+  // Gleicher Stichtag wie in der Seite: heute, nicht ein fest eingetragenes Datum.
+  const past = (event.endDate ?? event.date) < new Date().toISOString().slice(0, 10);
   const location = [event.city, event.region].filter(Boolean).join(" · ");
   return `
     <article class="sportcal-event${past ? " sportcal-event--past" : ""}"
@@ -7390,6 +8380,7 @@ function triathlonEventCard(event) {
         <p><span aria-hidden="true">⌖</span>${location}</p>
       </div>
       <div class="sportcal-event__meta">
+        <span class="event-countdown" data-weeks-out data-event-date="${event.date}" aria-label="Countdown wird berechnet"><strong>–</strong><small>Weeks out</small></span>
         <span class="sportcal-event__distance" data-event-distance hidden></span>
         <span class="sportcal-event__status">${past ? "Ausgetragen" : "Bestätigt"}</span>
         <a href="${event.url}" target="_blank" rel="noopener noreferrer" aria-label="Offizielle Quelle für ${event.name}">Quelle ↗</a>
@@ -7401,8 +8392,13 @@ function triathlonEventCard(event) {
 function triathlonCalendarPage() {
   const allEvents = [...dtuTriathlonEvents2026, ...internationalTriathlonEvents2026]
     .sort((a, b) => a.date.localeCompare(b.date) || a.name.localeCompare(b.name));
-  const upcomingEvents = allEvents.filter((event) => event.date >= "2026-08-01");
-  const pastEvents = allEvents.filter((event) => event.date < "2026-08-01");
+  // Der Stichtag wird bei jedem Build gesetzt. Vorher stand hier ein festes
+  // Datum — dadurch galten längst gelaufene Termine weiter als kommend.
+  // Mehrtägige Veranstaltungen zählen bis zum Ende ihres letzten Tages.
+  const heute = new Date().toISOString().slice(0, 10);
+  const gelaufen = (event) => (event.endDate ?? event.date) < heute;
+  const upcomingEvents = allEvents.filter((event) => !gelaufen(event));
+  const pastEvents = allEvents.filter(gelaufen);
   const internationalCount = allEvents.filter((event) => event.country !== "DE").length;
   const calendarGroupsFor = (eventList, archive = false) => {
     const grouped = new Map();
@@ -7451,7 +8447,7 @@ function triathlonCalendarPage() {
         name: event.name,
         startDate: event.date,
         ...(event.endDate ? { endDate: event.endDate } : {}),
-        eventStatus: event.date < "2026-08-01" ? "https://schema.org/EventCompleted" : "https://schema.org/EventScheduled",
+        eventStatus: gelaufen(event) ? "https://schema.org/EventCompleted" : "https://schema.org/EventScheduled",
         location: {
           "@type": "Place",
           name: event.city,
@@ -7464,7 +8460,7 @@ function triathlonCalendarPage() {
 
   const content = `
     <section class="bbcal-hero trical-hero">
-      <img class="bbcal-hero__image" src="/assets/images/home-hero-ironman-interview.webp" alt="Triathlet Dominik Dörfl im Zielbereich eines Langdistanz-Triathlons"${imageLoadingAttributes({ eager: true })}>
+      <img class="bbcal-hero__image" src="/assets/images/home-hero-ironman-interview.webp" width="1800" height="960" alt="Triathlet Dominik Dörfl im Zielbereich eines Langdistanz-Triathlons"${imageLoadingAttributes({ eager: true })}>
       <div class="bbcal-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell bbcal-hero__inner">
         <div class="bbcal-hero__copy">
@@ -7505,7 +8501,7 @@ function triathlonCalendarPage() {
           <label>
             <span>Suchradius</span>
             <select data-tri-radius>
-              <option value="20">20 km</option><option value="50" selected>50 km</option><option value="100">100 km</option><option value="300">300 km</option>
+              <option value="20">20 km</option><option value="50" selected>50 km</option><option value="100">100 km</option><option value="300">300 km</option><option value="any">beliebig</option>
             </select>
           </label>
           <label>
@@ -7566,15 +8562,15 @@ function triathlonCalendarPage() {
       title: "Der Wettkampf steht. Jetzt braucht die Vorbereitung ein System.",
       text: "Training, Kraft, Ernährung und Renntaktik werden dann stark, wenn sie nicht nebeneinander laufen, sondern zusammenarbeiten.",
       primary: { label: "Vorbereitung anfragen", href: contactHref("premium-training") },
-      secondary: { label: "Personal Training ansehen", href: "/personal-trainer-nürnberg/" }
+      secondary: { label: "Personal Training ansehen", href: "/personal-trainer-nuernberg/" }
     })}
   `;
 
   return layout({
     path: "/triathlon-kalender-2026/",
-    title: "Triathlon Kalender 2026 nach PLZ & Radius | Camp Dörfl",
-    description: `Triathlon Kalender 2026 mit ${allEvents.length} Rennen: alle 351 DTU-Triathlons in Deutschland plus bestätigte Termine in acht europäischen Ländern. Suche nach PLZ, Radius und Land.`,
-    keywords: ["Triathlon Kalender 2026", "Triathlon Termine 2026", "Triathlon in meiner Nähe", "Triathlon Deutschland 2026", "Ironman Termine 2026", "Triathlon Österreich 2026"],
+    title: "Triathlon Termine 2026: Kalender Deutschland | Camp Dörfl",
+    description: `Triathlon Termine 2026 für Deutschland und acht weitere Länder: ${allEvents.length} Rennen aus dem DTU-Kalender, von Sprint bis Langdistanz, suchbar nach PLZ und Umkreis.`,
+    keywords: ["Triathlon Termine 2026", "Triathlon Kalender 2026", "Triathlon Deutschland 2026", "Triathlon in meiner Nähe", "Ironman Termine 2026", "Sprint Triathlon 2026", "Mitteldistanz 2026", "Triathlon Österreich 2026"],
     bodyClass: "page-premium page-bodybuilding-calendar page-triathlon-calendar",
     pageName: "Triathlon Kalender 2026",
     pageType: "CollectionPage",
@@ -7609,11 +8605,32 @@ const runningCalendarFaq = [
   {
     question: "Sind Termine und Anmeldung verbindlich?",
     answer: "Nein. Der Kalender dient der verbandsübergreifenden Orientierung. Terminänderungen, Strecken, Startplätze und Teilnahmebedingungen müssen immer über die direkt verlinkte offizielle Quelle geprüft werden."
+  },
+  {
+    question: "Wann finden 2026 die meisten Marathons statt?",
+    answer: "Die deutsche Laufsaison hat zwei Spitzen: das Frühjahr von April bis Juni und den Herbst von September bis Oktober. Die großen Stadtmarathons liegen fast alle im Herbst, weil die Temperaturen dann günstiger sind. Im Hochsommer dominieren kürzere Distanzen, Volksläufe und Trailformate."
+  },
+  {
+    question: "Wie lange vorher sollte ich mich anmelden?",
+    answer: "Bei großen Stadtmarathons sind Startplätze teils Monate im Voraus vergeben, einzelne Veranstaltungen arbeiten mit Verlosung. Regionale Volksläufe und Halbmarathons haben meist bis wenige Tage vorher Plätze, oft sogar Nachmeldung am Veranstaltungstag. Der Meldeschluss steht in der verlinkten Ausschreibung."
+  },
+  {
+    question: "Welche Distanz passt für den Einstieg?",
+    answer: "Für den ersten Wettkampf sind 5 oder 10 Kilometer der übliche Weg: Die Vorbereitung dauert Wochen statt Monate und das Verletzungsrisiko bleibt gering. Ein Halbmarathon ist ein realistisches Ziel, wenn regelmäßiges Laufen über mehrere Monate steht. Für einen Marathon sollte die Halbmarathon-Distanz sicher sitzen."
+  },
+  {
+    question: "Was unterscheidet Mammutmarsch und Megamarsch von einem Ultralauf?",
+    answer: "Mammutmarsch und Megamarsch sind Wanderformate über 30 bis 100 Kilometer, bei denen Gehen ausdrücklich vorgesehen ist und die Zeit eine untergeordnete Rolle spielt. Ultraläufe der DUV sind Wettkämpfe über der Marathondistanz mit Wertung und Ergebnisliste. Beide stehen im Kalender und sind als eigene Kategorien filterbar."
+  },
+  {
+    question: "Wie viel Vorbereitungszeit braucht ein Marathon?",
+    answer: "Aus der Coaching-Praxis: Wer bereits regelmäßig läuft, plant zwölf bis sechzehn Wochen gezielte Vorbereitung ein. Ohne Laufgrundlage sind es eher sechs bis neun Monate, weil zuerst Grundlagenausdauer und Belastungsverträglichkeit aufgebaut werden müssen. Entscheidend ist nicht der längste Lauf, sondern die Zahl der Wochen ohne Unterbrechung."
   }
 ];
 
 function runningEventCard(event) {
-  const past = event.date < "2026-08-01";
+  // Gleicher Stichtag wie in der Seite: heute, nicht ein fest eingetragenes Datum.
+  const past = (event.endDate ?? event.date) < new Date().toISOString().slice(0, 10);
   const searchValue = [event.name, event.city, event.postalCode, event.distance, event.source]
     .filter(Boolean).join(" ").replaceAll('"', "&quot;");
   return `
@@ -7630,6 +8647,7 @@ function runningEventCard(event) {
         <p><span aria-hidden="true">⌖</span>${event.postalCode ? `${event.postalCode} ` : ""}${event.city}</p>
       </div>
       <div class="sportcal-event__meta">
+        <span class="event-countdown" data-weeks-out data-event-date="${event.date}" aria-label="Countdown wird berechnet"><strong>–</strong><small>Weeks out</small></span>
         <span class="sportcal-event__distance" data-run-distance hidden></span>
         <span class="sportcal-event__status">${past ? "Ausgetragen" : "Bestätigt"}</span>
         <a href="${event.url}" target="_blank" rel="noopener noreferrer" aria-label="Offizielle Quelle für ${event.name}">Quelle ↗</a>
@@ -7641,8 +8659,13 @@ function runningCalendarPage() {
   const categoryOrder = ["half", "marathon", "mammut", "mega", "ultra"];
   const events = [...runningEvents2026].sort((a, b) => a.date.localeCompare(b.date) || a.name.localeCompare(b.name));
   const categoryCounts = Object.fromEntries(categoryOrder.map((category) => [category, events.filter((event) => event.category === category).length]));
-  const upcomingEvents = events.filter((event) => event.date >= "2026-08-01");
-  const pastEvents = events.filter((event) => event.date < "2026-08-01");
+  // Der Stichtag wird bei jedem Build gesetzt. Vorher stand hier ein festes
+  // Datum — dadurch galten längst gelaufene Termine weiter als kommend.
+  // Mehrtägige Veranstaltungen zählen bis zum Ende ihres letzten Tages.
+  const heute = new Date().toISOString().slice(0, 10);
+  const gelaufen = (event) => (event.endDate ?? event.date) < heute;
+  const upcomingEvents = events.filter((event) => !gelaufen(event));
+  const pastEvents = events.filter(gelaufen);
   const upcomingCount = upcomingEvents.length;
 
   const categoryNavigation = categoryOrder.map((category) => {
@@ -7699,7 +8722,7 @@ function runningCalendarPage() {
         name: event.name,
         startDate: event.date,
         ...(event.endDate ? { endDate: event.endDate } : {}),
-        eventStatus: event.date < "2026-08-01" ? "https://schema.org/EventCompleted" : "https://schema.org/EventScheduled",
+        eventStatus: gelaufen(event) ? "https://schema.org/EventCompleted" : "https://schema.org/EventScheduled",
         location: {
           "@type": "Place",
           name: event.city,
@@ -7712,7 +8735,7 @@ function runningCalendarPage() {
 
   const content = `
     <section class="bbcal-hero trical-hero runcal-hero">
-      <img class="bbcal-hero__image" src="/assets/images/home-hero-stadium-wide.webp" alt="Läufer und Moderator Dominik Dörfl im Stadion nach dem Zieleinlauf"${imageLoadingAttributes({ eager: true })}>
+      <img class="bbcal-hero__image" src="/assets/images/home-hero-stadium-wide.webp" width="1717" height="916" alt="Läufer und Moderator Dominik Dörfl im Stadion nach dem Zieleinlauf"${imageLoadingAttributes({ eager: true })}>
       <div class="bbcal-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell bbcal-hero__inner">
         <div class="bbcal-hero__copy">
@@ -7749,7 +8772,7 @@ function runningCalendarPage() {
 
         <form class="trical-filter runcal-filter" data-run-filter novalidate>
           <label><span>Eigene Postleitzahl</span><input type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="z. B. 90427" data-run-postcode></label>
-          <label><span>Suchradius</span><select data-run-radius><option value="20">20 km</option><option value="50" selected>50 km</option><option value="100">100 km</option><option value="300">300 km</option></select></label>
+          <label><span>Suchradius</span><select data-run-radius><option value="20">20 km</option><option value="50" selected>50 km</option><option value="100">100 km</option><option value="300">300 km</option><option value="any">beliebig</option></select></label>
           <label><span>Kategorie</span><select data-run-category><option value="" selected>Alle Laufwelten</option><option value="half">Halbmarathon</option><option value="marathon">Marathon</option><option value="mammut">Mammutmarsch</option><option value="mega">Megamarsch</option><option value="ultra">Ultra Running</option></select></label>
           <label><span>Event oder Ort</span><input type="search" autocomplete="off" placeholder="z. B. Berlin oder Trail" data-run-query></label>
           <button class="button button--primary trical-filter__submit" type="submit"><span>Passende Läufe finden</span><span aria-hidden="true">→</span></button>
@@ -7797,14 +8820,14 @@ function runningCalendarPage() {
       title: "Das Ziel steht. Jetzt braucht die Vorbereitung Struktur.",
       text: "Kraft, Lauftraining, Ernährung und Regeneration werden dann stark, wenn sie als ein System zusammenarbeiten.",
       primary: { label: "Vorbereitung anfragen", href: contactHref("premium-training") },
-      secondary: { label: "Personal Training ansehen", href: "/personal-trainer-nürnberg/" }
+      secondary: { label: "Personal Training ansehen", href: "/personal-trainer-nuernberg/" }
     })}
   `;
 
   return layout({
     path: "/laufkalender-2026/",
-    title: "Laufkalender 2026: Läufe nach PLZ & Radius | Camp Dörfl",
-    description: `Laufkalender 2026 mit ${events.length} deutschen Terminen: Halbmarathon, Marathon, Mammutmarsch, Megamarsch und Ultra Running. Suche nach PLZ, Radius, Ort und Kategorie.`,
+    title: "Laufkalender 2026: Marathon & Halbmarathon | Camp Dörfl",
+    description: `Marathon-, Halbmarathon- und Ultra-Termine 2026 in Deutschland: ${events.length} Läufe aus DLV, DUV, Mammutmarsch und Megamarsch, suchbar nach PLZ und Umkreis.`,
     keywords: ["Laufkalender 2026", "Läufe 2026 Deutschland", "Halbmarathon 2026", "Marathon 2026", "Mammutmarsch 2026", "Megamarsch 2026", "Ultralauf 2026", "Lauf in meiner Nähe"],
     bodyClass: "page-premium page-bodybuilding-calendar page-triathlon-calendar page-running-calendar",
     pageName: "Laufkalender 2026",
@@ -7820,36 +8843,53 @@ const golfCalendarFaq = [
   { question: "Welche Golfturniere sind für normale Clubspieler zugänglich?", answer: "Das hängt von Ausschreibung, Handicap-Index, Clubmitgliedschaft und Meldefrist ab. Der zentrale DGV-Turnierkalender bündelt Club-, Landesverbands- und DGV-Turniere und führt zur jeweiligen Anmeldung." },
   { question: "Wo finde ich Turniere meines Landesgolfverbandes?", answer: "Die Seite verlinkt alle zwölf Landesgolfverbände. Viele regionale Meisterschaften und offene Turniere erscheinen zusätzlich im zentralen Turnierkalender auf Golf.de." },
   { question: "Was enthält das Profi-Portal?", answer: "Das Profi-Portal bündelt Deutschland-Stopps internationaler Touren, die Pro Golf Tour sowie Turniere und Pro Days der PGA of Germany. Teilnahmebedingungen stehen jeweils beim Veranstalter." },
-  { question: "Sind Termine und Startberechtigungen verbindlich?", answer: "Nein. Diese Übersicht dient der Orientierung. Ausschreibung, Startberechtigung, Nenngeld, Meldeschluss und mögliche Änderungen sind ausschließlich an der offiziellen Quelle verbindlich." }
+  { question: "Sind Termine und Startberechtigungen verbindlich?", answer: "Nein. Diese Übersicht dient der Orientierung. Ausschreibung, Startberechtigung, Nenngeld, Meldeschluss und mögliche Änderungen sind ausschließlich an der offiziellen Quelle verbindlich." },
+  { question: "Wann sind die Golf-Majors 2026?", answer: "Die vier Herren-Majors: The Masters vom 9. bis 12. April in Augusta, die PGA Championship vom 14. bis 17. Mai im Aronimink Golf Club, die U.S. Open vom 18. bis 21. Juni in Shinnecock Hills und The Open vom 16. bis 19. Juli in Royal Birkdale. Die fünf Damen-Majors und der Solheim Cup stehen mit Datum und Austragungsort im Abschnitt Majors." },
+  { question: "Welche großen Turniere finden 2026 in Deutschland statt?", answer: "Die BMW International Open vom 1. bis 5. Juli im Golfclub München Eichenried bleibt das einzige Turnier der DP World Tour in Deutschland. Dazu kommen die German Challenge powered by VcG im Wittelsbacher Golfclub, die Amundi German Masters der Ladies European Tour sowie die VcG Open in Owingen-Überlingen, Köln und Neuhof." },
+  { question: "Was ist der Unterschied zwischen Major, Tour-Turnier und Verbandsmeisterschaft?", answer: "Majors sind die vier höchstbewerteten Profiturniere je Geschlecht und weltweit ausgeschrieben. Tour-Turniere gehören zu einer Serie wie der DP World Tour oder der HotelPlanner Tour und haben eigene Startberechtigungen. Verbandsmeisterschaften des DGV und der Landesverbände sind Amateurwettbewerbe mit Qualifikation über Handicap-Index, Rangliste oder Clubnominierung." },
+  { question: "Welches Handicap wird für ein Turnier gebraucht?", answer: "Es gibt keine allgemeine Grenze. Offene Clubturniere sind oft ohne Vorgabenbeschränkung ausgeschrieben, Landesverbands- und DGV-Meisterschaften verlangen einen niedrigen Handicap-Index oder eine Ranglistenplatzierung. Maßgeblich ist immer die Ausschreibung des jeweiligen Turniers." },
+  { question: "Wie melde ich mich für ein Turnier an?", answer: "Für Club- und Verbandsturniere läuft die Meldung in der Regel über den zentralen Turnierkalender auf Golf.de oder direkt über den ausrichtenden Club. Meldeschluss, Nenngeld und Startberechtigung stehen jeweils in der Ausschreibung; bei DGV-Meisterschaften kommt eine Qualifikation über die Rangliste dazu." },
+  { question: "Läuft die Turniersaison das ganze Jahr?", answer: "Nein. Die deutsche Turniersaison läuft im Kern von Ende April bis Oktober, in dieser Zeit findet nahezu jede Woche mindestens ein Leistungsturnier statt. Die internationalen Majors verteilen sich von April bis Anfang August." }
 ];
 
 function golfEventCard(event) {
-  const past = event.date < "2026-08-01";
+  // Gleicher Stichtag wie in der Seite: heute, nicht ein fest eingetragenes Datum.
+  const past = (event.endDate ?? event.date) < new Date().toISOString().slice(0, 10);
   return `
     <a class="golfcal-event${past ? " golfcal-event--past" : ""}" href="${event.url}" target="_blank" rel="noopener noreferrer">
       <time datetime="${event.date}">${calendarDateLabel(event)}</time>
       <span class="golfcal-event__type">${event.type}</span>
       <h3>${event.name}</h3>
       <p><span aria-hidden="true">⌖</span>${event.location}</p>
+      <span class="event-countdown" data-weeks-out data-event-date="${event.date}" aria-label="Countdown wird berechnet"><strong>–</strong><small>Weeks out</small></span>
       <span class="golfcal-event__link">Details & Quelle <b aria-hidden="true">↗</b></span>
     </a>`;
 }
 
 function golfCalendarPage() {
-  const amateurEvents = golfEvents2026.filter((event) => event.portal === "Amateur" && event.date >= "2026-08-01");
-  const amateurPastEvents = golfEvents2026.filter((event) => event.portal === "Amateur" && event.date < "2026-08-01");
-  const professionalEvents = golfEvents2026.filter((event) => event.portal === "Profi" && event.date >= "2026-08-01");
-  const professionalPastEvents = golfEvents2026.filter((event) => event.portal === "Profi" && event.date < "2026-08-01");
+  // Der Stichtag wird bei jedem Build gesetzt. Vorher stand hier ein festes
+  // Datum — dadurch galten längst gespielte Turniere weiter als kommend.
+  // Ein Turnier zählt bis zum Ende seines letzten Spieltags als laufend.
+  const heute = new Date().toISOString().slice(0, 10);
+  const gelaufen = (event) => (event.endDate ?? event.date) < heute;
+  const imPortal = (name, vergangen) =>
+    golfEvents2026.filter((event) => event.portal === name && gelaufen(event) === vergangen);
+  const amateurEvents = imPortal("Amateur", false);
+  const amateurPastEvents = imPortal("Amateur", true);
+  const professionalEvents = imPortal("Profi", false);
+  const professionalPastEvents = imPortal("Profi", true);
+  const majorEvents = imPortal("Major", false);
+  const majorPastEvents = imPortal("Major", true);
   const itemListSchema = {
     "@type": "ItemList",
     "@id": `${site.url}/golfturniere-2026/#turnierkalender`,
-    name: "Golfturniere 2026 in Deutschland – Amateur und Profi",
+    name: "Golfturniere 2026 – Majors, Deutschland-Stopps, Amateur und Profi",
     numberOfItems: golfEvents2026.length,
     itemListElement: golfEvents2026.map((event, index) => ({
       "@type": "ListItem", position: index + 1, item: {
         "@type": "SportsEvent", name: event.name, startDate: event.date,
         ...(event.endDate ? { endDate: event.endDate } : {}),
-        eventStatus: event.date < "2026-08-01" ? "https://schema.org/EventCompleted" : "https://schema.org/EventScheduled",
+        eventStatus: gelaufen(event) ? "https://schema.org/EventCompleted" : "https://schema.org/EventScheduled",
         location: { "@type": "Place", name: event.location }, url: event.url
       }
     }))
@@ -7857,7 +8897,7 @@ function golfCalendarPage() {
 
   const content = `
     <section class="bbcal-hero golfcal-hero">
-      <div class="golfcal-hero__graphic"><img src="/assets/images/golfturniere-hero.png" alt="Golfplatz in den Bergen mit Clubhaus, See und Grün im Abendlicht"${imageLoadingAttributes({ eager: true })}></div>
+      <div class="golfcal-hero__graphic"><img src="/assets/images/golfturniere-hero.webp" width="1717" height="916" alt="Golfplatz in den Bergen mit Clubhaus, See und Grün im Abendlicht"${imageLoadingAttributes({ eager: true })}></div>
       <div class="bbcal-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell bbcal-hero__inner">
         <div class="bbcal-hero__copy">
@@ -7880,11 +8920,11 @@ function golfCalendarPage() {
         <div class="golfcal-intro-layout">
           <div class="golfcal-intro-visual" data-reveal>
             <figure class="golfcal-intro-image">
-              <img src="/assets/images/golfturniere-schlaeger.jpg" alt="Detailaufnahme hochwertiger Golfschläger in einer Golftasche"${imageLoadingAttributes()}>
+              <img src="/assets/images/golfturniere-schlaeger.webp" width="1200" height="1800" alt="Detailaufnahme hochwertiger Golfschläger in einer Golftasche"${imageLoadingAttributes()}>
               <figcaption><span>Equipment & Präzision</span><strong>Bereit für die nächste Runde.</strong></figcaption>
             </figure>
             <figure class="golfcal-intro-person">
-              <img src="/assets/images/golfturniere-dominik.jpg" alt="Dominik Dörfl auf dem Golfplatz"${imageLoadingAttributes()}>
+              <img src="/assets/images/golfturniere-dominik.webp" width="1200" height="1800" alt="Dominik Dörfl auf dem Golfplatz"${imageLoadingAttributes()}>
               <figcaption>Performance auf dem Platz</figcaption>
             </figure>
           </div>
@@ -7899,6 +8939,17 @@ function golfCalendarPage() {
             </div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section class="section golfcal-events golfcal-majors" id="majors">
+      <div class="section-shell section-shell--wide">
+        <div class="bbcal-section-heading" data-reveal><p class="eyebrow">Majors &amp; Solheim Cup</p><h2>Die Turniere, die das Jahr prägen.</h2><p>Vier Herren-Majors, fünf Damen-Majors und der Solheim Cup — mit Termin und Austragungsort. Die Deutschland-Stopps von DP World Tour und HotelPlanner Tour stehen weiter unten im Profi-Portal.</p></div>
+        <div class="golfcal-event-grid">${majorEvents.map(golfEventCard).join("")}</div>
+        ${majorPastEvents.length ? `<details class="calendar-past-archive calendar-past-archive--golf">
+          <summary><span><small>Archiv 2026</small><strong>Bereits gespielte Majors</strong></span><b>${majorPastEvents.length} Turniere anzeigen</b></summary>
+          <div class="calendar-past-archive__content"><div class="golfcal-event-grid">${majorPastEvents.map(golfEventCard).join("")}</div></div>
+        </details>` : ""}
       </div>
     </section>
 
@@ -7953,14 +9004,14 @@ function golfCalendarPage() {
 
     <section class="section golfcal-performance-cta">
       <div class="section-shell section-shell--wide golfcal-performance-cta__inner">
-        <figure data-reveal><img src="/assets/images/golfturniere-creators-cup.jpg" alt="Dominik Dörfl beim Creators Golf Cup auf dem Grün"${imageLoadingAttributes()}></figure>
+        <figure data-reveal><img src="/assets/images/golfturniere-creators-cup.webp" width="1350" height="1800" alt="Dominik Dörfl beim Creators Golf Cup auf dem Grün"${imageLoadingAttributes()}></figure>
         <div class="golfcal-performance-cta__copy" data-reveal>
           <p class="eyebrow">Performance für Golfer</p>
           <h2>Mehr Stabilität.<br>Mehr Kontrolle.<br><span>Mehr Länge, die bleibt.</span></h2>
           <p>Athletik, Beweglichkeit und Belastbarkeit schaffen die Basis, damit Technik auch unter Druck abrufbar bleibt.</p>
           <div class="golfcal-performance-cta__actions">
             <a class="button button--primary" href="${contactHref("premium-training")}"><span>Golf-Performance anfragen</span><span aria-hidden="true">→</span></a>
-            <a class="button button--secondary" href="/personal-trainer-nürnberg/"><span>Personal Training ansehen</span><span aria-hidden="true">→</span></a>
+            <a class="button button--secondary" href="/personal-trainer-nuernberg/"><span>Personal Training ansehen</span><span aria-hidden="true">→</span></a>
           </div>
         </div>
       </div>
@@ -7969,13 +9020,13 @@ function golfCalendarPage() {
 
   return layout({
     path: "/golfturniere-2026/",
-    title: "Golfturniere 2026: Amateur & Profi | Camp Dörfl",
-    description: "Golfturniere 2026 in Deutschland: DGV-Meisterschaften, alle zwölf Landesgolfverbände, offene Turnierwege und ein eigenes Profi-Portal mit Tour- und PGA-Terminen.",
+    title: "Golfturniere 2026: Majors, Termine & Kalender | Camp Dörfl",
+    description: "Golfturniere 2026: alle Majors und der Solheim Cup mit Datum und Ort, die Deutschland-Stopps der Touren, DGV-Meisterschaften und zwölf Landesgolfverbände.",
     keywords: ["Golfturniere 2026", "Golf Turnierkalender 2026", "offene Golfturniere Deutschland", "DGV Turniere 2026", "Golf Profi Turniere Deutschland 2026"],
     bodyClass: "page-premium page-bodybuilding-calendar page-golf-calendar",
     pageName: "Golfturniere 2026",
     pageType: "CollectionPage",
-    socialImage: "/assets/images/golfturniere-hero.png",
+    socialImage: "/assets/images/golfturniere-hero.webp",
     socialImageAlt: "Golfturniere 2026 – Amateur, Verbände und Profi-Portal",
     extraStructuredData: [itemListSchema, faqSchema("/golfturniere-2026/", golfCalendarFaq)],
     content
@@ -8140,7 +9191,7 @@ function sportSpotFinderPage() {
 function pressMediaPage() {
   const content = `
     <section class="ff-hero ff-hero--split ff-hero--photo ff-hero--about">
-      <img class="ff-hero__img" src="/assets/images/dominik-about-training-hero.jpg" alt="Dominik Dörfl beim Ausdauertraining im Fitnessstudio"${imageLoadingAttributes({ eager: true })}>
+      <img class="ff-hero__img" src="/assets/images/dominik-about-training-hero.webp" width="1200" height="1800" alt="Dominik Dörfl beim Ausdauertraining im Fitnessstudio"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__shell">
         <div class="ff-hero__inner">
@@ -8179,7 +9230,7 @@ function pressMediaPage() {
       <div class="bbc-flow__grid">
         <a href="/ueber-dominik/" data-reveal><span>01 · Person</span><h3>Über Dominik Dörfl</h3><p>Werdegang, sportliche Stationen und Arbeitsweise.</p><b>Profil öffnen →</b></a>
         <a href="/erfolge-im-team/" data-reveal><span>02 · Nachweise</span><h3>Erfolge im Team</h3><p>Dokumentierte Resultate aus Coaching und Leistungssport.</p><b>Erfolge öffnen →</b></a>
-        <a href="/personal-trainer-nürnberg/" data-reveal><span>03 · Angebot</span><h3>Personal Trainer Nürnberg</h3><p>Leistungsumfang, Zielgruppen und regionale Betreuung.</p><b>Leistungsseite öffnen →</b></a>
+        <a href="/personal-trainer-nuernberg/" data-reveal><span>03 · Angebot</span><h3>Personal Trainer Nürnberg</h3><p>Leistungsumfang, Zielgruppen und regionale Betreuung.</p><b>Leistungsseite öffnen →</b></a>
       </div>
     </div></section>
 
@@ -8210,8 +9261,220 @@ function pressMediaPage() {
     pageName: "Presse und Medien",
     pageType: "CollectionPage",
     dateModified: "2026-08-11",
-    socialImage: "/assets/images/dominik-about-training-hero.jpg",
+    socialImage: "/assets/images/dominik-about-training-hero.webp",
     socialImageAlt: "Dominik Dörfl – Presse und Medien",
+    content
+  });
+}
+
+
+function xxlNutritionRabattcodePage() {
+  const path = "/xxl-nutrition-rabattcode/";
+  const code = "Dominik";
+  // Rabatthöhe an einer Stelle: Sie steht im Titel, im Hero, auf der Code-Karte
+  // und in der FAQ. Ändert XXL Nutrition die Konditionen, reicht diese Zeile.
+  const rabatt = "10 %";
+  const shopUrl = "https://www.xxlnutrition.com/";
+
+  const einloeseSchritte = [
+    {
+      step: "01",
+      title: "Warenkorb füllen",
+      text: "Produkte bei XXL Nutrition auswählen und in den Warenkorb legen. Der Code wird erst danach eingegeben."
+    },
+    {
+      step: "02",
+      title: `Code ${code} eintragen`,
+      text: "Im Warenkorb oder an der Kasse gibt es ein Feld für Gutschein- oder Rabattcodes. Dort den Code eintragen und bestätigen."
+    },
+    {
+      step: "03",
+      title: "Abzug prüfen",
+      text: "Vor dem Abschicken der Bestellung kurz kontrollieren, ob der Abzug in der Summe steht. Erst dann bestellen."
+    }
+  ];
+
+  const sortiment = [
+    {
+      detail: "Grundlage",
+      title: "Protein",
+      text: "Whey, Casein und pflanzliche Varianten — der Baustein, an dem in der Ernährungsplanung am häufigsten etwas fehlt."
+    },
+    {
+      detail: "Bestuntersucht",
+      title: "Kreatin",
+      text: "Kreatin-Monohydrat gehört zu den am besten untersuchten Supplements im Kraftsport."
+    },
+    {
+      detail: "Training",
+      title: "Pre-Workout & Aminosäuren",
+      text: "Produkte rund um die Einheit selbst — sinnvoll erst, wenn Schlaf, Essen und Training stehen."
+    },
+    {
+      detail: "Alltag",
+      title: "Vitamine & Basics",
+      text: "Alles, was den Alltag abdeckt, wenn die Ernährung über Wochen stabil laufen soll."
+    }
+  ];
+
+  const rabattFaq = [
+    {
+      question: "Wie lautet der XXL Nutrition Rabattcode?",
+      answer: `Der Code lautet ${code} und bringt ${rabatt} Rabatt. Er wird bei XXL Nutrition im Warenkorb beziehungsweise an der Kasse in das Feld für Gutschein- und Rabattcodes eingetragen.`
+    },
+    {
+      question: "Wie löse ich den Rabattcode ein?",
+      answer: `Zuerst die Produkte in den Warenkorb legen, dann den Code ${code} im Gutscheinfeld eintragen und bestätigen. Vor dem Abschicken der Bestellung sollte der Abzug in der Summe sichtbar sein.`
+    },
+    {
+      question: "Kostet mich der Code etwas?",
+      answer: `Nein. Der Code ist kostenlos, an keine Bedingung von unserer Seite geknüpft und zieht ${rabatt} von deiner Bestellung ab. Camp Dörfl ist Nutrition Partner von XXL Nutrition; über den Link kann eine Vergütung entstehen, für dich ändert sich am Preis dadurch nichts.`
+    },
+    {
+      question: "Für welche Produkte gilt der Code?",
+      answer:
+        "Umfang, Mindestbestellwert und mögliche Ausnahmen legt XXL Nutrition selbst fest und kann sie jederzeit ändern. Verbindlich ist immer das, was im Warenkorb angezeigt wird."
+    },
+    {
+      question: "Was tun, wenn der Code nicht funktioniert?",
+      answer:
+        "Zuerst die Schreibweise prüfen und darauf achten, dass der Code im Gutscheinfeld und nicht im Suchfeld steht. Bleibt es dabei, hilft der Kundenservice von XXL Nutrition weiter — dort liegen die aktuellen Bedingungen."
+    },
+    {
+      question: "Warum empfiehlt Dominik Dörfl XXL Nutrition?",
+      answer:
+        "XXL Nutrition ist Nutrition Partner von Camp Dörfl. Die Zusammenarbeit läuft seit mehreren Jahren, die Produkte werden im eigenen Training und in der Betreuung eingesetzt."
+    }
+  ];
+
+  const content = `
+    <section class="ff-hero ff-hero--split ff-hero--partner">
+      <div class="ff-hero__scrim" aria-hidden="true"></div>
+      <div class="section-shell ff-hero__shell">
+        <div class="ff-hero__inner">
+          <p class="ff-hero__eyebrow" data-reveal>XXL Nutrition · Partner-Code · ${rabatt}</p>
+          <h1 class="ff-hero__title" data-reveal>XXL Nutrition<br><span>Rabattcode.</span></h1>
+          <p class="ff-hero__lead" data-reveal>
+            ${rabatt} auf deine Bestellung bei XXL Nutrition mit dem Code von Dominik Dörfl — hier steht er, darunter steht, wie du ihn einlöst.
+          </p>
+          <div class="code-card" data-reveal>
+            <p class="code-card__label">Dein Rabattcode · ${rabatt}</p>
+            <p class="code-card__value"><span data-code-value>${code}</span></p>
+            <div class="code-card__actions">
+              <button class="button button--primary code-card__copy" type="button" data-copy-code="${code}">
+                <span>Code kopieren</span><span aria-hidden="true">⧉</span>
+              </button>
+              <a class="button button--secondary-light" href="${shopUrl}" target="_blank" rel="sponsored noopener noreferrer">
+                <span>Zum Shop</span><span aria-hidden="true">↗</span>
+              </a>
+            </div>
+            <p class="code-card__hint" role="status" data-copy-feedback></p>
+            ${advertisingNote("ad-note ad-note--hero", "Werbung: Partnerlink zu XXL Nutrition")}
+          </div>
+        </div>
+        <div class="ff-hero__showcase ff-hero__showcase--partner" data-reveal>
+          <figure class="partner-hero__visual partner-hero__visual--portrait">
+            <img src="/assets/images/dominik-athlete-nutrition.webp" width="1351" height="1800" alt="Dominik Dörfl als Nutrition Partner von XXL Nutrition"${imageLoadingAttributes({ eager: true })}>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight" aria-labelledby="einloesen-title">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "In drei Schritten",
+          title: "So löst du den Code ein.",
+          text:
+            "Der Ablauf dauert keine Minute. Wichtig ist nur die Reihenfolge: erst der Warenkorb, dann der Code.",
+          align: "center"
+        }).replace("<h2", '<h2 id="einloesen-title"')}
+        ${stepGrid(einloeseSchritte)}
+      </div>
+    </section>
+
+    <section class="section section--muted" aria-labelledby="sortiment-title">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Wofür sich der Code lohnt",
+          title: "Was im Sortiment steht.",
+          text:
+            "Supplements ersetzen keine Ernährung — sie schließen Lücken. Diese vier Bereiche sind es, nach denen im Coaching am häufigsten gefragt wird.",
+          align: "center"
+        }).replace("<h2", '<h2 id="sortiment-title"')}
+        ${featureGrid(sortiment, "feature-grid--audience")}
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="warum-title">
+      <div class="section-shell editorial-stage">
+        <div class="editorial-stage__copy" data-reveal>
+          ${sectionHeader({
+            eyebrow: "Hintergrund",
+            title: "Warum es diesen Code gibt.",
+            text:
+              "Camp Dörfl ist Nutrition Partner von XXL Nutrition. Aus dieser Zusammenarbeit stammt der Code — er ist kein anonymer Gutschein aus einem Portal, sondern an eine bestehende Partnerschaft geknüpft."
+          }).replace("<h2", '<h2 id="warum-title"')}
+          <div class="summary-rows summary-rows--compact">
+            <article class="summary-row">
+              <h3>Transparenz statt Kleingedrucktem</h3>
+              <p>Der Link zum Shop ist ein Partnerlink. Was das bedeutet, steht offen auf der Seite <a href="/werbung-partnerlinks/">Partnerlinks &amp; Werbung</a>.</p>
+            </article>
+            <article class="summary-row">
+              <h3>Ernährung vor Supplement</h3>
+              <p>Im Coaching steht zuerst die Ernährung, danach ergänzen Produkte. Wie das aufgebaut wird, zeigt die <a href="/koerperanalyse-nuernberg/">Körperanalyse</a> als Ausgangspunkt.</p>
+            </article>
+          </div>
+          <div class="ff-hero__actions" data-reveal>
+            <a class="button button--secondary" href="/partner/"><span>Alle Partner ansehen</span><span aria-hidden="true">&rarr;</span></a>
+          </div>
+        </div>
+        <div class="editorial-stage__media" data-reveal>
+          <figure class="partner-hero__visual partner-hero__visual--logo">
+            <img src="/assets/images/partner-xxl-nutrition-logo.webp" width="259" height="194" alt="Logo von XXL Nutrition"${imageLoadingAttributes()}>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted" aria-labelledby="rabatt-faq-title">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "FAQ",
+          title: "Häufige Fragen zum Rabattcode.",
+          align: "center"
+        }).replace("<h2", '<h2 id="rabatt-faq-title"')}
+        ${faq(rabattFaq)}
+      </div>
+    </section>
+
+    ${ctaSection({
+      eyebrow: "Nächster Schritt",
+      title: "Der Code ist der einfache Teil.",
+      text:
+        "Wenn Training und Ernährung dahinter zusammenpassen sollen, ist ein Gespräch der bessere Anfang als ein Warenkorb.",
+      primary: { label: "Beratung anfragen", href: contactHref("premium-training") },
+      secondary: { label: "Personal Training ansehen", href: "/personal-trainer-nuernberg/" }
+    })}
+  `;
+
+  return layout({
+    path,
+    title: `XXL Nutrition Rabattcode: ${rabatt} mit Code ${code}`,
+    description: `XXL Nutrition Rabattcode von Dominik Dörfl: ${rabatt} mit dem Code ${code}. Anleitung in drei Schritten, Antworten zu Gültigkeit und Bedingungen.`,
+    keywords: [
+      "XXL Nutrition Rabattcode",
+      "XXL Nutrition Gutscheincode",
+      "XXL Nutrition Code",
+      "XXL Nutrition Rabatt",
+      "XXL Nutrition Gutschein einlösen"
+    ],
+    bodyClass: "page-premium page-partner page-discount-code",
+    pageName: "XXL Nutrition Rabattcode",
+    dateModified: "2026-08-19",
+    socialImage: "/assets/images/dominik-athlete-nutrition-social.jpg",
+    socialImageAlt: "Dominik Dörfl als Nutrition Partner von XXL Nutrition",
+    extraStructuredData: [faqSchema(path, rabattFaq)],
     content
   });
 }
@@ -8220,18 +9483,20 @@ export const pages = [
   { route: "/", render: homePage, lastModified: "2026-08-11" },
   { route: "/app/", render: appPage },
   { route: "/personal-training-kosten-nuernberg/", render: personalTrainingCostPage, lastModified: "2026-08-11" },
-  { route: "/personal-trainer-nürnberg/", render: personalCoachingPage, lastModified: "2026-08-11" },
+  { route: "/personal-trainer-nuernberg/", render: personalCoachingPage, lastModified: "2026-08-11" },
   { route: "/gesundheitstag-nuernberg/", render: gesundheitstagNuernbergPage },
   { route: "/koerperanalyse-nuernberg/", render: koerperanalyseNuernbergPage },
   { route: "/firmenfitness/", render: firmenfitnessPage, lastModified: "2026-08-11" },
-  { route: "/events/", render: eventsPage },
+  { route: "/moderator-nuernberg/", render: eventsPage, lastModified: "2026-08-21" },
   { route: "/keynote-speaker-nuernberg/", render: keynoteSpeakerNuernbergPage, lastModified: "2026-08-16" },
   { route: "/fit-werden/", render: personalTrainingAb40NuernbergPage, lastModified: "2026-08-16" },
   { route: "/partner/", render: partnerPage },
+  { route: "/xxl-nutrition-rabattcode/", render: xxlNutritionRabattcodePage, lastModified: "2026-08-23" },
   { route: "/bodybuilding-coaching-wettkampfvorbereitung/", render: bodybuildingCoachingPage, lastModified: "2026-08-11" },
-  { route: "/bodybuilding-wettkaempfe-2026/", render: bodybuildingCalendarPage, lastModified: "2026-08-10" },
-  { route: "/bodybuilding-klassen-gewichtslimits/", render: bodybuildingClassesPage, lastModified: "2026-08-11" },
+  { route: "/bodybuilding-wettkaempfe-2026/", render: bodybuildingCalendarPage, lastModified: "2026-08-21" },
+  { route: "/bodybuilding-klassen-gewichtslimits/", render: bodybuildingClassesPage, lastModified: "2026-08-22" },
   { route: "/boxen-wettkaempfe-2026/", render: boxingCalendarPage },
+  { route: "/mma-wettkaempfe-2026/", render: mmaCalendarPage, lastModified: "2026-08-20" },
   { route: "/triathlon-kalender-2026/", render: triathlonCalendarPage },
   { route: "/laufkalender-2026/", render: runningCalendarPage },
   { route: "/golfturniere-2026/", render: golfCalendarPage },

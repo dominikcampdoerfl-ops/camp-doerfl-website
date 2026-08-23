@@ -1,4 +1,4 @@
-import { navItems, site, sponsors } from "./data.mjs";
+import { encodePath, navCategories, navItems, site, sponsors } from "./data.mjs";
 import { contactTopics, resolveContactTopicKey } from "./contact-topics.js";
 import { MEMBER_BASE_PATH } from "./member-area.mjs";
 
@@ -26,7 +26,7 @@ const socialPlatformIcons = {
   },
   spotify: {
     label: "Spotify",
-    src: "/assets/images/social-spotify.png"
+    src: "/assets/images/social-spotify.webp"
   }
 };
 
@@ -124,17 +124,18 @@ function breadcrumbSchema(path, pageName) {
 
   const parentPages = {
     "/gesundheitstag-nuernberg/": ["Firmenfitness", "/firmenfitness/"],
-    "/koerperanalyse-nuernberg/": ["Personal Trainer Nürnberg", "/personal-trainer-nürnberg/"],
-    "/personal-training-kosten-nuernberg/": ["Personal Trainer Nürnberg", "/personal-trainer-nürnberg/"],
+    "/koerperanalyse-nuernberg/": ["Personal Trainer Nürnberg", "/personal-trainer-nuernberg/"],
+    "/personal-training-kosten-nuernberg/": ["Personal Trainer Nürnberg", "/personal-trainer-nuernberg/"],
     "/executive-performance/": ["Firmenfitness", "/firmenfitness/"],
     "/erfolge-im-team/guenter-preis/": ["Erfolge im Team", "/erfolge-im-team/"],
     "/bodybuilding-wettkaempfe-2026/": ["Bodybuilding Coaching", "/bodybuilding-coaching-wettkampfvorbereitung/"],
     "/bodybuilding-klassen-gewichtslimits/": ["Bodybuilding Coaching", "/bodybuilding-coaching-wettkampfvorbereitung/"],
-    "/personal-trainer-auswaehlen-nuernberg/": ["Personal Trainer Nürnberg", "/personal-trainer-nürnberg/"],
+    "/personal-trainer-auswaehlen-nuernberg/": ["Personal Trainer Nürnberg", "/personal-trainer-nuernberg/"],
     "/bodybuilding-wettkampfvorbereitung-dauer/": ["Bodybuilding Coaching", "/bodybuilding-coaching-wettkampfvorbereitung/"],
     "/bia-inbody-koerperanalyse-vergleich/": ["Körperanalyse Nürnberg", "/koerperanalyse-nuernberg/"],
-    "/keynote-speaker-nuernberg/": ["Events", "/events/"],
-    "/fit-werden/": ["Personal Trainer Nürnberg", "/personal-trainer-nürnberg/"]
+    "/keynote-speaker-nuernberg/": ["Moderator Nürnberg", "/moderator-nuernberg/"],
+    "/fit-werden/": ["Personal Trainer Nürnberg", "/personal-trainer-nuernberg/"],
+    "/xxl-nutrition-rabattcode/": ["Partner", "/partner/"]
   };
   const parent = parentPages[path];
   const itemListElement = [{
@@ -149,7 +150,7 @@ function breadcrumbSchema(path, pageName) {
       "@type": "ListItem",
       position: 2,
       name: parent[0],
-      item: `${site.url}${parent[1]}`
+      item: `${site.url}${encodePath(parent[1])}`
     });
   }
 
@@ -161,7 +162,7 @@ function breadcrumbSchema(path, pageName) {
 
   return {
     "@type": "BreadcrumbList",
-    "@id": `${site.url}${path}#breadcrumb`,
+    "@id": `${site.url}${encodePath(path)}#breadcrumb`,
     itemListElement
   };
 }
@@ -294,12 +295,37 @@ function uiIcon(name) {
   return `<span class="program-icon">${icons[name] || icons.app}</span>`;
 }
 
+// Flaggen für die Sprachwahl. Bewusst als Inline-SVG: keine zusätzliche
+// Anfrage, gestochen scharf auf jedem Bildschirm und mitfärbbar über CSS.
+function flagIcon(language) {
+  if (language === "en") {
+    return `
+      <svg class="language-switcher__flag" viewBox="0 0 60 30" role="img" aria-hidden="true" focusable="false">
+        <clipPath id="flag-en-band"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"></path></clipPath>
+        <rect width="60" height="30" fill="#012169"></rect>
+        <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"></path>
+        <path d="M0,0 L60,30 M60,0 L0,30" stroke="#c8102e" stroke-width="4" clip-path="url(#flag-en-band)"></path>
+        <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"></path>
+        <path d="M30,0 v30 M0,15 h60" stroke="#c8102e" stroke-width="6"></path>
+      </svg>
+    `;
+  }
+
+  return `
+    <svg class="language-switcher__flag" viewBox="0 0 60 30" role="img" aria-hidden="true" focusable="false">
+      <rect width="60" height="10" y="0" fill="#161616"></rect>
+      <rect width="60" height="10" y="10" fill="#dd0000"></rect>
+      <rect width="60" height="10" y="20" fill="#ffce00"></rect>
+    </svg>
+  `;
+}
+
 function navIconForHref(href) {
   if (href === "/") return "home";
   if (href === MEMBER_BASE_PATH + "/") return "member";
-  if (href === "/events/") return "events";
+  if (href === "/moderator-nuernberg/") return "events";
   if (href === "/firmenfitness/") return "team";
-  if (href === "/personal-trainer-nürnberg/") return "trainer";
+  if (href === "/personal-trainer-nuernberg/") return "trainer";
   if (href === "/partner/") return "partner";
   if (href === "/app/") return "app";
   if (href === "/kontakt/") return "contact";
@@ -503,6 +529,55 @@ export function featureGrid(items, modifier = "") {
           `;
         })
         .join("")}
+    </div>
+  `;
+}
+
+/* Leistungs-Slideshow: fasst alle Angebote noch einmal zusammen, diesmal mit
+   mehr Tiefe als die Kacheln weiter oben. Ohne JavaScript bleibt die Spur eine
+   horizontal scrollbare Liste — main.js ergaenzt Pfeile, Punkte und Tastatur. */
+export function pathSlider(items, label = "Alle Leistungen", { autoplay = 0, itemLabel = "Leistung" } = {}) {
+  const total = String(items.length).padStart(2, "0");
+
+  const slides = items
+    .map((item, index) => {
+      const position = String(index + 1).padStart(2, "0");
+      const points = (item.points || [])
+        .map((point) => `<li>${point}</li>`)
+        .join("");
+
+      return `
+        <li class="path-slide" data-path-slide role="group" aria-roledescription="Folie" aria-label="${position} von ${total}: ${item.title}">
+          <div class="path-slide__intro">
+            <p class="path-slide__count"><span>${position}</span> / ${total}</p>
+            ${item.detail ? `<p class="path-slide__detail">${item.detail}</p>` : ""}
+            <h3 class="path-slide__title">${item.title}</h3>
+            <p class="path-slide__text">${item.text}</p>
+            ${item.href && item.ctaLabel ? `<a class="button button--primary path-slide__cta" href="${item.href}"><span>${item.ctaLabel}</span><span aria-hidden="true">&rarr;</span></a>` : ""}
+          </div>
+          ${points ? `<ul class="path-slide__points">${points}</ul>` : ""}
+        </li>
+      `;
+    })
+    .join("");
+
+  const dots = items
+    .map(
+      (item, index) =>
+        `<button class="path-slider__dot${index === 0 ? " is-active" : ""}" type="button" data-path-dot="${index}" aria-label="${item.title} anzeigen"${index === 0 ? ' aria-current="true"' : ""}></button>`
+    )
+    .join("");
+
+  return `
+    <div class="path-slider" data-path-slider${autoplay ? ` data-path-autoplay="${autoplay}"` : ""} data-reveal aria-roledescription="Slideshow" aria-label="${label}">
+      <div class="path-slider__frame">
+        <ul class="path-slider__track" data-path-track>${slides}</ul>
+      </div>
+      <div class="path-slider__controls">
+        <button class="path-slider__arrow" type="button" data-path-prev aria-label="Vorherige ${itemLabel}"><span aria-hidden="true">&larr;</span></button>
+        <div class="path-slider__dots" data-path-dots>${dots}</div>
+        <button class="path-slider__arrow" type="button" data-path-next aria-label="Naechste ${itemLabel}"><span aria-hidden="true">&rarr;</span></button>
+      </div>
     </div>
   `;
 }
@@ -841,14 +916,14 @@ export function contactForm() {
 
 const inquiryByPath = Object.freeze({
   "/": { topic: "", label: "Beratung anfragen" },
-  "/personal-trainer-nürnberg/": { topic: "premium-training", label: "Training anfragen" },
+  "/personal-trainer-nuernberg/": { topic: "premium-training", label: "Training anfragen" },
   "/personal-training-kosten-nuernberg/": { topic: "premium-training", label: "Training anfragen" },
   "/bodybuilding-coaching-wettkampfvorbereitung/": { topic: "bodybuilding-coaching", label: "Coaching anfragen" },
   "/koerperanalyse-nuernberg/": { topic: "koerperanalyse", label: "Analyse anfragen" },
   "/executive-performance/": { topic: "executive-performance", label: "Platz anfragen" },
   "/firmenfitness/": { topic: "firmenfitness", label: "Firmenfitness anfragen" },
   "/gesundheitstag-nuernberg/": { topic: "firmenfitness", label: "Gesundheitstag anfragen" },
-  "/events/": { topic: "events", label: "Event anfragen" },
+  "/moderator-nuernberg/": { topic: "events", label: "Event anfragen" },
   "/app/": { topic: "app", label: "App-Zugang anfragen" },
   "/partner/": { topic: "kooperation", label: "Kooperation anfragen" },
   "/ueber-dominik/": { topic: "premium-training", label: "Zusammenarbeit anfragen" },
@@ -874,13 +949,50 @@ function mobileInquiryBar(path) {
   `;
 }
 
+// Verzeichnis aller weiteren Seiten im Menü — nach Anliegen gruppiert, damit
+// niemand eine lange Liste durchsuchen muss. Was oben schon als Haupteinstieg
+// steht, wird hier nicht wiederholt.
+function menuDirectory(shownItems, activePath) {
+  const shownHrefs = new Set(shownItems.map((item) => item.href));
+  const groups = navCategories
+    .map((category) => ({
+      title: category.title,
+      items: category.items.filter((item) => !shownHrefs.has(item.href))
+    }))
+    .filter((category) => category.items.length > 0);
+
+  if (groups.length === 0) return "";
+
+  return `
+    <div class="site-nav__directory">
+      <p class="site-nav__directory-title">Alle Seiten</p>
+      ${groups
+        .map(
+          (group) => `
+            <section class="site-nav__group">
+              <h2 class="site-nav__group-title">${group.title}</h2>
+              <div class="site-nav__group-links">
+                ${group.items
+                  .map(
+                    (item) => `<a href="${item.href}"${item.isMember ? " data-member-login" : ""}${activePath === item.href ? ' class="is-active" aria-current="page"' : ""}>${item.label}</a>`
+                  )
+                  .join("")}
+              </div>
+            </section>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+}
+
 function navbar(activePath) {
   const primaryNavOrder = [
     "/",
-    "/personal-trainer-nürnberg/",
+    "/personal-trainer-nuernberg/",
     "/firmenfitness/",
     "/fit-werden/",
-    "/events/",
+    "/moderator-nuernberg/",
     "/partner/"
   ];
   const primaryNavItems = primaryNavOrder
@@ -914,10 +1026,12 @@ function navbar(activePath) {
     memberItem,
     ...(contextualContactItem ? [contextualContactItem] : [])
   ];
-  // Kurzformen nur für die Desktop-Leiste, wenn die volle Bezeichnung die Breite
-  // sprengt. Im Kompaktmenü und in der Fußzeile steht immer die vollständige.
+  // In der Desktop-Leiste steht der volle Name. Auf schmalen Notebooks
+  // (unter 1200 px) wird "Nürnberg" per CSS ausgeblendet, sonst schiebt die
+  // Zeile die Anfragen-Schaltfläche über den Rand. Im Kompaktmenü und in der
+  // Fußzeile steht immer die vollständige Bezeichnung.
   const desktopLabels = {
-    "/personal-trainer-nürnberg/": "Personal Training Nürnberg"
+    "/personal-trainer-nuernberg/": 'Personal Training<span class="site-nav__label-city"> Nürnberg</span>'
   };
   const renderNavItem = (item) => `
     <a class="site-nav__entry${item.href === "/app/" || item.isContact || item.isMember ? " site-nav__entry--supplemental" : ""}${activePath === item.href ? " is-active" : ""}" href="${item.href}" ${item.isMember ? "data-member-login" : ""} ${activePath === item.href ? 'aria-current="page"' : ""}>
@@ -931,11 +1045,17 @@ function navbar(activePath) {
       <span class="site-nav__entry-arrow" aria-hidden="true">&rsaquo;</span>
     </a>
   `;
+  // Sprachwahl über Flaggen statt Kürzel. Der Name der Schaltfläche steht als
+  // unsichtbarer Text daneben, damit Screenreader und Tastatur weiterhin
+  // "Deutsch" bzw. "English" vorfinden.
   const languageSwitcher = (className = "") => `
-    <div class="language-switcher${className ? ` ${className}` : ""}" data-language-switcher translate="no" aria-label="Sprache auswählen">
-      <button class="language-switcher__button is-active" type="button" data-language="de" aria-pressed="true">DE</button>
-      <span aria-hidden="true">/</span>
-      <button class="language-switcher__button" type="button" data-language="en" aria-pressed="false">EN</button>
+    <div class="language-switcher${className ? ` ${className}` : ""}" data-language-switcher translate="no" role="group" aria-label="Sprache auswählen">
+      <button class="language-switcher__button is-active" type="button" data-language="de" aria-pressed="true" title="Deutsch">
+        ${flagIcon("de")}<span class="language-switcher__name">Deutsch</span>
+      </button>
+      <button class="language-switcher__button" type="button" data-language="en" aria-pressed="false" title="English">
+        ${flagIcon("en")}<span class="language-switcher__name">English</span>
+      </button>
     </div>
   `;
 
@@ -947,7 +1067,7 @@ function navbar(activePath) {
           ${brandLogo()}
           <span><span class="brand__name">Camp Dörfl</span><small>Performance System</small></span>
         </a>
-        ${languageSwitcher("language-switcher--mobile")}
+        ${languageSwitcher("language-switcher--brand")}
         <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">
           <span></span><span></span><span></span>
           <span class="nav-toggle__label">Menü</span>
@@ -964,6 +1084,7 @@ function navbar(activePath) {
             <div class="site-nav__list">
               ${mobileNavItems.map((item) => renderNavItem(item)).join("")}
             </div>
+            ${menuDirectory(mobileNavItems, activePath)}
             ${
               mobileSocialMarkup
                 ? `<div class="site-nav__footer">
@@ -975,9 +1096,8 @@ function navbar(activePath) {
           </div>
         </nav>
         <div class="nav-extras">
-          ${languageSwitcher("language-switcher--desktop")}
           ${appItem ? `<a class="nav-action nav-action--app${activePath === appItem.href ? " is-active" : ""}" href="${appItem.href}" ${activePath === appItem.href ? 'aria-current="page"' : ""}>App</a>` : ""}
-          <a class="nav-action nav-action--member" href="${MEMBER_BASE_PATH}/" data-member-login><span class="nav-action__icon" aria-hidden="true">${uiIcon("member")}</span><span>Member</span></a>
+          <a class="nav-action nav-action--member" href="${MEMBER_BASE_PATH}/" data-member-login>Login</a>
           ${contextualContactItem ? `<a class="nav-action nav-action--contact${activePath === "/kontakt/" ? " is-active" : ""}" href="${contextualContactItem.href}" ${activePath === "/kontakt/" ? 'aria-current="page"' : ""}><span>Anfragen</span><span aria-hidden="true">&nearr;</span></a>` : ""}
         </div>
       </div>
@@ -986,31 +1106,6 @@ function navbar(activePath) {
 }
 
 function footer() {
-  const footerNavItems = [
-    ...navItems,
-    { label: "Körperanalyse Nürnberg", href: "/koerperanalyse-nuernberg/" },
-    { label: "Keynote Speaker Nürnberg", href: "/keynote-speaker-nuernberg/" },
-    { label: "Gesundheitstag Nürnberg", href: "/gesundheitstag-nuernberg/" },
-    { label: "Personal Training Kosten", href: "/personal-training-kosten-nuernberg/" },
-    { label: "Executive Performance", href: "/executive-performance/" },
-    { label: "Über Dominik", href: "/ueber-dominik/" },
-    { label: "Erfolge im Team", href: "/erfolge-im-team/" },
-    { label: "Presse & Medien", href: "/presse-medien/" },
-    { label: "Expertenwissen", href: "/expertenwissen/" },
-    { label: "Personal Trainer auswählen", href: "/personal-trainer-auswaehlen-nuernberg/" },
-    { label: "Dauer der Wettkampfvorbereitung", href: "/bodybuilding-wettkampfvorbereitung-dauer/" },
-    { label: "BIA & InBody Vergleich", href: "/bia-inbody-koerperanalyse-vergleich/" },
-    { label: "Redaktionelle Richtlinien", href: "/redaktionelle-richtlinien/" },
-    { label: "Bodybuilding Coaching", href: "/bodybuilding-coaching-wettkampfvorbereitung/" },
-    { label: "Bodybuilding Wettkämpfe 2026", href: "/bodybuilding-wettkaempfe-2026/" },
-    { label: "Bodybuilding Klassen & Gewichtslimits", href: "/bodybuilding-klassen-gewichtslimits/" },
-    { label: "Boxen Wettkämpfe 2026", href: "/boxen-wettkaempfe-2026/" },
-    { label: "Triathlon Kalender 2026", href: "/triathlon-kalender-2026/" },
-    { label: "Laufkalender 2026", href: "/laufkalender-2026/" },
-    { label: "Golfturniere 2026", href: "/golfturniere-2026/" },
-    { label: "Sport Spot finden", href: "/sport-spot-finden/" }
-  ];
-
   return `
     <footer class="site-footer">
       <div class="section-shell footer-grid">
@@ -1024,8 +1119,23 @@ function footer() {
         </div>
         <div class="footer-panel footer-nav-panel">
           <h2>Navigation</h2>
-          <div class="footer-nav-links">
-            ${footerNavItems.map((item) => `<a href="${item.href}">${item.label}</a>`).join("")}
+          <div class="footer-nav-groups">
+            ${navCategories
+              .map(
+                (category) => `
+                  <section class="footer-nav-group">
+                    <h3>${category.title}</h3>
+                    <div class="footer-nav-links">
+                      ${category.items
+                        .map(
+                          (item) => `<a href="${item.href}"${item.isMember ? " data-member-login" : ""}>${item.label}</a>`
+                        )
+                        .join("")}
+                    </div>
+                  </section>
+                `
+              )
+              .join("")}
           </div>
         </div>
         <div class="footer-panel footer-contact-panel">
@@ -1246,7 +1356,7 @@ export function layout({
 }) {
   const canonicalPath = path === "/" ? "/" : path;
   const hasMobileInquiry = Boolean(inquiryForPath(path));
-  const canonical = `${site.url}${canonicalPath}`;
+  const canonical = `${site.url}${encodePath(canonicalPath)}`;
   const sameAs = socialProfileUrls();
   const resolvedPageName = htmlText(pageName || title.split("|")[0].trim()) || site.name;
   const resolvedSocialImage = normalizedAbsoluteUrl(socialImage);
@@ -1336,7 +1446,7 @@ export function layout({
         "@id": personId,
         name: site.ownerName,
         url: `${site.url}/ueber-dominik/`,
-        image: normalizedAbsoluteUrl("/assets/images/dominik-about-gym-portrait.jpg"),
+        image: normalizedAbsoluteUrl("/assets/images/dominik-about-gym-portrait.webp"),
         description:
           "Dominik Dörfl ist Personal Trainer, Bodybuilding- und Performance-Coach, Moderator und Gründer von Camp Dörfl in Nürnberg.",
         jobTitle: "Personal Trainer, Bodybuilding- und Performance-Coach",

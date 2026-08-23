@@ -1,3 +1,18 @@
+/**
+ * Prozentkodiert Umlaute in einem Pfad. Seit dem Umzug der Hauptseite auf
+ * `/personal-trainer-nuernberg/` trägt keine Route mehr einen Umlaut — die
+ * Funktion bleibt das Netz für künftige Routen: Eine rohe Umlaut-Adresse
+ * beantwortet der Worker nur über eine Umleitung, die kodierte direkt mit 200.
+ * Sie gilt überall dort, wo eine absolute Adresse entsteht: Canonical,
+ * og:url, Breadcrumb und beide Sitemaps.
+ */
+export function encodePath(path = "/") {
+  return path
+    .split("/")
+    .map((segment) => encodeURIComponent(segment))
+    .join("/");
+}
+
 export const site = {
   name: "Camp Dörfl",
   ownerName: "Dominik Dörfl",
@@ -39,13 +54,81 @@ export const site = {
 
 export const navItems = [
   { label: "Home", href: "/" },
-  { label: "Events", href: "/events/" },
+  { label: "Events", href: "/moderator-nuernberg/" },
   { label: "Firmenfitness", href: "/firmenfitness/" },
   { label: "Fit werden", href: "/fit-werden/" },
-  { label: "Personal Trainer Nürnberg", href: "/personal-trainer-nürnberg/" },
+  { label: "Personal Trainer Nürnberg", href: "/personal-trainer-nuernberg/" },
   { label: "Partner", href: "/partner/" },
   { label: "Camp Dörfl App", href: "/app/" },
   { label: "Kontakt", href: "/kontakt/" }
+];
+
+// Alle Seiten nach Anliegen sortiert. Diese Gliederung gilt gleichermaßen für
+// das Menü und die Fußzeile, damit Besucher überall dieselbe Ordnung vorfinden
+// und nicht in einer langen Liste suchen müssen.
+export const navCategories = [
+  {
+    title: "Training & Coaching",
+    items: [
+      { label: "Personal Trainer Nürnberg", href: "/personal-trainer-nuernberg/" },
+      { label: "Fit werden in 12 Wochen", href: "/fit-werden/" },
+      { label: "Körperanalyse Nürnberg", href: "/koerperanalyse-nuernberg/" },
+      { label: "Bodybuilding Coaching", href: "/bodybuilding-coaching-wettkampfvorbereitung/" },
+      { label: "Personal Training Kosten", href: "/personal-training-kosten-nuernberg/" }
+    ]
+  },
+  {
+    title: "Für Unternehmen",
+    items: [
+      { label: "Firmenfitness", href: "/firmenfitness/" },
+      { label: "Gesundheitstag Nürnberg", href: "/gesundheitstag-nuernberg/" },
+      { label: "Executive Performance", href: "/executive-performance/" },
+      { label: "Events & Moderation", href: "/moderator-nuernberg/" },
+      { label: "Keynote Speaker Nürnberg", href: "/keynote-speaker-nuernberg/" }
+    ]
+  },
+  {
+    title: "App & Member",
+    items: [
+      { label: "Camp Dörfl App", href: "/app/" },
+      { label: "Member Area", href: "/member/", isMember: true }
+    ]
+  },
+  {
+    title: "Camp Dörfl",
+    items: [
+      { label: "Startseite", href: "/" },
+      { label: "Über Dominik", href: "/ueber-dominik/" },
+      { label: "Erfolge im Team", href: "/erfolge-im-team/" },
+      { label: "Partner", href: "/partner/" },
+      { label: "XXL Nutrition Rabattcode", href: "/xxl-nutrition-rabattcode/" },
+      { label: "Presse & Medien", href: "/presse-medien/" },
+      { label: "Kontakt", href: "/kontakt/" }
+    ]
+  },
+  {
+    title: "Wissen & Leitfäden",
+    items: [
+      { label: "Expertenwissen", href: "/expertenwissen/" },
+      { label: "Personal Trainer auswählen", href: "/personal-trainer-auswaehlen-nuernberg/" },
+      { label: "Bodybuilding Klassen & Gewichtslimits", href: "/bodybuilding-klassen-gewichtslimits/" },
+      { label: "Dauer der Wettkampfvorbereitung", href: "/bodybuilding-wettkampfvorbereitung-dauer/" },
+      { label: "BIA & InBody Vergleich", href: "/bia-inbody-koerperanalyse-vergleich/" },
+      { label: "Redaktionelle Richtlinien", href: "/redaktionelle-richtlinien/" }
+    ]
+  },
+  {
+    title: "Termine & Kalender",
+    items: [
+      { label: "Bodybuilding Wettkämpfe 2026", href: "/bodybuilding-wettkaempfe-2026/" },
+      { label: "Boxen Wettkämpfe 2026", href: "/boxen-wettkaempfe-2026/" },
+      { label: "MMA Wettkämpfe 2026", href: "/mma-wettkaempfe-2026/" },
+      { label: "Triathlon Kalender 2026", href: "/triathlon-kalender-2026/" },
+      { label: "Laufkalender 2026", href: "/laufkalender-2026/" },
+      { label: "Golfturniere 2026", href: "/golfturniere-2026/" },
+      { label: "Sport Spot finden", href: "/sport-spot-finden/" }
+    ]
+  }
 ];
 
 export const appFeatures = [
@@ -204,7 +287,7 @@ export const landingPrograms = [
       "Für Privatpersonen: flexibel mit Personal Training oder als Premium Personal Training mit Analyse, Planung, App und laufender Steuerung.",
     highlights: ["Personal Training ohne Bindung", "Premium Training mit Analyse", "Training und Ernährung aus einer Hand"],
     cta: "Premium Personal Training ansehen",
-    href: "/personal-trainer-nürnberg/"
+    href: "/personal-trainer-nuernberg/"
   },
   {
     image: "/assets/images/dominik-coaching-bikeerg.webp",
@@ -221,7 +304,7 @@ export const landingPrograms = [
     href: "/firmenfitness/"
   },
   {
-    image: "/assets/images/dominik-moderator-segmueller.jpg",
+    image: "/assets/images/dominik-moderator-segmueller.webp",
     alt: "Dominik Dörfl moderiert eine Veranstaltung bei Segmüller",
     imagePosition: "center 12%",
     tag: "03",
@@ -232,10 +315,10 @@ export const landingPrograms = [
       "Professionelle Moderation für Firmenveranstaltungen, Sportevents, Galas und Podiumsdiskussionen mit sicherer Bühnenpräsenz.",
     highlights: ["Firmenveranstaltung", "Sportevent und Gala", "Podiumsdiskussion"],
     cta: "Events entdecken",
-    href: "/events/"
+    href: "/moderator-nuernberg/"
   },
   {
-    image: "/assets/images/app-screen-all-tools.jpg",
+    image: "/assets/images/app-screen-all-tools.webp",
     alt: "Bildschirmansicht der Camp Dörfl App mit Trainings- und Ernährungsfunktionen",
     imagePosition: "center 18%",
     tag: "04",

@@ -5,11 +5,19 @@
   "type": "module",
   "scripts": {
     "build": "node src/build.mjs",
+    "pretest": "node src/build.mjs",
     "test": "node --test",
     "dev": "node src/dev.mjs",
     "preview": "node src/server.mjs",
     "test:redirects": "node --test test/legacy-redirects.test.mjs",
+    "images": "node scripts/optimize-images.mjs --schreiben && node scripts/image-dimensions.mjs --schreiben",
+    "images:pruefen": "node scripts/optimize-images.mjs && node scripts/image-dimensions.mjs",
     "cf:deploy": "npm run build && npx wrangler deploy",
-    "cf:deploy:dry-run": "npm run build && npx wrangler deploy --dry-run"
+    "cf:deploy:dry-run": "npm run build && npx wrangler deploy --dry-run",
+    "kontrast": "node scripts/kontrast-pruefen.mjs"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^25.8.0",
+    "sharp": "^0.35.3"
   }
 }

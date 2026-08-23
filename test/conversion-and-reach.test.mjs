@@ -11,7 +11,7 @@ const pageMarkup = (route) => {
 
 test("core service pages expose a contextual mobile inquiry path", () => {
   const cases = [
-    ["/personal-trainer-nürnberg/", "Training anfragen", "premium-training"],
+    ["/personal-trainer-nuernberg/", "Training anfragen", "premium-training"],
     ["/koerperanalyse-nuernberg/", "Analyse anfragen", "koerperanalyse"],
     ["/firmenfitness/", "Firmenfitness anfragen", "firmenfitness"],
     ["/gesundheitstag-nuernberg/", "Gesundheitstag anfragen", "firmenfitness"]
@@ -31,17 +31,18 @@ test("informational calendar pages are not covered by a fixed inquiry bar", () =
 
 test("homepage links visibly to the primary local search intents", () => {
   const markup = pageMarkup("/");
-  assert.match(markup, /Was suchst du in Nürnberg\?/);
-  assert.match(markup, /href="\/personal-trainer-nürnberg\/"/);
+  // Der Ortsname trägt seit dem Goldakzent ein eigenes span, der Text bleibt gleich.
+  assert.match(markup, /Was suchst du in (?:<span>)?Nürnberg\?/);
+  assert.match(markup, /href="\/personal-trainer-nuernberg\/"/);
   assert.match(markup, /href="\/koerperanalyse-nuernberg\/"/);
   assert.match(markup, /href="\/gesundheitstag-nuernberg\/"/);
   assert.match(markup, /href="\/personal-training-kosten-nuernberg\/"/);
   assert.match(markup, />Moderator Nürnberg</);
-  assert.match(markup, /href="\/events\/"/);
+  assert.match(markup, /href="\/moderator-nuernberg\/"/);
 });
 
 test("service pages declare their real geographic coverage", () => {
-  const personalTraining = pageMarkup("/personal-trainer-nürnberg/");
+  const personalTraining = pageMarkup("/personal-trainer-nuernberg/");
   const corporateFitness = pageMarkup("/firmenfitness/");
 
   assert.match(personalTraining, /Personal Training für Nürnberg, Fürth und Erlangen/);
@@ -67,19 +68,30 @@ test("corporate fitness presents three concrete offers and verifiable experience
 });
 
 test("Personal Trainer Nürnberg is the single authoritative service destination", () => {
-  const training = pageMarkup("/personal-trainer-nürnberg/");
+  const training = pageMarkup("/personal-trainer-nuernberg/");
   const home = pageMarkup("/");
   const contact = pageMarkup("/kontakt/");
 
-  assert.match(training, /<title>Personal Trainer Nürnberg \| Dominik Dörfl – echte Erfolge<\/title>/);
-  assert.match(training, /<link rel="canonical" href="https:\/\/www\.campdoerfl\.de\/personal-trainer-nürnberg\/">/);
+  assert.match(training, /<title>Personal Trainer Nürnberg \| 1:1 Coaching · Dominik Dörfl<\/title>/);
+  assert.match(training, /<link rel="canonical" href="https:\/\/www\.campdoerfl\.de\/personal-trainer-nuernberg\/">/);
   assert.match(training, /Warum Dominik Dörfl als Personal Trainer in Nürnberg/);
   assert.match(training, /13<\/dt><dd>Deutsche Meistertitel im betreuten Team/);
-  assert.match(training, /126<\/dt><dd>dokumentierte Wettkampfplatzierungen/);
   assert.match(training, /"jobTitle":"Personal Trainer in Nürnberg"/);
-  assert.match(training, /"dateModified":"2026-08-11"/);
   assert.match(home, /<title>Camp Dörfl \| Performance System Nürnberg<\/title>/);
   assert.match(contact, /Personal Trainer Nürnberg: Leistungen und Erfolge ansehen/);
+
+  // Kannibalisierung: Im August 2026 stand der Ratgeber auf Platz 28 für
+  // "Personal Trainer Nürnberg" — die Hauptseite gar nicht. Seitdem gilt:
+  // nur diese eine Seite führt die Phrase im Titel.
+  const mitPhraseImTitel = pages
+    .filter((page) => /<title>[^<]*Personal Trainer Nürnberg/.test(page.render()))
+    .map((page) => page.route);
+
+  assert.deepEqual(mitPhraseImTitel, ["/personal-trainer-nuernberg/"]);
+
+  // Die Seite spricht die breite Zielgruppe an, nicht nur den Wettkampfsport.
+  assert.match(training, /Für Menschen mitten im Leben/);
+  assert.match(training, /auch für Einsteiger geeignet/);
 });
 
 test("bodybuilding calendar covers high-impression search questions", () => {

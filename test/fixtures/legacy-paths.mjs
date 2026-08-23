@@ -149,7 +149,10 @@ export const legacyPaths = Object.freeze([
   "/personal-trainer-in-nuernberg/krafttraining-und-muskelaufbau/",
   "/personal-trainer-in-nuernberg/personal-training-fuer-frauen/",
   "/personal-trainer-nuernberg/dein-gym-in-nuernberg/",
-  "/personal-trainer-nuernberg/",
+  // Bis 08/2026 die Adresse der Hauptseite. Sie ist jetzt eine Weiterleitung
+  // auf dieselbe Seite ohne Umlaut; die Schreibweise ohne Umlaut ist die
+  // aktuelle Route und steht deshalb nicht mehr in dieser Liste.
+  "/personal-trainer-nürnberg/",
   "/personal-training/",
   "/personal-training-in-nuernberg/",
   "/personal-training-in-nuernberg/camp-doerfl-bootcamp/",

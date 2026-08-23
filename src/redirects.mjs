@@ -34,10 +34,18 @@ export const legacyRedirectRules = Object.freeze({
     "/cookie-einstellungen/": "/cookies/",
     "/dein-trainer/": "/ueber-dominik/",
     "/dein-trainer/partner/": "/partner/",
+    // Diese Adresse steht bei Google noch im Index und lief bis 08/2026
+    // ins Leere: /die-starken-partner/ war nur exakt erfasst, nie als Präfix.
+    "/die-starken-partner/xxl-nutrition-rabattcode/": "/xxl-nutrition-rabattcode/",
     "/die-starken-partner/": "/partner/",
     "/die-starken-partner/bgm-angebote/": "/firmenfitness/",
     "/die-starken-partner/bgm-angebote-fuer-unternehmen/": "/firmenfitness/",
     "/erfolge-im-camp-doerfl/lebenseinstellung-bodybuilding-mit-guenter-preis/": "/erfolge-im-team/guenter-preis/",
+    // Die Moderationsseite lag bis 08/2026 unter /events/. Der Slug trug den
+    // Suchbegriff nicht, unter dem sie gesucht wird — sie führt jetzt unter
+    // /moderator-nuernberg/. Alle älteren Adressen zeigen direkt dorthin,
+    // damit keine Weiterleitungskette entsteht.
+    "/events/": "/moderator-nuernberg/",
     "/firmenfitness-aus-nuernberg/gesundheitstag/": "/gesundheitstag-nuernberg/",
     "/firmenfitness-in-nuernberg/gesundheitstag/": "/gesundheitstag-nuernberg/",
     "/firmenfitness-nuernberg/": "/firmenfitness/",
@@ -52,8 +60,11 @@ export const legacyRedirectRules = Object.freeze({
     "/home/die-starken-partner/": "/partner/",
     "/home/preise-und-leistungen/": "/personal-training-kosten-nuernberg/",
     "/lieferbedingungen/": "/impressum/",
-    "/personal-coaching/": "/personal-trainer-nürnberg/",
-    "/personal-trainer-nuernberg/": "/personal-trainer-nürnberg/",
+    "/personal-coaching/": "/personal-trainer-nuernberg/",
+    // Die Hauptseite lag bis 08/2026 unter der Adresse mit Umlaut. Sie führt
+    // jetzt ohne Umlaut, damit sie in Suchergebnissen, Links und Sitemap ohne
+    // Prozentkodierung steht — die alte Adresse zeigt dauerhaft auf die neue.
+    "/personal-trainer-nürnberg/": "/personal-trainer-nuernberg/",
     "/personal-training-in-nuernberg/xxl-nutrition/": "/partner/",
     "/preise/": "/personal-training-kosten-nuernberg/",
     "/preise-und-leistungen/": "/personal-training-kosten-nuernberg/",
@@ -71,19 +82,19 @@ export const legacyRedirectRules = Object.freeze({
     Object.freeze({ from: "/athletenbereich/archiv/", to: "/erfolge-im-team/" }),
     Object.freeze({ from: "/athletenbereich/aktuelle-news/", to: "/erfolge-im-team/" }),
     Object.freeze({ from: "/athletenbereich/news/", to: "/erfolge-im-team/" }),
-    Object.freeze({ from: "/athletenbereich/bodybuilding-coach/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/athletenbereich/bodybuilding/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/athletenbereich/bodybuilding-doku/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/athletenbereich/bodybuilding-gewichtslimits/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/athletenbereich/bodybuilding-klassen-gewichtslimits/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/athletenbereich/bodybuilding-verbaende/", to: "/personal-trainer-nürnberg/" }),
+    Object.freeze({ from: "/athletenbereich/bodybuilding-coach/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/athletenbereich/bodybuilding/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/athletenbereich/bodybuilding-doku/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/athletenbereich/bodybuilding-gewichtslimits/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/athletenbereich/bodybuilding-klassen-gewichtslimits/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/athletenbereich/bodybuilding-verbaende/", to: "/personal-trainer-nuernberg/" }),
     Object.freeze({ from: "/athletenbereich/bodybuilding-wettkaempfe-", to: "/bodybuilding-wettkaempfe-2026/" }),
     Object.freeze({ from: "/athletenbereich/halbmarathon-termine-", to: "/laufkalender-2026/" }),
     Object.freeze({ from: "/athletenbereich/triathlon-termine-", to: "/triathlon-kalender-2026/" }),
-    Object.freeze({ from: "/athletenbereich/ablauf-bodybuilding-wettkampf/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/athletenbereich/blog/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/athletenbereich/fitness-blog/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/athletenbereich/hybrid-training/", to: "/personal-trainer-nürnberg/" }),
+    Object.freeze({ from: "/athletenbereich/ablauf-bodybuilding-wettkampf/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/athletenbereich/blog/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/athletenbereich/fitness-blog/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/athletenbereich/hybrid-training/", to: "/personal-trainer-nuernberg/" }),
     Object.freeze({ from: "/athletenbereich/", to: "/erfolge-im-team/" }),
     Object.freeze({ from: "/home/aktuelle-news/", to: "/erfolge-im-team/" }),
     Object.freeze({ from: "/home/news/", to: "/erfolge-im-team/" }),
@@ -93,53 +104,61 @@ export const legacyRedirectRules = Object.freeze({
     Object.freeze({ from: "/archiv/", to: "/erfolge-im-team/" }),
     Object.freeze({ from: "/erfolge-im-camp-doerfl/", to: "/erfolge-im-team/" }),
     Object.freeze({ from: "/erfolge/", to: "/erfolge-im-team/" }),
-    Object.freeze({ from: "/personal-trainer-nuernberg/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/personal-trainer-in-nuernberg/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/personal-training-in-nuernberg/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/personal-training-nuernberg/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/personal-training/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/personal-trainer/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/coaching-angebote/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/dein-personal-trainer/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/fitness-online-coaching/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/premium-online-coaching/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/online-coaching/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/fitness-online-coach/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/betreuung-fuer-frauen/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/fuer-die-ladys/", to: "/personal-trainer-nürnberg/" }),
+    // Unterseiten der alten Jimdo-Adresse (z. B. .../dein-gym-in-nuernberg/) landen
+    // auf der Hauptseite. Die Adresse selbst ist seit 08/2026 eine echte Seite und
+    // darf deshalb nicht mehr in die Weiterleitung laufen.
+    Object.freeze({ from: "/personal-trainer-nuernberg/", to: "/personal-trainer-nuernberg/", descendantsOnly: true }),
+    Object.freeze({ from: "/personal-trainer-in-nuernberg/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/personal-training-in-nuernberg/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/personal-training-nuernberg/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/personal-training/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/personal-trainer/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/coaching-angebote/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/dein-personal-trainer/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/fitness-online-coaching/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/premium-online-coaching/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/online-coaching/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/fitness-online-coach/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/betreuung-fuer-frauen/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/fuer-die-ladys/", to: "/personal-trainer-nuernberg/" }),
     Object.freeze({ from: "/fuer-athleten/erfolge-im-team/", to: "/erfolge-im-team/" }),
     Object.freeze({ from: "/fuer-athleten/erfolge/", to: "/erfolge-im-team/" }),
     Object.freeze({ from: "/fuer-athleten/athletenteam/", to: "/erfolge-im-team/" }),
-    Object.freeze({ from: "/fuer-athleten/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/fitnessstudio-in-nuernberg/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/bodybuilding-doku/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/bodybuilding/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/camp-doerfl-blog/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/blog/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/fitness-shop/", to: "/personal-trainer-nürnberg/" }),
-    Object.freeze({ from: "/shop/", to: "/personal-trainer-nürnberg/" }),
+    Object.freeze({ from: "/fuer-athleten/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/fitnessstudio-in-nuernberg/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/bodybuilding-doku/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/bodybuilding/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/camp-doerfl-blog/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/blog/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/fitness-shop/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/shop/", to: "/personal-trainer-nuernberg/" }),
     Object.freeze({ from: "/firmenfitness-aus-nuernberg/", to: "/firmenfitness/" }),
     Object.freeze({ from: "/firmenfitness-in-nuernberg/", to: "/firmenfitness/" }),
-    Object.freeze({ from: "/fuer-unternehmen/moderator/", to: "/events/" }),
-    Object.freeze({ from: "/fuer-unternehmen/moderator-in-nuernberg/", to: "/events/" }),
-    Object.freeze({ from: "/fuer-unternehmen/moderator-nuernberg/", to: "/events/" }),
-    Object.freeze({ from: "/fuer-unternehmen/moderation/", to: "/events/" }),
-    Object.freeze({ from: "/fuer-unternehmen/event/", to: "/events/" }),
-    Object.freeze({ from: "/fuer-unternehmen/events/", to: "/events/" }),
-    Object.freeze({ from: "/fuer-unternehmen/eventmoderation/", to: "/events/" }),
-    Object.freeze({ from: "/fuer-unternehmen/event-moderation/", to: "/events/" }),
-    Object.freeze({ from: "/fuer-unternehmen/speaker/", to: "/events/" }),
-    Object.freeze({ from: "/fuer-unternehmen/keynote/", to: "/events/" }),
-    Object.freeze({ from: "/fuer-unternehmen/keynote-speaker/", to: "/events/" }),
-    Object.freeze({ from: "/fuer-unternehmen/veranstaltung/", to: "/events/" }),
-    Object.freeze({ from: "/fuer-unternehmen/veranstaltungen/", to: "/events/" }),
+    Object.freeze({ from: "/fuer-unternehmen/moderator/", to: "/moderator-nuernberg/" }),
+    Object.freeze({ from: "/fuer-unternehmen/moderator-in-nuernberg/", to: "/moderator-nuernberg/" }),
+    Object.freeze({ from: "/fuer-unternehmen/moderator-nuernberg/", to: "/moderator-nuernberg/" }),
+    Object.freeze({ from: "/fuer-unternehmen/moderation/", to: "/moderator-nuernberg/" }),
+    Object.freeze({ from: "/fuer-unternehmen/event/", to: "/moderator-nuernberg/" }),
+    Object.freeze({ from: "/fuer-unternehmen/events/", to: "/moderator-nuernberg/" }),
+    Object.freeze({ from: "/fuer-unternehmen/eventmoderation/", to: "/moderator-nuernberg/" }),
+    Object.freeze({ from: "/fuer-unternehmen/event-moderation/", to: "/moderator-nuernberg/" }),
+    Object.freeze({ from: "/fuer-unternehmen/speaker/", to: "/moderator-nuernberg/" }),
+    Object.freeze({ from: "/fuer-unternehmen/keynote/", to: "/moderator-nuernberg/" }),
+    Object.freeze({ from: "/fuer-unternehmen/keynote-speaker/", to: "/moderator-nuernberg/" }),
+    Object.freeze({ from: "/fuer-unternehmen/veranstaltung/", to: "/moderator-nuernberg/" }),
+    Object.freeze({ from: "/fuer-unternehmen/veranstaltungen/", to: "/moderator-nuernberg/" }),
     Object.freeze({ from: "/fuer-unternehmen/bgm/", to: "/firmenfitness/" }),
     Object.freeze({ from: "/fuer-unternehmen/gesundheitscheck/", to: "/firmenfitness/" }),
     Object.freeze({ from: "/fuer-unternehmen/gesundheitstag/", to: "/gesundheitstag-nuernberg/" }),
     Object.freeze({ from: "/fuer-unternehmen/", to: "/firmenfitness/" }),
-    Object.freeze({ from: "/veranstaltungen-und-events/", to: "/events/" }),
-    Object.freeze({ from: "/speaker-und-moderator/", to: "/events/" }),
-    Object.freeze({ from: "/speaker/", to: "/events/" }),
+    Object.freeze({ from: "/veranstaltungen-und-events/", to: "/moderator-nuernberg/" }),
+    Object.freeze({ from: "/speaker-und-moderator/", to: "/moderator-nuernberg/" }),
+    Object.freeze({ from: "/speaker/", to: "/moderator-nuernberg/" }),
+    // Ohne diese drei Präfixe endete jeder Unterpfad der alten Jimdo-Struktur
+    // in einem 404 — die Elternpfade waren nur exakt erfasst.
+    Object.freeze({ from: "/die-starken-partner/", to: "/partner/" }),
+    Object.freeze({ from: "/startseite/", to: "/" }),
+    Object.freeze({ from: "/dein-trainer/", to: "/ueber-dominik/" }),
     Object.freeze({ from: "/jetzt-buchen/", to: "/kontakt/" })
   ])
 });
@@ -207,6 +226,14 @@ export function resolveLegacyRedirect(pathname) {
   }
 
   for (const rule of legacyRedirectRules.prefixes) {
+    if (rule.descendantsOnly) {
+      if (normalizedPathname !== rule.from && normalizedPathname.startsWith(rule.from)) {
+        return rule.to;
+      }
+
+      continue;
+    }
+
     if (normalizedPathname === rule.from || normalizedPathname.startsWith(rule.from)) {
       return rule.to;
     }

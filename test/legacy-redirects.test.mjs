@@ -1,11 +1,13 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { encodePath } from "../src/data.mjs";
 import { pages } from "../src/pages.mjs";
 import { resolveCanonicalRedirect, resolveLegacyRedirect } from "../src/redirects.mjs";
 import { legacyPaths } from "./fixtures/legacy-paths.mjs";
+import { ensureBuiltSite } from "./helpers/built-site.mjs";
 
-await import("../src/build.mjs");
+await ensureBuiltSite();
 const worker = (await import("../dist/server/index.js")).default;
 const assetEnvironment = {
   ASSETS: {
@@ -47,18 +49,18 @@ test("the generated production worker returns a permanent redirect for the compl
 
 test("semantic exceptions win over their broader legacy groups", async () => {
   const expectedTargets = new Map([
-    ["/fuer-unternehmen/moderator-in-nuernberg/", "/events/"],
-    ["/fuer-unternehmen/speaker/konferenz/", "/events/"],
-    ["/fuer-unternehmen/keynote/fuehrung/", "/events/"],
-    ["/fuer-unternehmen/veranstaltungen/kongress/", "/events/"],
+    ["/fuer-unternehmen/moderator-in-nuernberg/", "/moderator-nuernberg/"],
+    ["/fuer-unternehmen/speaker/konferenz/", "/moderator-nuernberg/"],
+    ["/fuer-unternehmen/keynote/fuehrung/", "/moderator-nuernberg/"],
+    ["/fuer-unternehmen/veranstaltungen/kongress/", "/moderator-nuernberg/"],
     ["/fuer-unternehmen/bgm/gesundheitstag/", "/firmenfitness/"],
     ["/fuer-unternehmen/gesundheitscheck/inbody/", "/firmenfitness/"],
     ["/fuer-athleten/erfolge-im-team/guenter-preis/", "/erfolge-im-team/guenter-preis/"],
-    ["/fuer-athleten/online-coaching/", "/personal-trainer-nürnberg/"],
-    ["/fitness-online-coach/", "/personal-trainer-nürnberg/"],
+    ["/fuer-athleten/online-coaching/", "/personal-trainer-nuernberg/"],
+    ["/fitness-online-coach/", "/personal-trainer-nuernberg/"],
     ["/athletenbereich/erfolge-im-team/guenter-preis/", "/erfolge-im-team/guenter-preis/"],
     ["/erfolge-im-camp-doerfl/lebenseinstellung-bodybuilding-mit-guenter-preis/", "/erfolge-im-team/guenter-preis/"],
-    ["/athletenbereich/bodybuilding-coach/gewichtslimits/", "/personal-trainer-nürnberg/"],
+    ["/athletenbereich/bodybuilding-coach/gewichtslimits/", "/personal-trainer-nuernberg/"],
     ["/athletenbereich/wettkampf-info/klassen-kategorien/", "/bodybuilding-klassen-gewichtslimits/"],
     ["/athletenbereich/wettkampf-info/bodybuilding-verbaende/", "/bodybuilding-coaching-wettkampfvorbereitung/"],
     ["/jetzt-buchen/koerperanalyse-nuernberg-bia-messung/", "/koerperanalyse-nuernberg/"],
@@ -70,8 +72,8 @@ test("semantic exceptions win over their broader legacy groups", async () => {
     ["/athletenbereich/triathlon-termine-2024/", "/triathlon-kalender-2026/"],
     ["/athletenbereich/bodybuilding-wettkaempfe-2023/", "/bodybuilding-wettkaempfe-2026/"],
     ["/personal-training-in-nuernberg/xxl-nutrition/", "/partner/"],
-    ["/personal-trainer-nuernberg/", "/personal-trainer-nürnberg/"],
-    ["/personal-trainer-nuernberg/dein-gym-in-nuernberg/", "/personal-trainer-nürnberg/"],
+    ["/personal-trainer-nürnberg/", "/personal-trainer-nuernberg/"],
+    ["/personal-trainer-nuernberg/dein-gym-in-nuernberg/", "/personal-trainer-nuernberg/"],
     ["/firmenfitness-aus-nuernberg/gesundheitstag/", "/gesundheitstag-nuernberg/"],
     ["/fuer-unternehmen/gesundheitstag/", "/gesundheitstag-nuernberg/"],
     ["/preise-und-leistungen/", "/personal-training-kosten-nuernberg/"],
@@ -99,7 +101,7 @@ test("apex/http legacy requests reach the canonical target in one hop", async ()
   assert.equal(response.status, 301);
   assert.equal(
     response.headers.get("location"),
-    "https://www.campdoerfl.de/personal-trainer-n%C3%BCrnberg/?utm_source=bookmark"
+    "https://www.campdoerfl.de/personal-trainer-nuernberg/?utm_source=bookmark"
   );
 });
 
@@ -116,7 +118,7 @@ test("slash, case and old HTML variants normalize to the same destination", asyn
     assert.equal(response.status, 301, `Expected normalized redirect for ${variant}`);
     assert.equal(
       decodeURI(new URL(response.headers.get("location")).pathname),
-      "/personal-trainer-nürnberg/",
+      "/personal-trainer-nuernberg/",
       `Wrong normalized target for ${variant}`
     );
   }
@@ -127,7 +129,7 @@ test("the former canonical coaching URL permanently redirects to the new SEO rou
   const location = new URL(response.headers.get("location"));
 
   assert.equal(response.status, 301);
-  assert.equal(decodeURI(location.pathname), "/personal-trainer-nürnberg/");
+  assert.equal(decodeURI(location.pathname), "/personal-trainer-nuernberg/");
   assert.equal(location.search, "?utm_source=existing-link");
 });
 
@@ -146,11 +148,11 @@ test("current routes are never caught by a legacy rule", async () => {
 
 test("current URL variants redirect to one clean canonical structure", async () => {
   const variants = new Map([
-    ["/EVENTS", "/events/"],
-    ["/events.html", "/events/"],
-    ["/events/index.html", "/events/"],
-    ["//events//", "/events/"],
-    ["/PERSONAL-TRAINER-N%C3%9CRNBERG", "/personal-trainer-nürnberg/"]
+    ["/MODERATOR-NUERNBERG", "/moderator-nuernberg/"],
+    ["/moderator-nuernberg.html", "/moderator-nuernberg/"],
+    ["/moderator-nuernberg/index.html", "/moderator-nuernberg/"],
+    ["//moderator-nuernberg//", "/moderator-nuernberg/"],
+    ["/PERSONAL-TRAINER-NUERNBERG", "/personal-trainer-nuernberg/"]
   ]);
   const canonicalRoutes = pages.map((page) => page.route);
 
@@ -172,7 +174,7 @@ test("the sitemap contains canonical pages only", async () => {
 
   for (const page of pages.filter((page) => page.includeInSitemap !== false)) {
     assert.ok(
-      sitemap.includes(`<loc>https://www.campdoerfl.de${page.route}</loc>`),
+      sitemap.includes(`<loc>https://www.campdoerfl.de${encodePath(page.route)}</loc>`),
       `Canonical page missing from sitemap: ${page.route}`
     );
   }
@@ -183,4 +185,31 @@ test("the sitemap contains canonical pages only", async () => {
       `Legacy URL leaked into sitemap: ${legacyPath}`
     );
   }
+});
+
+test("Sitemap und Canonical führen ohne Umleitung zum Ziel", async () => {
+  const sitemap = await readFile(new URL("../dist/sitemap.xml", import.meta.url), "utf8");
+  const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
+
+  for (const loc of locs) {
+    assert.ok(
+      // eslint-disable-next-line no-control-regex
+      /^[\x00-\x7F]*$/.test(loc),
+      `Sitemap-Adresse ist nicht prozentkodiert und läuft über eine Umleitung: ${loc}`
+    );
+  }
+
+  // Die Hauptseite ist der Prüffall: Canonical und Sitemap müssen dieselbe
+  // Adresse tragen, und sie muss ohne Umleitung antworten.
+  const html = await readFile(
+    new URL("../dist/personal-trainer-nuernberg/index.html", import.meta.url),
+    "utf8"
+  );
+  const canonical = /<link rel="canonical" href="([^"]+)"/.exec(html)?.[1];
+
+  assert.equal(canonical, "https://www.campdoerfl.de/personal-trainer-nuernberg/");
+  assert.ok(locs.includes(canonical), "Canonical fehlt in der Sitemap");
+
+  const response = await worker.fetch(new Request(canonical), assetEnvironment);
+  assert.equal(response.status, 200);
 });

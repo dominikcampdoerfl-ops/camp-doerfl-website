@@ -15,7 +15,7 @@ Fachwissen: https://www.campdoerfl.de/expertenwissen/
 2. Apple Podcasts, Spotify und weitere Podcast-Verzeichnisse auf campdoerfl.de vereinheitlichen.
 3. LinkedIn-Kurzprofil, Standort, Rolle und Website mit dem kanonischen Profil abgleichen.
 4. Partnerseiten von clever fit Nürnberg Süd, XXL Nutrition, AEKE, Puzzle Gym und Trueformance um ein redaktionelles Profil mit Deep Link bitten.
-5. Veranstalter vergangener Moderationen um Speakerprofil und Link auf /events/ bitten.
+5. Veranstalter vergangener Moderationen um Speakerprofil und Link auf /moderator-nuernberg/ bitten.
 6. Betreute Athleten und veröffentlichbare Fallstudien nur mit dokumentierter Zustimmung verknüpfen.
 7. Regionale Medien, Sportpodcasts und Fachportale mit konkretem Thema statt allgemeiner Eigenwerbung ansprechen.
 
@@ -30,6 +30,6 @@ Fachwissen: https://www.campdoerfl.de/expertenwissen/
 - Körperanalyse: /koerperanalyse-nuernberg/
 - BIA-/InBody-Vergleich: /bia-inbody-koerperanalyse-vergleich/
 - Firmenfitness: /firmenfitness/
-- Moderation: /events/
+- Moderation: /moderator-nuernberg/
 
 Keine gekauften Linkpakete, keine erfundenen Auszeichnungen und keine identischen Massenanschreiben.

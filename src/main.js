@@ -991,7 +991,7 @@ const initTriathlonCalendar = () => {
     hydrateArchive();
     const postcode = postcodeInput.value.trim();
     const country = countrySelect.value;
-    const radius = Number(radiusSelect.value);
+    const radius = radiusSelect.value === "any" ? Infinity : Number(radiusSelect.value);
 
     if (!postcode) {
       const countryLabel = country ? countryNames[country] : "allen Ländern";
@@ -1020,7 +1020,9 @@ const initTriathlonCalendar = () => {
         origin,
         radius,
         country: effectiveCountry,
-        status: `Rennen im Umkreis von ${radius} km um ${postcode} in ${countryNames[effectiveCountry]}. Entfernungen sind Luftlinie.`
+        status: Number.isFinite(radius)
+          ? `Rennen im Umkreis von ${radius} km um ${postcode} in ${countryNames[effectiveCountry]}. Entfernungen sind Luftlinie.`
+          : `Alle Rennen, sortiert nach Datum — mit Entfernung ab ${postcode} als Luftlinie.`
       });
     } catch {
       setResults({ country, status: "Die Postleitzahl konnte gerade nicht gefunden werden. Bitte Eingabe prüfen oder nur nach Land filtern." });
@@ -1168,7 +1170,7 @@ const initRunningCalendar = () => {
     event.preventDefault();
     hydrateArchive();
     const postcode = postcodeInput.value.trim();
-    const radius = Number(radiusSelect.value);
+    const radius = radiusSelect.value === "any" ? Infinity : Number(radiusSelect.value);
     const category = categorySelect.value;
     const query = queryInput.value.trim();
     const filterDescription = [category ? categoryNames[category] : "alle Laufwelten", query ? `Suche „${query}“` : ""].filter(Boolean).join(" · ");
@@ -1195,7 +1197,9 @@ const initRunningCalendar = () => {
       const origin = await geocodePostcode(postcode);
       setResults({
         origin, radius, category, query,
-        status: `${filterDescription} im Umkreis von ${radius} km um ${postcode}. Entfernungen sind Luftlinie.`
+        status: Number.isFinite(radius)
+          ? `${filterDescription} im Umkreis von ${radius} km um ${postcode}. Entfernungen sind Luftlinie.`
+          : `${filterDescription} — alle Entfernungen, gemessen ab ${postcode} als Luftlinie.`
       });
     } catch {
       setResults({ category, query, status: "Die Postleitzahl konnte gerade nicht gefunden werden. Bitte Eingabe prüfen oder ohne Umkreis filtern." });
@@ -1539,7 +1543,14 @@ const initSportSpotFinder = () => {
 
 initSportSpotFinder();
 
-const initBodybuildingWeeksOut = () => {
+/* Countdown auf den Wettkampf — für alle Kalender.
+ *
+ * Über einer Woche zählt die Plakette Wochen ("12 WEEKS OUT"), darunter Tage
+ * ("6 DAYS OUT"), am Tag selbst steht die Zielmarke. Die Wortwahl kommt aus dem
+ * Markup: Bodybuilding bleibt bei "SHOW DAY", die übrigen Kalender sagen
+ * "GAME TIME". So liest sich jeder Kalender in seiner eigenen Sprache.
+ */
+const initEventCountdowns = () => {
   const countdowns = document.querySelectorAll("[data-weeks-out][data-event-date]");
   if (!countdowns.length) return;
 
@@ -1554,33 +1565,53 @@ const initBodybuildingWeeksOut = () => {
     const daysRemaining = Math.round((eventDate - today) / dayInMilliseconds);
     const value = countdown.querySelector("strong");
     const label = countdown.querySelector("small");
-    countdown.classList.remove("is-show-day", "is-show-over");
+    const wortDay = countdown.dataset.countdownDay || "GAME";
+    const wortDayLabel = countdown.dataset.countdownDayLabel || "TIME";
+    const wortOver = countdown.dataset.countdownOver || "EVENT";
+    const wortOverLabel = countdown.dataset.countdownOverLabel || "OVER";
+    countdown.classList.remove("is-show-day", "is-show-over", "is-days-out");
+
+    const setze = (text, beschriftung, klasse, ariaLabel, titel) => {
+      if (value) value.textContent = text;
+      if (label) label.textContent = beschriftung;
+      if (klasse) countdown.classList.add(klasse);
+      countdown.setAttribute("aria-label", ariaLabel);
+      if (titel) countdown.title = titel;
+    };
 
     if (daysRemaining < 0) {
-      if (value) value.textContent = "SHOW";
-      if (label) label.textContent = "OVER";
-      countdown.classList.add("is-show-over");
-      countdown.setAttribute("aria-label", "Wettkampf bereits ausgetragen");
+      setze(wortOver, wortOverLabel, "is-show-over", "Wettkampf bereits ausgetragen");
       return;
     }
 
     if (daysRemaining === 0) {
-      if (value) value.textContent = "SHOW";
-      if (label) label.textContent = "DAY";
-      countdown.classList.add("is-show-day");
-      countdown.setAttribute("aria-label", "Wettkampftag ist heute");
+      setze(wortDay, wortDayLabel, "is-show-day", "Wettkampftag ist heute");
+      return;
+    }
+
+    if (daysRemaining < 7) {
+      setze(
+        String(daysRemaining),
+        daysRemaining === 1 ? "DAY OUT" : "DAYS OUT",
+        "is-days-out",
+        `Noch ${daysRemaining} ${daysRemaining === 1 ? "Tag" : "Tage"} bis zum Wettkampf`,
+        `Noch ${daysRemaining} ${daysRemaining === 1 ? "Tag" : "Tage"}`
+      );
       return;
     }
 
     const weeksRemaining = Math.ceil(daysRemaining / 7);
-    if (value) value.textContent = String(weeksRemaining);
-    if (label) label.textContent = weeksRemaining === 1 ? "WEEK OUT" : "WEEKS OUT";
-    countdown.setAttribute("aria-label", `${weeksRemaining} ${weeksRemaining === 1 ? "Woche" : "Wochen"} bis zum Wettkampf, noch ${daysRemaining} ${daysRemaining === 1 ? "Tag" : "Tage"}`);
-    countdown.title = `Noch ${daysRemaining} ${daysRemaining === 1 ? "Tag" : "Tage"} bis zur Show`;
+    setze(
+      String(weeksRemaining),
+      weeksRemaining === 1 ? "WEEK OUT" : "WEEKS OUT",
+      null,
+      `${weeksRemaining} ${weeksRemaining === 1 ? "Woche" : "Wochen"} bis zum Wettkampf, noch ${daysRemaining} ${daysRemaining === 1 ? "Tag" : "Tage"}`,
+      `Noch ${daysRemaining} ${daysRemaining === 1 ? "Tag" : "Tage"} bis zum Termin`
+    );
   });
 };
 
-initBodybuildingWeeksOut();
+initEventCountdowns();
 
 const initBodybuildingClassCalculator = () => {
   const calculator = document.querySelector("[data-class-calculator]");
@@ -1651,6 +1682,30 @@ const initBodybuildingClassCalculator = () => {
       } else {
         label = "Nicht als eigene Klasse geführt";
         note = "NAC Germany führt Classic Physique, aber keine separate Classic-Bodybuilding-Division.";
+      }
+    } else if (federation.value === "gnbf") {
+      if (division.value === "classic-physique" || division.value === "classic-bodybuilding") {
+        limit = height - 98;
+        label = `GNBF-Limit: ${limit.toFixed(1).replace(".0", "")} kg`;
+        note = "Men’s Classic Physique: Körpergröße minus 98. Gilt nur national – international zählen die Kriterien von INBA Global.";
+      } else if (division.value === "bodybuilding") {
+        label = "FFMI bis 26,0 statt kg-Limit";
+        note = "GNBF Men’s Bodybuilding kennt kein Gewichtslimit. Beim Einschreiben wird der FFMI ermittelt; über 26,0 erfolgt national keine Zulassung. Eingeteilt wird vor Ort nach Körpergröße.";
+      } else {
+        label = "Kein kg-Limit";
+        note = "Men’s Physique und Men’s Athletik werden vor Ort nach Körpergröße eingeteilt, nicht über ein Gewichtslimit.";
+      }
+    } else if (federation.value === "nabba") {
+      if (division.value === "bodybuilding") {
+        const mrClass = height <= 172 ? "Mr Class 3" : height <= 179 ? "Mr Class 2" : "Mr Class 1";
+        label = `${mrClass} · kein Gewichtslimit`;
+        note = "NABBA teilt Bodybuilding allein nach Körpergröße ein: bis 1,72 m, über 1,72 bis 1,79 m, über 1,79 m.";
+      } else if (division.value === "classic-physique" || division.value === "classic-bodybuilding") {
+        label = "Kein Gewichtslimit";
+        note = "NABBA Classic wird ohne Gewichtsobergrenze gewertet – entscheidend ist der klassische Look.";
+      } else {
+        label = "Kein Gewichtslimit";
+        note = "NABBA Men’s Physique läuft als Open und Over 45, ohne Gewichtsgrenze.";
       }
     } else {
       if (division.value === "classic-physique") {
@@ -2116,3 +2171,159 @@ const initMemberLogin = () => {
 };
 
 initMemberLogin();
+
+/* Leistungs-Slideshow der Startseite: Pfeile, Punkte und Tastatur auf einer
+   Spur, die ohne JavaScript bereits horizontal scrollbar ist. */
+const initPathSliders = () => {
+  document.querySelectorAll("[data-path-slider]").forEach((slider) => {
+    const track = slider.querySelector("[data-path-track]");
+    const slides = Array.from(slider.querySelectorAll("[data-path-slide]"));
+    const dots = Array.from(slider.querySelectorAll("[data-path-dot]"));
+    const previousButton = slider.querySelector("[data-path-prev]");
+    const nextButton = slider.querySelector("[data-path-next]");
+
+    if (!track || slides.length === 0) return;
+
+    let current = 0;
+
+    const markActive = (index) => {
+      current = index;
+      dots.forEach((dot, dotIndex) => {
+        const isActive = dotIndex === index;
+        dot.classList.toggle("is-active", isActive);
+        if (isActive) {
+          dot.setAttribute("aria-current", "true");
+        } else {
+          dot.removeAttribute("aria-current");
+        }
+      });
+    };
+
+    const goTo = (index) => {
+      const target = (index + slides.length) % slides.length;
+      track.scrollTo({ left: slides[target].offsetLeft - slides[0].offsetLeft });
+      markActive(target);
+    };
+
+    // Beim Wischen und beim Scrollen mit dem Trackpad führt die Spur, nicht der Knopf.
+    let syncTimer = null;
+    track.addEventListener("scroll", () => {
+      window.clearTimeout(syncTimer);
+      syncTimer = window.setTimeout(() => {
+        const origin = slides[0].offsetLeft;
+        const distances = slides.map((slide) => Math.abs(slide.offsetLeft - origin - track.scrollLeft));
+        markActive(distances.indexOf(Math.min(...distances)));
+      }, 90);
+    });
+
+    /* Automatischer Vorlauf, wenn die Folge ihn anfordert.
+     *
+     * Er hält an, sobald jemand mit der Maus darüber ist, per Tastatur darin
+     * steht, selbst blättert oder wischt — und er läuft nicht, wenn im System
+     * weniger Bewegung gewünscht ist oder der Tab im Hintergrund liegt. */
+    const autoplayDauer = Number(slider.dataset.pathAutoplay || 0);
+    const wenigerBewegung = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let autoplayTimer = null;
+    let autoplayGestoppt = false;
+
+    const autoplayAnhalten = () => {
+      window.clearInterval(autoplayTimer);
+      autoplayTimer = null;
+    };
+
+    const autoplayStarten = () => {
+      if (!autoplayDauer || autoplayGestoppt || wenigerBewegung.matches) return;
+      if (autoplayTimer || document.hidden) return;
+      autoplayTimer = window.setInterval(() => goTo(current + 1), autoplayDauer);
+    };
+
+    // Nach einem eigenen Klick, Tastendruck oder Wisch bleibt die Folge stehen.
+    const autoplayBeenden = () => {
+      autoplayGestoppt = true;
+      autoplayAnhalten();
+    };
+
+    if (autoplayDauer) {
+      slider.addEventListener("mouseenter", autoplayAnhalten);
+      slider.addEventListener("mouseleave", autoplayStarten);
+      slider.addEventListener("focusin", autoplayAnhalten);
+      slider.addEventListener("focusout", autoplayStarten);
+      slider.addEventListener("pointerdown", autoplayBeenden);
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) autoplayAnhalten();
+        else autoplayStarten();
+      });
+      wenigerBewegung.addEventListener?.("change", () => {
+        if (wenigerBewegung.matches) autoplayAnhalten();
+        else autoplayStarten();
+      });
+      autoplayStarten();
+    }
+
+    previousButton?.addEventListener("click", () => {
+      autoplayBeenden();
+      goTo(current - 1);
+    });
+    nextButton?.addEventListener("click", () => {
+      autoplayBeenden();
+      goTo(current + 1);
+    });
+    dots.forEach((dot, index) =>
+      dot.addEventListener("click", () => {
+        autoplayBeenden();
+        goTo(index);
+      })
+    );
+
+    slider.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        autoplayBeenden();
+        goTo(current - 1);
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault();
+        autoplayBeenden();
+        goTo(current + 1);
+      }
+    });
+  });
+};
+
+initPathSliders();
+
+/* Rabattcode kopieren.
+ *
+ * Ohne JavaScript bleibt der Code lesbar und markierbar — der Knopf ist nur die
+ * bequemere Variante. Schlägt das Kopieren fehl (ältere Browser, blockierte
+ * Zwischenablage), wird der Code markiert, damit er von Hand kopiert werden kann.
+ */
+const initCodeCopy = () => {
+  const buttons = document.querySelectorAll("[data-copy-code]");
+  if (!buttons.length) return;
+
+  buttons.forEach((button) => {
+    const feedback = button.closest(".code-card")?.querySelector("[data-copy-feedback]");
+    const meldung = (text) => { if (feedback instanceof HTMLElement) feedback.textContent = text; };
+
+    button.addEventListener("click", async () => {
+      const code = button.dataset.copyCode || "";
+
+      try {
+        await navigator.clipboard.writeText(code);
+        meldung(`Code ${code} kopiert.`);
+      } catch {
+        const wert = button.closest(".code-card")?.querySelector("[data-code-value]");
+        if (wert instanceof HTMLElement) {
+          const auswahl = window.getSelection();
+          const bereich = document.createRange();
+          bereich.selectNodeContents(wert);
+          auswahl?.removeAllRanges();
+          auswahl?.addRange(bereich);
+        }
+        meldung("Kopieren nicht möglich — der Code ist markiert und kann von Hand kopiert werden.");
+      }
+    });
+  });
+};
+
+initCodeCopy();

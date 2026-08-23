@@ -27,7 +27,7 @@ test("the pricing page lists every current Personal Training price", () => {
 test("the pricing page answers commercial search intent and supports a confident decision", () => {
   const markup = renderPage("/personal-training-kosten-nuernberg/");
 
-  assert.match(markup, /Personal Trainer Nürnberg: Preise & Kosten/);
+  assert.match(markup, /Personal Training Kosten Nürnberg: Preise im Überblick/);
   assert.match(markup, /Welches Personal-Training-Modell passt zu dir/);
   assert.match(markup, /80 € pro Session/);
   assert.match(markup, /Wie teuer ist ein Personal Trainer in Nürnberg/);
@@ -41,7 +41,7 @@ test("the pricing page answers commercial search intent and supports a confident
 
 test("pricing is linked from Personal Training Nürnberg and every footer", () => {
   const pricingHref = 'href="/personal-training-kosten-nuernberg/"';
-  const trainingMarkup = renderPage("/personal-trainer-nürnberg/");
+  const trainingMarkup = renderPage("/personal-trainer-nuernberg/");
   const homeMarkup = renderPage("/");
 
   assert.ok(trainingMarkup.split(pricingHref).length >= 3, "training page must include its contextual link and footer link");
@@ -51,7 +51,7 @@ test("pricing is linked from Personal Training Nürnberg and every footer", () =
 });
 
 test("new local landing pages receive strong contextual internal links", () => {
-  const trainingMarkup = renderPage("/personal-trainer-nürnberg/");
+  const trainingMarkup = renderPage("/personal-trainer-nuernberg/");
   const corporateMarkup = renderPage("/firmenfitness/");
   const homeMarkup = renderPage("/");
 

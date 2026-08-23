@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { pages } from "./pages.mjs";
-import { site } from "./data.mjs";
+import { encodePath, site } from "./data.mjs";
 import { legacyRedirectRules } from "./redirects.mjs";
 import { securityHeaders } from "./security.mjs";
 import {
@@ -163,6 +163,14 @@ function resolveLegacyRedirect(pathname) {
   }
 
   for (const rule of legacyRedirectRules.prefixes) {
+    if (rule.descendantsOnly) {
+      if (normalizedPathname !== rule.from && normalizedPathname.startsWith(rule.from)) {
+        return rule.to;
+      }
+
+      continue;
+    }
+
     if (normalizedPathname === rule.from || normalizedPathname.startsWith(rule.from)) {
       return rule.to;
     }
@@ -522,7 +530,7 @@ export async function buildSite() {
 ${sitemapPages
     .map(
       (page) => `  <url>
-    <loc>${site.url}${page.route}</loc>
+    <loc>${site.url}${encodePath(page.route)}</loc>
     <lastmod>${page.lastModified || "2026-08-11"}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>${page.route === "/" ? "1.0" : "0.8"}</priority>
@@ -549,7 +557,7 @@ ${sitemapPages
   const videoSitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
 ${videoEntries.map(({ page, video }) => `  <url>
-    <loc>${escapeXml(`${site.url}${page.route}`)}</loc>
+    <loc>${escapeXml(`${site.url}${encodePath(page.route)}`)}</loc>
     <video:video>
       <video:thumbnail_loc>${escapeXml(Array.isArray(video.thumbnailUrl) ? video.thumbnailUrl[0] : video.thumbnailUrl)}</video:thumbnail_loc>
       <video:title>${escapeXml(video.name)}</video:title>
@@ -635,10 +643,10 @@ Camp Dörfl is a public German-language website for personal training, body anal
 
 - [Home](${site.url}/): Overview of Camp Dörfl and all services
 - [Körperanalyse Nürnberg](${site.url}/koerperanalyse-nuernberg/): 2D body analysis, InBody BIA measurement and personal evaluation
-- [Personal Trainer Nürnberg](${site.url}/personal-trainer-nürnberg/): Premium personal training and coaching
+- [Personal Trainer Nürnberg](${site.url}/personal-trainer-nuernberg/): Premium personal training and coaching
 - [Firmenfitness deutschlandweit](${site.url}/firmenfitness/): Germany-wide corporate health days, InBody consultation, workplace-specific nutrition talks and team activation
 - [Gesundheitstag Nürnberg](${site.url}/gesundheitstag-nuernberg/): Health-day formats for companies
-- [Events](${site.url}/events/): Event moderation and performance formats
+- [Moderator Nürnberg](${site.url}/moderator-nuernberg/): Event moderation and stage formats
 - [Camp Dörfl App](${site.url}/app/): Training, nutrition and progress tracking
 - [About Dominik Dörfl](${site.url}/ueber-dominik/): Coach, athlete and moderator profile
 - [Expert knowledge hub](${site.url}/expertenwissen/): Source-backed guides by Dominik Dörfl

@@ -9,3 +9,6 @@ assets/videos/events-wir-bewegen-bayern.mp4
 member-app/
 member-app.staging/
 member-app.previous/
+
+# npm-Abhängigkeiten (nur für Werkzeuge wie die Bildpipeline)
+node_modules/
