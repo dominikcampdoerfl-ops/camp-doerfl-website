@@ -155,8 +155,16 @@ test("die Marketingseiten bleiben streng gesichert, die App darf mehr", () => {
 
   // Das Login-Fenster der Website meldet direkt beim App-Backend an.
   assert.ok(sitePolicy.includes(MEMBER_API_ORIGIN));
-  assert.ok(sitePolicy.includes("script-src 'self' 'unsafe-inline';"));
+  // Genau eine fremde Skriptquelle ist erlaubt: das Beacon von Cloudflare Web
+  // Analytics. Kommt eine weitere dazu, schlägt dieser Test an.
+  assert.ok(
+    sitePolicy.includes("script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com;"),
+    `script-src unerwartet: ${sitePolicy}`
+  );
   assert.ok(!sitePolicy.includes("unsafe-eval"));
+  assert.ok(!sitePolicy.includes("script-src *"));
+  const scriptQuellen = sitePolicy.match(/script-src ([^;]+);/)[1].split(/\s+/).filter((q) => q.startsWith("http"));
+  assert.equal(scriptQuellen.length, 1, `nur eine externe Skriptquelle erwartet, gefunden: ${scriptQuellen}`);
 
   // Der Expo-Build braucht Blob-Worker und erzeugt Animationsfunktionen zur Laufzeit.
   assert.ok(memberPolicy.includes("worker-src 'self' blob:"));

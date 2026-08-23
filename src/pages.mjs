@@ -4100,7 +4100,7 @@ function privacyPage() {
           <article class="legal-card" data-reveal>
             <h2>Kurz zusammengefasst</h2>
             <ul class="legal-list">
-              <li>Diese Website verwendet aktuell keine Analyse- oder Marketing-Tools, die ohne Einwilligung aktiviert werden.</li>
+              <li>Diese Website verwendet zur Reichweitenmessung Cloudflare Web Analytics — ohne Cookies, ohne Wiedererkennung über Seiten hinweg und ohne Marketing-Tools.</li>
               <li>Die auf der Website verwendeten Schriftarten werden lokal bereitgestellt.</li>
               <li>Ihre Einwilligungsauswahl wird lokal im Browser unter <code>campdoerfl-consent</code> gespeichert.</li>
               <li>Erfolgsrelevante Interaktionen werden ohne Cookies oder dauerhafte Nutzerkennung anonymisiert gezählt.</li>
@@ -4127,6 +4127,12 @@ function privacyPage() {
           <h2>2. Kontakt per E-Mail und Kontaktformular</h2>
           <p>Wenn Sie mir direkt per E-Mail schreiben oder das Kontaktformular auf dieser Website nutzen, verarbeite ich die von Ihnen übermittelten Angaben zur Bearbeitung Ihrer Anfrage. Das können insbesondere Name, E-Mail-Adresse, Telefonnummer, Unternehmen, Thema und Nachricht sein.</p>
           <p>Beim Absenden des Formulars werden die eingegebenen Daten an den externen Formular-Dienst FormSubmit unter <code>formsubmit.co</code> übertragen und von dort an ${site.email} weitergeleitet. Dabei können zusätzlich technische Verbindungsdaten wie IP-Adresse, Zeitstempel und Browserinformationen verarbeitet werden.</p>
+          <h2>Reichweitenmessung mit Cloudflare Web Analytics</h2>
+          <p>Zur Messung der Reichweite dieser Website wird Cloudflare Web Analytics eingesetzt, ein Dienst der Cloudflare, Inc. Erfasst werden Seitenaufrufe, aufgerufene Seitenpfade, die verweisende Domain, das Herkunftsland, grobe Geräte- und Browserangaben sowie Ladezeiten.</p>
+          <p>Der Dienst arbeitet <strong>ohne Cookies, ohne Zugriff auf den lokalen Speicher und ohne Fingerprinting</strong>. Es wird keine dauerhafte Nutzerkennung vergeben und keine Wiedererkennung über verschiedene Websites hinweg vorgenommen. Eine Zuordnung der Daten zu Ihrer Person ist mir nicht möglich; aus diesem Grund ist für den Einsatz keine Einwilligung erforderlich und die Messung ist von Ihrer Auswahl im Einwilligungsdialog unabhängig.</p>
+          <p><span class="legal-label">Empfänger:</span> Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107, USA. Cloudflare ist unter dem EU-US Data Privacy Framework zertifiziert.</p>
+          <p><span class="legal-label">Rechtsgrundlage:</span> Art. 6 Abs. 1 lit. f DSGVO — berechtigtes Interesse an einer datensparsamen, statistischen Auswertung der Websitenutzung.</p>
+
           <h2>Anonymisierte Erfolgsmessung</h2>
           <p>Zur Verbesserung der Website werden ausschließlich erfolgsrelevante Interaktionen wie Klicks auf Anfragewege, Formularbeginn und erfolgreicher oder fehlgeschlagener Versand gezählt. Gespeichert werden Ereignistyp, aufgerufener Seitenpfad, Zielkategorie, grobe Geräteklasse und die verweisende Domain. Es werden keine Cookies, keine dauerhafte Nutzerkennung und keine Formularinhalte gespeichert. Die Speicherung erfolgt als strukturierter Eintrag in Cloudflare Workers Logs und wird nach spätestens sieben Tagen automatisch gelöscht.</p>
           <p><span class="legal-label">Empfänger:</span> ich selbst sowie der eingesetzte Formular-Dienst FormSubmit / Devro LABS.</p>
@@ -9488,7 +9494,7 @@ export const pages = [
   { route: "/koerperanalyse-nuernberg/", render: koerperanalyseNuernbergPage },
   { route: "/firmenfitness/", render: firmenfitnessPage, lastModified: "2026-08-11" },
   { route: "/moderator-nuernberg/", render: eventsPage, lastModified: "2026-08-21" },
-  { route: "/keynote-speaker-nuernberg/", render: keynoteSpeakerNuernbergPage, lastModified: "2026-08-16" },
+  { route: "/keynote-speaker-nuernberg/", render: keynoteSpeakerNuernbergPage, lastModified: "2026-08-23" },
   { route: "/fit-werden/", render: personalTrainingAb40NuernbergPage, lastModified: "2026-08-16" },
   { route: "/partner/", render: partnerPage },
   { route: "/xxl-nutrition-rabattcode/", render: xxlNutritionRabattcodePage, lastModified: "2026-08-23" },
@@ -9497,9 +9503,9 @@ export const pages = [
   { route: "/bodybuilding-klassen-gewichtslimits/", render: bodybuildingClassesPage, lastModified: "2026-08-22" },
   { route: "/boxen-wettkaempfe-2026/", render: boxingCalendarPage },
   { route: "/mma-wettkaempfe-2026/", render: mmaCalendarPage, lastModified: "2026-08-20" },
-  { route: "/triathlon-kalender-2026/", render: triathlonCalendarPage },
-  { route: "/laufkalender-2026/", render: runningCalendarPage },
-  { route: "/golfturniere-2026/", render: golfCalendarPage },
+  { route: "/triathlon-kalender-2026/", render: triathlonCalendarPage, lastModified: "2026-08-23" },
+  { route: "/laufkalender-2026/", render: runningCalendarPage, lastModified: "2026-08-23" },
+  { route: "/golfturniere-2026/", render: golfCalendarPage, lastModified: "2026-08-23" },
   { route: "/sport-spot-finden/", render: sportSpotFinderPage },
   { route: "/executive-performance/", render: executivePerformancePage },
   { route: "/erfolge-im-team/", render: teamSuccessPage },

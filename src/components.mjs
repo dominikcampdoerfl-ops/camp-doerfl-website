@@ -1339,6 +1339,25 @@ function consentManager() {
   `;
 }
 
+/* ---------------------------------------------------------------
+   Cloudflare Web Analytics
+
+   Ohne Cookies, ohne localStorage, ohne Wiedererkennung über Seiten
+   hinweg — deshalb ist keine Einwilligung nötig und das Skript läuft
+   unabhängig vom Consent-Banner. Erhoben werden Seitenaufrufe,
+   Herkunft, Land und Ladezeiten.
+
+   Das Token stammt aus dem Cloudflare-Dashboard und ist kein Geheimnis:
+   Es steht ohnehin im ausgelieferten HTML. Ohne Token wird gar nichts
+   eingebunden, die Seite funktioniert dann unverändert.
+   --------------------------------------------------------------- */
+const WEB_ANALYTICS_TOKEN = "0e97d1729e144d108067a82218067414";
+
+function webAnalyticsSnippet() {
+  if (!WEB_ANALYTICS_TOKEN) return "";
+  return `<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "${WEB_ANALYTICS_TOKEN}"}'></script>`;
+}
+
 export function layout({
   title,
   description,
@@ -1552,6 +1571,7 @@ export function layout({
     ${memberLoginDialog()}
     ${consentManager()}
     <script type="module" src="/assets/__ASSET_VERSION__/main.js"></script>
+    ${webAnalyticsSnippet()}
   </body>
 </html>`;
 }
