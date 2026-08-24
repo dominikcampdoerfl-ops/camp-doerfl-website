@@ -503,10 +503,45 @@ export async function buildSite() {
   }
   const coreAssetNames = ["styles.css", "mobile-overrides.css", "design-contract.css", "main.js", "contact-topics.js"];
   const coreAssetContents = await Promise.all(coreAssetNames.map((name) => readFile(join(root, "src", name))));
-  const assetVersion = `v-${createHash("sha256").update(Buffer.concat(coreAssetContents)).digest("hex").slice(0, 12)}`;
+  // Die Schriften liegen unter einer festen Adresse und werden ein Jahr lang als
+  // "immutable" ausgeliefert. Ohne eigene Kennung bekaemen wiederkehrende Besucher
+  // nach einem Austausch weiter die alten Dateien aus dem Cache. Die Kennung wird
+  // getrennt von assetVersion gebildet, damit eine reine CSS-Aenderung die
+  // Schriften nicht unnoetig erneut laden laesst.
+  const fontDir = join(root, "assets", "fonts");
+  const fontNames = (await pathExists(fontDir))
+    ? (await readdir(fontDir)).filter((name) => name.endsWith(".woff2")).sort()
+    : [];
+  const fontContents = await Promise.all(fontNames.map((name) => readFile(join(fontDir, name))));
+  const fontVersion = fontNames.length
+    ? `f-${createHash("sha256").update(Buffer.concat(fontContents)).digest("hex").slice(0, 12)}`
+    : "";
+
+  // Die Schriftkennung geht in die Asset-Version ein: Die Schrift-Adressen werden
+  // erst beim Kopieren in das CSS geschrieben, die Quelldatei bleibt unveraendert.
+  // Ohne diesen Zusatz behielte das CSS seine Adresse und wiederkehrende Besucher
+  // bekaemen ein Jahr lang die alte Fassung mit den alten Schriften aus dem Cache.
+  const assetVersion = `v-${createHash("sha256")
+    .update(Buffer.concat(coreAssetContents))
+    .update(fontVersion)
+    .digest("hex")
+    .slice(0, 12)}`;
+
   const versionedAssetDir = join(dist, "assets", assetVersion);
   await mkdir(versionedAssetDir, { recursive: true });
-  await Promise.all(coreAssetNames.map((name) => copyFile(join(root, "src", name), join(versionedAssetDir, name))));
+  await Promise.all(
+    coreAssetNames.map(async (name) => {
+      if (!fontVersion || !name.endsWith(".css")) {
+        return copyFile(join(root, "src", name), join(versionedAssetDir, name));
+      }
+      const inhalt = await readFile(join(root, "src", name), "utf8");
+      const mitKennung = inhalt.replaceAll(
+        /\/assets\/fonts\/([A-Za-z0-9._-]+\.woff2)/g,
+        `/assets/fonts/$1?${fontVersion}`
+      );
+      return writeFile(join(versionedAssetDir, name), mitKennung, "utf8");
+    })
+  );
 
   const memberBuild = await readMemberBuild();
   const memberBuildNoteMarkup = memberBuildNote(memberBuild);
@@ -518,6 +553,7 @@ export async function buildSite() {
     const html = page
       .render()
       .replaceAll("__ASSET_VERSION__", assetVersion)
+      .replaceAll("__FONT_VERSION__", fontVersion)
       .replaceAll("__MEMBER_APP_BUILD_NOTE__", memberBuildNoteMarkup);
     renderedPages.set(page.route, html);
     await writeFile(join(outputDir, "index.html"), html, "utf8");

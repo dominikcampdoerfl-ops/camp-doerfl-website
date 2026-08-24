@@ -118,7 +118,12 @@ test("bodybuilding calendar separates all requested international systems", () =
   assert.match(markup, /bbcal-source-group--international/);
   assert.match(markup, /bbcal-federation--international/);
   assert.match(markup, /bbcal-more-events/);
-  assert.match(markup, /Weitere 14 öffnen/);
+  // Bewusst ohne feste Zahl: Der Kalender bestimmt seinen Status beim Build,
+  // deshalb sinkt die Zahl der kommenden Termine mit jedem vergangenen Tag.
+  // Geprüft wird, dass die Aufklappliste überhaupt Termine nachreicht.
+  const nachgereicht = markup.match(/Weitere (\d+) öffnen/);
+  assert.ok(nachgereicht, "die internationalen Kalender müssen weitere Termine nachreichen");
+  assert.ok(Number(nachgereicht[1]) > 0, `erwartet mehr als 0 weitere Termine, gefunden: ${nachgereicht[1]}`);
 });
 
 test("boxing calendar includes IBF and BDB as professional organisations", () => {

@@ -1556,6 +1556,13 @@ export function layout({
 	    <link rel="icon" type="image/webp" href="${brandLogoDisplayPath}">
 	    <link rel="icon" type="image/png" href="${brandLogoSourcePath}">
 	    <link rel="apple-touch-icon" sizes="180x180" href="${brandLogoSourcePath}">
+	    <!-- Vorgeladen werden nur die drei Schnitte über der Falz: Inter 400 traegt
+	         den Fliesstext, Inter 700 Marke und Navigation, Roboto Condensed 700 die
+	         Hero-Titel. Ohne Preload werden sie erst nach dem CSS entdeckt und der
+	         Schriftwechsel verschiebt die Kopfzeile (CLS). -->
+	    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-400.woff2?__FONT_VERSION__" crossorigin>
+	    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-700.woff2?__FONT_VERSION__" crossorigin>
+	    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/roboto-condensed-700.woff2?__FONT_VERSION__" crossorigin>
 	    <link rel="stylesheet" href="/assets/__ASSET_VERSION__/styles.css">
 	    <link rel="stylesheet" href="/assets/__ASSET_VERSION__/mobile-overrides.css">
 	    <link rel="stylesheet" href="/assets/__ASSET_VERSION__/design-contract.css">
