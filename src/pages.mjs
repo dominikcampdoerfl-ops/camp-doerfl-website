@@ -5322,9 +5322,10 @@ function personalTrainingCostPage() {
             <thead><tr><th>Modell</th><th>Am besten für</th><th>Umfang</th><th>Preis</th><th>Je Session</th></tr></thead>
             <tbody>
               <tr><th>Einzelsession</th><td>Check, Technik, erster Impuls</td><td>1 Termin</td><td>120 € / 150 € inkl. 2D</td><td>120 € / 150 €</td></tr>
-              <tr><th>5er-Karte</th><td>Strukturierter Einstieg</td><td>5 Sessions</td><td>500 €</td><td>100 €</td></tr>
-              <tr class="is-recommended"><th>10er-Karte <span>Empfehlung</span></th><td>Regelmäßige 1:1 Führung</td><td>10 Sessions</td><td>800 €</td><td>80 €</td></tr>
+              <tr><th>5er-Karte</th><td>Strukturierter Einstieg</td><td>5 Sessions + 1× InBody</td><td>500 €</td><td>100 €</td></tr>
+              <tr class="is-recommended"><th>10er-Karte <span>Empfehlung</span></th><td>Regelmäßige 1:1 Führung</td><td>10 Sessions + 2× InBody</td><td>800 €</td><td>80 €</td></tr>
               <tr><th>App Zugang</th><td>Digitaler Start ohne feste Termine</td><td>Alle App-Funktionen</td><td>9,99 € / Monat</td><td>ohne Session</td></tr>
+              <tr><th>Online Coaching</th><td>Führung ohne Termine vor Ort</td><td>Plan, Anpassung, App</td><td>ab 120 € / Monat</td><td>ohne Session</td></tr>
               <tr><th>Premium Begleitung</th><td>Ganzheitliche laufende Steuerung</td><td>Individuell</td><td>ab 200 € / Monat</td><td>nach Umfang</td></tr>
             </tbody>
           </table>
