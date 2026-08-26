@@ -11887,7 +11887,7 @@ html body.page-premium.page-firmenfitness main .corporate-process-section {
   text-transform: uppercase;
 }
 
-.page-guide-pricing .pt-price-card h3 {
+.page-guide-pricing .pt-price-card h4 {
   margin: 0;
   color: #19150e !important;
   font-size: clamp(1.65rem, 2.1vw, 2.2rem);
@@ -12904,8 +12904,10 @@ html body.page-premium.page-bodybuilding-coaching main .bbc-inquiry {
   }
 }
 
-/* Goldene Fläche für die Ausbaustufe — auf beiden Breiten. */
-.page-guide-pricing .pt-price-card--wide {
+/* Goldene Flaeche fuer die Ausbaustufe. Haengt bewusst nicht mehr an der
+   Vollbreite: Seit die Preise in zwei Gruppen zu je drei Karten stehen,
+   braucht die oberste Stufe die Hervorhebung ohne eigene Zeile. */
+.page-guide-pricing .pt-price-card--top {
   border-color: rgba(155, 116, 26, 0.46) !important;
   background:
     radial-gradient(circle at 100% 0%, rgba(255, 255, 255, 0.6), transparent 40%),
@@ -12913,7 +12915,7 @@ html body.page-premium.page-bodybuilding-coaching main .bbc-inquiry {
   box-shadow: 0 26px 48px -34px rgba(43, 32, 12, 0.5) !important;
 }
 
-.page-guide-pricing .pt-price-card--wide .pt-price-card__tag {
+.page-guide-pricing .pt-price-card--top .pt-price-card__tag {
   color: #7f5c0f !important;
   -webkit-text-fill-color: #7f5c0f !important;
 }
@@ -14052,4 +14054,37 @@ html body.page-premium.page-coaching main .coaching-price .summary-row {
   .page-home-reboot .home-search-paths .section-header h2 {
     font-size: min(3rem, 5.5vw);
   }
+}
+
+
+/* ---------------------------------------------------------------
+   Preisgruppen: Training vor Ort gegen laufende Betreuung.
+   Zwei Bloecke zu je drei Karten statt einer durchlaufenden Liste.
+   --------------------------------------------------------------- */
+.page-guide-pricing .pt-price-groups {
+  display: grid;
+  gap: clamp(38px, 4vw, 64px);
+}
+
+.page-guide-pricing .pt-price-group__head {
+  margin-bottom: clamp(18px, 2vw, 28px);
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(42, 33, 18, 0.16);
+}
+
+.page-guide-pricing .pt-price-group__title {
+  margin: 0 0 6px;
+  color: #19150e;
+  font-family: var(--font-cond);
+  font-size: clamp(1.5rem, 2.4vw, 2.05rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.page-guide-pricing .pt-price-group__head p {
+  margin: 0;
+  max-width: 68ch;
+  color: #625747;
+  line-height: 1.6;
 }

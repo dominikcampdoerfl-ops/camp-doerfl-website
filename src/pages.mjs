@@ -5052,8 +5052,15 @@ function contactPage() {
 }
 
 function personalTrainingCostPage() {
-  const priceCards = [
+  // Zwei Kategorien: Training vor Ort nach Terminen, Coaching als laufende
+  // Betreuung. Die Nummerierung beginnt je Gruppe neu, damit die Zuordnung
+  // sichtbar bleibt statt durchzulaufen.
+  const priceGroups = [
     {
+      title: "Personal Training",
+      text: "Persönliches Training vor Ort in Nürnberg — als einzelner Termin oder als Karte über mehrere Einheiten.",
+      cards: [
+{
       number: "01",
       tag: "Ohne Kartenbindung",
       title: "Einzelsession",
@@ -5065,7 +5072,7 @@ function personalTrainingCostPage() {
       items: ["120 € ohne 2D-Körperanalyse", "150 € inklusive 2D-Körperanalyse"],
       cta: "Einzelsession anfragen"
     },
-    {
+{
       number: "02",
       tag: "Kontinuität",
       title: "5er-Karte",
@@ -5077,7 +5084,7 @@ function personalTrainingCostPage() {
       items: ["5 persönliche Sessions", "Entspricht 100 € pro Session"],
       cta: "5er-Karte anfragen"
     },
-    {
+{
       number: "03",
       tag: "Bester Kartenwert",
       title: "10er-Karte",
@@ -5089,9 +5096,15 @@ function personalTrainingCostPage() {
       items: ["10 persönliche Sessions", "Entspricht 80 € pro Session"],
       featured: true,
       cta: "10er-Karte anfragen"
+    }
+      ]
     },
     {
-      number: "04",
+      title: "Personal Coaching",
+      text: "Laufende Betreuung statt einzelner Termine — digital, aus der Ferne oder eins zu eins vor Ort.",
+      cards: [
+{
+      number: "01",
       tag: "Digitaler Einstieg",
       title: "App Zugang",
       price: "9,99 €<small>monatlich</small>",
@@ -5103,8 +5116,8 @@ function personalTrainingCostPage() {
       href: "/app/",
       cta: "App ansehen"
     },
-    {
-      number: "05",
+{
+      number: "02",
       tag: "Ortsunabhängig",
       title: "Online Coaching",
       price: "ab 120 €<small>monatlich</small>",
@@ -5115,8 +5128,8 @@ function personalTrainingCostPage() {
       items: ["Camp Dörfl App inbegriffen", "Individueller Trainings- und Ernährungsplan", "Laufende Anpassung und Rückmeldung", "Umfang und Rhythmus werden vereinbart"],
       cta: "Online Coaching anfragen"
     },
-    {
-      number: "06",
+{
+      number: "03",
       tag: "Laufende Führung",
       title: "Premium Begleitung",
       price: "ab 200 €<small>monatlich</small>",
@@ -5125,8 +5138,10 @@ function personalTrainingCostPage() {
       text:
         "Für ein abgestimmtes System aus Training, Ernährung, Analyse, App und laufender Anpassung — der Rahmen wird individuell vereinbart.",
       items: ["Persönliche laufende Begleitung", "Umfang passend zu Ziel und Alltag", "Analyse, App und Steuerung inklusive"],
-      wide: true,
+      top: true,
       cta: "Premium Begleitung anfragen"
+    }
+      ]
     }
   ];
 
@@ -5197,21 +5212,34 @@ function personalTrainingCostPage() {
     }
   ];
 
-  const pricingMarkup = priceCards
+  const kartenMarkup = (cards) => cards
     .map(
       (card) => `
-        <article class="pt-price-card${card.featured ? " pt-price-card--featured" : ""}${card.wide ? " pt-price-card--wide" : ""}" data-reveal>
+        <article class="pt-price-card${card.featured ? " pt-price-card--featured" : ""}${card.top ? " pt-price-card--top" : ""}" data-reveal>
           <div class="pt-price-card__top">
             <span class="pt-price-card__number">${card.number}</span>
             <span class="pt-price-card__tag">${card.tag}</span>
           </div>
-          <h3>${card.title}</h3>
+          <h4>${card.title}</h4>
           <p class="pt-price-card__price">${card.price}</p>
           <p class="pt-price-card__fit">Ideal für: ${card.fit}</p>
           <p class="pt-price-card__text">${card.text}</p>
           <ul>${card.items.map((item) => `<li>${item}</li>`).join("")}</ul>
           <a class="pt-price-card__link" href="${card.href || contactHref("premium-training")}">${card.cta}<span aria-hidden="true">&rarr;</span></a>
         </article>`
+    )
+    .join("");
+
+  const pricingMarkup = priceGroups
+    .map(
+      (group) => `
+        <section class="pt-price-group" data-reveal>
+          <div class="pt-price-group__head">
+            <h3 class="pt-price-group__title">${group.title}</h3>
+            <p>${group.text}</p>
+          </div>
+          <div class="pt-price-grid">${kartenMarkup(group.cards)}</div>
+        </section>`
     )
     .join("");
 
@@ -5273,7 +5301,7 @@ function personalTrainingCostPage() {
             "Vom flexiblen Einzeltermin bis zur laufenden Betreuung: Du siehst sofort, was enthalten ist, für wen das Modell gedacht ist und welcher Preis pro Session entsteht.",
           align: "center"
         })}
-        <div class="pt-price-grid">${pricingMarkup}</div>
+        <div class="pt-price-groups">${pricingMarkup}</div>
         <div class="pt-price-assurance" data-reveal>
           <div><strong>Noch unsicher?</strong><span>Schreib kurz dein Ziel und deine Ausgangslage. Du bekommst eine ehrliche Empfehlung – auch wenn dafür zunächst nur eine Einzelsession sinnvoll ist.</span></div>
           <a class="button button--primary" href="${contactHref("premium-training")}"><span>Passendes Modell anfragen</span><span aria-hidden="true">&rarr;</span></a>
