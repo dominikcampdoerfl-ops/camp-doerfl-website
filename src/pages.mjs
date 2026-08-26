@@ -5105,6 +5105,18 @@ function personalTrainingCostPage() {
     },
     {
       number: "05",
+      tag: "Ortsunabhängig",
+      title: "Online Coaching",
+      price: "ab 120 €<small>monatlich</small>",
+      sessionPrice: "ab 120 € monatlich",
+      fit: "Persönliche Führung ohne feste Termine vor Ort",
+      text:
+        "Für alle, die individuelle Betreuung wollen, aber nicht regelmäßig nach Nürnberg kommen können: Training und Ernährung laufen über die App, die Abstimmung aus der Ferne.",
+      items: ["Individueller Trainings- und Ernährungsplan", "Laufende Anpassung und Rückmeldung", "Umfang und Rhythmus werden vereinbart"],
+      cta: "Online Coaching anfragen"
+    },
+    {
+      number: "06",
       tag: "Laufende Führung",
       title: "Premium Begleitung",
       price: "ab 200 €<small>monatlich</small>",
@@ -5213,7 +5225,8 @@ function personalTrainingCostPage() {
       { name: "5er-Karte Personal Training", price: "500", description: "Fünf persönliche Sessions" },
       { name: "10er-Karte Personal Training", price: "800", description: "Zehn persönliche Sessions" },
       { name: "Premium Begleitung", price: "200", description: "Laufende persönliche Begleitung ab 200 Euro monatlich" },
-      { name: "Camp Dörfl App Zugang", price: "9.99", description: "Digitaler Zugang mit allen App-Funktionen, monatlich kündbar" }
+      { name: "Camp Dörfl App Zugang", price: "9.99", description: "Digitaler Zugang mit allen App-Funktionen, monatlich kündbar" },
+      { name: "Online Coaching", price: "120", description: "Ortsunabhängige persönliche Betreuung ab 120 Euro monatlich" }
     ].map((offer) => ({
       "@type": "Offer",
       name: offer.name,
@@ -5233,7 +5246,7 @@ function personalTrainingCostPage() {
         <p class="ff-hero__eyebrow" data-reveal>Personal Trainer Nürnberg · Preise transparent</p>
         <h1 class="ff-hero__title" data-reveal>Personal Training Kosten <br><span>in Nürnberg.</span></h1>
         <p class="ff-hero__lead" data-reveal>
-          Fünf Wege, von 9,99 Euro im Monat für den App-Zugang über Einzelsession und Karten bis zur Premium Begleitung ab 200 Euro monatlich. Hier siehst du auf einen Blick, welches Modell zu deinem Ziel und deinem Alltag passt.
+          Sechs Wege, von 9,99 Euro im Monat für den App-Zugang über Einzelsession, Karten und Online Coaching bis zur Premium Begleitung ab 200 Euro monatlich. Hier siehst du auf einen Blick, welches Modell zu deinem Ziel und deinem Alltag passt.
         </p>
         <p class="ff-hero__support" data-reveal>
           Transparent vergleichen, passend entscheiden und direkt mit Dominik klären, welcher Einstieg wirklich sinnvoll ist.
@@ -5255,7 +5268,7 @@ function personalTrainingCostPage() {
       <div class="section-shell section-shell--wide">
         ${sectionHeader({
           eyebrow: "Preise auf einen Blick",
-          title: "Fünf klare Wege. Kein Preisrätsel.",
+          title: "Sechs klare Wege. Kein Preisrätsel.",
           text:
             "Vom flexiblen Einzeltermin bis zur laufenden Betreuung: Du siehst sofort, was enthalten ist, für wen das Modell gedacht ist und welcher Preis pro Session entsteht.",
           align: "center"
@@ -5369,7 +5382,7 @@ function personalTrainingCostPage() {
     path: "/personal-training-kosten-nuernberg/",
     title: "Personal Training Kosten Nürnberg: Preise im Überblick",
     description:
-      "Was Personal Training in Nürnberg kostet: 10er-Karte 80 € je Session, Einzeltraining ab 120 €, Premium ab 200 € monatlich — alle Modelle im Vergleich.",
+      "Was Personal Training in Nürnberg kostet: 10er-Karte 80 € je Session, Einzeltraining ab 120 €, Online Coaching ab 120 € monatlich — alle Modelle im Vergleich.",
     keywords: [
       "Personal Training Kosten Nürnberg",
       "Was kostet Personal Training in Nürnberg",

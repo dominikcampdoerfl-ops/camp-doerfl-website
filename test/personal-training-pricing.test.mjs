@@ -22,6 +22,10 @@ test("the pricing page lists every current Personal Training price", () => {
   assert.match(markup, /Premium Begleitung/);
   assert.match(markup, /ab 200 €/);
   assert.match(markup, /monatlich/);
+  assert.match(markup, /Online Coaching/);
+  assert.match(markup, /ab 120 €/);
+  // Alle sechs Wege müssen als Karte auftauchen, nicht nur im Fließtext.
+  assert.equal(markup.match(/pt-price-card__number/g).length, 6);
 });
 
 test("the pricing page answers commercial search intent and supports a confident decision", () => {
