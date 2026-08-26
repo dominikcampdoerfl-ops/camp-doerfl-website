@@ -5111,8 +5111,8 @@ function personalTrainingCostPage() {
       sessionPrice: "ab 120 € monatlich",
       fit: "Persönliche Führung ohne feste Termine vor Ort",
       text:
-        "Für alle, die individuelle Betreuung wollen, aber nicht regelmäßig nach Nürnberg kommen können: Training und Ernährung laufen über die App, die Abstimmung aus der Ferne.",
-      items: ["Individueller Trainings- und Ernährungsplan", "Laufende Anpassung und Rückmeldung", "Umfang und Rhythmus werden vereinbart"],
+        "Für alle, die individuelle Betreuung wollen, aber nicht regelmäßig nach Nürnberg kommen können: Training und Ernährung laufen über die Camp Dörfl App, die Abstimmung aus der Ferne. Der App-Zugang ist enthalten.",
+      items: ["Camp Dörfl App inbegriffen", "Individueller Trainings- und Ernährungsplan", "Laufende Anpassung und Rückmeldung", "Umfang und Rhythmus werden vereinbart"],
       cta: "Online Coaching anfragen"
     },
     {
@@ -5226,7 +5226,7 @@ function personalTrainingCostPage() {
       { name: "10er-Karte Personal Training", price: "800", description: "Zehn persönliche Sessions" },
       { name: "Premium Begleitung", price: "200", description: "Laufende persönliche Begleitung ab 200 Euro monatlich" },
       { name: "Camp Dörfl App Zugang", price: "9.99", description: "Digitaler Zugang mit allen App-Funktionen, monatlich kündbar" },
-      { name: "Online Coaching", price: "120", description: "Ortsunabhängige persönliche Betreuung ab 120 Euro monatlich" }
+      { name: "Online Coaching", price: "120", description: "Ortsunabhängige persönliche Betreuung ab 120 Euro monatlich, Camp Dörfl App inbegriffen" }
     ].map((offer) => ({
       "@type": "Offer",
       name: offer.name,
