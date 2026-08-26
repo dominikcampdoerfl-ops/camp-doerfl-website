@@ -5081,7 +5081,7 @@ function personalTrainingCostPage() {
       fit: "Strukturierter Einstieg über mehrere aufbauende Termine",
       text:
         "Für mehrere aufeinander aufbauende Termine und mehr Verbindlichkeit über einen überschaubaren Zeitraum.",
-      items: ["5 persönliche Sessions", "Entspricht 100 € pro Session"],
+      items: ["5 persönliche Sessions", "1× InBody Körperanalyse inklusive", "Entspricht 100 € pro Session"],
       cta: "5er-Karte anfragen"
     },
 {
@@ -5093,7 +5093,7 @@ function personalTrainingCostPage() {
       fit: "Regelmäßige 1:1 Trainingssteuerung mit bestem Kartenpreis",
       text:
         "Für regelmäßige persönliche Trainingssteuerung und eine längerfristige, verlässliche Zusammenarbeit.",
-      items: ["10 persönliche Sessions", "Entspricht 80 € pro Session"],
+      items: ["10 persönliche Sessions", "2× InBody Körperanalyse inklusive", "Entspricht 80 € pro Session"],
       featured: true,
       cta: "10er-Karte anfragen"
     }
@@ -5250,8 +5250,8 @@ function personalTrainingCostPage() {
     itemListElement: [
       { name: "Einzelsession Personal Training", price: "120", description: "Einzelsession ohne 2D-Körperanalyse" },
       { name: "Einzelsession mit 2D-Körperanalyse", price: "150", description: "Einzelsession inklusive 2D-Körperanalyse" },
-      { name: "5er-Karte Personal Training", price: "500", description: "Fünf persönliche Sessions" },
-      { name: "10er-Karte Personal Training", price: "800", description: "Zehn persönliche Sessions" },
+      { name: "5er-Karte Personal Training", price: "500", description: "Fünf persönliche Sessions inklusive einer InBody Körperanalyse" },
+      { name: "10er-Karte Personal Training", price: "800", description: "Zehn persönliche Sessions inklusive zwei InBody Körperanalysen" },
       { name: "Premium Begleitung", price: "200", description: "Laufende persönliche Begleitung ab 200 Euro monatlich" },
       { name: "Camp Dörfl App Zugang", price: "9.99", description: "Digitaler Zugang mit allen App-Funktionen, monatlich kündbar" },
       { name: "Online Coaching", price: "120", description: "Ortsunabhängige persönliche Betreuung ab 120 Euro monatlich, Camp Dörfl App inbegriffen" }
