@@ -511,6 +511,7 @@ export async function buildSite() {
     "design-contract.css",
     "main.js",
     "contact-topics.js",
+    "hero-cinema.js",
     "vendor/gsap/gsap.min.js",
     "vendor/gsap/ScrollTrigger.min.js"
   ];

@@ -257,7 +257,7 @@ document
   .querySelectorAll(autoRevealSelectors.map((selector) => `${selector}:not([data-reveal])`).join(", "))
   .forEach((item) => item.setAttribute("data-reveal", "card"));
 
-document.querySelectorAll("main > section:not(.ff-hero):not(.hero)").forEach((section) => {
+document.querySelectorAll("main > section:not(.ff-hero):not(.hero):not(.cine)").forEach((section) => {
   const revealTarget = section.querySelector(":scope > .section-shell, :scope > .hero__inner, :scope > [class*='__inner']");
   if (revealTarget && !revealTarget.hasAttribute("data-reveal")) {
     revealTarget.setAttribute("data-reveal", "section");

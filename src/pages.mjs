@@ -46,6 +46,7 @@ import {
   transformationGrid,
   whatsappNumber
 } from "./components.mjs";
+import { cinematicHero } from "./cinematic-hero.mjs";
 import { dtuTriathlonEvents2026 } from "./triathlon-events-2026.mjs";
 import { xxlWochenangebot } from "./xxl-wochenangebot.mjs";
 import { runningEvents2026 } from "./running-events-2026.mjs";
@@ -1711,34 +1712,7 @@ const campTransformationCards = [
 
 function homePage() {
   const content = `
-    <div class="hero-szene" data-hero-szene>
-    <section class="ff-hero ff-hero--home-photo">
-      <picture>
-        <source media="(max-width: 900px)" srcset="/assets/images/home-hero-ironman-interview-mobile-480.webp 480w, /assets/images/home-hero-ironman-interview-mobile-720.webp 720w, /assets/images/home-hero-ironman-interview-mobile.webp 900w" sizes="100vw">
-        <img class="ff-hero__img" src="/assets/images/home-hero-ironman-interview.webp" width="1800" height="960" srcset="/assets/images/home-hero-ironman-interview-960.webp 960w, /assets/images/home-hero-ironman-interview.webp 1920w" sizes="100vw" alt="Dominik Dörfl als Ironman-70.3-Finisher mit Medaille bei einem Interview im Stadion"${imageLoadingAttributes({ eager: true })}>
-      </picture>
-      <div class="ff-hero__scrim" aria-hidden="true"></div>
-      <div class="section-shell ff-hero__inner">
-        <div class="ff-hero__home-card">
-          <p class="ff-hero__eyebrow">Personal Training · Firmenfitness · Events · Nürnberg</p>
-          <h1 class="ff-hero__title ff-hero__title--staged"><span class="ff-hero__line">Gesundheit.</span> <span class="ff-hero__line">Leistung.</span> <span class="ff-hero__line"><span>Präsenz.</span></span></h1>
-          <div class="ff-hero__actions">
-            <a class="button button--primary" href="${contactHref()}"><span>Beratung anfragen</span><span aria-hidden="true">&rarr;</span></a>
-            <a class="button button--ghost" href="#einstiege"><span>Vier Einstiege ansehen</span><span aria-hidden="true">&rarr;</span></a>
-          </div>
-          <p class="ff-hero__mobile-welcome">Willkommen bei Camp Dörfl</p>
-          <dl class="ff-hero__facts" aria-label="Camp Dörfl in Zahlen">
-            <div><dt>Moderator</dt><dd>knapp 100 Events</dd></div>
-            <div><dt>Firmenfitness</dt><dd>für gesunde Unternehmen</dd></div>
-            <div><dt>Fitness Trainer</dt><dd>ausgebildet & zertifiziert</dd></div>
-            <div><dt>Profi Athlet</dt><dd>Fitness &amp; Bodybuilding</dd></div>
-            <div><dt>2×</dt><dd>Deutscher Meister</dd></div>
-            <div><dt>Ironman 70.3</dt><dd>Finisher</dd></div>
-          </dl>
-        </div>
-      </div>
-    </section>
-    </div>
+    ${cinematicHero()}
 
     <section class="ed-section ed-section--hero-sync" id="einstiege">
       <div class="section-shell">
@@ -1967,7 +1941,7 @@ function homePage() {
     ],
     // Nur die Startseite lädt GSAP: Der Cinematic Hero liegt hier, alle anderen
     // Routen bleiben ohne die Bibliothek.
-    pageScripts: ["vendor/gsap/gsap.min.js", "vendor/gsap/ScrollTrigger.min.js"],
+    pageScripts: ["vendor/gsap/gsap.min.js", "vendor/gsap/ScrollTrigger.min.js", "hero-cinema.js"],
     content
   });
 }

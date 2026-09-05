@@ -19612,3 +19612,143 @@ body.page-home-reboot main {
     opacity: 0;
   }
 }
+
+/* ===================================================================
+   CINEMATIC HERO — Szene 01 RUNNING → 02 STRENGTH
+
+   Der neue Auftakt der Startseite. Eigener Namensraum .cine, bewusst
+   getrennt von .ff-hero: Der alte Hero bringt eine Einblendanimation,
+   eine Parallax-Schleife und !important-Regeln mit, die einer
+   gescrubbten GSAP-Timeline in die Quere kämen.
+
+   Hier steht nur der Ausgangszustand. Alles Bewegte rechnet
+   src/hero-cinema.js — deshalb liegt auf .cine-Elementen keine
+   transition und keine Keyframe-Animation: Beides würde eine
+   mitlaufende Bewegung in ein Nachziehen verwandeln.
+
+   Gepinnt wird über ScrollTrigger, nicht über position: sticky. Die
+   Regel `body.page-home-reboot main { overflow: visible }` weiter oben
+   bleibt trotzdem nötig — .page-premium main trägt overflow: clip, und
+   das ist hier schon einmal zur Falle geworden.
+   =================================================================== */
+
+.cine {
+  position: relative;
+  background: #000;
+}
+
+/* .page-premium main trägt 18 px Innenabstand oben. Bei einem Auftakt, der den
+   Bildschirm füllen soll, bleibt darüber sonst ein heller Streifen stehen. Der
+   Ausgleich steht hier statt in der gemeinsamen Regel, damit alle anderen Seiten
+   ihren Abstand behalten. */
+body.page-premium .cine {
+  margin-top: -18px;
+}
+
+.cine__stage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: #000;
+}
+
+.cine__scene {
+  position: absolute;
+  inset: 0;
+}
+
+/* Die Maske von Szene 02 hängt an einer einzigen Zahl. Sie steht hier auf
+   100%, damit die Szene vollständig abgeschnitten ist, bevor JavaScript
+   läuft — ohne Skript oder ohne GSAP bleibt allein Szene 01 stehen. */
+.cine__scene--strength {
+  --cine-reveal: 100%;
+  clip-path: inset(0 0 0 var(--cine-reveal));
+}
+
+.cine__media,
+.cine__media img {
+  width: 100%;
+  height: 100%;
+}
+
+.cine__media img {
+  display: block;
+  object-fit: cover;
+}
+
+/* will-change nur auf den beiden Flächen, die wirklich bewegt werden. */
+.cine__scene .cine__media img {
+  will-change: transform;
+}
+
+/* Die Master sind 16:9. Bis eigene Hochformat-Zuschnitte existieren,
+   verschiebt object-position den Ausschnitt so, dass die Person im Bild
+   bleibt: Beim Lauf steht sie links der Mitte, beim Bankdrücken mittig,
+   dort zählt die obere Bildhälfte mit Hantel und Gesicht. */
+/* Die Y-Angabe wirkt nur, wenn das Fenster breiter als 16:9 ist — erst dann
+   beschneidet cover oben und unten. Bei 1440×640 sind das 172 px. Mit dem
+   Standardwert 50 % fiele davon die Hälfte oben weg, und der Kopf des Läufers
+   wäre ab. Er sitzt im Master direkt an der Oberkante, deshalb steht der Wert
+   dicht an 0. */
+.cine__scene--running .cine__media img {
+  object-position: 40% 12%;
+}
+
+/* Beim Bankdrücken zählt die obere Bildhälfte: Hantel, Hände, Gesicht. */
+.cine__scene--strength .cine__media img {
+  object-position: 50% 40%;
+}
+
+/* Kein flächiger Fade, sondern ein schmaler Schattenstreifen, der einmal
+   über die Naht läuft und die Maskenkante kaschiert. Davor und danach
+   ist er vollständig unsichtbar. */
+.cine__veil {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 42%;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.3) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  will-change: transform, opacity;
+}
+
+@media (max-width: 900px) {
+  /* Hochformat schneidet waagerecht stark zu. Der Ausschnitt rückt
+     deshalb näher an die Person heran. */
+  .cine__scene--running .cine__media img {
+    object-position: 38% 50%;
+  }
+
+  .cine__scene--strength .cine__media img {
+    object-position: 50% 42%;
+  }
+
+  /* Breiter und weicher: Auf schmalen Displays wäre ein schmaler Streifen
+     als Balken erkennbar. */
+  .cine__veil {
+    width: 62%;
+  }
+}
+
+/* Ohne Bewegung bleibt nur Szene 01 — bildschirmfüllend, still, ohne
+   Kleben und ohne zusätzliche Scrollstrecke. hero-cinema.js legt in
+   diesem Fall weder Timeline noch Pinning an. */
+@media (prefers-reduced-motion: reduce) {
+  .cine__scene--strength,
+  .cine__veil {
+    display: none;
+  }
+
+  .cine__scene .cine__media img {
+    will-change: auto;
+  }
+}
