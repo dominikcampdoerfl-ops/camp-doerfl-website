@@ -2883,7 +2883,8 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
   color: #19150e;
 }
 
-/* "4 Wege" steht auf der hellen Karte. Der gemeinsame Gold-Verlauf weiter unten
+/* "4 Wege" und das "Nürnberg?" in "Was suchst du in Nürnberg?" stehen auf der
+   hellen Fläche. Der gemeinsame Gold-Verlauf weiter unten
    ("One gold system") ist für dunkle Flächen gemacht — sein hellster Halt
    (#fff1b8) kam dort auf 1,1:1 und war praktisch unsichtbar. Dieser Verlauf
    bleibt im selben Goldton, nur abgedunkelt: 3,7:1 am hellsten Punkt, 4,9:1 in
@@ -2891,7 +2892,8 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
    gemeinsame Regel selbst !important trägt; entscheidend ist die höhere
    Spezifität. Nur diese eine Überschrift ist betroffen, die Hero-Akzente auf
    dem dunklen Foto behalten das helle Gold. */
-.page-home-reboot .ed-section--hero-sync .ed-section__title > span {
+.page-home-reboot .ed-section--hero-sync .ed-section__title > span,
+.page-home-reboot .home-search-paths .section-header h2 > span {
   background: linear-gradient(115deg, #a67d24 0%, #8f6a1e 45%, #6f4f13 100%) !important;
   /* Die Kurzform background setzt background-clip mit zurück. Ohne diese beiden
      Zeilen füllt der Verlauf den Kasten statt der Buchstaben — der Schriftzug
