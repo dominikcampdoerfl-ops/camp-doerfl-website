@@ -884,7 +884,7 @@ const partnerBrandCards = [
   {
     name: "AEKE",
     label: "Smart Gym Partner",
-    image: "/assets/images/partner-aeke-logo.webp",
+    image: "/assets/images/partner-aeke-logo-zoom.webp",
     alt: "AEKE Logo",
     href: "https://eu.aeke.com/products/buy-aeke-k1?sca_ref=11019964.wKUJzkQCK3",
     linkLabel: "Zum AEKE K1",
@@ -4758,50 +4758,14 @@ function partnerPage() {
   };
 
   const content = `
-    <section class="ff-hero ff-hero--split ff-hero--partner">
-      <div class="ff-hero__scrim" aria-hidden="true"></div>
-      <div class="section-shell ff-hero__shell">
-        <div class="ff-hero__inner">
-          <p class="ff-hero__eyebrow" data-reveal>Partner</p>
-          <h1 class="ff-hero__title" data-reveal>Partner<wbr>schaften.<br>Mit Wirkung.<br><span>Und Haltung.</span></h1>
-          <p class="ff-hero__lead" data-reveal>
-            Camp Dörfl verbindet Performance, Bühne, Unternehmen und Community zu einer glaubwürdigen Markenwelt.
-          </p>
-          <p class="ff-hero__support" data-reveal>
-            Für Marken, Produkte und Kooperationen, die nah an echten Menschen, echter Leistung und sauberer Umsetzung stattfinden sollen.
-          </p>
-          <div class="ff-hero__actions partner-hero__actions" data-reveal>
-            <a class="button button--primary" href="${contactHref("kooperation")}"><span>Kooperation anfragen</span><span aria-hidden="true">&rarr;</span></a>
-            <a class="button button--secondary-light" href="/moderator-nuernberg/"><span>Events ansehen</span><span aria-hidden="true">&rarr;</span></a>
-            <div class="partner-hero__logos" aria-label="Aktuelle Partner">
-              <a class="partner-hero__logo" href="https://www.xxlnutrition.com/" target="_blank" rel="sponsored noopener noreferrer" aria-label="XXL Nutrition öffnen">
-                <img src="/assets/images/partner-xxl-nutrition-logo.webp" width="259" height="194" alt=""${imageLoadingAttributes()}>
-              </a>
-              <a class="partner-hero__logo partner-hero__logo--aeke" href="https://eu.aeke.com/products/buy-aeke-k1?sca_ref=11019964.wKUJzkQCK3" target="_blank" rel="sponsored noopener noreferrer" aria-label="AEKE öffnen">
-                <img src="/assets/images/partner-aeke-logo.webp" width="311" height="162" alt=""${imageLoadingAttributes()}>
-              </a>
-            </div>
-            ${advertisingNote("ad-note ad-note--hero", "Werbung: Der AEKE-Link ist ein Partnerlink")}
-          </div>
-          <dl class="ff-hero__facts" data-reveal aria-label="Partner Schwerpunkte">
-            <div><dt>Live</dt><dd>Events & Bühne</dd></div>
-            <div><dt>Digital</dt><dd>App & Content</dd></div>
-            <div><dt>Community</dt><dd>Training & Netzwerk</dd></div>
-          </dl>
-        </div>
-        <div class="ff-hero__showcase ff-hero__showcase--partner" data-reveal>
-          <figure class="partner-hero__visual partner-hero__visual--portrait">
-            <img src="/assets/images/partner-hero-dominik-gym.webp" width="1200" height="1800" alt="Dominik Dörfl im Fitnessstudio als Ansprechpartner für Partnerschaften"${imageLoadingAttributes({ eager: true })}>
-          </figure>
-        </div>
-      </div>
-    </section>
-
     <section class="section section--tight">
       <div class="section-shell section-shell--wide premium-sponsor-stage">
         <div class="premium-sponsor-stage__intro" data-reveal>
           ${sectionHeader({
             align: "center",
+            // Ohne den Header darueber ist dies die erste Ueberschrift der Seite
+            // und traegt deshalb h1 statt h2.
+            headingLevel: 1,
             eyebrow: "Partner im Performance System",
             title: "Premium Partner im Camp",
             text:
@@ -4822,7 +4786,7 @@ function partnerPage() {
           </a>
           <a class="premium-sponsor-card premium-sponsor-card--aeke" href="https://www.aeke.com" target="_blank" rel="sponsored noopener noreferrer" data-reveal>
             <span class="premium-sponsor-card__logo">
-              <img src="/assets/images/partner-aeke-logo.webp" width="311" height="162" alt=""${imageLoadingAttributes()}>
+              <img src="/assets/images/partner-aeke-logo-zoom.webp" width="692" height="248" alt=""${imageLoadingAttributes()}>
             </span>
             <span class="premium-sponsor-card__copy">
               <span class="premium-sponsor-card__tier">Gym Partner</span>
@@ -4859,13 +4823,23 @@ function partnerPage() {
         </p>
         <div class="basis-partner-stage" data-reveal>
           <div class="basis-partner-stage__intro">
-            <p class="eyebrow">Performance Partner</p>
-            <h3>Verbunden in Bewegung.</h3>
-            <p>Partner für digitale Aktivitäten, Routen und gemeinsame sportliche Herausforderungen.</p>
+            <p class="eyebrow">Weitere Partner</p>
+            <h3>Verbunden in Bewegung und Technik.</h3>
+            <p>Partner für digitale Aktivitäten, für Gebäude, die funktionieren, und für Technik, die den Alltag trägt.</p>
           </div>
           <a class="basis-partner-card basis-partner-card--strava" href="https://strava.app.link/ajkmFixCe5b" target="_blank" rel="sponsored noopener noreferrer">
             <span class="basis-partner-card__logo"><img src="/assets/images/partner-strava.webp" width="1200" height="338" alt=""${imageLoadingAttributes()}></span>
-            <span class="basis-partner-card__copy"><small>Performance Partner</small><strong>Strava</strong><span>Aktivitäten aufzeichnen, Routen entdecken und sportliche Fortschritte teilen.</span></span>
+            <span class="basis-partner-card__copy"><small>Endurance Partner</small><strong>Strava</strong><span>Aktivitäten aufzeichnen, Routen entdecken und sportliche Fortschritte teilen.</span></span>
+            <span class="basis-partner-card__action" aria-hidden="true">↗</span>
+          </a>
+          <a class="basis-partner-card basis-partner-card--caverion" href="https://www.caverion.de/" target="_blank" rel="sponsored noopener noreferrer">
+            <span class="basis-partner-card__logo"><img src="/assets/images/partner-caverion.webp" width="561" height="225" alt=""${imageLoadingAttributes()}></span>
+            <span class="basis-partner-card__copy"><small>Performance Partner</small><strong>Caverion Deutschland GmbH</strong><span>Technische Gebäudeausrüstung für smarte und nachhaltige Gebäude.</span></span>
+            <span class="basis-partner-card__action" aria-hidden="true">↗</span>
+          </a>
+          <a class="basis-partner-card basis-partner-card--htech" href="https://htech-franken.de/" target="_blank" rel="sponsored noopener noreferrer">
+            <span class="basis-partner-card__logo"><img src="/assets/images/partner-htech-franken.webp" width="1200" height="324" alt=""${imageLoadingAttributes()}></span>
+            <span class="basis-partner-card__copy"><small>Innovation Partner</small><strong>H-Tech Franken GmbH</strong><span>Sanitär, Heizung, Lüftung, Klima und Notdienst aus Franken.</span></span>
             <span class="basis-partner-card__action" aria-hidden="true">↗</span>
           </a>
         </div>

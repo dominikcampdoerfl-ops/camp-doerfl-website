@@ -15129,7 +15129,7 @@ html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n) .ed-entry_
   /* Die Einrueckung sitzt hier, nicht an den Kindern: Raender an der Leiste
      verlieren gegen bestehende Regeln, und das h3 brachte eigene 24px mit —
      beides zusammen hat den Titel doppelt eingerueckt. */
-  padding: 0 24px 22px !important;
+  padding: 0 18px 22px !important;
   border: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
@@ -15151,7 +15151,12 @@ html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n) {
 html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n) .ed-entry__body {
   display: flex !important;
   flex-direction: column !important;
-  justify-content: space-between !important;
+  /* flex-end statt space-between: Titel und Knopf stehen jetzt direkt
+     beieinander am unteren Rand, statt dass der freie Platz zwischen ihnen
+     aufgespannt wird. Die Knoepfe bleiben dabei auf gleicher Hoehe, weil der
+     Block weiterhin am Boden endet. */
+  justify-content: flex-end !important;
+  gap: 14px !important;
 }
 
 /* Karte 2 trug aus der Zeit des laengeren Titels ("GESUNDHEITSTAGE, DIE ETWAS
@@ -15187,8 +15192,8 @@ html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n) .ed-entry_
      Mit 4px Polster und dem 28px hohen Goldquadrat bleiben rund 38px. */
   min-height: 0 !important;
   justify-content: space-between !important;
-  gap: 12px !important;
-  padding: 4px 4px 4px 12px !important;
+  gap: 10px !important;
+  padding: 4px 4px 4px 10px !important;
   border: 1px solid rgba(255, 253, 248, 0.34) !important;
   border-radius: 12px !important;
   background: transparent !important;
@@ -15208,8 +15213,12 @@ html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n):is(:hover,
      die kleinere Schrift schafft den noetigen Platz. */
   flex: 1 1 auto !important;
   min-width: 0 !important;
-  font-size: 0.72rem !important;
-  letter-spacing: 0.05em !important;
+  /* Groesser und ruhiger: 0,82rem statt 0,72rem, dafuer engere Laufweite.
+     Die laengste Beschriftung ("GESUNDHEITSTAG PLANEN") muss weiterhin in
+     eine Zeile passen — deshalb wurde gleichzeitig der Innenabstand des
+     Textblocks von 24 auf 18px verringert. */
+  font-size: 0.82rem !important;
+  letter-spacing: 0.02em !important;
   white-space: nowrap !important;
 }
 
