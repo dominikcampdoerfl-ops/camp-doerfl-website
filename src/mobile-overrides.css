@@ -15126,9 +15126,40 @@ html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n) .ed-entry_
   backdrop-filter: none !important;
 }
 
+/* Die Karte wird zur Spalte und der Textblock an den Boden gehaengt: so
+   steht die Schaltflaeche auf allen vier Karten auf derselben Hoehe, egal
+   wie viele Zeilen der Titel braucht. Vorher hing der Block an einem festen
+   Randabstand von oben und die Knoepfe standen bei 418/409/447/447. */
+html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n) {
+  flex-direction: column !important;
+}
+
+/* Der Textblock hat eine feste Hoehe und der Inhalt floss von oben: Karten
+   mit kuerzerem Titel liessen ihren Knopf 28px hoeher enden (670 gegen 698).
+   space-between haengt den Titel oben und den Knopf unten an — ohne Rand,
+   denn Raender an diesen Elementen verlieren gegen bestehende Regeln. */
+html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n) .ed-entry__body {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+}
+
+/* Karte 2 trug aus der Zeit des laengeren Titels ("GESUNDHEITSTAGE, DIE ETWAS
+   BEWEGEN.") eine eigene, kleinere Schriftgroesse — 25,6px gegen 31px bei den
+   anderen. Hier steht fuer alle vier dieselbe Angabe wie die Grundgroesse. */
 html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n) .ed-entry__body h3 {
   padding-right: 0 !important;
   padding-left: 0 !important;
+  /* 1,8vw statt der urspruenglichen 2,15vw. "FIRMENFITNESS," steht durch das
+     harte <br> allein in einer Zeile und lief bei 2,15vw ueber die Spalte
+     hinaus (256 gegen 240 px bei 1440, 199 gegen 181 bei 1180). Die Spalten
+     werden zu schmaleren Fenstern hin ueberproportional enger, weil die
+     Abstaende dazwischen fest sind — deshalb der niedrigere Faktor und die
+     niedrige Untergrenze. Alle vier tragen denselben Wert, darum ging es.
+     hyphens greift nur, wenn ein Wort trotzdem nicht passt. */
+  font-size: clamp(1.1rem, 1.8vw, 2.05rem) !important;
+  hyphens: auto !important;
+  letter-spacing: -0.012em !important;
   color: #fffdf8 !important;
   -webkit-text-fill-color: #fffdf8 !important;
 }

@@ -613,9 +613,9 @@ const homeEntryCards = [
     titleHtml: "CAMP DÖRFL APP<br><span>DEIN SYSTEM.</span>",
     text:
       "TRAINING, ERNÄHRUNG UND FORTSCHRITT IN EINEM KLAREN DIGITALEN SYSTEM.",
-    image: "/assets/images/home-app-banner-coaching.webp",
-    srcset: "/assets/images/home-app-banner-coaching-480.webp 480w, /assets/images/home-app-banner-coaching-768.webp 768w, /assets/images/home-app-banner-coaching.webp 864w",
-    alt: "Dominik Dörfl zeigt die Camp Dörfl App auf einem Smartphone im Fitnessstudio",
+    image: "/assets/images/home-app-member-phone.webp",
+    srcset: "/assets/images/home-app-member-phone-480.webp 480w, /assets/images/home-app-member-phone-768.webp 768w, /assets/images/home-app-member-phone.webp 1086w",
+    alt: "Dominik Dörfl als Ironman-70.3-Finisher hält ein Smartphone mit dem Camp-Dörfl-Member-Zeichen in die Kamera",
     theme: "app",
     href: "/app/",
     buttonLabel: "APP ENTDECKEN"
