@@ -48,7 +48,7 @@ test("service pages declare their real geographic coverage", () => {
   assert.match(personalTraining, /Personal Training für Nürnberg, Fürth und Erlangen/);
   assert.match(corporateFitness, /Firmenfitness\. <br><span>Deutschlandweit/);
   assert.match(corporateFitness, /"@type":"Country","name":"Deutschland"/);
-  assert.match(personalTraining, /"dateModified":"2026-08-11"/);
+  assert.match(personalTraining, /"dateModified":"2026-09-03"/);
   assert.match(corporateFitness, /"dateModified":"2026-08-11"/);
 });
 
