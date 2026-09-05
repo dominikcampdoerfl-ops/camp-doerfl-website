@@ -1711,11 +1711,10 @@ const campTransformationCards = [
 
 function homePage() {
   const content = `
-    <div class="hero-szene" data-hero-szene>
     <section class="ff-hero ff-hero--home-photo">
       <picture>
-        <source media="(max-width: 900px)" srcset="/assets/images/home-hero-ironman-interview-mobile-480.webp 480w, /assets/images/home-hero-ironman-interview-mobile-720.webp 720w, /assets/images/home-hero-ironman-interview-mobile.webp 900w" sizes="100vw">
-        <img class="ff-hero__img" src="/assets/images/home-hero-ironman-interview.webp" width="1800" height="960" srcset="/assets/images/home-hero-ironman-interview-960.webp 960w, /assets/images/home-hero-ironman-interview.webp 1920w" sizes="100vw" alt="Dominik Dörfl als Ironman-70.3-Finisher mit Medaille bei einem Interview im Stadion"${imageLoadingAttributes({ eager: true })}>
+        <source media="(max-width: 900px)" srcset="/assets/images/home-hero-ironman-member-mobile-480.webp 480w, /assets/images/home-hero-ironman-member-mobile-720.webp 720w, /assets/images/home-hero-ironman-member-mobile.webp 768w" sizes="100vw">
+        <img class="ff-hero__img" src="/assets/images/home-hero-ironman-member.webp" width="1536" height="819" srcset="/assets/images/home-hero-ironman-member-960.webp 960w, /assets/images/home-hero-ironman-member.webp 1536w" sizes="100vw" alt="Dominik Dörfl zweifach im Stadion: als Ironman-70.3-Finisher mit Medaille und im Anzug als Moderator"${imageLoadingAttributes({ eager: true })}>
       </picture>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
@@ -1738,7 +1737,6 @@ function homePage() {
         </div>
       </div>
     </section>
-    </div>
 
     <section class="ed-section ed-section--hero-sync" id="einstiege">
       <div class="section-shell">
@@ -1956,8 +1954,8 @@ function homePage() {
       "Das Performance System von Dominik Dörfl in Nürnberg: Leistungsentwicklung, Firmenfitness, Event-Moderation und die Camp Dörfl App.",
     pageName: "Camp Dörfl",
     dateModified: "2026-08-10",
-    socialImage: "/assets/images/home-hero-ironman-interview-social.jpg",
-    socialImageAlt: "Dominik Dörfl als Ironman-70.3-Finisher im Stadion",
+    socialImage: "/assets/images/home-hero-ironman-member-social.jpg",
+    socialImageAlt: "Dominik Dörfl als Ironman-70.3-Finisher und als Moderator im Stadion",
     keywords: [
       "Camp Dörfl Nürnberg",
       "Performance System Nürnberg",

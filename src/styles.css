@@ -19486,18 +19486,11 @@ body.page-shop main {
    steht exakt so da wie zuvor.
    =================================================================== */
 
-/* position: sticky greift nicht, wenn ein Vorfahr overflow: clip trägt —
-   .page-premium main tut das. Auf der Shop-Seite ist das schon einmal
-   aufgefallen und dort mit overflow: visible gelöst.
-
-   Der Versuch, nur die senkrechte Achse freizugeben (overflow-x: clip,
-   overflow-y: visible), reicht nicht: Chrome behandelt auch den reinen
-   clip-Kontext als Grenze für sticky. Deshalb hier derselbe Weg wie beim
-   Shop — und danach gemessen, dass die Startseite trotzdem nirgends
-   waagerecht überläuft. */
-body.page-home-reboot main {
-  overflow: visible;
-}
+/* Hinweis: Solange die Startseite den Wrapper .hero-szene nicht ausgibt,
+   greift von diesem Block nichts. Er wartet hier, bis der Auftakt wieder
+   eingeschaltet wird. Die dafür nötige Freigabe von overflow auf
+   body.page-home-reboot main gehört dann wieder dazu — sie steht hier
+   bewusst nicht, weil sie auch ohne Szene wirken würde. */
 
 .hero-szene {
   --hero-p: 0;
