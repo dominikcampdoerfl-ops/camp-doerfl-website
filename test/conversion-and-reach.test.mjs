@@ -31,8 +31,9 @@ test("informational calendar pages are not covered by a fixed inquiry bar", () =
 
 test("homepage links visibly to the primary local search intents", () => {
   const markup = pageMarkup("/");
-  // Der Ortsname trägt seit dem Goldakzent ein eigenes span, der Text bleibt gleich.
-  assert.match(markup, /Was suchst du in (?:<span>)?Nürnberg\?/);
+  // Die Überschrift "Was suchst du in Nürnberg?" wurde am 06.09.2026 entfernt.
+  // Was der Test absichert, sind die sichtbaren Wege zu den lokalen Landeseiten —
+  // die liegen im Schieber darunter und werden unten weiterhin geprüft.
   assert.match(markup, /href="\/personal-trainer-nuernberg\/"/);
   assert.match(markup, /href="\/koerperanalyse-nuernberg\/"/);
   assert.match(markup, /href="\/gesundheitstag-nuernberg\/"/);

@@ -1845,15 +1845,11 @@ function homePage() {
       </div>
     </section>
 
-    <section class="section section--muted home-search-paths" aria-labelledby="home-search-paths-title">
+    <!-- Ohne Überschrift: aria-labelledby zeigte auf das h2 und hinge sonst ins Leere.
+         Der Abschnitt trägt jetzt keinen zugänglichen Namen mehr und ist damit
+         schlicht ein Behälter — die Karten darin sprechen für sich. -->
+    <section class="section section--muted home-search-paths">
       <div class="section-shell">
-        ${sectionHeader({
-          eyebrow: "Direkt zum passenden Angebot",
-          title: "Was suchst du in <span>Nürnberg?</span>",
-          text:
-            "Wähle deinen konkreten Einstieg – vom persönlichen Coaching über die Körperanalyse bis zum Gesundheitstag für Unternehmen.",
-          align: "center"
-        }).replace("<h2", '<h2 id="home-search-paths-title"')}
         ${pathSlider(
           [
             {
@@ -6458,11 +6454,6 @@ function keynoteSpeakerNuernbergPage() {
         "Der inhaltliche Höhepunkt, der einen Tag voller Zahlen und Präsentationen zusammenbindet und dem Programm einen gemeinsamen Nenner gibt."
     },
     {
-      title: "Kundenveranstaltung",
-      text:
-        "Ein Beitrag, der nicht verkauft, sondern etwas gibt. Ihre Gäste nehmen einen Gedanken mit nach Hause statt nur einen Abend."
-    },
-    {
       title: "Führungskreis",
       text:
         "Für kleinere Runden, in denen es um Belastung, Vorbildwirkung und die eigene Haltung geht — mit Raum für Diskussion statt nur Vortrag."
@@ -6787,7 +6778,7 @@ function keynoteSpeakerNuernbergPage() {
           eyebrow: "Anlässe",
           title: "Wofür der Vortrag gebucht wird.",
           text:
-            "Eine Keynote wird selten nach Thema gesucht, sondern für einen konkreten Termin. Diese sechs Anlässe kommen am häufigsten vor — der Zuschnitt unterscheidet sich jeweils deutlich.",
+            "Eine Keynote wird selten nach Thema gesucht, sondern für einen konkreten Termin. Diese fünf Anlässe kommen am häufigsten vor — der Zuschnitt unterscheidet sich jeweils deutlich.",
           align: "center"
         })}
         <div class="keynote-occasions">
