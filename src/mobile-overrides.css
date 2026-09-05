@@ -2895,13 +2895,22 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
    gemeinsame Regel selbst !important trägt; entscheidend ist die höhere
    Spezifität. Nur diese eine Überschrift ist betroffen, die Hero-Akzente auf
    dem dunklen Foto behalten das helle Gold. */
+/* "4 Wege" traegt jetzt dieselbe Farbe wie der Rest der Ueberschrift (#19150e)
+   statt eines Goldverlaufs. Damit entfaellt auch die Kontrastfrage, die den
+   Verlauf vorher zweimal nachjustieren liess.
+
+   Der Verlauf kam aus dem gemeinsamen "One gold system" und wurde dort ueber
+   background + background-clip: text gesetzt. Beides muss hier ausdruecklich
+   zurueckgenommen werden, sonst bleibt die Fuellung stehen und
+   -webkit-text-fill-color haelt die Glyphen durchsichtig. */
 .page-home-reboot .ed-section--hero-sync .ed-section__title > span {
-  background: linear-gradient(115deg, #ab8330 0%, #96701d 45%, #7a5a12 100%) !important;
-  /* Die Kurzform background setzt background-clip mit zurück. Ohne diese beiden
-     Zeilen füllt der Verlauf den Kasten statt der Buchstaben — der Schriftzug
-     wird zum goldenen Block. */
-  background-clip: text !important;
-  -webkit-background-clip: text !important;
+  background: none !important;
+  background-clip: border-box !important;
+  -webkit-background-clip: border-box !important;
+  color: #19150e !important;
+  -webkit-text-fill-color: #19150e !important;
+  /* Leichter Schatten: helle Kante nach oben, weicher warmer Schlagschatten. */
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.62), 0 3px 10px rgba(43, 32, 12, 0.16) !important;
 }
 
 .page-home-reboot .ed-section__lead,
@@ -15062,12 +15071,13 @@ html body.page-premium.page-coaching main .coaching-price .summary-row {
   }
 
   .page-premium .nav-shell .site-nav__entry.is-active {
-    background: rgba(242, 223, 168, 0.16) !important;
+    background: rgba(245, 205, 100, 0.2) !important;
   }
 
+  /* #f5cf6a statt #f2dfa8: derselbe Goldton, nur gesaettigter. */
   .page-premium .nav-shell .site-nav__entry.is-active,
   .page-premium .nav-shell .site-nav__entry.is-active .site-nav__label-desktop {
-    color: #f2dfa8 !important;
+    color: #f5cf6a !important;
   }
 }
 
@@ -15220,4 +15230,159 @@ html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n) .ed-entry_
 html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n):is(:hover, :focus-visible) .ed-entry__cta {
   border-color: rgba(255, 253, 248, 0.72) !important;
   background: rgba(255, 253, 248, 0.08) !important;
+}
+
+
+/* ============================================================
+   PARTNERSEITE IN ANTHRAZIT
+
+   Die Seite lief bisher auf der hellen Markenflaeche. Fuer den
+   hochwertigeren Auftritt wird sie durchgehend dunkel — Grund, Karten,
+   Aufklapper. Der Hero war ohnehin schon dunkel und bleibt unberuehrt.
+
+   Die Farbwerte laufen ueber die Token (--cd-card, --cd-text, --cd-line),
+   damit alle Bausteine mitziehen, die sie benutzen. Was seine Flaeche fest
+   verdrahtet hat, steht darunter einzeln.
+
+   Alles haengt an html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner und wirkt nur hier.
+   ============================================================ */
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner {
+  --cd-bg: #16181c;
+  --cd-bg-2: #1e2126;
+  --cd-card: #1e2126;
+  --cd-line: rgba(215, 195, 148, 0.18);
+  --cd-line-2: rgba(215, 195, 148, 0.32);
+  --cd-text: #fffdf8;
+  --cd-dim: rgba(255, 253, 248, 0.72);
+  /* Diese vier kommen aus design-contract.css und werden von Bausteinen wie
+     .feature-card benutzt. Ohne sie bleiben deren Ueberschriften dunkel. */
+  --cd-text-strong: #fffdf8;
+  --cd-text-body: rgba(255, 253, 248, 0.76);
+  --cd-text-on-dark: #fffdf8;
+  --cd-text-on-dark-muted: rgba(255, 253, 248, 0.72);
+  background:
+    radial-gradient(circle at 4% 12%, rgba(198, 176, 126, 0.1), transparent 26%),
+    radial-gradient(circle at 94% 32%, rgba(198, 176, 126, 0.13), transparent 30%),
+    linear-gradient(180deg, #1b1d21 0%, #0f1113 100%) !important;
+  color: #fffdf8 !important;
+}
+
+/* Ueberschriften und Fliesstext — aber ausdruecklich ohne den Hero.
+   Der war schon dunkel und braucht nichts; seine Akzentzeile ("UND HALTUNG.")
+   traegt den Goldverlauf ueber background-clip: text. Eine pauschale Regel
+   hat sie mit -webkit-text-fill-color uebermalt und weiss werden lassen. */
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner main section:not(.ff-hero) :is(h1, h2, h3, h4, strong) {
+  color: #fffdf8 !important;
+  -webkit-text-fill-color: #fffdf8 !important;
+}
+
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner main section:not(.ff-hero) :is(p, li, dd, summary) {
+  color: rgba(255, 253, 248, 0.76) !important;
+}
+
+/* Das Abschlussband war schon dunkel, erbte aber die helle Textfarbe. */
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner main .cta-band,
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner main .cta-band .section-shell {
+  color: rgba(255, 253, 248, 0.82) !important;
+}
+
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner main .eyebrow {
+  color: #f2dfa8 !important;
+}
+
+/* Die Kacheln: Karten, Zusammenfassungen, Aufklapper. */
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner main :is(.feature-card, .summary-row, .basis-partner-card, details) {
+  border-color: rgba(215, 195, 148, 0.18) !important;
+  background: linear-gradient(152deg, #24262b 0%, #15171a 100%) !important;
+  box-shadow: 0 26px 48px -32px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Der Lichtschleier der Buehne war fuer helles Papier gedacht. */
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner main .section-shell {
+  background-image: none !important;
+}
+
+/* Die zweite Partnerreihe traegt eigene Klassen und faellt sonst durch. */
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner .basis-partner-card,
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner .basis-partner-card__copy,
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner .basis-partner-card__copy > span {
+  color: rgba(255, 253, 248, 0.78) !important;
+}
+
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner .basis-partner-card strong {
+  color: #fffdf8 !important;
+  -webkit-text-fill-color: #fffdf8 !important;
+}
+
+/* ============================================================
+   SPONSOREN IM FOKUS
+
+   Die vier Karten sind der Grund, warum die Seite besucht wird. Sie
+   bekommen eine eigene, kraeftigere Flaeche als der Rest und reagieren
+   deutlich auf den Zeiger: Rahmen und Beschriftung wechseln ins Gold,
+   die Karte hebt sich leicht an.
+   ============================================================ */
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner .premium-sponsor-card {
+  border: 1px solid rgba(215, 195, 148, 0.26) !important;
+  background: linear-gradient(150deg, #272a30 0%, #16181c 100%) !important;
+  box-shadow: 0 30px 60px -38px rgba(0, 0, 0, 0.78) !important;
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms ease, box-shadow 220ms ease, background 220ms ease !important;
+}
+
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner .premium-sponsor-card:is(:hover, :focus-visible) {
+  transform: translateY(-6px) !important;
+  /* Kurzform statt border-color: die Ruheregel setzt "border" als Kurzform,
+     und die schlaegt bei gleicher Spezifitaet die Langform. */
+  border: 1px solid rgba(245, 207, 106, 0.72) !important;
+  background: linear-gradient(150deg, #2f333a 0%, #1b1e23 100%) !important;
+  box-shadow: 0 40px 76px -40px rgba(0, 0, 0, 0.86),
+    0 0 0 1px rgba(245, 207, 106, 0.2) !important;
+}
+
+/* Der Name der Marke und die Beschriftung darunter. */
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner .premium-sponsor-card strong {
+  color: #fffdf8 !important;
+  -webkit-text-fill-color: #fffdf8 !important;
+}
+
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner .premium-sponsor-card,
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner .premium-sponsor-card__copy,
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner .premium-sponsor-card__copy > span {
+  color: rgba(255, 253, 248, 0.76) !important;
+}
+
+/* Die Beschreibung ist ein blankes <span> und wird von der Regel fuer
+   p/li/dd/summary nicht erfasst — sie stand dunkel auf dunkel. */
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner .premium-sponsor-card__tier {
+  color: #f2dfa8 !important;
+}
+
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner .premium-sponsor-card:is(:hover, :focus-visible) strong {
+  color: #f5cf6a !important;
+  -webkit-text-fill-color: #f5cf6a !important;
+}
+
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner .premium-sponsor-card:is(:hover, :focus-visible) .premium-sponsor-card__tier {
+  color: #ffe6a8 !important;
+}
+
+/* Das Logofeld bleibt hell: die Marken-Logos sind dunkel gezeichnet und
+   brauchen ihren hellen Grund, sonst verschwinden sie. Beim Ueberfahren
+   bekommt es nur einen goldenen Rand. */
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner .premium-sponsor-card__logo {
+  border: 1px solid rgba(215, 195, 148, 0.22) !important;
+  transition: border-color 220ms ease !important;
+}
+
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner .premium-sponsor-card:is(:hover, :focus-visible) .premium-sponsor-card__logo {
+  border: 1px solid rgba(245, 207, 106, 0.66) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner .premium-sponsor-card,
+  html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner .premium-sponsor-card:is(:hover, :focus-visible) {
+    transform: none !important;
+    transition: border-color 220ms ease, background 220ms ease !important;
+  }
 }

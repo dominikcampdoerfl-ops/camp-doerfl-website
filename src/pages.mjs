@@ -13,7 +13,6 @@ import {
   corporateSteps,
   dominikFacts,
   executiveSteps,
-  landingProofCards,
   shopProducts,
   shopShipping,
   shopSizes,
@@ -35,7 +34,6 @@ import {
   pathSlider,
   pricingCards,
   processList,
-  proofMosaic,
   sectionHeader,
   socialButtonLabel,
   socialIconLink,
@@ -2485,7 +2483,7 @@ function guenterStoryPreview(context = "team") {
           </figure>
           <div class="guenter-story-preview__copy">
             <p class="eyebrow">Erfolgsgeschichte · Günter Preis</p>
-            <h2>Gesundheit zuerst.<br><span>Bühne später.</span></h2>
+            <h2>Ein aktives Leben<br><span>mit Diabetes.</span></h2>
             <p>Eine zufällige Begegnung im Jahr 2021 wurde zum Anfang einer außergewöhnlichen Geschichte: erst raus aus der gesundheitlichen Gefahrenzone, dann zurück auf die Bühne – bis zum Vizeweltmeistertitel mit 63.</p>
             <dl class="guenter-story-preview__facts" aria-label="Günters Entwicklung in Zahlen">
               <div><strong>63</strong><span>Jahre</span></div>
@@ -3410,18 +3408,6 @@ function teamSuccessPage() {
             "Ergebnisse im Team entstehen nicht aus Zufall, sondern aus einer Verbindung aus Klarheit, Verantwortung und konsequenter Führung."
         })}
         ${featureGrid(teamSuccessCards)}
-      </div>
-    </section>
-
-    <section class="section section--muted">
-      <div class="section-shell">
-        ${sectionHeader({
-          eyebrow: "Proof",
-          title: "Erfahrung, die sichtbar geworden ist.",
-          text:
-            "Titel, Ausdauerleistungen, Coaching-Praxis und unternehmerische Perspektive bilden das Fundament hinter Camp Dörfl."
-        })}
-        ${proofMosaic(landingProofCards)}
       </div>
     </section>
 
