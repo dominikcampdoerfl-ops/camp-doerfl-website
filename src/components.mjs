@@ -1400,7 +1400,12 @@ export function layout({
   dateModified = "2026-08-11",
   socialImage = defaultSocialImage,
   socialImageAlt = "Camp Dörfl Performance System in Nürnberg",
-  extraStructuredData = []
+  extraStructuredData = [],
+  // Zusätzliche Skripte nur für diese eine Seite. Angegeben wird der Pfad
+  // unterhalb des Asset-Ordners (z. B. "vendor/gsap/gsap.min.js"); die Adresse
+  // mit Kennung setzt layout() daraus zusammen. Sie laufen vor main.js und in
+  // der angegebenen Reihenfolge.
+  pageScripts = []
 }) {
   const canonicalPath = path === "/" ? "/" : path;
   const hasMobileInquiry = Boolean(inquiryForPath(path));
@@ -1559,6 +1564,10 @@ export function layout({
     ]
   };
 
+  const pageScriptTags = pageScripts
+    .map((name) => `<script defer src="/assets/__ASSET_VERSION__/${name}"></script>`)
+    .join("\n    ");
+
   return `<!doctype html>
 <html lang="de">
   <head>
@@ -1606,7 +1615,7 @@ export function layout({
     ${mobileInquiryBar(path)}
     ${memberLoginDialog()}
     ${consentManager()}
-    <script type="module" src="/assets/__ASSET_VERSION__/main.js"></script>
+    ${pageScriptTags ? `${pageScriptTags}\n    ` : ""}<script type="module" src="/assets/__ASSET_VERSION__/main.js"></script>
     ${webAnalyticsSnippet()}
   </body>
 </html>`;

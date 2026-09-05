@@ -1965,6 +1965,9 @@ function homePage() {
       "Firmenfitness Nürnberg",
       "Moderator Nürnberg"
     ],
+    // Nur die Startseite lädt GSAP: Der Cinematic Hero liegt hier, alle anderen
+    // Routen bleiben ohne die Bibliothek.
+    pageScripts: ["vendor/gsap/gsap.min.js", "vendor/gsap/ScrollTrigger.min.js"],
     content
   });
 }

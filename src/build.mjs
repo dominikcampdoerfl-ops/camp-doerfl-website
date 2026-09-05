@@ -501,7 +501,19 @@ export async function buildSite() {
   if (await pathExists(publicDir)) {
     await copyDeployableAssets(publicDir, dist);
   }
-  const coreAssetNames = ["styles.css", "mobile-overrides.css", "design-contract.css", "main.js", "contact-topics.js"];
+  // Ein Name darf einen Unterordner enthalten: Er ist der Pfad unterhalb von
+  // src/ und wird unter derselben Kennung ausgeliefert. So bekommen die selbst
+  // gehosteten GSAP-Dateien dieselbe Cache-Behandlung wie styles.css — wird die
+  // Bibliothek ausgetauscht, ändert sich die Kennung mit.
+  const coreAssetNames = [
+    "styles.css",
+    "mobile-overrides.css",
+    "design-contract.css",
+    "main.js",
+    "contact-topics.js",
+    "vendor/gsap/gsap.min.js",
+    "vendor/gsap/ScrollTrigger.min.js"
+  ];
   const coreAssetContents = await Promise.all(coreAssetNames.map((name) => readFile(join(root, "src", name))));
   // Die Schriften liegen unter einer festen Adresse und werden ein Jahr lang als
   // "immutable" ausgeliefert. Ohne eigene Kennung bekaemen wiederkehrende Besucher
@@ -531,15 +543,19 @@ export async function buildSite() {
   await mkdir(versionedAssetDir, { recursive: true });
   await Promise.all(
     coreAssetNames.map(async (name) => {
+      const zielPfad = join(versionedAssetDir, name);
+      // Namen mit Unterordner brauchen ihr Verzeichnis, bevor kopiert wird.
+      await mkdir(dirname(zielPfad), { recursive: true });
+
       if (!fontVersion || !name.endsWith(".css")) {
-        return copyFile(join(root, "src", name), join(versionedAssetDir, name));
+        return copyFile(join(root, "src", name), zielPfad);
       }
       const inhalt = await readFile(join(root, "src", name), "utf8");
       const mitKennung = inhalt.replaceAll(
         /\/assets\/fonts\/([A-Za-z0-9._-]+\.woff2)/g,
         `/assets/fonts/$1?${fontVersion}`
       );
-      return writeFile(join(versionedAssetDir, name), mitKennung, "utf8");
+      return writeFile(zielPfad, mitKennung, "utf8");
     })
   );
 
