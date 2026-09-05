@@ -407,12 +407,12 @@ export const landingStartCards = [
 ];
 
 export const achievements = [
-  { value: "Ex Profi Athlet", label: "auf europäischem Spitzenlevel" },
+  { value: "Ex Profi Athlet", label: "auf europäischem Spitzenlevel", href: "/ueber-dominik/" },
   { value: "2x Deutscher Meister", label: "Bodybuilding und Powerlifting" },
   { value: "Ironman 70.3", label: "Finisher" },
   { value: "8848 hm", label: "zu Fuß hoch und runter in 15 Stunden" },
   { value: "270 km", label: "Radtour innerhalb von 24 Stunden" },
-  { value: "Top-Athleten", label: "Coaching von Olympia-Athleten, Meistern und internationalen Platzierungen" }
+  { value: "Top-Athleten", label: "Coaching von Olympia-Athleten, Meistern und internationalen Platzierungen", href: "/erfolge-im-team/" }
 ];
 
 export const dominikFacts = [

@@ -1778,9 +1778,9 @@ function homePage() {
         <dl class="ed-proof__grid">
           ${achievements
             .map(
-              ({ value, label }) => `
-                <div class="ed-proof__item" data-reveal>
-                  <dt>${value}</dt>
+              ({ value, label, href }) => `
+                <div class="ed-proof__item${href ? " ed-proof__item--link" : ""}" data-reveal>
+                  <dt>${href ? `<a class="ed-proof__link" href="${href}">${value}</a>` : value}</dt>
                   <dd>${label}</dd>
                 </div>
               `

@@ -2046,9 +2046,12 @@ h3 {
   font-family: "Inter", "Aptos", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   font-size: clamp(0.98rem, 1.1vw, 1.1rem);
   font-style: normal;
-  font-weight: 650;
-  letter-spacing: -0.022em;
-  line-height: 1.42;
+  /* Inter liegt in 400, 500, 700 und 800 vor — 400 ist der dünnste echte
+     Schnitt. 650 fiel auf 700 und las sich als Fettschrift. Die enge Laufweite
+     stammte aus dem fetten Satz und wird hier mit zurückgenommen. */
+  font-weight: 400;
+  letter-spacing: -0.006em;
+  line-height: 1.5;
 }
 
 .page-home-reboot .ed-google-review figcaption {
@@ -2973,10 +2976,10 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
   color: #15120b !important;
 }
 
-/* Leistungsnachweise: Cremekarten auf cremefarbenem Papier haben sich kaum vom
-   Grund abgehoben. Die Kacheln tragen jetzt eine deutlich tiefere Sandfläche,
-   eine goldene Haarlinie und eine goldene Oberkante — dieselbe Goldfamilie wie
-   die Einstiegskarten darüber, nur als Fläche statt nur als Rand. */
+/* Leistungsnachweise: dunkles Anthrazit statt Sand. Auf der hellen Seite setzen
+   sich die sechs Kacheln damit klar ab — und das helle Marken-Gold, das auf
+   weissem Grund nicht trägt, ist hier genau richtig: #f2dfa8 kommt auf dem
+   Anthrazit auf 12,7:1, der Beschriftungston auf 7,7:1. */
 .page-home-reboot .ed-proof__item,
 .page-home-reboot .ed-proof__item:nth-child(6n+1),
 .page-home-reboot .ed-proof__item:nth-child(6n+2),
@@ -2986,11 +2989,11 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
 .page-home-reboot .ed-proof__item:nth-child(6n+6) {
   position: relative;
   overflow: hidden;
-  border-color: rgba(155, 116, 26, 0.42);
+  border-color: rgba(215, 195, 148, 0.26);
   background:
-    radial-gradient(circle at 100% 0%, rgba(255, 255, 255, 0.72), transparent 42%),
-    linear-gradient(152deg, #fdf3df 0%, #f0dfba 100%);
-  box-shadow: 0 26px 48px -32px rgba(43, 32, 12, 0.52);
+    radial-gradient(circle at 100% 0%, rgba(242, 223, 168, 0.1), transparent 46%),
+    linear-gradient(152deg, #24262b 0%, #15171a 100%);
+  box-shadow: 0 26px 48px -30px rgba(10, 10, 12, 0.66);
 }
 
 /* Die Oberkante gibt jeder Kachel eine klare Linie gegen das Papier. */
@@ -3011,11 +3014,49 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
 .page-home-reboot .ed-proof__item:nth-child(6n+4) dt,
 .page-home-reboot .ed-proof__item:nth-child(6n+5) dt,
 .page-home-reboot .ed-proof__item:nth-child(6n+6) dt {
-  color: #7f5c0f;
+  color: #f2dfa8;
 }
 
 .page-home-reboot .ed-proof__item dd {
-  color: rgba(25, 21, 14, 0.78);
+  color: rgba(242, 223, 168, 0.74);
+}
+
+/* Drei der sechs Kacheln führen weiter. Der Verweis sitzt im dt und legt sich
+   über die ganze Kachel, damit die Klickfläche der Kachel entspricht — als
+   echtes <a> und nicht als Klick-Handler, damit Tastatur, Mittelklick und
+   "Link in neuem Tab" wie überall sonst funktionieren. Ein <a> um dt und dd
+   herum wäre in einer <dl> nicht zulässig. */
+.page-home-reboot .ed-proof__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page-home-reboot .ed-proof__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.page-home-reboot .ed-proof__item--link {
+  cursor: pointer;
+}
+
+.page-home-reboot .ed-proof__item--link:is(:hover, :focus-within) {
+  border-color: rgba(242, 223, 168, 0.52);
+}
+
+.page-home-reboot .ed-proof__item--link:is(:hover, :focus-within) dt {
+  color: #fff1b8;
+}
+
+/* Der Fokusrahmen gehört um die Kachel, nicht um den kleinen Text darin. */
+.page-home-reboot .ed-proof__link:focus-visible {
+  outline: none;
+}
+
+.page-home-reboot .ed-proof__item--link:focus-within {
+  outline: 2px solid #f2dfa8;
+  outline-offset: 3px;
 }
 
 .page-home-reboot .ed-app-banner {
@@ -9242,8 +9283,9 @@ body.page-premium.page-firmenfitness main .corporate-outcome-stage .corporate-ou
   background: transparent !important;
   box-shadow: none !important;
   font-size: clamp(1rem, 1.05vw, 1.08rem);
-  font-weight: 650;
-  line-height: 1.45;
+  /* Dieselbe Angabe wie oben — diese Regel steht später und gewinnt. */
+  font-weight: 400;
+  line-height: 1.5;
 }
 
 .page-home-reboot .ed-google-review figcaption {
