@@ -1458,7 +1458,10 @@ const coachSuccessYears = [
       "1. Platz Süddeutsche Meisterschaft Classic Physique 40+",
       "2. Platz Süddeutsche Meisterschaft Masters 50+",
       "4. Platz Süddeutsche Meisterschaft Masters 60+",
-      "4. Platz Süddeutsche Meisterschaft Body 2"
+      "4. Platz Süddeutsche Meisterschaft Body 2",
+      "1. Platz Deutsche Meisterschaft Classic Bodybuilding",
+      "3. Platz Deutsche Meisterschaft Masters Bodybuilding",
+      "4. Platz Deutsche Meisterschaft Mens Physique"
     ]
   },
   {
