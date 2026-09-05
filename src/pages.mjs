@@ -1713,7 +1713,7 @@ function homePage() {
   const content = `
     <section class="ff-hero ff-hero--home-photo">
       <picture>
-        <source media="(max-width: 900px)" srcset="/assets/images/home-hero-ironman-member-mobile-480.webp 480w, /assets/images/home-hero-ironman-member-mobile-720.webp 720w, /assets/images/home-hero-ironman-member-mobile.webp 768w" sizes="100vw">
+        <source media="(max-width: 900px)" srcset="/assets/images/home-hero-ironman-member-mobile-duo-480.webp 480w, /assets/images/home-hero-ironman-member-mobile-duo-720.webp 720w, /assets/images/home-hero-ironman-member-mobile-duo.webp 1065w" sizes="100vw">
         <img class="ff-hero__img" src="/assets/images/home-hero-ironman-member.webp" width="1536" height="819" srcset="/assets/images/home-hero-ironman-member-960.webp 960w, /assets/images/home-hero-ironman-member.webp 1536w" sizes="100vw" alt="Dominik Dörfl zweifach im Stadion: als Ironman-70.3-Finisher mit Medaille und im Anzug als Moderator"${imageLoadingAttributes({ eager: true })}>
       </picture>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
