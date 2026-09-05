@@ -18,6 +18,7 @@
     "kontrast": "node scripts/kontrast-pruefen.mjs"
   },
   "devDependencies": {
+    "gsap": "3.15.0",
     "puppeteer-core": "^25.8.0",
     "sharp": "^0.35.3"
   }
