@@ -1,4 +1,12 @@
 import {
+  arnoldKlassen,
+  arnoldOffeneKlassen,
+  CHAMPIONS_STAND,
+  olympiaKlassen,
+  siegerReihen,
+  titelRangliste
+} from "./bodybuilding-champions.mjs";
+import {
   achievements,
   encodePath,
   appFunctionRows,
@@ -6,6 +14,10 @@ import {
   dominikFacts,
   executiveSteps,
   landingProofCards,
+  shopProducts,
+  shopShipping,
+  shopSizes,
+  shopVouchers,
   site,
   timeline
 } from "./data.mjs";
@@ -35,6 +47,7 @@ import {
   whatsappNumber
 } from "./components.mjs";
 import { dtuTriathlonEvents2026 } from "./triathlon-events-2026.mjs";
+import { xxlWochenangebot } from "./xxl-wochenangebot.mjs";
 import { runningEvents2026 } from "./running-events-2026.mjs";
 import {
   golfAssociations,
@@ -1698,6 +1711,7 @@ const campTransformationCards = [
 
 function homePage() {
   const content = `
+    <div class="hero-szene" data-hero-szene>
     <section class="ff-hero ff-hero--home-photo">
       <picture>
         <source media="(max-width: 900px)" srcset="/assets/images/home-hero-ironman-interview-mobile-480.webp 480w, /assets/images/home-hero-ironman-interview-mobile-720.webp 720w, /assets/images/home-hero-ironman-interview-mobile.webp 900w" sizes="100vw">
@@ -1707,7 +1721,7 @@ function homePage() {
       <div class="section-shell ff-hero__inner">
         <div class="ff-hero__home-card">
           <p class="ff-hero__eyebrow">Personal Training · Firmenfitness · Events · Nürnberg</p>
-          <h1 class="ff-hero__title ff-hero__title--staged"><span class="ff-hero__line">Gesundheit.</span><span class="ff-hero__line">Leistung.</span><span class="ff-hero__line"><span>Präsenz.</span></span></h1>
+          <h1 class="ff-hero__title ff-hero__title--staged"><span class="ff-hero__line">Gesundheit.</span> <span class="ff-hero__line">Leistung.</span> <span class="ff-hero__line"><span>Präsenz.</span></span></h1>
           <div class="ff-hero__actions">
             <a class="button button--primary" href="${contactHref()}"><span>Beratung anfragen</span><span aria-hidden="true">&rarr;</span></a>
             <a class="button button--ghost" href="#einstiege"><span>Vier Einstiege ansehen</span><span aria-hidden="true">&rarr;</span></a>
@@ -1724,6 +1738,7 @@ function homePage() {
         </div>
       </div>
     </section>
+    </div>
 
     <section class="ed-section ed-section--hero-sync" id="einstiege">
       <div class="section-shell">
@@ -2104,25 +2119,28 @@ function appPage() {
 
 function personalCoachingPage() {
   const content = `
-    <section class="ff-hero ff-hero--coaching ff-hero--coaching-photo">
-      <img class="ff-hero__img" src="/assets/images/premium-training-hero-wide.webp" width="1774" height="887" srcset="/assets/images/premium-training-hero-wide-960.webp 960w, /assets/images/premium-training-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl als Personal Trainer in Nürnberg beim Training mit einem Kunden im Studio"${imageLoadingAttributes({ eager: true })}>
+    <section class="ff-hero ff-hero--coaching ff-hero--coaching-photo ff-hero--stage-card">
+      <img class="ff-hero__img" src="/assets/images/premium-training-hero-ironman.webp" width="1774" height="887" srcset="/assets/images/premium-training-hero-ironman-960.webp 960w, /assets/images/premium-training-hero-ironman.webp 1774w" sizes="100vw" alt="Dominik Dörfl als Personal Trainer in Nürnberg beim Zieleinlauf im Ironman-Trikot"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
-        <p class="ff-hero__eyebrow" data-reveal>Personal Trainer Nürnberg · 1:1 Coaching</p>
-        <h1 class="ff-hero__title" data-reveal>Personal Trainer <br><span>Nürnberg.</span></h1>
-        <p class="ff-hero__lead" data-reveal>
-          Dein Personal Trainer in Nürnberg für alle, deren Woche schon voll ist: 1:1 Training, Körperanalyse und Ernährung, abgestimmt auf Beruf, Familie und dein Ziel — ob Abnehmen, Kraft oder einfach wieder Energie.
-        </p>
-        <div class="ff-hero__actions" data-reveal>
-          <a class="button button--primary" href="${contactHref("premium-training")}"><span>Beratung anfragen</span><span aria-hidden="true">&rarr;</span></a>
-          <a class="button button--secondary-light" href="/fit-werden/"><span>12-Wochen-Programm</span><span aria-hidden="true">&rarr;</span></a>
-          <a class="button button--secondary-light" href="/koerperanalyse-nuernberg/"><span>Körperanalyse ansehen</span><span aria-hidden="true">&rarr;</span></a>
+        <div class="ff-hero__stage-card">
+          <p class="ff-hero__mobile-welcome">Willkommen bei Camp Dörfl</p>
+          <p class="ff-hero__eyebrow">Personal Trainer Nürnberg · 1:1 Coaching</p>
+          <h1 class="ff-hero__title ff-hero__title--staged"><span class="ff-hero__line">Personal Trainer</span> <span class="ff-hero__line"><span>Nürnberg.</span></span></h1>
+          <p class="ff-hero__lead">
+            Dein Personal Trainer in Nürnberg für alle, deren Woche schon voll ist: 1:1 Training, Körperanalyse und Ernährung, abgestimmt auf Beruf, Familie und dein Ziel — ob Abnehmen, Kraft oder einfach wieder Energie.
+          </p>
+          <div class="ff-hero__actions">
+            <a class="button button--primary" href="${contactHref("premium-training")}"><span>Beratung anfragen</span><span aria-hidden="true">&rarr;</span></a>
+            <a class="button button--secondary-light" href="/fit-werden/"><span>12-Wochen-Programm</span><span aria-hidden="true">&rarr;</span></a>
+            <a class="button button--secondary-light" href="/koerperanalyse-nuernberg/"><span>Körperanalyse ansehen</span><span aria-hidden="true">&rarr;</span></a>
+          </div>
+          <dl class="ff-hero__facts" aria-label="Leistungsbausteine im Premium Personal Training">
+            <div><dt>1:1</dt><dd>Persönliche Führung</dd></div>
+            <div><dt>2D</dt><dd>Analyse & InBody</dd></div>
+            <div><dt>App</dt><dd>Check-ins & Steuerung</dd></div>
+          </dl>
         </div>
-        <dl class="ff-hero__facts" data-reveal aria-label="Leistungsbausteine im Premium Personal Training">
-          <div><dt>1:1</dt><dd>Persönliche Führung</dd></div>
-          <div><dt>2D</dt><dd>Analyse & InBody</dd></div>
-          <div><dt>App</dt><dd>Check-ins & Steuerung</dd></div>
-        </dl>
       </div>
     </section>
 
@@ -2395,9 +2413,9 @@ function personalCoachingPage() {
     keywords: ["Personal Trainer Nürnberg", "Personal Training Nürnberg", "Personal Trainer Nürnberg Abnehmen", "1:1 Personal Training Nürnberg", "Personal Trainer Nürnberg Einsteiger", "Ernährungscoaching Nürnberg"],
     bodyClass: "page-premium page-coaching",
     pageName: "Personal Trainer Nürnberg",
-    dateModified: "2026-08-11",
-    socialImage: "/assets/images/premium-training-hero-wide-social.jpg",
-    socialImageAlt: "Dominik Dörfl beim Personal Training mit einem Kunden in Nürnberg",
+    dateModified: "2026-09-03",
+    socialImage: "/assets/images/premium-training-hero-ironman-social.jpg",
+    socialImageAlt: "Dominik Dörfl, Personal Trainer in Nürnberg, beim Zieleinlauf im Ironman-Trikot",
     extraStructuredData: [
       serviceSchema({
         path: "/personal-trainer-nuernberg/",
@@ -2752,33 +2770,36 @@ function firmenfitnessPage() {
 
 function eventsPage() {
   const content = `
-    <section class="ff-hero ff-hero--photo ff-hero--events ff-hero--events-photo ff-hero--text-only">
+    <section class="ff-hero ff-hero--photo ff-hero--events ff-hero--events-photo ff-hero--text-only ff-hero--stage-card">
       <img class="ff-hero__img" src="/assets/images/events-hero-wide.webp" width="1774" height="887" srcset="/assets/images/events-hero-wide-960.webp 960w, /assets/images/events-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl als Moderator auf einer Eventbühne mit Publikum"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
-          <p class="ff-hero__eyebrow" data-reveal>Events · Moderation · Hosting</p>
-          <h1 class="ff-hero__title" data-reveal>Moderator <br><span>in Nürnberg.</span></h1>
-          <p class="ff-hero__lead" data-reveal>
+        <div class="ff-hero__stage-card">
+          <p class="ff-hero__mobile-welcome">Willkommen bei Camp Dörfl</p>
+          <p class="ff-hero__eyebrow">Events · Moderation · Hosting</p>
+          <h1 class="ff-hero__title ff-hero__title--staged"><span class="ff-hero__line">Moderator</span> <span class="ff-hero__line"><span>in Nürnberg.</span></span></h1>
+          <p class="ff-hero__lead">
             Moderator in Nürnberg für Interviews, Panels, Eröffnungen und Bühnenformate mit sportlicher Präsenz, sauberer Dramaturgie und professioneller Ruhe.
           </p>
-          <p class="ff-hero__support" data-reveal>
+          <p class="ff-hero__support">
             Besonders stark, wenn Markenwirkung, Timing und sichere Gesprächsführung gleichzeitig zählen.
           </p>
-          <div class="ff-hero__actions" data-reveal>
+          <div class="ff-hero__actions">
             <a class="button button--primary" href="${contactHref("events")}"><span>Event anfragen</span><span aria-hidden="true">&rarr;</span></a>
             <a class="button button--secondary-light" href="/firmenfitness/"><span>Firmenfitness ansehen</span><span aria-hidden="true">&rarr;</span></a>
           </div>
-          <div class="premium-proof-pills ff-hero__pills" data-reveal>
+          <div class="premium-proof-pills ff-hero__pills">
             <span>Interviews</span>
             <span>Eröffnungen</span>
             <span>Podium</span>
             <span>Gala & Sport</span>
           </div>
-          <dl class="ff-hero__facts" data-reveal aria-label="Event-Schwerpunkte">
+          <dl class="ff-hero__facts" aria-label="Event-Schwerpunkte">
             <div><dt>Live</dt><dd>Bühne & Publikum</dd></div>
             <div><dt>Talk</dt><dd>Interviews & Panels</dd></div>
             <div><dt>Brand</dt><dd>Präsenz & Timing</dd></div>
           </dl>
+        </div>
       </div>
     </section>
 
@@ -6986,6 +7007,103 @@ function bodybuildingCoachingPage() {
   });
 }
 
+/* Werbeband des Nutrition Partners.
+ *
+ * Steht direkt unter dem Kopfbild des Wettkampfkalenders — der Seite mit den
+ * meisten Aufrufen. Gezeigt wird das laufende Wochenangebot von XXL Nutrition,
+ * jeweils mit dem Preis, der mit dem Partner-Code von Dominik entsteht.
+ *
+ * Die Daten kommen aus src/xxl-wochenangebot.mjs und werden wöchentlich neu
+ * geholt (npm run xxl). Steht dort nichts, entfällt das Band ersatzlos —
+ * lieber keine Werbung als ein leeres Gerüst oder Preise von letzter Woche.
+ */
+function euro(cent) {
+  return `${(cent / 100).toFixed(2).replace(".", ",")}&nbsp;€`;
+}
+
+function xxlAngebotsKarte(produkt, position, gesamt) {
+  // Der Vorteil, den die Karte ausweist, ist der gegenüber dem Normalpreis —
+  // Wochenangebot und Code zusammen, denn genau so zahlt man an der Kasse.
+  const ersparnis = Math.round((1 - produkt.codeCent / produkt.uvpCent) * 100);
+  const ab = produkt.ab ? "ab " : "";
+
+  return `
+    <li class="xxl-card" data-xxl-slide role="group" aria-roledescription="Folie" aria-label="${position} von ${gesamt}: ${produkt.name}">
+      <a class="xxl-card__link" href="${produkt.url}" target="_blank" rel="sponsored noopener noreferrer">
+        <span class="xxl-card__shot">
+          <img src="${produkt.bild}" width="${produkt.breite}" height="${produkt.hoehe}" alt="XXL Nutrition ${produkt.name}"${imageLoadingAttributes()}>
+          <span class="xxl-card__save">&minus;${ersparnis}&nbsp;%</span>
+        </span>
+        <span class="xxl-card__body">
+          <span class="xxl-card__name">${produkt.name}</span>
+          <span class="xxl-card__points">${produkt.merkmale.map((merkmal) => `<span>${merkmal}</span>`).join("")}</span>
+          <span class="xxl-card__prices">
+            <s>${euro(produkt.uvpCent)}</s>
+            <span class="xxl-card__deal">${ab}${euro(produkt.preisCent)}</span>
+          </span>
+          <span class="xxl-card__code">mit Code <b>${xxlWochenangebot.code}</b> ${ab}${euro(produkt.codeCent)}</span>
+        </span>
+      </a>
+    </li>
+  `;
+}
+
+function xxlAngebotsBand() {
+  const { produkte, code, rabattProzent, stand, quelle } = xxlWochenangebot;
+  if (!produkte.length) return "";
+
+  const gesamt = String(produkte.length).padStart(2, "0");
+  const karten = produkte
+    .map((produkt, index) => xxlAngebotsKarte(produkt, String(index + 1).padStart(2, "0"), gesamt))
+    .join("");
+
+  const standText = new Date(stand).toLocaleDateString("de-DE", { day: "numeric", month: "long", year: "numeric" });
+
+  return `
+    <section class="xxl-band" aria-labelledby="xxl-band-title">
+      <div class="section-shell section-shell--wide">
+        <div class="xxl-band__head">
+          <div class="xxl-band__intro" data-reveal>
+            <p class="eyebrow">Nutrition Partner &middot; Wochenangebot</p>
+            <h2 id="xxl-band-title">XXL Nutrition<br><span>diese Woche.</span></h2>
+            <p class="xxl-band__lead">${produkte.length} Artikel sind gerade reduziert. Mit dem Partner-Code gehen an der Kasse noch einmal ${rabattProzent}&nbsp;% herunter — die Preise unten stehen bereits mit Code.</p>
+          </div>
+          <div class="code-card xxl-band__code" data-reveal>
+            <p class="code-card__label">Dein Code &middot; ${rabattProzent}&nbsp;% zusätzlich</p>
+            <p class="code-card__value"><span data-code-value>${code}</span></p>
+            <div class="code-card__actions">
+              <button class="button button--primary code-card__copy" type="button" data-copy-code="${code}">
+                <span>Code kopieren</span><span aria-hidden="true">&#10690;</span>
+              </button>
+              <a class="button button--secondary-light" href="${quelle}" target="_blank" rel="sponsored noopener noreferrer">
+                <span>Alle Angebote</span><span aria-hidden="true">&#8599;</span>
+              </a>
+            </div>
+            <p class="code-card__hint" role="status" data-copy-feedback></p>
+          </div>
+        </div>
+
+        <div class="xxl-slider" data-xxl-slider data-xxl-autoplay="5200" data-reveal aria-roledescription="Slideshow" aria-label="Wochenangebote von XXL Nutrition">
+          <ul class="xxl-slider__track" data-xxl-track>${karten}</ul>
+          <div class="xxl-slider__controls" data-xxl-controls hidden>
+            <button class="xxl-slider__arrow" type="button" data-xxl-prev aria-label="Vorherige Angebote"><span aria-hidden="true">&larr;</span></button>
+            <div class="xxl-slider__dots" data-xxl-dots></div>
+            <button class="xxl-slider__arrow" type="button" data-xxl-next aria-label="Nächste Angebote"><span aria-hidden="true">&rarr;</span></button>
+          </div>
+        </div>
+
+        <p class="xxl-band__note">
+          ${advertisingNote("ad-note ad-note--band", "Werbung")}
+          Preise und Auswahl vom ${standText}, ohne Gewähr. Es gilt der Preis im Warenkorb von XXL Nutrition;
+          Umfang und Ausnahmen des Codes legt XXL Nutrition fest. Camp Dörfl ist Nutrition Partner &mdash;
+          über die Links kann eine Vergütung entstehen, für dich ändert sich am Preis nichts.
+          <a href="/xxl-nutrition-rabattcode/">Alles zum Rabattcode</a>
+        </p>
+      </div>
+    </section>
+  `;
+}
+
 function bodybuildingCalendarPage() {
   // Der Status wird bei jedem Build neu bestimmt: Eine Show gilt ab dem Tag nach
   // ihrem letzten Wettkampftag als ausgetragen. Vorher hing das an einem von Hand
@@ -7135,6 +7253,8 @@ function bodybuildingCalendarPage() {
         </dl>
       </div>
     </section>
+
+    ${xxlAngebotsBand()}
 
     <section class="section bbcal-intro" id="termine">
       <div class="section-shell section-shell--wide">
@@ -9527,6 +9647,1071 @@ function xxlNutritionRabattcodePage() {
   });
 }
 
+// Preise erscheinen auf der Seite, in der Zusammenfassung und in der E-Mail.
+// Damit überall dasselbe steht, formatiert nur diese Funktion sie — die
+// Entsprechung im Browser liegt in src/main.js.
+function shopEuro(value) {
+  return `${value.toFixed(2).replace(".", ",")} €`;
+}
+
+function shopPage() {
+  const path = "/shop/";
+  const shirt = shopProducts.find((product) => product.category === "Shirt");
+  const jacke = shopProducts.find((product) => product.category === "Jacke");
+  const shirts = shopProducts.filter((product) => product.category === "Shirt");
+  const jacken = shopProducts.filter((product) => product.category === "Jacke");
+  const bag = shopProducts.find((product) => product.id === "bag");
+  const weitere = shopProducts.filter(
+    (product) => ["Sweatshirt", "Jacke", "Sonstiges"].includes(product.category) && product.id !== bag?.id
+  );
+  const sweatshirt = shopProducts.find((product) => product.category === "Sweatshirt");
+  // Der Einstieg zeigt nur, was man anziehen kann — Buddy hat sein eigenes Motiv.
+  const tragbar = shopProducts.filter((product) => product.category !== "Sonstiges");
+  const kacheln = tragbar.length > 8 ? [...tragbar.slice(0, 5), ...tragbar.slice(-3)] : tragbar;
+  const guenstigsterGutschein = Math.min(...shopVouchers.map((gutschein) => gutschein.price));
+
+  const ablauf = [
+    {
+      step: "01",
+      title: "Auswählen",
+      text: "Farbe und Größe wählen, auf „Vorbestellen“ tippen. Die Auswahl sammelt sich in der Übersicht — Summe und Versand stehen sofort dabei."
+    },
+    {
+      step: "02",
+      title: "Anfrage abschicken",
+      text: "Adresse eintragen und absenden. Deine Vorbestellung kommt als E-Mail bei mir an. Bezahlt wird an dieser Stelle nichts."
+    },
+    {
+      step: "03",
+      title: "Bestätigung abwarten",
+      text: "Du bekommst eine persönliche Rückmeldung mit Verfügbarkeit, Summe und Zahlungsweg. Erst damit wird die Bestellung verbindlich."
+    }
+  ];
+
+  const shopFaq = [
+    {
+      question: "Kann ich hier direkt kaufen?",
+      answer:
+        "Nein. Diese Seite ist kein Kassensystem: Du stellst deine Auswahl zusammen und schickst sie als unverbindliche Vorbestellung per E-Mail. Ein Kaufvertrag kommt erst mit meiner ausdrücklichen Bestätigung zustande."
+    },
+    {
+      question: "Was kostet der Versand?",
+      answer: `Innerhalb Deutschlands ${shopEuro(shopShipping.price)} für Kleidung und ${shopEuro(shopShipping.voucherPrice)} für Gutscheine — jeweils als Pauschale pro Bestellung, egal wie viele Teile du vorbestellst. Kommt beides zusammen in eine Bestellung, gilt einmal die höhere Pauschale von ${shopEuro(shopShipping.price)}.`
+    },
+    {
+      question: "Welche Größen gibt es?",
+      answer: `Shirts und Jacken gibt es von ${shopSizes[0]} bis ${shopSizes[shopSizes.length - 1]}. Wenn du zwischen zwei Größen liegst, schreib es in das Nachrichtenfeld — dann klären wir das vor der Produktion.`
+    },
+    {
+      question: "Wann kommt meine Bestellung an?",
+      answer:
+        "Produziert wird, sobald die Vorbestellungen zusammen sind. Den konkreten Termin nenne ich dir in der Bestätigung, damit du nicht auf ein Datum wartest, das ich vorher nicht kenne."
+    },
+    {
+      question: "Für was gibt es Gutscheine?",
+      answer:
+        "Für Personal Training, Personal Training mit Körperanalyse, die Körperanalyse mit persönlicher Beratung, drei Monate Online Coaching sowie die 5er- und die 10er-Karte Personal Training. Die Beträge entsprechen genau den Preisen aus der Preisübersicht — auf den Gutschein kommt nichts obendrauf."
+    },
+    {
+      question: "Wie lange ist ein Gutschein gültig und wie bekomme ich ihn?",
+      answer:
+        "Das Gültigkeitsdatum trägt Dominik bei der Ausstellung ein und nennt es in der Bestätigung. Ob der Gutschein gedruckt oder als Datei zu dir kommt, klären wir in derselben Rückmeldung — ein Wunschname für „Für:“ gehört ins Nachrichtenfeld."
+    },
+    {
+      question: "Was passiert mit meinen Daten?",
+      answer:
+        "Deine Angaben werden ausschließlich zur Bearbeitung der Vorbestellung verwendet und über den Formular-Dienst FormSubmit an meine E-Mail-Adresse übermittelt. Details stehen in der Datenschutzerklärung."
+    }
+  ];
+
+  /* "hasMerchantReturnPolicy" fehlt hier bewusst.
+   *
+   * Die Search Console meldet es als optionale Lücke. Es ist aber keine
+   * technische Angabe, sondern eine öffentliche Zusage über das Rückgaberecht —
+   * und der Shop verkauft nichts: Er nimmt eine unverbindliche Vorbestellung
+   * per E-Mail entgegen, der Vertrag entsteht danach. Solange das so ist und
+   * keine Regelung auf der Website steht, bleibt das Feld leer. Entschieden am
+   * 31.08.2026 mit Dominik; nicht ungefragt "beheben".
+   *
+   * Versandangabe für die Produktdaten der Suche.
+   *
+   * Der Satz ist eine Pauschale je Bestellung, nicht je Stück — das Format
+   * kennt aber nur einen Satz je Angebot. Was auf der Seite steht, bleibt
+   * deshalb verbindlich; die Auszeichnung nennt den Satz, der für eine
+   * Bestellung mit genau diesem Artikel anfällt. */
+  const versandAngabe = (satz) => ({
+    "@type": "OfferShippingDetails",
+    shippingRate: { "@type": "MonetaryAmount", value: satz.toFixed(2), currency: "EUR" },
+    shippingDestination: { "@type": "DefinedRegion", addressCountry: "DE" }
+  });
+
+  const produktSchema = {
+    "@type": "ItemList",
+    "@id": `${site.url}${encodePath(path)}#kollektion`,
+    name: "Camp Dörfl #MEMBER Kollektion",
+    numberOfItems: shopProducts.length + shopVouchers.length,
+    itemListElement: shopProducts.map((product, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "Product",
+        name: `${product.name} ${product.variant}`,
+        description: product.text,
+        color: product.variant,
+        image: `${site.url}${product.image}`,
+        brand: { "@type": "Brand", name: site.name },
+        offers: {
+          "@type": "Offer",
+          price: product.price.toFixed(2),
+          priceCurrency: "EUR",
+          availability: "https://schema.org/PreOrder",
+          url: `${site.url}${encodePath(path)}`,
+          seller: { "@id": `${site.url}/#business` },
+          shippingDetails: versandAngabe(shopShipping.price)
+        }
+      }
+    })).concat(
+      shopVouchers.map((gutschein, index) => ({
+        "@type": "ListItem",
+        position: shopProducts.length + index + 1,
+        item: {
+          "@type": "Product",
+          name: `Camp Dörfl Gutschein — ${gutschein.title}`,
+          description: gutschein.text,
+          category: "Gutschein",
+          image: `${site.url}${gutschein.image}`,
+          brand: { "@type": "Brand", name: site.name },
+          offers: {
+            "@type": "Offer",
+            price: gutschein.price.toFixed(2),
+            priceCurrency: "EUR",
+            availability: "https://schema.org/PreOrder",
+            url: `${site.url}${encodePath(path)}`,
+            seller: { "@id": `${site.url}/#business` },
+            shippingDetails: versandAngabe(shopShipping.voucherPrice)
+          }
+        }
+      }))
+    )
+  };
+
+  const produktKarte = (product, eager = false) => `
+    <article
+      class="shop-card"
+      data-shop-product
+      data-id="${product.id}"
+      data-name="${product.name} ${product.variant}"
+      data-price="${product.price}"
+      data-shipping="${shopShipping.price}"
+      data-reveal
+    >
+      <div class="shop-card__media">
+        <button
+          class="shop-zoom"
+          type="button"
+          data-shop-zoom
+          data-src="${product.image}"
+          data-alt="${product.alt}"
+          data-caption="${product.name} ${product.variant} · ${product.print} · ${shopEuro(product.price)}"
+          aria-label="${product.name} ${product.variant} groß ansehen"
+        >
+          <img src="${product.image}" width="1020" height="1532" alt="${product.alt}"${imageLoadingAttributes({ eager })}>
+          <span class="shop-zoom__hint" aria-hidden="true">Groß ansehen</span>
+        </button>
+        <span class="shop-card__tag">${product.category}</span>
+      </div>
+      <div class="shop-card__body">
+        <h3 class="shop-card__title">${product.name}</h3>
+        <p class="shop-card__variant">
+          <span class="shop-card__swatch" style="--shop-swatch: ${product.swatch}" aria-hidden="true"></span>
+          ${product.variant} · ${product.print}
+        </p>
+        <p class="shop-card__text">${product.text}</p>
+        <p class="shop-card__price">${shopEuro(product.price)}</p>
+        <div class="shop-card__controls">
+          ${product.ohneGroesse ? `
+            <div class="shop-field">
+              <span class="shop-field__label">Größe</span>
+              <p class="shop-field__fest">Einheitsgröße</p>
+            </div>
+          ` : `
+            <label class="shop-field">
+              <span class="shop-field__label">Größe</span>
+              <select data-shop-size aria-label="Größe für ${product.name} ${product.variant}">
+                <option value="">Größe wählen</option>
+                ${shopSizes.map((size) => `<option value="${size}">${size}</option>`).join("")}
+              </select>
+            </label>
+          `}
+          <button class="button button--primary shop-card__add" type="button" data-shop-add>
+            <span>Vorbestellen</span><span aria-hidden="true">+</span>
+          </button>
+        </div>
+        <div class="shop-card__inline" data-shop-card-state hidden>
+          <p class="shop-card__inline-label">In deiner Vorbestellung</p>
+          <div data-shop-card-rows></div>
+        </div>
+        <p class="shop-card__hint" data-shop-card-hint role="status"></p>
+      </div>
+    </article>
+  `;
+
+  const gutscheinKarte = (gutschein) => `
+    <article
+      class="shop-voucher"
+      data-shop-product
+      data-id="${gutschein.id}"
+      data-name="Gutschein ${gutschein.kurz}"
+      data-price="${gutschein.price}"
+      data-shipping="${shopShipping.voucherPrice}"
+      data-reveal
+    >
+      <div class="shop-voucher__top">
+        <span class="shop-voucher__tag">Gutschein</span>
+        <span class="shop-voucher__detail">${gutschein.detail}</span>
+      </div>
+      <p class="shop-voucher__value">${shopEuro(gutschein.price)}</p>
+      <h4 class="shop-voucher__title">${gutschein.title}</h4>
+      <p class="shop-voucher__text">${gutschein.text}</p>
+      <button class="button button--primary shop-voucher__add" type="button" data-shop-add>
+        <span>Vorbestellen</span><span aria-hidden="true">+</span>
+      </button>
+      <div class="shop-card__inline" data-shop-card-state hidden>
+        <p class="shop-card__inline-label">In deiner Vorbestellung</p>
+        <div data-shop-card-rows></div>
+      </div>
+      <p class="shop-card__hint" data-shop-card-hint role="status"></p>
+    </article>
+  `;
+
+  const content = `
+    <section class="shop-hero">
+      <div class="shop-hero__glow" aria-hidden="true"></div>
+      <div class="section-shell shop-hero__shell">
+        <div class="shop-hero__copy" data-reveal>
+          <p class="shop-hero__eyebrow">Camp Dörfl Kollektion</p>
+          <h1 class="shop-hero__title">Der Camp Dörfl<br><span>#Member</span> Shop</h1>
+          <p class="shop-hero__lead">
+            Acht Shirts, ein Sweatshirt, zwei Jacken, ein Bär, ein Beutel, ein Emblem: Camp Dörfl #MEMBER und darunter
+            <em>NO TIME TO BE LAZY</em>. Dazu Gutscheine für Training, Körperanalyse und
+            Online Coaching. Ausgesucht wird hier — gekauft wird nicht. Du stellst deine
+            Auswahl zusammen und schickst sie mir als Vorbestellung.
+          </p>
+          <div class="shop-hero__actions">
+            <a class="button button--primary" href="#kollektion"><span>Kollektion ansehen</span><span aria-hidden="true">&darr;</span></a>
+            <a class="button button--secondary-light" href="#vorbestellung"><span>Vorbestellung</span><span aria-hidden="true">&rarr;</span></a>
+          </div>
+          <div class="shop-hero__facts">
+            <div><span class="shop-hero__fact-value">ab ${shopEuro(Math.min(...shirts.map((product) => product.price)))}</span><span>je Shirt</span></div>
+            <div><span class="shop-hero__fact-value">${shopEuro(sweatshirt.price)}</span><span>je Sweatshirt</span></div>
+            <div><span class="shop-hero__fact-value">${shopEuro(jacke.price)}</span><span>je Jacke</span></div>
+            <div><span class="shop-hero__fact-value">ab ${shopEuro(guenstigsterGutschein)}</span><span>je Gutschein</span></div>
+            <div><span class="shop-hero__fact-value">ab ${shopEuro(shopShipping.voucherPrice)}</span><span>Versand</span></div>
+          </div>
+        </div>
+        <div class="shop-hero__mosaic" data-reveal>
+          ${kacheln
+            .map(
+              (product, index) => `
+                <figure class="shop-hero__tile">
+                  <button
+                    class="shop-zoom"
+                    type="button"
+                    data-shop-zoom
+                    data-src="${product.image}"
+                    data-alt="${product.alt}"
+                    data-caption="${product.name} ${product.variant} · ${product.print} · ${shopEuro(product.price)}"
+                    aria-label="${product.name} ${product.variant} groß ansehen"
+                  >
+                    <img src="${product.image}" width="1020" height="1532" alt="${product.alt}"${imageLoadingAttributes({ eager: index < 2 })}>
+                  </button>
+                </figure>
+              `
+            )
+            .join("")}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight" aria-labelledby="ablauf-title">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "So läuft es ab",
+          title: "Vorbestellen dann bezahlen.",
+          text:
+            "Es gibt keinen Warenkorb und keine Kasse. Drei Schritte, dazwischen eine persönliche Rückmeldung von mir.",
+          align: "center"
+        }).replace("<h2", '<h2 id="ablauf-title"')}
+        ${stepGrid(ablauf)}
+      </div>
+    </section>
+
+    <section class="section section--muted" id="kollektion" aria-labelledby="kollektion-title" data-shop>
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Kollektion & Gutscheine",
+          title: "Für Member und zum Verschenken",
+          text:
+            "Elf Teile zum Anziehen, Bär und Beutel dazu, sechs Gutscheine für Training, Analyse und Coaching. Alles landet in derselben Vorbestellung.",
+          align: "center"
+        }).replace("<h2", '<h2 id="kollektion-title"')}
+
+        <div class="shop-layout">
+          <div class="shop-catalog">
+            <div class="shop-group">
+              <div class="shop-group__head">
+                <h3 class="shop-group__title">Shirts</h3>
+                <p class="shop-group__meta">${shopEuro(Math.min(...shirts.map((product) => product.price)))} – ${shopEuro(Math.max(...shirts.map((product) => product.price)))} · ${shopSizes[0]}–${shopSizes[shopSizes.length - 1]}</p>
+              </div>
+              <div class="shop-grid">
+                ${shirts.map((product, index) => produktKarte(product, index === 0)).join("")}
+              </div>
+            </div>
+
+            <div class="shop-group">
+              <div class="shop-group__head">
+                <h3 class="shop-group__title">Sweatshirts, Jacken &amp; Sonstiges</h3>
+                <p class="shop-group__meta">${shopEuro(Math.min(...weitere.map((product) => product.price)))} – ${shopEuro(Math.max(...weitere.map((product) => product.price)))}</p>
+              </div>
+              <div class="shop-grid">
+                ${weitere.map((product) => produktKarte(product)).join("")}
+              </div>
+            </div>
+
+            <div class="shop-group" id="gutscheine">
+              <div class="shop-group__head">
+                <h3 class="shop-group__title">Gutscheine</h3>
+                <p class="shop-group__meta">ab ${shopEuro(guenstigsterGutschein)} · Versand ${shopEuro(shopShipping.voucherPrice)}</p>
+              </div>
+
+              <div class="shop-voucher-stage">
+                <div class="shop-voucher-stage__oben">
+                  <div class="shop-voucher-stage__artikel">
+                    ${bag ? produktKarte(bag) : ""}
+                  </div>
+                  <div class="shop-voucher-stage__sides">
+                  <figure class="voucher-preview">
+                    <div class="voucher-card voucher-card--front">
+                      <p class="voucher-card__title">Gutschein</p>
+                      <img class="voucher-card__emblem" src="/assets/images/camp-doerfl-logo.png" width="2000" height="2000" alt="">
+                      <div class="voucher-card__foot">
+                        <p class="voucher-card__brand">Camp Dörfl</p>
+                        <p class="voucher-card__contact">www.${site.domain}<br>${site.email}</p>
+                      </div>
+                    </div>
+                    <figcaption>Vorderseite</figcaption>
+                  </figure>
+
+                  <figure class="voucher-preview">
+                    <div class="voucher-card voucher-card--back">
+                      <p class="voucher-card__eyebrow">Dein Fitness &amp; Bodybuilding Gutschein</p>
+                      <img class="voucher-card__emblem" src="/assets/images/camp-doerfl-logo.png" width="2000" height="2000" alt="">
+                      <div class="voucher-card__lines" aria-hidden="true">
+                        <span>Für:</span>
+                        <span>Wert:</span>
+                        <span>Gültig bis:</span>
+                      </div>
+                      <p class="voucher-card__brand">Camp Dörfl</p>
+                    </div>
+                    <figcaption>Rückseite</figcaption>
+                    </figure>
+                  </div>
+                </div>
+                <div class="shop-voucher-stage__copy">
+                  <p>
+                    Jeder Gutschein wird auf den Namen ausgestellt, den du angibst — mit Wert und
+                    Gültigkeit darauf. Die Beträge sind dieselben wie in der
+                    <a href="/personal-training-kosten-nuernberg/">Preisübersicht</a>, es kommt
+                    nichts obendrauf.
+                  </p>
+                  <p class="shop-voucher-stage__note">
+                    Der Versand kostet ${shopEuro(shopShipping.voucherPrice)} je Bestellung. Liegt Kleidung mit dabei,
+                    gilt die höhere Pauschale von ${shopEuro(shopShipping.price)} — und zwar nur einmal.
+                  </p>
+                </div>
+              </div>
+
+              <div class="shop-grid shop-grid--vouchers">
+                ${shopVouchers.map((gutschein) => gutscheinKarte(gutschein)).join("")}
+              </div>
+            </div>
+          </div>
+
+          <aside class="shop-summary" aria-labelledby="summary-title">
+            <div class="shop-summary__inner">
+              <p class="shop-summary__eyebrow">Unverbindlich</p>
+              <h3 class="shop-summary__title" id="summary-title">Deine Vorbestellung</h3>
+              <p class="shop-summary__empty" data-shop-empty>
+                Noch nichts ausgewählt. Wähle bei einem Teil die Größe oder nimm einen Gutschein — dann auf „Vorbestellen“.
+              </p>
+              <ul class="shop-summary__list" data-shop-list hidden></ul>
+              <dl class="shop-summary__totals" data-shop-totals hidden>
+                <div class="shop-summary__row">
+                  <dt>Zwischensumme</dt>
+                  <dd data-shop-subtotal>${shopEuro(0)}</dd>
+                </div>
+                <div class="shop-summary__row">
+                  <dt>Versand</dt>
+                  <dd data-shop-shipping>${shopEuro(shopShipping.price)}</dd>
+                </div>
+                <div class="shop-summary__row shop-summary__row--total">
+                  <dt>Gesamt</dt>
+                  <dd data-shop-total>${shopEuro(0)}</dd>
+                </div>
+              </dl>
+              <a class="button button--primary shop-summary__cta" href="#vorbestellung" data-shop-cta>
+                <span>Zur Vorbestellung</span><span aria-hidden="true">&rarr;</span>
+              </a>
+              <p class="shop-summary__note">
+                Alle Preise sind Endpreise. Versand ${shopEuro(shopShipping.price)} für Kleidung,
+                ${shopEuro(shopShipping.voucherPrice)} für Gutscheine — pro Bestellung, nicht je Stück.
+                Verbindlich wird die Bestellung erst mit meiner Bestätigung.
+              </p>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+      <div class="shop-bar" data-shop-bar hidden>
+        <div class="shop-bar__info">
+          <strong data-shop-bar-count>0 Teile</strong>
+          <span data-shop-bar-total>${shopEuro(0)}</span>
+        </div>
+        <a class="button button--primary" href="#vorbestellung"><span>Weiter</span><span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </section>
+
+    <dialog class="shop-lightbox" data-shop-lightbox aria-label="Produktbild in groß">
+      <div class="shop-lightbox__inner">
+        <button class="shop-lightbox__close" type="button" data-shop-lightbox-close aria-label="Großansicht schließen">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <button class="shop-lightbox__step shop-lightbox__step--prev" type="button" data-shop-lightbox-prev aria-label="Vorheriges Teil">
+          <span aria-hidden="true">&lsaquo;</span>
+        </button>
+        <figure class="shop-lightbox__figure" data-shop-lightbox-figure>
+          <figcaption data-shop-lightbox-caption></figcaption>
+        </figure>
+        <button class="shop-lightbox__step shop-lightbox__step--next" type="button" data-shop-lightbox-next aria-label="Nächstes Teil">
+          <span aria-hidden="true">&rsaquo;</span>
+        </button>
+      </div>
+    </dialog>
+
+    <section class="section" id="vorbestellung" aria-labelledby="vorbestellung-title">
+      <div class="section-shell shop-order">
+        ${sectionHeader({
+          eyebrow: "Schritt 02",
+          title: "Vorbestellung abschicken.",
+          text:
+            "Die Auswahl von oben wird automatisch mitgeschickt. Du bekommst eine persönliche Rückmeldung, bevor irgendetwas verbindlich wird.",
+          align: "center"
+        }).replace("<h2", '<h2 id="vorbestellung-title"')}
+
+        <form
+          class="shop-form"
+          data-shop-form
+          action="https://formsubmit.co/${site.email}"
+          data-contact-endpoint="https://formsubmit.co/ajax/${site.email}"
+          method="POST"
+        >
+          <input class="contact-form__trap" type="text" name="_honey" tabindex="-1" autocomplete="off">
+          <input type="hidden" name="_subject" value="Camp Dörfl Vorbestellung">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="Zwischensumme" value="" data-shop-subtotal-field>
+          <input type="hidden" name="Versand" value="" data-shop-shipping-field>
+          <input type="hidden" name="Gesamt" value="" data-shop-total-field>
+
+          <div class="shop-form__recap" data-shop-recap>
+            <p class="shop-form__recap-empty" data-shop-recap-empty>
+              Deine Auswahl erscheint hier, sobald du oben ein Teil vorbestellt hast.
+            </p>
+            <ul class="shop-form__recap-list" data-shop-recap-list hidden></ul>
+            <p class="shop-form__recap-total" data-shop-recap-total hidden></p>
+          </div>
+
+          <div class="form-grid shop-form__grid">
+            <label>
+              <span>Name</span>
+              <input name="name" autocomplete="name" required>
+            </label>
+            <label>
+              <span>E-Mail</span>
+              <input name="email" type="email" autocomplete="email" required>
+            </label>
+            <label>
+              <span>Telefon <small>optional</small></span>
+              <input name="telefon" autocomplete="tel">
+            </label>
+            <label>
+              <span>Straße &amp; Hausnummer</span>
+              <input name="strasse" autocomplete="street-address" required>
+            </label>
+            <label>
+              <span>PLZ</span>
+              <input name="plz" autocomplete="postal-code" inputmode="numeric" required>
+            </label>
+            <label>
+              <span>Ort</span>
+              <input name="ort" autocomplete="address-level2" required>
+            </label>
+          </div>
+
+          <label class="shop-form__message">
+            <span>Nachricht <small>optional</small></span>
+            <textarea name="nachricht" rows="5" placeholder="Zwischen zwei Größen? Wunschtermin? Schreib es hier dazu."></textarea>
+          </label>
+
+          <div class="shop-form__footer">
+            <div class="shop-form__trust">
+              <div class="shop-form__trust-item">
+                <span class="shop-form__trust-mark" aria-hidden="true">01</span>
+                <div>
+                  <span class="shop-form__trust-label">Unverbindlich</span>
+                  <p>Mit dem Abschicken gibst du eine Vorbestellung ab. Ein Kaufvertrag kommt erst mit meiner ausdrücklichen Bestätigung zustande.</p>
+                </div>
+              </div>
+              <div class="shop-form__trust-item">
+                <span class="shop-form__trust-mark" aria-hidden="true">02</span>
+                <div>
+                  <span class="shop-form__trust-label">Vertraulich behandelt</span>
+                  <p>Deine Angaben werden ausschließlich für diese Bestellung verwendet. <a href="/datenschutz/">Datenschutz ansehen&nbsp;→</a></p>
+                </div>
+              </div>
+            </div>
+            <div class="shop-form__actions">
+              <button class="button button--primary" type="submit"><span>Vorbestellung abschicken</span><span aria-hidden="true">&rarr;</span></button>
+            </div>
+            <p class="contact-form__status shop-form__status" data-contact-status aria-live="polite"></p>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="section section--muted" aria-labelledby="shop-faq-title">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "FAQ",
+          title: "Häufige Fragen zur Kollektion.",
+          align: "center"
+        }).replace("<h2", '<h2 id="shop-faq-title"')}
+        ${faq(shopFaq)}
+      </div>
+    </section>
+
+    ${ctaSection({
+      eyebrow: "Und danach",
+      title: "Das Shirt ist der einfache Teil.",
+      text:
+        "Wer die Kollektion trägt, trainiert meistens auch danach. Wenn du willst, dass Training und Ernährung dahinter zusammenpassen, reden wir vorher darüber.",
+      primary: { label: "Beratung anfragen", href: contactHref("premium-training") },
+      secondary: { label: "Camp Dörfl App ansehen", href: "/app/" }
+    })}
+  `;
+
+  return layout({
+    path,
+    title: "Camp Dörfl Shop — Kollektion vorbestellen",
+    description: `Die Camp Dörfl #MEMBER Kollektion: Shirts für ${shopEuro(shirt.price)}, Jacken für ${shopEuro(jacke.price)}, Versand ${shopEuro(shopShipping.price)}. Auswählen und unverbindlich per E-Mail vorbestellen.`,
+    keywords: [
+      "Camp Dörfl Shop",
+      "Camp Dörfl Kollektion",
+      "Camp Dörfl Shirt",
+      "Camp Dörfl Jacke",
+      "Fitness Bekleidung Nürnberg",
+      "Camp Dörfl Member Kollektion"
+    ],
+    bodyClass: "page-premium page-shop",
+    pageName: "Camp Dörfl Shop",
+    pageType: "CollectionPage",
+    dateModified: "2026-08-26",
+    socialImage: "/assets/images/camp-doerfl-kollektion-social.jpg",
+    socialImageAlt: "Dominik Dörfl trägt drei Teile der Camp Dörfl #MEMBER Kollektion",
+    extraStructuredData: [produktSchema, faqSchema(path, shopFaq)],
+    content
+  });
+}
+
+// Beide Siegerlisten teilen sich einen Aufbau: dunkler Einstieg mit Zahlen,
+// Erklärung, durchsuchbare Tabelle, Rekorde, FAQ. Unterschiedlich sind nur
+// Daten und Texte — deshalb eine Funktion für beide Seiten.
+function siegerlisteSeite({
+  path,
+  klassen,
+  eventName,
+  eyebrow,
+  titel,
+  h1,
+  lead,
+  seoTitel,
+  beschreibung,
+  keywords,
+  einordnung,
+  entwicklung,
+  faqEintraege,
+  hauptklasse,
+  offeneKlassen = [],
+  nachbarseite
+}) {
+  const reihen = siegerReihen(klassen);
+  const jahre = [...new Set(reihen.map((reihe) => reihe.jahr))].sort((a, b) => b - a);
+  const rangliste = titelRangliste(klassen, hauptklasse).slice(0, 8);
+  const gesamtRangliste = titelRangliste(klassen).slice(0, 8);
+  const aktuell = reihen.find((reihe) => reihe.klasseId === hauptklasse);
+  const ersterJahrgang = Math.min(...reihen.map((reihe) => reihe.jahr));
+
+  const suchtext = (reihe) => `${reihe.jahr} ${reihe.klasse} ${reihe.name}`.toLowerCase();
+
+  // 231 Zeilen am Stück sind kein Nachschlagewerk, sondern eine Wand. Die
+  // Liste steht deshalb nach Klassen gruppiert in aufklappbaren Blöcken:
+  // zehn Zeilen zum Überfliegen, ein Klick bis zum Jahrgang. <details> hält
+  // den Inhalt dabei im HTML — Suchmaschinen sehen alles, auch zugeklappt.
+  const gruppenMarkup = klassen
+    .map((klasse, index) => {
+      const eigene = siegerReihen([klasse]);
+      const jahreDerKlasse = eigene.map((reihe) => reihe.jahr);
+      const von = Math.min(...jahreDerKlasse);
+      const bis = Math.max(...jahreDerKlasse);
+      const aktuellste = eigene[0];
+
+      return `
+        <details class="champs-group" data-champs-group data-klasse="${klasse.id}"${index === 0 ? " open" : ""}>
+          <summary class="champs-group__head">
+            <span class="champs-group__name">${klasse.name}</span>
+            <span class="champs-group__meta">${von}–${bis} · ${eigene.length} Titel</span>
+            <span class="champs-group__now">zuletzt: ${aktuellste.name}</span>
+            <span class="champs-group__chevron" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path d="m6 9.5 6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </summary>
+          <div class="champs-group__body">
+            <p class="champs-group__text">${klasse.text}</p>
+            ${
+              klasse.luecke
+                ? `<p class="champs-group__gap">${klasse.luecke.von}–${klasse.luecke.bis}: ${klasse.luecke.grund}</p>`
+                : ""
+            }
+            <table class="champs-table">
+              <caption class="champs-table__caption">${klasse.name} beim ${eventName} — neueste zuerst.</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Jahr</th>
+                  <th scope="col">Sieger</th>
+                </tr>
+              </thead>
+              <tbody data-champs-body>
+                ${eigene
+                  .map(
+                    (reihe) => `
+                      <tr data-jahr="${reihe.jahr}" data-klasse="${reihe.klasseId}" data-suche="${suchtext(reihe)}">
+                        <td class="champs-table__year">${reihe.jahr}</td>
+                        <td class="champs-table__name">${reihe.name}${reihe.hinweis ? `<small class="champs-table__note">${reihe.hinweis}</small>` : ""}</td>
+                      </tr>
+                    `
+                  )
+                  .join("")}
+              </tbody>
+            </table>
+          </div>
+        </details>
+      `;
+    })
+    .join("");
+
+  const tabelle = `
+    <div class="champs-tools" data-champs>
+      <div class="champs-field champs-field--search">
+        <label class="champs-field__label" for="champs-suche">Suchen</label>
+        <input
+          class="champs-input"
+          id="champs-suche"
+          type="search"
+          data-champs-search
+          placeholder="Name oder Jahr, z. B. Coleman oder 1998"
+          autocomplete="off"
+        >
+      </div>
+      <div class="champs-field">
+        <label class="champs-field__label" for="champs-klasse">Klasse</label>
+        <select class="champs-select" id="champs-klasse" data-champs-division>
+          <option value="">Alle Klassen</option>
+          ${klassen.map((klasse) => `<option value="${klasse.id}">${klasse.name}</option>`).join("")}
+        </select>
+      </div>
+      <div class="champs-field">
+        <label class="champs-field__label" for="champs-jahr">Jahr</label>
+        <select class="champs-select" id="champs-jahr" data-champs-year>
+          <option value="">Alle Jahre</option>
+          ${jahre.map((jahr) => `<option value="${jahr}">${jahr}</option>`).join("")}
+        </select>
+      </div>
+      <button class="champs-reset" type="button" data-champs-reset>Zurücksetzen</button>
+    </div>
+
+    <div class="champs-status">
+      <p class="champs-count" data-champs-count role="status">${reihen.length} Titel in ${klassen.length} ${klassen.length === 1 ? "Klasse" : "Klassen"}</p>
+      <button class="champs-toggle" type="button" data-champs-expand aria-pressed="false">Alle aufklappen</button>
+    </div>
+
+    <div class="champs-groups">
+      ${gruppenMarkup}
+    </div>
+
+    <p class="champs-empty" data-champs-empty hidden>
+      Kein Treffer. Prüfe die Schreibweise oder setze die Filter zurück.
+    </p>
+  `;
+
+  const content = `
+    <section class="champs-hero">
+      <div class="champs-hero__glow" aria-hidden="true"></div>
+      <div class="section-shell champs-hero__shell">
+        <p class="champs-hero__eyebrow" data-reveal>${eyebrow}</p>
+        <h1 class="champs-hero__title" data-reveal>${h1}</h1>
+        <p class="champs-hero__lead" data-reveal>${lead}</p>
+        <div class="champs-hero__facts" data-reveal>
+          <div><span class="champs-hero__fact-value">${ersterJahrgang}</span><span>erster Titel</span></div>
+          <div><span class="champs-hero__fact-value">${klassen.length}</span><span>${klassen.length === 1 ? "Klasse" : "Klassen"} erfasst</span></div>
+          <div><span class="champs-hero__fact-value">${reihen.length}</span><span>Titel insgesamt</span></div>
+          ${aktuell ? `<div><span class="champs-hero__fact-value">${aktuell.jahr}</span><span>zuletzt: ${aktuell.name}</span></div>` : ""}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight" aria-labelledby="einordnung-title">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Einordnung",
+          title: titel,
+          text: einordnung.lead,
+          align: "center"
+        }).replace("<h2", '<h2 id="einordnung-title"')}
+        <div class="summary-rows summary-rows--compact champs-intro">
+          ${einordnung.punkte
+            .map((punkt) => `<article class="summary-row" data-reveal><h3>${punkt.titel}</h3><p>${punkt.text}</p></article>`)
+            .join("")}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted" id="siegerliste" aria-labelledby="liste-title">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Die komplette Liste",
+          title: `Alle Sieger des ${eventName}.`,
+          text:
+            "Such nach einem Namen, filtere nach Klasse oder springe direkt auf ein Jahr. Ohne Filter steht die vollständige Liste da, neueste Titel zuerst.",
+          align: "center"
+        }).replace("<h2", '<h2 id="liste-title"')}
+        ${tabelle}
+        ${
+          offeneKlassen.length
+            ? `<p class="champs-open-note">
+                 Noch nicht erfasst: ${offeneKlassen.join(", ")}. Für diese Klassen liegt keine
+                 durchgehend belegte Jahresliste vor — sie kommen dazu, sobald die Daten gesichert sind.
+               </p>`
+            : ""
+        }
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="rekorde-title">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Rekorde",
+          title: "Wer am häufigsten gewonnen hat.",
+          text: `Gezählt werden Titel, nicht Teilnahmen. Links die Königsklasse, rechts alle erfassten Klassen zusammen.`,
+          align: "center"
+        }).replace("<h2", '<h2 id="rekorde-title"')}
+        <div class="champs-records">
+          <div class="champs-record" data-reveal>
+            <h3 class="champs-record__title">Men’s Open</h3>
+            <ol class="champs-record__list">
+              ${rangliste
+                .map((eintrag) => `<li><span>${eintrag.name}</span><strong>${eintrag.titel}</strong></li>`)
+                .join("")}
+            </ol>
+          </div>
+          <div class="champs-record" data-reveal>
+            <h3 class="champs-record__title">Alle Klassen</h3>
+            <ol class="champs-record__list">
+              ${gesamtRangliste
+                .map((eintrag) => `<li><span>${eintrag.name}</span><strong>${eintrag.titel}</strong></li>`)
+                .join("")}
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted" aria-labelledby="entwicklung-title">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Entwicklung",
+          title: entwicklung.titel,
+          align: "center"
+        }).replace("<h2", '<h2 id="entwicklung-title"')}
+        ${stepGrid(entwicklung.schritte)}
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="champs-faq-title">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "FAQ",
+          title: `Häufige Fragen zum ${eventName}.`,
+          align: "center"
+        }).replace("<h2", '<h2 id="champs-faq-title"')}
+        ${faq(faqEintraege)}
+        <p class="expert-policy-link" data-reveal>
+          <a href="${nachbarseite.href}">${nachbarseite.label}&nbsp;→</a>
+        </p>
+      </div>
+    </section>
+
+    ${ctaSection({
+      eyebrow: "Vom Zuschauen zum Antreten",
+      title: "Wettkampf ist planbar.",
+      text:
+        "Wer selbst auf eine Bühne will, braucht keinen Zufall, sondern einen Plan aus Aufbau, Diät und Peak Week. Genau daran arbeite ich mit meinen Athleten.",
+      primary: { label: "Wettkampfcoaching ansehen", href: "/bodybuilding-coaching-wettkampfvorbereitung/" },
+      secondary: { label: "Wettkämpfe 2026", href: "/bodybuilding-wettkaempfe-2026/" }
+    })}
+  `;
+
+  return layout({
+    path,
+    title: seoTitel,
+    description: beschreibung,
+    keywords,
+    bodyClass: "page-premium page-champions",
+    pageName: titel,
+    pageType: "CollectionPage",
+    dateModified: CHAMPIONS_STAND,
+    extraStructuredData: [faqSchema(path, faqEintraege)],
+    content
+  });
+}
+
+function olympiaSiegerPage() {
+  const path = "/mr-olympia-sieger/";
+
+  return siegerlisteSeite({
+    path,
+    klassen: olympiaKlassen,
+    eventName: "Mr. Olympia",
+    hauptklasse: "mens-open",
+    eyebrow: "Mr. Olympia · Siegerliste seit 1965",
+    titel: "Was der Mr. Olympia ist",
+    h1: "Mr. Olympia<br><span>Alle Sieger.</span>",
+    lead:
+      "Jeder Titelträger seit 1965, in allen zehn Klassen — durchsuchbar nach Name, Jahr und Klasse. Gepflegt nach jeder Ausgabe.",
+    seoTitel: "Mr. Olympia Sieger: alle Gewinner seit 1965",
+    beschreibung:
+      "Alle Mr.-Olympia-Sieger seit 1965 in zehn Klassen: Men’s Open, 212, Classic Physique, Ms. Olympia und mehr. Durchsuchbar nach Jahr, Klasse und Name.",
+    keywords: [
+      "Mr. Olympia Sieger",
+      "Mr. Olympia Gewinner",
+      "Mr. Olympia Liste",
+      "Mr Olympia alle Sieger",
+      "Ms. Olympia Siegerinnen",
+      "Classic Physique Olympia Sieger"
+    ],
+    einordnung: {
+      lead:
+        "Der Mr. Olympia ist der höchste Titel im Profi-Bodybuilding. Er wird seit 1965 von der IFBB vergeben und entscheidet jedes Jahr im Herbst, wer als bester Bodybuilder der Welt gilt.",
+      punkte: [
+        {
+          titel: "Warum es ihn gibt",
+          text:
+            "Joe Weider rief den Wettbewerb 1965 ins Leben, damit Sieger anderer Titel weiter antreten konnten, statt nach dem Gewinn zurückzutreten. Aus dieser Idee wurde die wichtigste Bühne des Sports."
+        },
+        {
+          titel: "Wie gewertet wird",
+          text:
+            "Bewertet wird nicht ein Muskel, sondern das Gesamtbild aus Masse, Symmetrie, Definition und Präsentation — in Pflichtposen und Kür, über Vorentscheid und Finale."
+        },
+        {
+          titel: "Aus einer wurden zehn Klassen",
+          text:
+            "Lange gab es nur die offene Klasse. Heute laufen zehn Wertungen parallel, von Classic Physique über Bikini bis Wellness — jede mit eigenen Maßstäben."
+        }
+      ]
+    },
+    entwicklung: {
+      titel: "Sechs Jahrzehnte in vier Schritten.",
+      schritte: [
+        {
+          step: "01",
+          title: "1965–1979: die Gründerjahre",
+          text:
+            "Larry Scott gewinnt die ersten beiden Titel, Sergio Oliva und Arnold Schwarzenegger prägen die Siebziger. Arnold holt bis 1975 sechs Titel in Folge."
+        },
+        {
+          step: "02",
+          title: "1980–1997: Ordnung und Dominanz",
+          text:
+            "Nach Arnolds umstrittenem Comeback 1980 folgen die langen Regentschaften: Lee Haney acht Titel, danach Dorian Yates sechs. Die Bühne wird professioneller, die Athleten schwerer."
+        },
+        {
+          step: "03",
+          title: "1998–2017: die Massenära",
+          text:
+            "Ronnie Coleman stellt mit acht Titeln Haneys Rekord ein, Jay Cutler unterbricht ihn zweimal, Phil Heath gewinnt sieben Mal in Folge. Gleichzeitig entstehen 212, Figure und Bikini."
+        },
+        {
+          step: "04",
+          title: "Seit 2018: offener denn je",
+          text:
+            "Sieben verschiedene Namen in acht Jahren in der offenen Klasse. Parallel wächst das Feld: Classic Physique und Wellness ziehen ein neues Publikum an."
+        }
+      ]
+    },
+    faqEintraege: [
+      {
+        question: "Wer ist der aktuelle Mr. Olympia?",
+        answer:
+          "Derek Lunsford gewann den Titel in der offenen Klasse 2025 zurück, nachdem er 2023 bereits gewonnen und 2024 gegen Samson Dauda verloren hatte. Der nächste Mr. Olympia wird im Herbst 2026 ausgetragen."
+      },
+      {
+        question: "Wer hat die meisten Mr.-Olympia-Titel gewonnen?",
+        answer:
+          "Lee Haney und Ronnie Coleman führen mit je acht Titeln in der offenen Klasse. Dahinter folgen Arnold Schwarzenegger und Phil Heath mit je sieben. Bei den Frauen hält Iris Kyle mit zehn Ms.-Olympia-Titeln den Rekord."
+      },
+      {
+        question: "Wer war der erste Mr. Olympia?",
+        answer: "Larry Scott gewann die erste Ausgabe 1965 und verteidigte den Titel 1966."
+      },
+      {
+        question: "Welche Klassen gibt es beim Mr. Olympia?",
+        answer:
+          "Aktuell zehn: Men’s Open, Men’s 212, Classic Physique, Men’s Physique, Ms. Olympia, Women’s Physique, Fitness, Figure, Bikini und Wellness. Die offene Klasse trägt den eigentlichen Titel Mr. Olympia."
+      },
+      {
+        question: "Warum fehlt die Ms. Olympia zwischen 2015 und 2019?",
+        answer:
+          "Der Titel wurde in diesen Jahren nicht ausgetragen. Nach der Absetzung 2015 kehrte die Ms. Olympia 2020 zurück, seither gewinnt Andrea Shaw."
+      },
+      {
+        question: "Wann findet der Mr. Olympia statt?",
+        answer:
+          "Traditionell im Herbst, meist im September oder Oktober, seit Jahren überwiegend in Las Vegas. Die Ausgabe 2026 ist für Ende September angesetzt."
+      }
+    ],
+    nachbarseite: { href: "/arnold-classic-sieger/", label: "Auch alle Arnold-Classic-Sieger im Überblick" }
+  });
+}
+
+function arnoldClassicSiegerPage() {
+  const path = "/arnold-classic-sieger/";
+
+  return siegerlisteSeite({
+    path,
+    klassen: arnoldKlassen,
+    eventName: "Arnold Classic",
+    hauptklasse: "mens-open",
+    offeneKlassen: arnoldOffeneKlassen,
+    eyebrow: "Arnold Classic · Siegerliste seit 1989",
+    titel: "Was der Arnold Classic ist",
+    h1: "Arnold Classic<br><span>Alle Sieger.</span>",
+    lead:
+      "Jeder Champion der offenen Klasse seit 1989, dazu Classic Physique und die Ms. International — durchsuchbar nach Name, Jahr und Klasse.",
+    seoTitel: "Arnold Classic Sieger: alle Gewinner seit 1989",
+    beschreibung:
+      "Alle Arnold-Classic-Sieger seit 1989: Men’s Open von Rich Gaspari bis heute, dazu Classic Physique und Ms. International — durchsuchbar nach Jahr und Name.",
+    keywords: [
+      "Arnold Classic Sieger",
+      "Arnold Classic Gewinner",
+      "Arnold Classic Liste",
+      "Arnold Classic alle Sieger",
+      "Ms. International Siegerinnen",
+      "Arnold Sports Festival Bodybuilding"
+    ],
+    einordnung: {
+      lead:
+        "Der Arnold Classic ist nach dem Mr. Olympia der wichtigste Titel im Profi-Bodybuilding. Arnold Schwarzenegger rief ihn 1989 ins Leben; ausgetragen wird er jedes Frühjahr in Columbus, Ohio.",
+      punkte: [
+        {
+          titel: "Der zweite große Titel",
+          text:
+            "Wer den Arnold gewinnt, gehört zur Weltspitze. Viele Mr.-Olympia-Sieger haben hier zuerst gewonnen — und einige haben nur hier gewonnen."
+        },
+        {
+          titel: "Mehr als Bodybuilding",
+          text:
+            "Der Wettbewerb ist Teil des Arnold Sports Festival, das über tausend Athleten aus Dutzenden Sportarten zusammenbringt, vom Strongman bis zum Armdrücken."
+        },
+        {
+          titel: "Ein Termin im Frühjahr",
+          text:
+            "Anders als der Mr. Olympia im Herbst liegt der Arnold Classic im Februar oder März. Für viele Athleten ist er damit der erste große Formtest des Jahres."
+        }
+      ]
+    },
+    entwicklung: {
+      titel: "Vier Jahrzehnte in vier Schritten.",
+      schritte: [
+        {
+          step: "01",
+          title: "1989–1999: die Neunziger",
+          text:
+            "Rich Gaspari gewinnt die erste Ausgabe. Danach prägen Flex Wheeler und Kevin Levrone das Jahrzehnt — Wheeler holt allein vier Titel."
+        },
+        {
+          step: "02",
+          title: "2000–2008: Olympia-Sieger unter sich",
+          text:
+            "Ronnie Coleman, Jay Cutler und Dexter Jackson gewinnen in Columbus, während sie auch beim Mr. Olympia oben stehen. Cutler holt drei Titel in Folge."
+        },
+        {
+          step: "03",
+          title: "2009–2018: Kai Greene und Dexter Jackson",
+          text:
+            "Dexter Jackson baut seinen Rekord auf fünf Arnold-Titel aus, Kai Greene gewinnt dreimal. Der Wettbewerb wird zur Bühne für Athleten, denen beim Olympia der letzte Schritt fehlt."
+        },
+        {
+          step: "04",
+          title: "Seit 2019: jedes Jahr ein neuer Name",
+          text:
+            "Von Brandon Curry über Nick Walker und Samson Dauda bis Andrew Jacked 2026 — acht Ausgaben, sieben verschiedene Sieger."
+        }
+      ]
+    },
+    faqEintraege: [
+      {
+        question: "Wer hat den Arnold Classic 2026 gewonnen?",
+        answer:
+          "Andrew Jacked gewann die offene Klasse des Arnold Classic 2026 in Columbus. Im Jahr davor hatte Derek Lunsford gewonnen."
+      },
+      {
+        question: "Wer hat den Arnold Classic am häufigsten gewonnen?",
+        answer:
+          "Dexter Jackson mit fünf Titeln (2005, 2006, 2008, 2013 und 2015). Dahinter folgt Flex Wheeler mit vier Siegen."
+      },
+      {
+        question: "Wer war der erste Arnold-Classic-Sieger?",
+        answer: "Rich Gaspari gewann die erste Ausgabe 1989 und verteidigte den Titel bis dahin nicht — 1990 gewann Mike Ashley."
+      },
+      {
+        question: "Was ist der Unterschied zum Mr. Olympia?",
+        answer:
+          "Der Mr. Olympia ist der höchste Titel des Sports und findet im Herbst statt, der Arnold Classic im Frühjahr. Der Arnold ist Teil eines großen Sportfestivals und gilt als zweitwichtigster Profi-Titel."
+      },
+      {
+        question: "Gibt es den Arnold Classic auch außerhalb der USA?",
+        answer:
+          "Ja. Neben Columbus gibt es Ableger unter anderem in Australien, Südafrika und Großbritannien. Diese Liste führt die Ergebnisse der US-Ausgabe, die als der Arnold Classic gilt."
+      },
+      {
+        question: "Warum gibt es die Ms. International nicht mehr?",
+        answer:
+          "Das Frauen-Bodybuilding am Arnold Classic wurde nach 2013 eingestellt. An seine Stelle trat 2014 die 212-Klasse der Männer."
+      }
+    ],
+    nachbarseite: { href: "/mr-olympia-sieger/", label: "Auch alle Mr.-Olympia-Sieger im Überblick" }
+  });
+}
+
 export const pages = [
   { route: "/", render: homePage, lastModified: "2026-08-11" },
   { route: "/app/", render: appPage },
@@ -9543,6 +10728,8 @@ export const pages = [
   { route: "/bodybuilding-coaching-wettkampfvorbereitung/", render: bodybuildingCoachingPage, lastModified: "2026-08-11" },
   { route: "/bodybuilding-wettkaempfe-2026/", render: bodybuildingCalendarPage, lastModified: "2026-08-21" },
   { route: "/bodybuilding-klassen-gewichtslimits/", render: bodybuildingClassesPage, lastModified: "2026-08-22" },
+  { route: "/mr-olympia-sieger/", render: olympiaSiegerPage, lastModified: "2026-08-28" },
+  { route: "/arnold-classic-sieger/", render: arnoldClassicSiegerPage, lastModified: "2026-08-28" },
   { route: "/boxen-wettkaempfe-2026/", render: boxingCalendarPage },
   { route: "/mma-wettkaempfe-2026/", render: mmaCalendarPage, lastModified: "2026-08-20" },
   { route: "/triathlon-kalender-2026/", render: triathlonCalendarPage, lastModified: "2026-08-23" },
@@ -9553,6 +10740,7 @@ export const pages = [
   { route: "/erfolge-im-team/", render: teamSuccessPage },
   { route: "/erfolge-im-team/guenter-preis/", render: guenterPreisStoryPage },
   { route: "/ueber-dominik/", render: ueberDominikPage },
+  { route: "/shop/", render: shopPage, lastModified: "2026-08-26" },
   { route: "/presse-medien/", render: pressMediaPage, lastModified: "2026-08-11" },
   { route: "/expertenwissen/", render: expertKnowledgePage, lastModified: "2026-08-11" },
   { route: "/personal-trainer-auswaehlen-nuernberg/", render: choosePersonalTrainerGuidePage, lastModified: "2026-08-11" },

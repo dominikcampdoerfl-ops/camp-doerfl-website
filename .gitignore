@@ -12,3 +12,6 @@ member-app.previous/
 
 # npm-Abhängigkeiten (nur für Werkzeuge wie die Bildpipeline)
 node_modules/
+
+# Zwischenlager des Wochenangebot-Empfangs (scripts/xxl-wochenangebot.mjs)
+.xxl-eingang/

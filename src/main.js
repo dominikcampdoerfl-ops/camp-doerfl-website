@@ -2291,6 +2291,185 @@ const initPathSliders = () => {
 
 initPathSliders();
 
+/* Angebots-Slideshow des Nutrition Partners.
+ *
+ * Anders als die Leistungs-Slideshow zeigt sie mehrere Karten nebeneinander.
+ * Geblättert wird deshalb seitenweise, nicht kartenweise — und die Punkte
+ * zählen Seiten, sonst stünden bei zwanzig Angeboten zwanzig Punkte darunter.
+ *
+ * Wie viele Karten nebeneinander stehen, hängt am Fenster und wird deshalb bei
+ * jedem Blättern neu gemessen statt einmal gemerkt. Ein ResizeObserver wäre der
+ * naheliegende Weg, meldet sich in verborgenen Tabs aber nicht zuverlässig —
+ * und eine gemerkte Zahl aus einem Moment ohne Layout ist schlimmer als gar
+ * keine. Ohne JavaScript bleibt die Spur eine horizontal scrollbare Liste; die
+ * Bedienleiste ist dann gar nicht erst sichtbar.
+ */
+const initOfferSliders = () => {
+  document.querySelectorAll("[data-xxl-slider]").forEach((slider) => {
+    const track = slider.querySelector("[data-xxl-track]");
+    const controls = slider.querySelector("[data-xxl-controls]");
+    const dotBox = slider.querySelector("[data-xxl-dots]");
+    const previousButton = slider.querySelector("[data-xxl-prev]");
+    const nextButton = slider.querySelector("[data-xxl-next]");
+    const slides = Array.from(slider.querySelectorAll("[data-xxl-slide]"));
+
+    if (!track || slides.length === 0) return;
+
+    controls?.removeAttribute("hidden");
+
+    let current = 0;
+
+    // Der Abstand von Kartenanfang zu Kartenanfang. Daraus ergibt sich, wie
+    // viele Karten nebeneinander stehen — und damit, wie weit ein Pfeilklick
+    // springt. Über die reine Spurbreite zu blättern würde am Handy mitten in
+    // einer Karte landen und gegen das Einrasten arbeiten.
+    const messen = () => {
+      const schritt = slides.length > 1 ? slides[1].offsetLeft - slides[0].offsetLeft : track.clientWidth;
+      if (!schritt || !track.clientWidth) return null;
+
+      const proSeite = Math.max(1, Math.round(track.clientWidth / schritt));
+      return { schritt, proSeite, seiten: Math.max(1, Math.ceil(slides.length / proSeite)) };
+    };
+
+    const markActive = (index) => {
+      current = index;
+      Array.from(dotBox?.children || []).forEach((dot, dotIndex) => {
+        const isActive = dotIndex === index;
+        dot.classList.toggle("is-active", isActive);
+        if (isActive) {
+          dot.setAttribute("aria-current", "true");
+        } else {
+          dot.removeAttribute("aria-current");
+        }
+      });
+    };
+
+    const punkteSetzen = (seiten) => {
+      if (!dotBox || dotBox.children.length === seiten) return;
+
+      dotBox.textContent = "";
+      for (let index = 0; index < seiten; index += 1) {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "xxl-slider__dot";
+        dot.setAttribute("aria-label", `Angebote ${index + 1} von ${seiten} anzeigen`);
+        dot.addEventListener("click", () => {
+          autoplayBeenden();
+          goTo(index);
+        });
+        dotBox.appendChild(dot);
+      }
+    };
+
+    const nachmessen = () => {
+      const mass = messen();
+      if (!mass) return null;
+
+      punkteSetzen(mass.seiten);
+      // Bei einer einzigen Seite gibt es nichts zu blättern.
+      slider.classList.toggle("is-static", mass.seiten <= 1);
+      markActive(Math.min(current, mass.seiten - 1));
+      return mass;
+    };
+
+    function goTo(index) {
+      const mass = nachmessen();
+      if (!mass) return;
+
+      const target = (index + mass.seiten) % mass.seiten;
+      const slide = slides[Math.min(target * mass.proSeite, slides.length - 1)];
+      track.scrollTo({ left: slide.offsetLeft - slides[0].offsetLeft, behavior: "smooth" });
+      markActive(target);
+    }
+
+    // Beim Wischen und beim Scrollen mit dem Trackpad führt die Spur, nicht der Knopf.
+    let syncTimer = null;
+    track.addEventListener("scroll", () => {
+      window.clearTimeout(syncTimer);
+      syncTimer = window.setTimeout(() => {
+        const mass = messen();
+        if (!mass) return;
+        punkteSetzen(mass.seiten);
+        markActive(Math.min(mass.seiten - 1, Math.round(track.scrollLeft / (mass.schritt * mass.proSeite))));
+      }, 90);
+    });
+
+    /* Automatischer Vorlauf, wenn die Folge ihn anfordert. Er hält an, sobald
+     * jemand mit der Maus darüber ist, per Tastatur darin steht, selbst blättert
+     * oder wischt — und er läuft nicht, wenn im System weniger Bewegung
+     * gewünscht ist oder der Tab im Hintergrund liegt. */
+    const autoplayDauer = Number(slider.dataset.xxlAutoplay || 0);
+    const wenigerBewegung = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let autoplayTimer = null;
+    let autoplayGestoppt = false;
+
+    const autoplayAnhalten = () => {
+      window.clearInterval(autoplayTimer);
+      autoplayTimer = null;
+    };
+
+    const autoplayStarten = () => {
+      if (!autoplayDauer || autoplayGestoppt || wenigerBewegung.matches) return;
+      if (autoplayTimer || document.hidden) return;
+      autoplayTimer = window.setInterval(() => {
+        if (!slider.classList.contains("is-static")) goTo(current + 1);
+      }, autoplayDauer);
+    };
+
+    // Nach einem eigenen Klick, Tastendruck oder Wisch bleibt die Folge stehen.
+    function autoplayBeenden() {
+      autoplayGestoppt = true;
+      autoplayAnhalten();
+    }
+
+    previousButton?.addEventListener("click", () => {
+      autoplayBeenden();
+      goTo(current - 1);
+    });
+    nextButton?.addEventListener("click", () => {
+      autoplayBeenden();
+      goTo(current + 1);
+    });
+
+    slider.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        autoplayBeenden();
+        goTo(current - 1);
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault();
+        autoplayBeenden();
+        goTo(current + 1);
+      }
+    });
+
+    nachmessen();
+    // Beim ersten Aufbau steht die Breite manchmal noch nicht; die Bilder tragen
+    // feste Maße, aber Schriften und Spalten setzen sich erst.
+    window.addEventListener("load", nachmessen);
+    window.addEventListener("resize", nachmessen);
+
+    if (autoplayDauer) {
+      slider.addEventListener("mouseenter", autoplayAnhalten);
+      slider.addEventListener("mouseleave", autoplayStarten);
+      slider.addEventListener("focusin", autoplayAnhalten);
+      slider.addEventListener("focusout", autoplayStarten);
+      slider.addEventListener("pointerdown", autoplayBeenden);
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) autoplayAnhalten();
+        else autoplayStarten();
+      });
+      wenigerBewegung.addEventListener?.("change", () => {
+        if (wenigerBewegung.matches) autoplayAnhalten();
+        else autoplayStarten();
+      });
+      autoplayStarten();
+    }
+  });
+};
+
+initOfferSliders();
+
 /* Rabattcode kopieren.
  *
  * Ohne JavaScript bleibt der Code lesbar und markierbar — der Knopf ist nur die
@@ -2327,3 +2506,564 @@ const initCodeCopy = () => {
 };
 
 initCodeCopy();
+
+/* Shop — Vorbestellung statt Warenkorb.
+ *
+ * Die Auswahl lebt nur im geöffneten Tab: kein Speicher im Browser, keine
+ * Sitzung auf dem Server, nichts, was später wieder auftaucht. Sie verlässt die
+ * Seite genau einmal — mit dem Formular, als E-Mail.
+ *
+ * Jeder Artikel geht als eigenes verstecktes Feld mit. FormSubmit macht daraus
+ * je eine Zeile in der Tabelle; eine einzige Textzeile mit Umbrüchen käme in der
+ * E-Mail als Fließtext an und wäre kaum lesbar.
+ */
+const initShop = () => {
+  const bereich = document.querySelector("[data-shop]");
+  const formular = document.querySelector("[data-shop-form]");
+  if (!bereich || !formular) return;
+
+  const liste = bereich.querySelector("[data-shop-list]");
+  const leerHinweis = bereich.querySelector("[data-shop-empty]");
+  const summenBlock = bereich.querySelector("[data-shop-totals]");
+  const zwischensummeAnzeige = bereich.querySelector("[data-shop-subtotal]");
+  const versandAnzeige = bereich.querySelector("[data-shop-shipping]");
+  const gesamtAnzeige = bereich.querySelector("[data-shop-total]");
+  const leiste = bereich.querySelector("[data-shop-bar]");
+  const leisteAnzahl = bereich.querySelector("[data-shop-bar-count]");
+  const leisteSumme = bereich.querySelector("[data-shop-bar-total]");
+
+  const recapLeer = formular.querySelector("[data-shop-recap-empty]");
+  const recapListe = formular.querySelector("[data-shop-recap-list]");
+  const recapSumme = formular.querySelector("[data-shop-recap-total]");
+  const feldZwischensumme = formular.querySelector("[data-shop-subtotal-field]");
+  const feldVersand = formular.querySelector("[data-shop-shipping-field]");
+  const feldGesamt = formular.querySelector("[data-shop-total-field]");
+  const betreffFeld = formular.querySelector('[name="_subject"]');
+  const absenden = formular.querySelector('button[type="submit"]');
+
+  // Schlüssel ist Artikel plus Größe: dasselbe Shirt in M und in L sind zwei Zeilen.
+  const auswahl = new Map();
+
+  const euro = (wert) => `${wert.toFixed(2).replace(".", ",")} €`;
+  const maskiert = (text) => String(text).replace(/[&<>"]/g, (zeichen) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[zeichen]
+  );
+
+  const zeilen = () => [...auswahl.values()];
+  const versandsatz = () => zeilen().reduce((hoechster, zeile) => Math.max(hoechster, zeile.versand), 0);
+  const stueckzahl = () => zeilen().reduce((summe, zeile) => summe + zeile.menge, 0);
+  const zwischensumme = () => zeilen().reduce((summe, zeile) => summe + zeile.preis * zeile.menge, 0);
+
+  const artikelFelderSetzen = () => {
+    formular.querySelectorAll("[data-shop-item-field]").forEach((feld) => feld.remove());
+
+    zeilen().forEach((zeile, index) => {
+      const feld = document.createElement("input");
+      feld.type = "hidden";
+      feld.name = `Artikel ${index + 1}`;
+      feld.value = zeile.groesse
+        ? `${zeile.menge} × ${zeile.name}, Größe ${zeile.groesse} — ${euro(zeile.preis * zeile.menge)}`
+        : `${zeile.menge} × ${zeile.name} — ${euro(zeile.preis * zeile.menge)}`;
+      feld.dataset.shopItemField = "";
+      formular.append(feld);
+    });
+  };
+
+  const kartenStandZeichnen = () => {
+    bereich.querySelectorAll("[data-shop-product]").forEach((karte) => {
+      const zustand = karte.querySelector("[data-shop-card-state]");
+      const behaelter = karte.querySelector("[data-shop-card-rows]");
+      if (!zustand || !behaelter) return;
+
+      const eigene = zeilen().filter((zeile) => zeile.schluessel.startsWith(`${karte.dataset.id}|`));
+      zustand.hidden = eigene.length === 0;
+
+      behaelter.innerHTML = eigene
+        .map((zeile) => {
+          const bezeichnung = zeile.groesse ? `${zeile.name}, Größe ${zeile.groesse}` : zeile.name;
+          return `
+            <div class="shop-card__inline-row" data-key="${maskiert(zeile.schluessel)}">
+              ${zeile.groesse ? `<span class="shop-card__inline-size">${maskiert(zeile.groesse)}</span>` : ""}
+              <span class="shop-card__inline-qty">
+                <button class="shop-mini" type="button" data-shop-minus aria-label="Menge verringern für ${maskiert(bezeichnung)}">&minus;</button>
+                <span class="shop-card__inline-count">${zeile.menge}</span>
+                <button class="shop-mini" type="button" data-shop-plus aria-label="Menge erhöhen für ${maskiert(bezeichnung)}">+</button>
+              </span>
+              <button class="shop-card__inline-remove" type="button" data-shop-remove aria-label="${maskiert(bezeichnung)} aus der Vorbestellung entfernen">Entfernen</button>
+            </div>
+          `;
+        })
+        .join("");
+    });
+  };
+
+  const zeichnen = () => {
+    const teile = stueckzahl();
+    const netto = zwischensumme();
+    const versand = versandsatz();
+    const versandPflicht = versand > 0;
+    const gesamt = netto + versand;
+    const teileText = `${teile} ${teile === 1 ? "Artikel" : "Artikel"}`;
+
+    liste.innerHTML = zeilen()
+      .map(
+        (zeile) => `
+          <li class="shop-line" data-key="${maskiert(zeile.schluessel)}">
+            <span class="shop-line__name">${maskiert(zeile.name)}</span>
+            <span class="shop-line__price">${euro(zeile.preis * zeile.menge)}</span>
+            <span class="shop-line__qty">
+              <button class="shop-qty" type="button" data-shop-minus aria-label="Menge verringern für ${maskiert(zeile.name)}${zeile.groesse ? `, Größe ${maskiert(zeile.groesse)}` : ""}">&minus;</button>
+              <span class="shop-line__count">${zeile.menge}</span>
+              <button class="shop-qty" type="button" data-shop-plus aria-label="Menge erhöhen für ${maskiert(zeile.name)}${zeile.groesse ? `, Größe ${maskiert(zeile.groesse)}` : ""}">+</button>
+              ${zeile.groesse ? `<span>Größe ${maskiert(zeile.groesse)}</span>` : ""}
+            </span>
+            <button class="shop-line__remove" type="button" data-shop-remove aria-label="${maskiert(zeile.name)}${zeile.groesse ? `, Größe ${maskiert(zeile.groesse)}` : ""} entfernen">Entfernen</button>
+          </li>
+        `
+      )
+      .join("");
+
+    liste.hidden = teile === 0;
+    summenBlock.hidden = teile === 0;
+    leerHinweis.hidden = teile > 0;
+
+    zwischensummeAnzeige.textContent = euro(netto);
+    versandAnzeige.textContent = versandPflicht ? euro(versand) : "entfällt";
+    gesamtAnzeige.textContent = euro(gesamt);
+
+    leiste.hidden = teile === 0;
+    leisteAnzahl.textContent = teileText;
+    leisteSumme.textContent = euro(gesamt);
+
+    recapListe.innerHTML = zeilen()
+      .map(
+        (zeile) => `
+          <li>
+            <span>${zeile.menge} × <strong>${maskiert(zeile.name)}</strong>${zeile.groesse ? `, Größe ${maskiert(zeile.groesse)}` : ""}</span>
+            <span>${euro(zeile.preis * zeile.menge)}</span>
+          </li>
+        `
+      )
+      .join("");
+    recapListe.hidden = teile === 0;
+    recapLeer.hidden = teile > 0;
+    recapSumme.hidden = teile === 0;
+    recapSumme.innerHTML = versandPflicht
+      ? `<span>${teileText} zzgl. Versand ${euro(versand)}</span><span>${euro(gesamt)}</span>`
+      : `<span>${teileText}, kein Versand</span><span>${euro(gesamt)}</span>`;
+
+    feldZwischensumme.value = euro(netto);
+    feldVersand.value = versandPflicht ? euro(versand) : "entfällt";
+    feldGesamt.value = euro(gesamt);
+    artikelFelderSetzen();
+    kartenStandZeichnen();
+  };
+
+  const kartenHinweis = (karte, text, zustand = "") => {
+    const hinweis = karte.querySelector("[data-shop-card-hint]");
+    if (!(hinweis instanceof HTMLElement)) return;
+
+    hinweis.textContent = text;
+    hinweis.dataset.state = zustand;
+
+    window.clearTimeout(Number(hinweis.dataset.timer || 0));
+    hinweis.dataset.timer = String(
+      window.setTimeout(() => {
+        hinweis.textContent = "";
+        hinweis.dataset.state = "";
+      }, 5000)
+    );
+  };
+
+  bereich.querySelectorAll("[data-shop-product]").forEach((karte) => {
+    const knopf = karte.querySelector("[data-shop-add]");
+    const groesseFeld = karte.querySelector("[data-shop-size]");
+    if (!(knopf instanceof HTMLButtonElement)) return;
+
+    knopf.addEventListener("click", () => {
+      const brauchtGroesse = groesseFeld instanceof HTMLSelectElement;
+      const groesse = brauchtGroesse ? groesseFeld.value : "";
+
+      if (brauchtGroesse && !groesse) {
+        kartenHinweis(karte, "Bitte zuerst eine Größe wählen.", "warn");
+        groesseFeld.focus();
+        return;
+      }
+
+      const name = karte.dataset.name || "Artikel";
+      const preis = Number(karte.dataset.price) || 0;
+      const versand = Number(karte.dataset.shipping) || 0;
+      const schluessel = `${karte.dataset.id}|${groesse}`;
+      const vorhanden = auswahl.get(schluessel);
+
+      if (vorhanden) {
+        vorhanden.menge += 1;
+      } else {
+        auswahl.set(schluessel, { schluessel, name, groesse, preis, menge: 1, versand });
+      }
+
+      zeichnen();
+      kartenHinweis(karte, groesse ? `Größe ${groesse} steht in deiner Vorbestellung.` : "Steht in deiner Vorbestellung.");
+      trackConversion("shop_add", { target: groesse ? `${name} ${groesse}` : name });
+    });
+  });
+
+  bereich.addEventListener("click", (event) => {
+    const knopf = event.target instanceof Element ? event.target.closest("button") : null;
+    if (!(knopf instanceof HTMLButtonElement)) return;
+
+    const schluessel = knopf.closest("[data-key]")?.getAttribute("data-key");
+    const zeile = schluessel ? auswahl.get(schluessel) : null;
+    if (!zeile) return;
+
+    if ("shopPlus" in knopf.dataset) zeile.menge += 1;
+    if ("shopMinus" in knopf.dataset) zeile.menge -= 1;
+    if ("shopRemove" in knopf.dataset) zeile.menge = 0;
+
+    if (zeile.menge <= 0) auswahl.delete(schluessel);
+    zeichnen();
+  });
+
+  formular.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const falle = formular.querySelector('[name="_honey"]');
+    if (falle instanceof HTMLInputElement && falle.value.trim()) return;
+
+    if (stueckzahl() === 0) {
+      setContactFormStatus(
+        formular,
+        "Deine Vorbestellung ist noch leer. Wähle oben bei einem Teil die Größe und tippe auf „Vorbestellen“.",
+        "warn"
+      );
+      document.getElementById("kollektion")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+
+    const nameFeld = formular.querySelector('[name="name"]');
+    const besteller = nameFeld instanceof HTMLInputElement ? nameFeld.value.trim() : "";
+    if (betreffFeld instanceof HTMLInputElement) {
+      betreffFeld.value = besteller ? `Camp Dörfl Vorbestellung · ${besteller}` : "Camp Dörfl Vorbestellung";
+    }
+
+    const daten = new FormData(formular);
+    const ziel = formular.getAttribute("data-contact-endpoint") || "https://formsubmit.co/ajax/dominik@campdoerfl.de";
+
+    absenden?.setAttribute("aria-busy", "true");
+    if (absenden instanceof HTMLButtonElement) absenden.disabled = true;
+    setContactFormStatus(formular, "Deine Vorbestellung wird gesendet.", "info");
+
+    try {
+      const antwort = await fetch(ziel, { method: "POST", headers: { Accept: "application/json" }, body: daten });
+      const inhalt = await antwort.json().catch(() => null);
+      if (!antwort.ok) throw new Error(inhalt?.message || "Senden fehlgeschlagen");
+
+      formular.reset();
+      auswahl.clear();
+      zeichnen();
+      setContactFormStatus(
+        formular,
+        "Deine Vorbestellung ist angekommen. Du bekommst eine persönliche Rückmeldung, bevor etwas verbindlich wird.",
+        "success"
+      );
+      trackConversion("form_success", { topic: "Shop Vorbestellung" });
+    } catch {
+      setContactFormStatus(
+        formular,
+        "Das Senden hat gerade nicht funktioniert. Schreib deine Vorbestellung alternativ direkt an dominik@campdoerfl.de.",
+        "warn"
+      );
+      trackConversion("form_error", { topic: "Shop Vorbestellung" });
+    } finally {
+      absenden?.removeAttribute("aria-busy");
+      if (absenden instanceof HTMLButtonElement) absenden.disabled = false;
+    }
+  });
+
+  zeichnen();
+};
+
+initShop();
+
+/* Großansicht der Produktbilder.
+ *
+ * Dieselben sechs Aufnahmen stehen zweimal auf der Seite — im Raster oben und
+ * in den Karten. Geblättert wird trotzdem durch sechs, nicht durch zwölf:
+ * Die Liste entsteht über die Bildadresse, doppelte fallen weg.
+ *
+ * Getragen wird das Ganze von <dialog>: Fokusfalle, Escape und der Hintergrund
+ * kommen vom Browser. Fehlt showModal, bleiben die Bilder einfach still stehen.
+ */
+const initShopLightbox = () => {
+  const dialog = document.querySelector("[data-shop-lightbox]");
+  const ausloeser = [...document.querySelectorAll("[data-shop-zoom]")];
+  if (!(dialog instanceof HTMLElement) || typeof dialog.showModal !== "function" || !ausloeser.length) return;
+
+  const figur = dialog.querySelector("[data-shop-lightbox-figure]");
+  const beschriftung = dialog.querySelector("[data-shop-lightbox-caption]");
+  const zurueck = dialog.querySelector("[data-shop-lightbox-prev]");
+  const weiter = dialog.querySelector("[data-shop-lightbox-next]");
+  const schliessen = dialog.querySelector("[data-shop-lightbox-close]");
+  if (!figur || !beschriftung) return;
+
+  const bilder = [];
+  const positionJeAusloeser = new Map();
+
+  for (const knopf of ausloeser) {
+    const quelle = knopf.dataset.src || "";
+    if (!quelle) continue;
+
+    let position = bilder.findIndex((bild) => bild.quelle === quelle);
+    if (position === -1) {
+      position = bilder.push({
+        quelle,
+        alt: knopf.dataset.alt || "",
+        beschriftung: knopf.dataset.caption || ""
+      }) - 1;
+    }
+    positionJeAusloeser.set(knopf, position);
+  }
+
+  if (!bilder.length) return;
+
+  const bild = document.createElement("img");
+  bild.width = 1020;
+  bild.height = 1532;
+  bild.decoding = "async";
+  figur.prepend(bild);
+
+  let aktuell = 0;
+  let zuletztGeoeffnetVon = null;
+  const mehrAlsEines = bilder.length > 1;
+
+  if (!mehrAlsEines) {
+    zurueck?.setAttribute("hidden", "");
+    weiter?.setAttribute("hidden", "");
+  }
+
+  const zeigen = (position) => {
+    aktuell = (position + bilder.length) % bilder.length;
+    const eintrag = bilder[aktuell];
+    bild.src = eintrag.quelle;
+    bild.alt = eintrag.alt;
+    beschriftung.textContent = mehrAlsEines
+      ? `${eintrag.beschriftung} · ${aktuell + 1} von ${bilder.length}`
+      : eintrag.beschriftung;
+  };
+
+  const oeffnen = (knopf) => {
+    zuletztGeoeffnetVon = knopf;
+    zeigen(positionJeAusloeser.get(knopf) ?? 0);
+    dialog.showModal();
+  };
+
+  ausloeser.forEach((knopf) => {
+    knopf.addEventListener("click", () => oeffnen(knopf));
+  });
+
+  zurueck?.addEventListener("click", () => zeigen(aktuell - 1));
+  weiter?.addEventListener("click", () => zeigen(aktuell + 1));
+  schliessen?.addEventListener("click", () => dialog.close());
+
+  // Klick auf die Fläche neben dem Bild schließt — der Hintergrund von <dialog>
+  // meldet Klicks als Treffer auf das Element selbst.
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+
+  dialog.addEventListener("keydown", (event) => {
+    if (!mehrAlsEines) return;
+    if (event.key === "ArrowLeft") { event.preventDefault(); zeigen(aktuell - 1); }
+    if (event.key === "ArrowRight") { event.preventDefault(); zeigen(aktuell + 1); }
+  });
+
+  // Nach dem Schließen zurück zu dem Bild, von dem aus geöffnet wurde.
+  dialog.addEventListener("close", () => {
+    zuletztGeoeffnetVon?.focus();
+    zuletztGeoeffnetVon = null;
+  });
+};
+
+initShopLightbox();
+
+/* Siegerlisten filtern — Mr. Olympia und Arnold Classic.
+ *
+ * Die vollständige Tabelle steht im HTML. Ohne JavaScript ist sie deshalb
+ * genauso vollständig, nur ohne Abkürzung. Gefiltert wird über ein
+ * vorbereitetes Suchfeld je Zeile, damit auch bei über zweihundert Zeilen
+ * nichts ruckelt.
+ */
+const initChampions = () => {
+  const werkzeuge = document.querySelector("[data-champs]");
+  const gruppen = [...document.querySelectorAll("[data-champs-group]")];
+  if (!werkzeuge || !gruppen.length) return;
+
+  const suchfeld = werkzeuge.querySelector("[data-champs-search]");
+  const klassenfeld = werkzeuge.querySelector("[data-champs-division]");
+  const jahrfeld = werkzeuge.querySelector("[data-champs-year]");
+  const zuruecksetzen = werkzeuge.querySelector("[data-champs-reset]");
+  const aufklappen = document.querySelector("[data-champs-expand]");
+  const zaehler = document.querySelector("[data-champs-count]");
+  const leer = document.querySelector("[data-champs-empty]");
+
+  const bloecke = gruppen.map((gruppe) => ({
+    gruppe,
+    zeilen: [...gruppe.querySelectorAll("[data-champs-body] tr")].map((zeile) => ({
+      zeile,
+      jahr: zeile.dataset.jahr || "",
+      klasse: zeile.dataset.klasse || "",
+      suche: zeile.dataset.suche || ""
+    }))
+  }));
+
+  const gesamt = bloecke.reduce((summe, block) => summe + block.zeilen.length, 0);
+  let alleOffen = false;
+
+  const filtern = () => {
+    const begriff = (suchfeld?.value || "").trim().toLowerCase();
+    const klasse = klassenfeld?.value || "";
+    const jahr = jahrfeld?.value || "";
+    const gefiltert = Boolean(begriff || klasse || jahr);
+    let treffer = 0;
+
+    bloecke.forEach((block, index) => {
+      let imBlock = 0;
+
+      for (const eintrag of block.zeilen) {
+        const passt =
+          (!begriff || eintrag.suche.includes(begriff)) &&
+          (!klasse || eintrag.klasse === klasse) &&
+          (!jahr || eintrag.jahr === jahr);
+
+        eintrag.zeile.hidden = !passt;
+        if (passt) imBlock += 1;
+      }
+
+      block.gruppe.hidden = gefiltert && imBlock === 0;
+      // Beim Filtern zeigt jeder Block, was er hat — sonst müsste man jeden
+      // einzeln aufklappen, um zu sehen, ob der Treffer darin steckt.
+      block.gruppe.open = gefiltert ? imBlock > 0 : alleOffen || index === 0;
+      treffer += imBlock;
+    });
+
+    if (leer) leer.hidden = treffer > 0;
+
+    if (zaehler) {
+      zaehler.textContent = gefiltert
+        ? `${treffer} von ${gesamt} Titeln`
+        : `${gesamt} Titel in ${bloecke.length} ${bloecke.length === 1 ? "Klasse" : "Klassen"}`;
+    }
+  };
+
+  suchfeld?.addEventListener("input", filtern);
+  klassenfeld?.addEventListener("change", filtern);
+  jahrfeld?.addEventListener("change", filtern);
+
+  zuruecksetzen?.addEventListener("click", () => {
+    if (suchfeld) suchfeld.value = "";
+    if (klassenfeld) klassenfeld.value = "";
+    if (jahrfeld) jahrfeld.value = "";
+    alleOffen = false;
+    if (aufklappen) {
+      aufklappen.textContent = "Alle aufklappen";
+      aufklappen.setAttribute("aria-pressed", "false");
+    }
+    filtern();
+    suchfeld?.focus();
+  });
+
+  aufklappen?.addEventListener("click", () => {
+    alleOffen = !alleOffen;
+    aufklappen.textContent = alleOffen ? "Alle zuklappen" : "Alle aufklappen";
+    aufklappen.setAttribute("aria-pressed", String(alleOffen));
+    for (const block of bloecke) {
+      if (!block.gruppe.hidden) block.gruppe.open = alleOffen;
+    }
+  });
+
+  filtern();
+};
+
+initChampions();
+
+/* ===================================================================
+   HERO-SZENE — Fortschritt des Auftakts
+
+   Schreibt eine einzige Zahl: --hero-p, den Anteil des bereits
+   zurückgelegten Wegs an der Szene. Zoom, Schleier und das Auflösen
+   der Textkarte rechnet styles.css daraus. Bleibt diese Datei aus oder
+   ist Bewegung reduziert, steht --hero-p auf 0 und der Hero sieht aus
+   wie immer.
+   =================================================================== */
+
+const initHeroSzene = () => {
+  const szene = document.querySelector("[data-hero-szene]");
+  if (!szene || prefersReducedMotion.matches) return;
+
+  const hero = szene.querySelector(".ff-hero");
+  const karte = szene.querySelector(".ff-hero__home-card");
+  const bloecke = karte ? [...karte.children] : [];
+
+  // Jede Zeile der Karte startet etwas später als die vorige. Der
+  // Abstand ist klein: Man liest ihn nicht als Abfolge, sondern als ein
+  // Auflösen mit Tiefe.
+  const STAFFEL = 0.05;
+  const DAUER = 0.46;
+
+  const weich = (t) => t * t * (3 - 2 * t);
+
+  let frame = 0;
+  let inert = false;
+  let aktiv = false;
+
+  const zeichnen = () => {
+    frame = 0;
+
+    const kasten = szene.getBoundingClientRect();
+    if (kasten.bottom <= 0 || kasten.top >= window.innerHeight) return;
+
+    // Der Weg ist das, was unter dem Hero an Luft hängt — nicht die
+    // Bildschirmhöhe. Der Hero ist höher als der Bildschirm, und mit der
+    // falschen Bezugsgröße wäre die Bewegung fertig, bevor er aufhört zu
+    // kleben: Unter ihm blitzt dann kurz die helle Seite durch.
+    const weg = Math.max(kasten.height - (hero?.offsetHeight ?? window.innerHeight), 1);
+    const p = Math.min(1, Math.max(0, -kasten.top / weg));
+
+    szene.style.setProperty("--hero-p", p.toFixed(4));
+
+    // Erst ab der ersten Scrollbewegung übernimmt die Szene. Vorher darf
+    // die Einblendanimation des Heros ungestört durchlaufen.
+    const sollAktiv = p > 0.004;
+    if (sollAktiv !== aktiv) {
+      aktiv = sollAktiv;
+      szene.classList.toggle("ist-aktiv", sollAktiv);
+    }
+
+    for (let i = 0; i < bloecke.length; i += 1) {
+      const roh = (p - i * STAFFEL) / DAUER;
+      const stufe = weich(roh < 0 ? 0 : roh > 1 ? 1 : roh);
+      bloecke[i].style.setProperty("--stufe", stufe.toFixed(4));
+    }
+
+    // Die verblassende Karte darf keine Klicks mehr abfangen. Der Wert
+    // liegt bewusst unter 1: Ab hier ist sie ohnehin nicht mehr lesbar.
+    const sollInert = p > 0.72;
+    if (sollInert !== inert) {
+      inert = sollInert;
+      for (const block of bloecke) {
+        if (sollInert) block.setAttribute("data-hero-inert", "");
+        else block.removeAttribute("data-hero-inert");
+      }
+    }
+  };
+
+  const anfordern = () => {
+    if (!frame) frame = requestAnimationFrame(zeichnen);
+  };
+
+  zeichnen();
+  window.addEventListener("scroll", anfordern, { passive: true });
+  window.addEventListener("resize", anfordern, { passive: true });
+};
+
+initHeroSzene();

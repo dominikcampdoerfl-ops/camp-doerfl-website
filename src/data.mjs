@@ -60,6 +60,7 @@ export const navItems = [
   { label: "Personal Trainer Nürnberg", href: "/personal-trainer-nuernberg/" },
   { label: "Partner", href: "/partner/" },
   { label: "Camp Dörfl App", href: "/app/" },
+  { label: "Shop", href: "/shop/" },
   { label: "Kontakt", href: "/kontakt/" }
 ];
 
@@ -100,6 +101,7 @@ export const navCategories = [
       { label: "Startseite", href: "/" },
       { label: "Über Dominik", href: "/ueber-dominik/" },
       { label: "Erfolge im Team", href: "/erfolge-im-team/" },
+      { label: "Shop & Kollektion", href: "/shop/" },
       { label: "Partner", href: "/partner/" },
       { label: "XXL Nutrition Rabattcode", href: "/xxl-nutrition-rabattcode/" },
       { label: "Presse & Medien", href: "/presse-medien/" },
@@ -121,6 +123,8 @@ export const navCategories = [
     title: "Termine & Kalender",
     items: [
       { label: "Bodybuilding Wettkämpfe 2026", href: "/bodybuilding-wettkaempfe-2026/" },
+      { label: "Mr. Olympia Sieger", href: "/mr-olympia-sieger/" },
+      { label: "Arnold Classic Sieger", href: "/arnold-classic-sieger/" },
       { label: "Boxen Wettkämpfe 2026", href: "/boxen-wettkaempfe-2026/" },
       { label: "MMA Wettkämpfe 2026", href: "/mma-wettkaempfe-2026/" },
       { label: "Triathlon Kalender 2026", href: "/triathlon-kalender-2026/" },
@@ -715,3 +719,254 @@ export const contactTopicConfigs = [
 ];
 
 export const contactTopics = contactTopicConfigs.map((topic) => topic.value);
+
+// ---------------------------------------------------------------------------
+// Shop — Vorbestellung statt Kasse
+//
+// Der Shop verkauft nicht selbst: Jede Auswahl endet als E-Mail bei Dominik,
+// verbindlich wird sie erst mit seiner Bestätigung. Preise, Größen und Versand
+// stehen deshalb genau einmal hier. Die Seite, die Zusammenfassung im Browser
+// (src/main.js) und die E-Mail rechnen mit denselben Zahlen — ändert sich ein
+// Preis, reicht diese Datei.
+// ---------------------------------------------------------------------------
+
+export const shopSizes = ["XS", "S", "M", "L", "XL", "XXL"];
+
+export const shopShipping = Object.freeze({
+  price: 4.9,
+  voucherPrice: 2.9,
+  label: "Versand innerhalb Deutschlands",
+  note: "Pauschale pro Bestellung, unabhängig von der Stückzahl."
+});
+
+export const shopProducts = [
+  {
+    id: "shirt-creme",
+    name: "Camp Dörfl Shirt",
+    variant: "Creme",
+    category: "Shirt",
+    price: 20,
+    print: "Goldenes Emblem",
+    swatch: "#d5c39f",
+    image: "/assets/images/shop/camp-doerfl-shirt-creme.webp",
+    alt: "Camp Dörfl Shirt in Creme mit goldenem #MEMBER Emblem auf der Brust",
+    text: "Warmer Sandton mit goldenem Emblem — der Ton, mit dem die Kollektion angefangen hat."
+  },
+  {
+    id: "shirt-off-white",
+    name: "Camp Dörfl Shirt",
+    variant: "Off White",
+    category: "Shirt",
+    price: 20,
+    print: "Goldenes Emblem",
+    swatch: "#e7e0d1",
+    image: "/assets/images/shop/camp-doerfl-shirt-off-white.webp",
+    alt: "Camp Dörfl Shirt in Off White mit goldenem #MEMBER Emblem auf der Brust",
+    text: "Heller, ruhiger Grundton mit goldenem Emblem. Fällt im Alltag nicht auf, im Studio schon."
+  },
+  {
+    id: "shirt-black",
+    name: "Camp Dörfl Shirt",
+    variant: "Black",
+    category: "Shirt",
+    price: 20,
+    print: "Goldenes Emblem",
+    swatch: "#16151a",
+    image: "/assets/images/shop/camp-doerfl-shirt-black.webp",
+    alt: "Camp Dörfl Shirt in Schwarz mit goldenem #MEMBER Emblem auf der Brust",
+    text: "Schwarz auf Gold — der stärkste Kontrast der Kollektion und die sicherste Wahl."
+  },
+  {
+    id: "shirt-wine",
+    name: "Camp Dörfl Shirt",
+    variant: "Wine",
+    category: "Shirt",
+    price: 20,
+    print: "Goldenes Emblem",
+    swatch: "#6d1f39",
+    image: "/assets/images/shop/camp-doerfl-shirt-wine.webp",
+    alt: "Camp Dörfl Shirt in Wine mit goldenem #MEMBER Emblem auf der Brust",
+    text: "Tiefes Bordeaux mit Gold. Die Farbe, nach der auf der Trainingsfläche am häufigsten gefragt wird."
+  },
+  {
+    id: "shirt-aprikose",
+    name: "Camp Dörfl Shirt",
+    variant: "Aprikose",
+    category: "Shirt",
+    price: 20,
+    print: "Goldenes Emblem",
+    swatch: "#e6938c",
+    image: "/assets/images/shop/camp-doerfl-shirt-aprikose.webp",
+    alt: "Camp Dörfl Shirt in Aprikose mit goldenem #MEMBER Emblem auf der Brust",
+    text: "Warmes Altrosa mit goldenem Emblem — der hellste Ton der Kollektion und der auffälligste."
+  },
+  {
+    id: "shirt-oversized-sand",
+    name: "Camp Dörfl Shirt",
+    variant: "Oversized Sand",
+    category: "Shirt",
+    price: 30,
+    print: "Goldenes Emblem",
+    swatch: "#c9bba8",
+    image: "/assets/images/shop/camp-doerfl-shirt-oversized-sand.webp",
+    alt: "Camp Dörfl Shirt in Sand, oversized geschnitten, mit goldenem #MEMBER Emblem",
+    text: "Oversized geschnitten, 220 g/m² schwerer Stoff aus 100 % Baumwolle. Lockere Schulter, fällt gerade."
+  },
+  {
+    id: "shirt-oversized-schwarz",
+    name: "Camp Dörfl Shirt",
+    variant: "Oversized Schwarz",
+    category: "Shirt",
+    price: 30,
+    print: "Goldenes Emblem",
+    swatch: "#121316",
+    image: "/assets/images/shop/camp-doerfl-shirt-oversized-schwarz.webp",
+    alt: "Camp Dörfl Shirt in Schwarz, oversized geschnitten, mit goldenem #MEMBER Emblem",
+    text: "Derselbe Schnitt in Schwarz: 220 g/m² schwerer Stoff aus 100 % Baumwolle, lockere Schulter."
+  },
+  {
+    id: "shirt-oversized-marineblau",
+    name: "Camp Dörfl Shirt",
+    variant: "Oversized Marineblau",
+    category: "Shirt",
+    price: 30,
+    print: "Goldenes Emblem",
+    swatch: "#141c2d",
+    image: "/assets/images/shop/camp-doerfl-shirt-oversized-marineblau.webp",
+    alt: "Camp Dörfl Shirt in Marineblau, oversized geschnitten, mit goldenem #MEMBER Emblem",
+    text: "Derselbe Schnitt in tiefem Marineblau: 220 g/m² aus 100 % Baumwolle, lockere Schulter."
+  },
+  {
+    id: "sweatshirt-grey",
+    name: "Camp Dörfl Sweatshirt",
+    variant: "Grey",
+    category: "Sweatshirt",
+    price: 49,
+    print: "Goldenes Emblem",
+    swatch: "#c4c2bf",
+    image: "/assets/images/shop/camp-doerfl-sweatshirt-grey.webp",
+    alt: "Camp Dörfl Sweatshirt in Grau mit Kapuze und goldenem #MEMBER Emblem",
+    text: "Kapuzenpullover ohne Reißverschluss, Kängurutasche, goldenes Emblem auf hellem Grau."
+  },
+  {
+    id: "jacke-creme",
+    name: "Camp Dörfl Jacke",
+    variant: "Creme",
+    category: "Jacke",
+    price: 45,
+    print: "Goldenes Emblem",
+    swatch: "#d5c39f",
+    image: "/assets/images/shop/camp-doerfl-jacke-creme.webp",
+    alt: "Camp Dörfl Kapuzenjacke in Creme mit goldenem #MEMBER Emblem",
+    text: "Kapuzenjacke mit durchgehendem Reißverschluss und zwei Taschen, goldenes Emblem."
+  },
+  {
+    id: "jacke-black",
+    name: "Camp Dörfl Jacke",
+    variant: "Black",
+    category: "Jacke",
+    price: 45,
+    print: "Goldenes Emblem",
+    swatch: "#16151a",
+    image: "/assets/images/shop/camp-doerfl-jacke-black.webp",
+    alt: "Camp Dörfl Kapuzenjacke in Schwarz mit goldenem #MEMBER Emblem",
+    text: "Dieselbe Jacke in Schwarz, Emblem in Gold. Über dem Shirt oder allein auf dem Weg ins Studio."
+  },
+  {
+    id: "buddy",
+    name: "Buddy Dörfl",
+    variant: "20 cm",
+    category: "Sonstiges",
+    price: 20,
+    print: "Shirt mit #MEMBER Emblem",
+    swatch: "#a98361",
+    ohneGroesse: true,
+    image: "/assets/images/shop/camp-doerfl-buddy-haende.webp",
+    alt: "Buddy Dörfl, Teddybär im weißen Camp Dörfl Shirt, auf zwei Händen gehalten",
+    text: "Im Sitzen 20 cm hoch, im eigenen #MEMBER Shirt. Dein Begleiter für jeden Tag."
+  },
+  {
+    id: "bag",
+    name: "Camp Dörfl Bag",
+    variant: "Black",
+    category: "Sonstiges",
+    price: 20,
+    print: "Goldenes Emblem",
+    swatch: "#1f1f1f",
+    ohneGroesse: true,
+    image: "/assets/images/shop/camp-doerfl-bag.webp",
+    alt: "Camp Dörfl Bag, schwarzer Turnbeutel mit goldenem #MEMBER Emblem auf dem Rücken getragen",
+    text: "Wasserabweisendes Material, 11 Liter Fassungsvermögen, 33 × 45 cm. Für Schuhe, Handtuch und alles, was mit ins Studio muss."
+  }
+];
+
+// ---------------------------------------------------------------------------
+// Gutscheine
+//
+// Die Beträge sind keine eigene Preisliste, sondern die Preise von
+// /personal-training-kosten-nuernberg/ und /koerperanalyse-nuernberg/ in
+// Gutscheinform. Ändert sich dort etwas, gehört es hier nachgezogen.
+//
+// Gutscheine werden nicht versendet: `versand: false` nimmt sie aus der
+// Versandpauschale heraus, die für Kleidung gilt.
+// ---------------------------------------------------------------------------
+
+// "image" ist für die Produktdaten der Suche verpflichtend. Gezeigt wird, was
+// der Gutschein einlöst — die Karten im Shop bleiben bewusst ohne Foto.
+export const shopVouchers = [
+  {
+    id: "gutschein-koerperanalyse",
+    image: "/assets/images/dominik-coaching-bikeerg.webp",
+    title: "Körperanalyse inkl. professioneller Beratung",
+    kurz: "Körperanalyse mit Beratung",
+    price: 59,
+    detail: "1 Termin",
+    text:
+      "InBody-Messung mit persönlicher Auswertung im Gespräch: was die Werte bedeuten und welcher Schritt als Nächstes sinnvoll ist."
+  },
+  {
+    id: "gutschein-personal-training",
+    image: "/assets/images/dominik-personal-coaching-client.webp",
+    title: "Personal Training",
+    kurz: "Personal Training",
+    price: 120,
+    detail: "1 Einheit",
+    text: "Eine Einheit Personal Training — Check, Technik und ein erster Impuls für den Weg dahinter."
+  },
+  {
+    id: "gutschein-personal-training-analyse",
+    image: "/assets/images/dominik-personal-coaching-client.webp",
+    title: "Personal Training inkl. Körperanalyse",
+    kurz: "Personal Training mit Analyse",
+    price: 150,
+    detail: "1 Einheit + Analyse",
+    text: "Dieselbe Einheit, davor die 2D-Körperanalyse als Standortbestimmung."
+  },
+  {
+    id: "gutschein-online-coaching",
+    image: "/assets/images/home-app-banner-coaching.webp",
+    title: "3 Monate Online Coaching",
+    kurz: "Online Coaching, 3 Monate",
+    price: 360,
+    detail: "3 Monate",
+    text: "Ortsunabhängige Betreuung über drei Monate, die Camp Dörfl App inbegriffen."
+  },
+  {
+    id: "gutschein-5er-karte",
+    image: "/assets/images/premium-training-hero-wide.webp",
+    title: "5er Karte Personal Training",
+    kurz: "5er Karte Personal Training",
+    price: 500,
+    detail: "5 Einheiten",
+    text: "Fünf Einheiten inklusive einer InBody-Körperanalyse — 100 € je Einheit."
+  },
+  {
+    id: "gutschein-10er-karte",
+    image: "/assets/images/premium-training-hero-wide.webp",
+    title: "10er Karte Personal Training",
+    kurz: "10er Karte Personal Training",
+    price: 800,
+    detail: "10 Einheiten",
+    text: "Zehn Einheiten inklusive zwei InBody-Körperanalysen — 80 € je Einheit."
+  }
+];

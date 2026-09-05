@@ -78,6 +78,43 @@ eingetragen ist, wird übersprungen. Nach jedem Schwung neuer Bilder einmal
 laufen lassen — die Originale bleiben als Vorlage erhalten und werden nicht
 mit ausgeliefert, weil der Build nur referenzierte Dateien nach `dist/` kopiert.
 
+## Wochenangebot von XXL Nutrition
+
+```bash
+npm run xxl
+```
+
+Auf `/bodybuilding-wettkaempfe-2026/` — der Seite mit den meisten Aufrufen —
+steht direkt unter dem Kopfbild das laufende Wochenangebot des Nutrition
+Partners, jeweils mit dem Preis, der mit dem Partner-Code entsteht.
+
+Das Angebot wechselt wöchentlich, also gehört der Lauf einmal pro Woche gemacht.
+Er läuft nicht von allein: xxlnutrition.com liegt hinter einer Bot-Prüfung und
+beantwortet Abrufe ohne Browser mit 403; zusätzlich verbietet die
+Sicherheitsrichtlinie des Shops seinen eigenen Seiten jede Verbindung nach
+außen. Der Weg führt deshalb über einen Browser, in dem die Seite offen ist:
+
+1. `npm run xxl` starten — der Sammel-Schnipsel landet in der Zwischenablage.
+2. <https://xxlnutrition.com/de/angebot/wochenangebot> öffnen, Konsole öffnen
+   (Alt+Cmd+I), einfügen, Enter.
+3. Der Browser lädt `xxl-wochenangebot.json` herunter (Download ggf.
+   bestätigen). Das wartende Skript nimmt die Datei, schreibt Bilder nach
+   `assets/images/xxl-angebote/` und Daten nach `src/xxl-wochenangebot.mjs`
+   und löscht den Download wieder.
+
+Liegt der Download-Ordner woanders, hilft `XXL_DOWNLOADS=/pfad npm run xxl`.
+
+Danach wie üblich `npm test` und `npm run cf:deploy`. Fehlen die Bilder, meldet
+der Build jede fehlende Datei einzeln — dann ist Schritt 2 nicht durchgelaufen.
+
+Beteiligte Dateien: `scripts/xxl-wochenangebot.mjs` (Ablauf),
+`scripts/xxl-sammeln.js` (der Schnipsel für die Konsole), `src/pages.mjs` →
+`xxlAngebotsBand()` (Markup) und `src/main.js` → `initOfferSliders` (Bedienung).
+
+Rabattcode und Rabatthöhe stehen an zwei Stellen: in
+`scripts/xxl-wochenangebot.mjs` und auf `/xxl-nutrition-rabattcode/` in
+`src/pages.mjs`. Ein Test hält beide zusammen.
+
 ## Member Area — die App im Browser
 
 Unter `/member/` läuft der komplette Web-Export der Camp Dörfl App. Über die
@@ -117,6 +154,7 @@ die auch das Login-Fenster der Marketingseiten benutzt.
 - `/partner/`
 - `/executive-performance/`
 - `/erfolge-im-team/`
+- `/shop/`
 - `/ueber-dominik/`
 - `/kontakt/`
 - `/impressum/`

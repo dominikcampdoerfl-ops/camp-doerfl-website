@@ -171,7 +171,6 @@ export const legacyPaths = Object.freeze([
   "/preise/",
   "/preise-und-leistungen/",
   "/premium-online-coaching/",
-  "/shop/",
   "/shop/90-tage-challenge/",
   "/shop/all-inclusive-personal-training/",
   "/shop/basic-shirt-member-rot/",

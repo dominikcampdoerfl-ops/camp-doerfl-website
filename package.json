@@ -11,6 +11,7 @@
     "preview": "node src/server.mjs",
     "test:redirects": "node --test test/legacy-redirects.test.mjs",
     "images": "node scripts/optimize-images.mjs --schreiben && node scripts/image-dimensions.mjs --schreiben",
+    "xxl": "node scripts/xxl-wochenangebot.mjs",
     "images:pruefen": "node scripts/optimize-images.mjs && node scripts/image-dimensions.mjs",
     "cf:deploy": "npm run build && npx wrangler deploy",
     "cf:deploy:dry-run": "npm run build && npx wrangler deploy --dry-run",

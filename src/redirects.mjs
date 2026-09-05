@@ -130,8 +130,11 @@ export const legacyRedirectRules = Object.freeze({
     Object.freeze({ from: "/bodybuilding/", to: "/personal-trainer-nuernberg/" }),
     Object.freeze({ from: "/camp-doerfl-blog/", to: "/personal-trainer-nuernberg/" }),
     Object.freeze({ from: "/blog/", to: "/personal-trainer-nuernberg/" }),
-    Object.freeze({ from: "/fitness-shop/", to: "/personal-trainer-nuernberg/" }),
-    Object.freeze({ from: "/shop/", to: "/personal-trainer-nuernberg/" }),
+    Object.freeze({ from: "/fitness-shop/", to: "/shop/" }),
+    // Der alte Jimdo-Shop hatte eigene Produktseiten. Sie führen jetzt auf die
+    // neue Kollektion; /shop/ selbst ist eine echte Seite und wird deshalb
+    // ausdrücklich nicht mehr umgeleitet (descendantsOnly).
+    Object.freeze({ from: "/shop/", to: "/shop/", descendantsOnly: true }),
     Object.freeze({ from: "/firmenfitness-aus-nuernberg/", to: "/firmenfitness/" }),
     Object.freeze({ from: "/firmenfitness-in-nuernberg/", to: "/firmenfitness/" }),
     Object.freeze({ from: "/fuer-unternehmen/moderator/", to: "/moderator-nuernberg/" }),

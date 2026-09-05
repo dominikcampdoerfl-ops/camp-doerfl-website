@@ -243,6 +243,19 @@ function uiIcon(name) {
         <path d="m13.5 8.5 2 2"></path>
       </svg>
     `,
+    fit: `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M20.2 8.6a4.3 4.3 0 0 0-7.4-2.4l-.8.9-.8-.9A4.3 4.3 0 0 0 3.8 8.6c0 1.3.5 2.4 1.3 3.3"></path>
+        <path d="M5.4 12.2 12 19l6.6-6.9c.6-.6 1.1-1.4 1.4-2.2"></path>
+        <path d="M3 12.1h4l1.4-2.5 2.1 4.2 1.6-2.6h2.4"></path>
+      </svg>
+    `,
+    shop: `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5.5 8h13l-1.1 11.5H6.6L5.5 8Z"></path>
+        <path d="M9.25 8V6.6a2.75 2.75 0 0 1 5.5 0V8"></path>
+      </svg>
+    `,
     contact: `
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <rect x="3.5" y="5.5" width="17" height="13" rx="2.5"></rect>
@@ -327,6 +340,8 @@ function navIconForHref(href) {
   if (href === "/firmenfitness/") return "team";
   if (href === "/personal-trainer-nuernberg/") return "trainer";
   if (href === "/partner/") return "partner";
+  if (href === "/shop/") return "shop";
+  if (href === "/fit-werden/") return "fit";
   if (href === "/app/") return "app";
   if (href === "/kontakt/") return "contact";
   return "app";
@@ -993,7 +1008,8 @@ function navbar(activePath) {
     "/firmenfitness/",
     "/fit-werden/",
     "/moderator-nuernberg/",
-    "/partner/"
+    "/partner/",
+    "/shop/"
   ];
   const primaryNavItems = primaryNavOrder
     .map((href) => navItems.find((item) => item.href === href))
@@ -1042,7 +1058,9 @@ function navbar(activePath) {
           <span class="site-nav__label-mobile">${item.label}</span>
         </span>
       </span>
-      <span class="site-nav__entry-arrow" aria-hidden="true">&rsaquo;</span>
+      <span class="site-nav__entry-arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="16" height="16"><path d="m9.5 5.5 7 6.5-7 6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
     </a>
   `;
   // Sprachwahl über Flaggen statt Kürzel. Der Name der Schaltfläche steht als
@@ -1202,11 +1220,22 @@ function memberLoginDialog() {
         hidden>
         <button class="member-login__close" type="button" data-member-login-close aria-label="Login schließen">${memberIcon("close")}</button>
 
-        <div class="member-login__hero">
-          <span class="member-login__logo"><img src="${brandLogoDisplayPath}" width="96" height="96" alt="" loading="lazy" decoding="async"></span>
-          <p class="member-login__eyebrow">Member Area</p>
-          <h2 id="member-login-title">Herzlich Willkommen</h2>
-          <p class="member-login__lead" id="member-login-lead">Melde dich an, um deine persönlichen Inhalte, Termine und Coaching-Updates zu sehen.</p>
+        <div class="member-login__aside">
+          <div class="member-login__hero">
+            <span class="member-login__logo"><img src="${brandLogoDisplayPath}" width="96" height="96" alt="" loading="lazy" decoding="async"></span>
+            <p class="member-login__eyebrow">Member Area</p>
+            <h2 id="member-login-title">Herzlich Willkommen</h2>
+            <p class="member-login__lead" id="member-login-lead">Melde dich an, um deine persönlichen Inhalte, Termine und Coaching-Updates zu sehen.</p>
+          </div>
+
+          <!-- Nur am Desktop sichtbar. Dort steht neben dem Formular eine halbe
+               Bildschirmbreite leer; auf dem Handy wäre dieselbe Liste eine
+               Hürde vor dem Feld, in das der Nutzer tippen will. -->
+          <ul class="member-login__points">
+            <li>${memberIcon("check")}<span><strong>Dein Plan am großen Bildschirm</strong>Trainings- und Ernährungsplan, Tagebuch und Fortschritt — dieselben Daten wie auf dem Handy.</span></li>
+            <li>${memberIcon("check")}<span><strong>Coach-Bereich inklusive</strong>Wer betreut, arbeitet am Rechner mit Tastatur statt mit dem Daumen.</span></li>
+            <li>${memberIcon("check")}<span><strong>Nichts zu installieren</strong>Der Browser genügt. Die Sitzung bleibt bestehen, wenn du es möchtest.</span></li>
+          </ul>
         </div>
 
         <form class="member-login__form" data-member-login-form novalidate>
