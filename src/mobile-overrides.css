@@ -3057,6 +3057,44 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
   outline-offset: 3px;
 }
 
+/* ============================================================
+   SCHIEBER DER SECHS STATIONEN — dieselbe Anthrazit-Fläche wie die
+   Leistungskacheln. Der Schieber steckt auch auf der Keynote-Seite,
+   deshalb hängt alles hier an .page-home-reboot; dort bleibt die
+   helle Folie unverändert.
+
+   Aufteilung wie im Hero auf dem dunklen Foto: Überschrift in Weiss,
+   Akzente in hellem Gold. Alles in Gold zu setzen wäre auf einer so
+   grossen Fläche zu viel.
+   ============================================================ */
+.page-home-reboot .path-slide {
+  border-color: rgba(215, 195, 148, 0.26);
+  background: linear-gradient(152deg, #24262b 0%, #15171a 100%);
+  box-shadow: 0 26px 52px -36px rgba(10, 10, 12, 0.7);
+}
+
+.page-home-reboot .path-slide__count {
+  color: rgba(255, 253, 248, 0.5);          /* 5,1:1 */
+}
+
+.page-home-reboot .path-slide__count span,
+.page-home-reboot .path-slide__detail {
+  color: #f2dfa8;                            /* 12,7:1 */
+}
+
+.page-home-reboot .path-slide__title {
+  color: #fffdf8;                            /* 18,9:1 */
+}
+
+.page-home-reboot .path-slide__text {
+  color: rgba(255, 253, 248, 0.78);          /* 10,3:1 */
+}
+
+.page-home-reboot .path-slide__points li {
+  border-bottom-color: rgba(242, 223, 168, 0.18);
+  color: rgba(255, 253, 248, 0.82);          /* 11,1:1 */
+}
+
 .page-home-reboot .ed-app-banner {
   border-color: rgba(155, 116, 26, 0.42);
   color: #19150e;
@@ -14905,5 +14943,129 @@ html body.page-premium.page-coaching main .coaching-price .summary-row {
 
   .xxl-card__body {
     padding: 14px 14px 16px;
+  }
+}
+
+
+/* ============================================================
+   KOPFZEILE IN ANTHRAZIT, ÜBER DIE VOLLE BREITE
+
+   Die Leiste war eine goldene Pille mit Abstand zu den Rändern.
+   Jetzt läuft sie als durchgehendes Band von Kante zu Kante.
+
+   Warum dieser Block am Dateiende steht und !important trägt:
+   auf .nav-shell wirken 24 Regeln aus beiden Stylesheets, mehrere
+   davon mit !important und in verschachtelten Media-Regeln. Einzeln
+   umzubiegen hätte an jeder Stelle dieselbe Farbe wiederholt und beim
+   nächsten Aufräumen wieder auseinanderlaufen können. Hier steht die
+   Fassung, die gilt — an einer Stelle, zuletzt.
+
+   Die Textfarben der Leisteneinträge hängen an (min-width: 980px):
+   darunter klappt die Navigation als Schublade auf, die ihre eigene
+   Fläche mitbringt und hier nicht angefasst wird.
+   ============================================================ */
+.page-premium .site-header,
+.page-home-reboot .site-header {
+  padding: 0 !important;
+}
+
+.page-premium .nav-shell,
+.page-home-reboot .nav-shell,
+.page-premium .site-header.is-scrolled .nav-shell,
+.page-home-reboot .site-header.is-scrolled .nav-shell,
+.page-premium .site-header.is-nav-open .nav-shell,
+.page-home-reboot .site-header.is-nav-open .nav-shell {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 10px clamp(14px, 3vw, 48px) !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(215, 195, 148, 0.2) !important;
+  border-radius: 0 !important;
+  background-image: linear-gradient(180deg, #24262b 0%, #17191d 100%) !important;
+  background-color: #1b1d21 !important;
+  box-shadow: 0 18px 42px -30px rgba(0, 0, 0, 0.72) !important;
+  backdrop-filter: none !important;
+}
+
+/* Marke: Name in Weiss, Zusatz eine Stufe leiser.
+   Die lange Selektorkette ist nötig: .page-premium .nav-shell > .brand
+   .brand__name (0,4,0) setzt hier ein dunkles Braun mit !important. Ein
+   kürzerer Selektor verliert, obwohl er später steht. */
+.page-premium .site-header .nav-shell > .brand,
+.page-premium .site-header .nav-shell > .brand .brand__name {
+  color: #fffdf8 !important;
+  -webkit-text-fill-color: #fffdf8 !important;
+}
+
+.page-premium .site-header .nav-shell > .brand small {
+  color: rgba(255, 253, 248, 0.62) !important;
+  -webkit-text-fill-color: rgba(255, 253, 248, 0.62) !important;
+}
+
+/* Sprachumschalter und Menüknopf sitzen auf der dunklen Fläche. */
+.page-premium .nav-shell .language-switcher {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.page-premium .nav-shell .language-switcher__button,
+.page-premium .nav-shell .language-switcher__name {
+  color: rgba(255, 253, 248, 0.82) !important;
+}
+
+.page-premium .nav-shell .language-switcher__button.is-active {
+  color: #f2dfa8 !important;
+}
+
+.page-premium .nav-shell .nav-toggle,
+.page-premium .nav-shell .nav-toggle__label {
+  color: #fffdf8 !important;
+}
+
+.page-premium .nav-shell .nav-toggle {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+/* Die drei Knöpfe rechts. "Anfragen" war dunkel auf Gold und wäre auf
+   Anthrazit verschwunden — es wird jetzt die hellste Fläche der Leiste.
+   "Login" behält seinen Goldverlauf, der auf Dunkel ohnehin trägt. */
+.page-premium .nav-shell .nav-action--app {
+  color: #fffdf8 !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+.page-premium .nav-shell .nav-action--contact {
+  color: #17130a !important;
+  background: #fffdf8 !important;
+  border-color: transparent !important;
+}
+
+@media (min-width: 980px) {
+  /* Die Leiste um die Einträge tritt zurück, damit die Fläche ruhig bleibt. */
+  .page-premium .nav-shell .site-nav {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .page-premium .nav-shell .site-nav__entry,
+  .page-premium .nav-shell .site-nav__label-desktop {
+    color: rgba(255, 253, 248, 0.74) !important;
+  }
+
+  .page-premium .nav-shell .site-nav__entry:is(:hover, :focus-visible),
+  .page-premium .nav-shell .site-nav__entry:is(:hover, :focus-visible) .site-nav__label-desktop {
+    color: #fffdf8 !important;
+  }
+
+  .page-premium .nav-shell .site-nav__entry.is-active {
+    background: rgba(242, 223, 168, 0.16) !important;
+  }
+
+  .page-premium .nav-shell .site-nav__entry.is-active,
+  .page-premium .nav-shell .site-nav__entry.is-active .site-nav__label-desktop {
+    color: #f2dfa8 !important;
   }
 }
