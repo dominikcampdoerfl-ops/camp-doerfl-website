@@ -586,7 +586,7 @@ const homeEntryCards = [
   },
   {
     detail: "02 / CORPORATE HEALTH",
-    titleHtml: "GESUNDHEITSTAGE,<br><span>DIE ETWAS BEWEGEN.</span>",
+    titleHtml: "FIRMENFITNESS,<br><span>DAS BEWEGT.</span>",
     text:
       "2D-SCAN, INBODY UND BERATUNG FÜR STARKE GESUNDHEITSTAGE.",
     image: "/assets/images/dominik-coaching-bikeerg.webp",

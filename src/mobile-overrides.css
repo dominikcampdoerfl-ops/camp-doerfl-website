@@ -2837,10 +2837,14 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
   --cd-line-2: rgba(42, 33, 18, 0.2);
   --cd-text: #19150e;
   --cd-dim: rgba(25, 21, 14, 0.68);
+  /* TEST: statt Creme-Beige (#fbf8f1 -> #f3ecdf) eine Alabaster-Fläche, die
+     nach unten in ein warmes Steingrau läuft. Der Gelbstich ist raus, die
+     Wärme bleibt; die beiden Gold-Schleier sind auf etwa die Hälfte
+     zurückgenommen, damit sie als Licht wirken und nicht als Einfärbung. */
   background:
-    radial-gradient(circle at 4% 14%, rgba(215, 195, 148, 0.19), transparent 25%),
-    radial-gradient(circle at 94% 28%, rgba(215, 195, 148, 0.26), transparent 28%),
-    linear-gradient(180deg, #fbf8f1 0%, #f3ecdf 100%);
+    radial-gradient(circle at 4% 14%, rgba(198, 176, 126, 0.10), transparent 26%),
+    radial-gradient(circle at 94% 28%, rgba(198, 176, 126, 0.13), transparent 30%),
+    linear-gradient(180deg, #fcfbf9 0%, #eeece7 100%);
   color: #19150e;
 }
 
@@ -2879,6 +2883,23 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
   color: #19150e;
 }
 
+/* "4 Wege" steht auf der hellen Karte. Der gemeinsame Gold-Verlauf weiter unten
+   ("One gold system") ist für dunkle Flächen gemacht — sein hellster Halt
+   (#fff1b8) kam dort auf 1,1:1 und war praktisch unsichtbar. Dieser Verlauf
+   bleibt im selben Goldton, nur abgedunkelt: 3,7:1 am hellsten Punkt, 4,9:1 in
+   der Mitte, 7,3:1 am Ende. Er braucht !important und diese Länge, weil die
+   gemeinsame Regel selbst !important trägt; entscheidend ist die höhere
+   Spezifität. Nur diese eine Überschrift ist betroffen, die Hero-Akzente auf
+   dem dunklen Foto behalten das helle Gold. */
+.page-home-reboot .ed-section--hero-sync .ed-section__title > span {
+  background: linear-gradient(115deg, #a67d24 0%, #8f6a1e 45%, #6f4f13 100%) !important;
+  /* Die Kurzform background setzt background-clip mit zurück. Ohne diese beiden
+     Zeilen füllt der Verlauf den Kasten statt der Buchstaben — der Schriftzug
+     wird zum goldenen Block. */
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+}
+
 .page-home-reboot .ed-section__lead,
 .page-home-reboot .ed-proof .ed-section__lead {
   color: rgba(25, 21, 14, 0.68);
@@ -2911,9 +2932,11 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
   color: #19150e !important;
 }
 
-.page-home-reboot .ed-entry--accent .ed-entry__body h3 span { color: #9b470f !important; }
-.page-home-reboot .ed-entry--light .ed-entry__body h3 span { color: #176582 !important; }
-.page-home-reboot .ed-entry--coaching .ed-entry__body h3 span { color: #9b741a !important; }
+/* Ein Gold für alle vier Einstiege. Vorher trug jede Karte eine eigene Farbe
+   (Rost, Blau, Goldbraun); auf der hellen Karte wirkte das uneinheitlich.
+   #8f6a1e ist das Markengold so weit abgedunkelt, dass es auf #fffdf8 auf
+   4,9:1 Kontrast kommt — lesbar und weiterhin eindeutig Gold. */
+.page-home-reboot .ed-entry .ed-entry__body h3 span { color: #8f6a1e !important; }
 
 /* The image hero remains cinematic, so its copy needs decisive light contrast. */
 .page-home-reboot .ff-hero__eyebrow { color: #f2dfa8 !important; }
@@ -2940,9 +2963,7 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
   color: #17130a !important;
 }
 
-.page-home-reboot .ed-entry.ed-entry--accent:is(:hover, :focus-visible) .ed-entry__body h3 span { color: #8f3e0b !important; }
-.page-home-reboot .ed-entry.ed-entry--light:is(:hover, :focus-visible) .ed-entry__body h3 span { color: #145b76 !important; }
-.page-home-reboot .ed-entry.ed-entry--coaching:is(:hover, :focus-visible) .ed-entry__body h3 span { color: #9b741a !important; }
+.page-home-reboot .ed-entry:is(:hover, :focus-visible) .ed-entry__body h3 span { color: #8f6a1e !important; }
 
 .page-home-reboot .ed-entry:is(:hover, :focus-visible) .ed-entry__cta,
 .page-home-reboot .ed-entry:is(:hover, :focus-visible) .ed-entry__cta-label,
@@ -3111,10 +3132,11 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
   --cd-line-2: rgba(42, 33, 18, 0.2);
   --cd-text: #19150e;
   --cd-dim: rgba(25, 21, 14, 0.68);
+  /* TEST: dieselbe Alabaster-Fläche wie auf der Startseite, siehe dort. */
   background:
-    radial-gradient(circle at 4% 12%, rgba(215, 195, 148, 0.18), transparent 24%),
-    radial-gradient(circle at 94% 32%, rgba(215, 195, 148, 0.24), transparent 28%),
-    linear-gradient(180deg, #fbf8f1 0%, #f3ecdf 100%) !important;
+    radial-gradient(circle at 4% 12%, rgba(198, 176, 126, 0.10), transparent 26%),
+    radial-gradient(circle at 94% 32%, rgba(198, 176, 126, 0.13), transparent 30%),
+    linear-gradient(180deg, #fcfbf9 0%, #eeece7 100%) !important;
   color: #19150e;
 }
 
@@ -9048,10 +9070,12 @@ body.page-premium.page-firmenfitness main .corporate-outcome-stage .corporate-ou
   word-break: normal !important;
 }
 
+/* Diese Regel gewinnt gegen die Themenfarben weiter oben — dort steht derselbe
+   Wert, damit sich nichts widerspricht, falls diese Eskalation je entfällt. */
 .page-home-reboot .ed-entry-grid .ed-entry .ed-entry__body h3 > span,
 .page-home-reboot .ed-entry-grid .ed-entry:is(:hover, :focus-visible) .ed-entry__body h3 > span {
-  color: #654706 !important;
-  -webkit-text-fill-color: #654706 !important;
+  color: #8f6a1e !important;
+  -webkit-text-fill-color: #8f6a1e !important;
   text-shadow: none !important;
 }
 
@@ -9558,10 +9582,11 @@ html body.page-home-reboot main .ed-entry-grid .ed-entry .ed-entry__body h3 {
   line-height: 0.92 !important;
 }
 
+/* Die letzte Eskalationsstufe und damit der Wert, der wirklich ankommt. */
 html body.page-home-reboot main .ed-entry-grid .ed-entry .ed-entry__body h3 > span,
 html body.page-home-reboot main .ed-entry-grid .ed-entry:is(:hover, :focus-visible) .ed-entry__body h3 > span {
-  color: #654706 !important;
-  -webkit-text-fill-color: #654706 !important;
+  color: #8f6a1e !important;
+  -webkit-text-fill-color: #8f6a1e !important;
 }
 
 html body.page-home-reboot main .ed-entry-grid .ed-entry .ed-entry__cta,
