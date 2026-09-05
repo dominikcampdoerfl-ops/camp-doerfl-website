@@ -1566,10 +1566,14 @@ h3 {
   }
 }
 
-/* New title image: preserve both faces on desktop and the shared moment on mobile. */
+/* New title image: preserve both faces on desktop and the shared moment on mobile.
+   Rechtsbündig, weil das Camp-Dörfl-Zeichen ganz am rechten Bildrand sitzt: Der
+   Hero ist flacher als das Bild, object-fit: cover beschneidet also die Seiten.
+   Bei center fiel rechts genauso viel weg wie links und das Zeichen verschwand;
+   bei 100% liegt der Schnitt immer links und es bleibt in jedem Fenster stehen. */
 @media (min-width: 901px) {
   .page-home-reboot .ff-hero--home-photo .ff-hero__img {
-    object-position: center top;
+    object-position: 100% top;
   }
 }
 
@@ -8118,9 +8122,11 @@ html body.page-premium.page-bodybuilding-calendar main .bbcal-event p {
   color: transparent !important;
 }
 
+/* Diese Regel gewinnt (!important) — sie muss mit der weiter oben stehenden
+   Fassung übereinstimmen, sonst zieht ein Aufräumen dort die Wirkung weg. */
 @media (min-width: 901px) {
   .page-home-reboot .ff-hero--home-photo .ff-hero__img {
-    object-position: center top !important;
+    object-position: 100% top !important;
   }
 }
 
