@@ -2778,6 +2778,7 @@ function eventsPage() {
             <a class="button button--secondary-light" href="/firmenfitness/"><span>Firmenfitness ansehen</span><span aria-hidden="true">&rarr;</span></a>
           </div>
           <div class="premium-proof-pills ff-hero__pills">
+            <span>Events & Firmenfeiern</span>
             <span>Interviews</span>
             <span>Eröffnungen</span>
             <span>Podium</span>
@@ -2925,9 +2926,7 @@ function eventsPage() {
         <div class="event-rule-stage__copy" data-reveal>
           ${sectionHeader({
             eyebrow: "Verband & Wettkampf",
-            title: "Formate mit klarem Regelwerk.",
-            text:
-              "Wenn Timing, Reihenfolge und Ansagen nicht frei interpretierbar sind, braucht es Moderation, die Bühne, Protokoll und Publikum sauber zusammenhält."
+            title: "Formate mit klarem Regelwerk."
           })}
           <div class="event-rule-stage__signal" data-reveal>
             <span>Präzise geführt</span>
@@ -4756,9 +4755,7 @@ function partnerPage() {
             // und traegt deshalb h1 statt h2.
             headingLevel: 1,
             eyebrow: "Partner im Performance System",
-            title: "Premium Partner im Camp",
-            text:
-              "XXL Nutrition, AEKE, Trueformance und Clever Fit Nürnberg-Süd ergänzen das Camp Dörfl Performance System mit starken Produkten, Trainingslösungen und gemeinsamer Performance-Ausrichtung."
+            title: "Premium Partner im Camp"
           })}
         </div>
         <div class="premium-sponsor-stage__grid" aria-label="Premium Sponsoren">
