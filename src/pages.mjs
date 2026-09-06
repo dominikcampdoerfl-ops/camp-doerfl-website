@@ -154,8 +154,8 @@ function eventFormatShowcase(items) {
           <span class="event-format-card__detail">${item.detail}</span>
         </div>
         <h3>${item.title}</h3>
-        <p>${item.text}</p>
-        <p class="event-format-card__note">${item.note}</p>
+        ${item.text ? `<p>${item.text}</p>` : ""}
+        ${item.note ? `<p class="event-format-card__note">${item.note}</p>` : ""}
       </div>
     </article>
   `;
@@ -770,8 +770,6 @@ const eventFormatCards = [
     number: "01",
     detail: "Firmenveranstaltung",
     title: "Souverän eröffnen",
-    text: "Klare Worte, sichere Führung und ein Auftakt, der Marke, Gastgeber und Publikum sofort auf ein Niveau bringt.",
-    note: "Ideal für Formate, in denen der erste Eindruck bereits Teil der Markenwirkung ist.",
     image: "/assets/images/event-opening-moderation.webp",
     alt: "Dominik Dörfl bei einer Eröffnung auf der Bühne",
     imagePosition: "center 34%"
@@ -780,8 +778,6 @@ const eventFormatCards = [
     number: "02",
     detail: "Sportevent",
     title: "Energie glaubwürdig transportieren",
-    text: "Sportliche Praxis macht die Moderation nahbar, dynamisch und glaubwürdig, ohne dass Inszenierung aufgesetzt wirkt.",
-    note: "Für Bühnen, auf denen Dynamik spürbar sein soll und trotzdem alles kontrolliert bleibt.",
     image: "/assets/images/event-stage-interview.webp",
     alt: "Dominik Dörfl moderiert ein Sportevent im Live-Moment",
     imagePosition: "64% 42%"
@@ -790,8 +786,6 @@ const eventFormatCards = [
     number: "03",
     detail: "Gala und Panel",
     title: "Gespräche sauber führen",
-    text: "Für Panels, Galas und Interviews, bei denen Timing, Ton und Gesprächsführung professionell getragen werden müssen.",
-    note: "Besonders stark, wenn Gäste sichtbar werden sollen und der Ablauf elegant zusammenhalten muss.",
     image: "/assets/images/event-panel-talk.webp",
     alt: "Dominik Dörfl bei einer Paneldiskussion auf einer Bühne",
     imagePosition: "68% 54%"
@@ -2935,11 +2929,6 @@ function eventsPage() {
             text:
               "Wenn Timing, Reihenfolge und Ansagen nicht frei interpretierbar sind, braucht es Moderation, die Bühne, Protokoll und Publikum sauber zusammenhält."
           })}
-          <div class="premium-proof-pills event-rule-stage__pills" data-reveal>
-            <span>Meisterschaften</span>
-            <span>Siegerehrungen</span>
-            <span>Offizielle Abläufe</span>
-          </div>
           <div class="event-rule-stage__signal" data-reveal>
             <span>Präzise geführt</span>
             <p>Gerade bei Wettkampf- und Verbandsformaten zählt nicht nur Präsenz, sondern die Sicherheit, Regeln verständlich, respektvoll und ohne Reibung auf die Bühne zu bringen.</p>
