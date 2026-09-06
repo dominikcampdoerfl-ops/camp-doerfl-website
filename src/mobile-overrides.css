@@ -15395,3 +15395,45 @@ html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-
     transition: border-color 220ms ease, background 220ms ease !important;
   }
 }
+
+
+/* ============================================================
+   LOGOFELDER VON CAVERION UND H-TECH IN WEISS
+
+   Die Felder stehen sonst auf fast schwarzem Grund. Das passt zu Strava,
+   dessen Marke fuer dunkle Flaechen gezeichnet ist — die beiden neuen
+   Logos sind dunkelblau und verschwinden darauf. Die Caverion-Datei
+   traegt zudem eine durchsichtige Flaeche, dort schlug das Schwarz
+   direkt durch.
+   ============================================================ */
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner .basis-partner-card--caverion .basis-partner-card__logo,
+html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-partner .basis-partner-card--htech .basis-partner-card__logo {
+  background: #ffffff !important;
+  border-color: rgba(24, 23, 19, 0.12) !important;
+}
+
+/* ============================================================
+   DIE DREI ORTSKARTEN ZENTRIEREN
+   Auf /personal-trainer-nuernberg/: Kennzeichnung, Titel und Text stehen
+   jetzt mittig in der Karte, passend zur zentrierten Ueberschrift darueber.
+   ============================================================ */
+.page-premium .feature-grid--local-service .feature-card {
+  align-items: center;
+  text-align: center;
+}
+
+
+/* ============================================================
+   PARTNER-ABSCHNITT "WIESO CAMP DOERFL ..." ZENTRIEREN
+
+   .page-premium .partner-value-stage .section-header h2 setzt fuer diesen
+   Bereich ausdruecklich margin-inline: 0 und max-width: 10ch — beides
+   stammt aus der Zeit, als der Abschnitt linksbuendig stand. Mit
+   align: "center" blieb der Kasten dadurch links kleben (Mitte 282 gegen
+   720 beim Absatz), und 10ch haetten die Zeile zu einer schmalen Saeule
+   gestapelt. Gilt nur fuer die zentrierte Fassung.
+   ============================================================ */
+.page-premium .partner-value-stage .section-header--center h2 {
+  max-width: min(100%, 24ch);
+  margin-inline: auto;
+}

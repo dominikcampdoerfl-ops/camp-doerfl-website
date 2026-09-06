@@ -4839,6 +4839,7 @@ function partnerPage() {
       <div class="section-shell section-shell--wide coaching-start-stage partner-value-stage">
         ${sectionHeader({
           eyebrow: "Warum Partner",
+          align: "center",
           title: "Wieso Camp Dörfl für Partnerschaften funktioniert.",
           text:
             "Kooperationen wirken hier nicht aufgesetzt, sondern eingebettet in Training, Bühne, Unternehmen und Alltag."
