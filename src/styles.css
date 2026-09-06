@@ -3291,6 +3291,11 @@ p {
   line-height: 0.94;
 }
 
+/* h1 gehoert mit dazu: Der Text war schon zentriert, aber der Kasten der
+   Ueberschrift ist auf 980px begrenzt und stand linksbuendig im breiteren
+   Kopf — die Zeile sass dadurch sichtbar links neben dem Absatz darunter.
+   Betrifft Koepfe, die ueber sectionHeader({ headingLevel: 1 }) entstehen. */
+.page-premium .section-header--center h1,
 .page-premium .section-header--center h2,
 .page-premium .section-header--center p {
   margin-inline: auto;
