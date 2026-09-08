@@ -3,6 +3,14 @@ import { createHash } from "node:crypto";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { pages } from "./pages.mjs";
+import { sammleEigennamen } from "./i18n/eigennamen.mjs";
+import { SPRACHEN, routeFuer } from "./i18n/sprachen.mjs";
+import {
+  baueUebersetzteSeite,
+  ergaenzeHreflang,
+  setzeNoindex,
+  sperreSchalter
+} from "./i18n/seite-uebersetzt.mjs";
 import { encodePath, site } from "./data.mjs";
 import { legacyRedirectRules } from "./redirects.mjs";
 import { securityHeaders } from "./security.mjs";
@@ -20,7 +28,10 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");
 const maxCloudflareAssetBytes = 25 * 1024 * 1024;
 const productionHost = new URL(site.url).hostname;
-const canonicalRoutes = pages.map((page) => page.route);
+const canonicalRoutes = pages.flatMap((page) => [
+  page.route,
+  ...SPRACHEN.map((sprache) => routeFuer(page.route, sprache))
+]);
 const oneYearInMilliseconds = 365 * 24 * 60 * 60 * 1000;
 const workerEntrypoint = `const productionHost = ${JSON.stringify(productionHost)};
 const apexHost = ${JSON.stringify(site.domain)};
@@ -547,6 +558,26 @@ export async function buildSite() {
   const memberBuildNoteMarkup = memberBuildNote(memberBuild);
 
   const renderedPages = new Map();
+  const eigennamen = await sammleEigennamen();
+  const alleRouten = new Set(pages.map((page) => page.route));
+
+  // Woerterbuecher aller Zielsprachen laden. Fehlt eines, wird die Sprache
+  // uebersprungen statt den Build abzubrechen.
+  const zielsprachen = [];
+  for (const sprache of SPRACHEN) {
+    try {
+      const modul = await import(`./i18n/${sprache.code}.mjs`);
+      zielsprachen.push({
+        sprache,
+        karte: new Map(Object.entries(modul.woerterbuch)),
+        fertigeRouten: new Set(),
+        fehlstellenJeSeite: new Map()
+      });
+    } catch {
+      console.log(`Sprache ${sprache.code}: kein Woerterbuch gefunden, wird uebersprungen.`);
+    }
+  }
+
   for (const page of pages) {
     const outputDir = page.route === "/" ? dist : join(dist, page.route.replace(/^\/|\/$/g, ""));
     await mkdir(outputDir, { recursive: true });
@@ -556,7 +587,76 @@ export async function buildSite() {
       .replaceAll("__FONT_VERSION__", fontVersion)
       .replaceAll("__MEMBER_APP_BUILD_NOTE__", memberBuildNoteMarkup);
     renderedPages.set(page.route, html);
-    await writeFile(join(outputDir, "index.html"), html, "utf8");
+
+    // Fuer jede Zielsprache eine eigene Fassung erzeugen.
+    const fertigeSprachen = [];
+    const offeneSprachen = [];
+
+    for (const ziel of zielsprachen) {
+      const fehlstellen = new Set();
+      let seite = baueUebersetzteSeite(html, {
+        route: page.route,
+        siteUrl: site.url,
+        sprache: ziel.sprache,
+        woerterbuch: ziel.karte,
+        eigennamen,
+        routen: alleRouten,
+        fehlstellen
+      });
+
+      if (fehlstellen.size === 0) {
+        ziel.fertigeRouten.add(page.route);
+        fertigeSprachen.push({ ziel, seite });
+      } else {
+        ziel.fehlstellenJeSeite.set(page.route, fehlstellen);
+        offeneSprachen.push(ziel.sprache);
+        seite = setzeNoindex(seite);
+        await schreibeSprachseite(page.route, ziel.sprache, seite);
+      }
+    }
+
+    // hreflang verweist nur auf fertige Fassungen — untereinander und zurueck
+    // auf Deutsch. Halb uebersetzte Seiten bleiben aussen vor.
+    const fertigeCodes = fertigeSprachen.map((eintrag) => eintrag.ziel.sprache);
+    for (const { ziel, seite } of fertigeSprachen) {
+      await schreibeSprachseite(
+        page.route,
+        ziel.sprache,
+        ergaenzeHreflang(seite, site.url, page.route, fertigeCodes)
+      );
+    }
+
+    // Die deutsche Seite verweist auf die fertigen Fassungen; fuer die offenen
+    // wird der jeweilige Schalter stillgelegt.
+    let deutsch = ergaenzeHreflang(html, site.url, page.route, fertigeCodes);
+    for (const sprache of offeneSprachen) deutsch = sperreSchalter(deutsch, sprache);
+    await writeFile(join(outputDir, "index.html"), deutsch, "utf8");
+  }
+
+  async function schreibeSprachseite(route, sprache, inhalt) {
+    const ordner = join(dist, routeFuer(route, sprache).replace(/^\/|\/$/g, ""));
+    await mkdir(ordner, { recursive: true });
+    await writeFile(join(ordner, "index.html"), inhalt, "utf8");
+  }
+
+  // Der Build sagt fuer jede Sprache offen, wie viel noch fehlt. Ohne diese
+  // Zeilen schleicht sich eine halb uebersetzte Seite unbemerkt durch.
+  for (const ziel of zielsprachen) {
+    const offen = new Set();
+    for (const menge of ziel.fehlstellenJeSeite.values()) for (const t of menge) offen.add(t);
+    if (offen.size) {
+      const schlimmste = [...ziel.fehlstellenJeSeite.entries()]
+        .sort((a, b) => b[1].size - a[1].size)
+        .slice(0, 5)
+        .map(([route, menge]) => `${route} (${menge.size})`)
+        .join(", ");
+      console.log(
+        `${ziel.sprache.name}: ${ziel.fertigeRouten.size} von ${pages.length} Seiten fertig und indexierbar. ` +
+          `${offen.size} Textbausteine offen. Am meisten offen: ${schlimmste}`
+      );
+    } else {
+      console.log(`${ziel.sprache.name}: vollstaendig uebersetzt.`);
+    }
   }
 
   const sitemapPages = pages.filter((page) => page.includeInSitemap !== false);
@@ -564,12 +664,21 @@ export async function buildSite() {
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${sitemapPages
+    // Jede Seite steht zweimal drin: deutsch und englisch. Die englische
+    // Fassung bekommt eine Stufe weniger Gewicht, weil die deutsche die
+    // Hauptfassung bleibt.
+    .flatMap((page) => [
+      { route: page.route, page, haupt: true },
+      ...zielsprachen
+        .filter((ziel) => ziel.fertigeRouten.has(page.route))
+        .map((ziel) => ({ route: routeFuer(page.route, ziel.sprache), page, haupt: false }))
+    ])
     .map(
-      (page) => `  <url>
-    <loc>${site.url}${encodePath(page.route)}</loc>
+      ({ route, page, haupt }) => `  <url>
+    <loc>${site.url}${encodePath(route)}</loc>
     <lastmod>${page.lastModified || "2026-08-11"}</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>${page.route === "/" ? "1.0" : "0.8"}</priority>
+    <priority>${page.route === "/" && haupt ? "1.0" : haupt ? "0.8" : "0.6"}</priority>
   </url>`
     )
     .join("\n")}

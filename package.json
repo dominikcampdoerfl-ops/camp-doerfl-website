@@ -15,7 +15,8 @@
     "images:pruefen": "node scripts/optimize-images.mjs && node scripts/image-dimensions.mjs",
     "cf:deploy": "npm run build && npx wrangler deploy",
     "cf:deploy:dry-run": "npm run build && npx wrangler deploy --dry-run",
-    "kontrast": "node scripts/kontrast-pruefen.mjs"
+    "kontrast": "node scripts/kontrast-pruefen.mjs",
+    "i18n": "node scripts/i18n-luecken.mjs"
   },
   "devDependencies": {
     "puppeteer-core": "^25.8.0",

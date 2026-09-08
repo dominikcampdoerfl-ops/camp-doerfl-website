@@ -952,7 +952,7 @@ const partnerFaq = [
   }
 ];
 
-const bodybuildingCalendarSources = [
+export const bodybuildingCalendarSources = [
   {
     id: "npc-germany",
     number: "01",
@@ -1222,7 +1222,7 @@ const bodybuildingCalendarFaq = [
   }
 ];
 
-const boxingCalendarSources = [
+export const boxingCalendarSources = [
   {
     id: "wba",
     number: "01",
@@ -1707,6 +1707,7 @@ const campTransformationCards = [
 function homePage() {
   const content = `
     <section class="ff-hero ff-hero--home-photo">
+      <div class="ff-hero__stage">
       <picture>
         <source media="(max-width: 900px)" srcset="/assets/images/home-hero-ironman-member-mobile-duo-480.webp 480w, /assets/images/home-hero-ironman-member-mobile-duo-720.webp 720w, /assets/images/home-hero-ironman-member-mobile-duo.webp 1065w" sizes="100vw">
         <img class="ff-hero__img" src="/assets/images/home-hero-ironman-member-voll.webp" width="1536" height="1024" srcset="/assets/images/home-hero-ironman-member-voll-960.webp 960w, /assets/images/home-hero-ironman-member-voll.webp 1536w" sizes="100vw" alt="Dominik Dörfl zweifach im Stadion: als Ironman-70.3-Finisher mit Medaille und im Anzug als Moderator"${imageLoadingAttributes({ eager: true })}>
@@ -1730,6 +1731,7 @@ function homePage() {
             <div><dt>Ironman 70.3</dt><dd>Finisher</dd></div>
           </dl>
         </div>
+      </div>
       </div>
     </section>
 
@@ -4075,7 +4077,7 @@ function privacyPage() {
         ${sectionHeader({
           eyebrow: "Rechtliches",
           title: "Datenschutz",
-          text: "Diese Datenschutzerklärung gilt für die Website ${site.domain}. Stand: 1. August 2026.",
+          text: `Diese Datenschutzerklärung gilt für die Website ${site.domain}. Stand: 1. August 2026.`,
           headingLevel: 1
         })}
         <div class="legal-grid legal-grid--intro">
@@ -4587,7 +4589,7 @@ function accessibilityPage() {
         ${sectionHeader({
           eyebrow: "Rechtliches",
           title: "Barrierefreiheit",
-          text: "Diese Hinweise beschreiben den aktuellen Stand der Barrierefreiheit auf ${site.domain}. Stand: 17. Juni 2026.",
+          text: `Diese Hinweise beschreiben den aktuellen Stand der Barrierefreiheit auf ${site.domain}. Stand: 17. Juni 2026.`,
           headingLevel: 1
         })}
         <div class="legal-grid legal-grid--intro">
@@ -7900,7 +7902,7 @@ function boxingCalendarPage() {
    Neun Organisationen in einem Kalender. Stand der Recherche:
    20. August 2026, jeweils gegen die offizielle Quelle geprüft.
    ============================================================ */
-const mmaCalendarSources = [
+export const mmaCalendarSources = [
   {
     id: "ufc",
     number: "01",
@@ -9824,72 +9826,12 @@ function shopPage() {
   `;
 
   const content = `
-    <section class="shop-hero">
-      <div class="shop-hero__glow" aria-hidden="true"></div>
-      <div class="section-shell shop-hero__shell">
-        <div class="shop-hero__copy" data-reveal>
-          <p class="shop-hero__eyebrow">Camp Dörfl Kollektion</p>
-          <h1 class="shop-hero__title">Der Camp Dörfl<br><span>#Member</span> Shop</h1>
-          <p class="shop-hero__lead">
-            Acht Shirts, ein Sweatshirt, zwei Jacken, ein Bär, ein Beutel, ein Emblem: Camp Dörfl #MEMBER und darunter
-            <em>NO TIME TO BE LAZY</em>. Dazu Gutscheine für Training, Körperanalyse und
-            Online Coaching. Ausgesucht wird hier — gekauft wird nicht. Du stellst deine
-            Auswahl zusammen und schickst sie mir als Vorbestellung.
-          </p>
-          <div class="shop-hero__actions">
-            <a class="button button--primary" href="#kollektion"><span>Kollektion ansehen</span><span aria-hidden="true">&darr;</span></a>
-            <a class="button button--secondary-light" href="#vorbestellung"><span>Vorbestellung</span><span aria-hidden="true">&rarr;</span></a>
-          </div>
-          <div class="shop-hero__facts">
-            <div><span class="shop-hero__fact-value">ab ${shopEuro(Math.min(...shirts.map((product) => product.price)))}</span><span>je Shirt</span></div>
-            <div><span class="shop-hero__fact-value">${shopEuro(sweatshirt.price)}</span><span>je Sweatshirt</span></div>
-            <div><span class="shop-hero__fact-value">${shopEuro(jacke.price)}</span><span>je Jacke</span></div>
-            <div><span class="shop-hero__fact-value">ab ${shopEuro(guenstigsterGutschein)}</span><span>je Gutschein</span></div>
-            <div><span class="shop-hero__fact-value">ab ${shopEuro(shopShipping.voucherPrice)}</span><span>Versand</span></div>
-          </div>
-        </div>
-        <div class="shop-hero__mosaic" data-reveal>
-          ${kacheln
-            .map(
-              (product, index) => `
-                <figure class="shop-hero__tile">
-                  <button
-                    class="shop-zoom"
-                    type="button"
-                    data-shop-zoom
-                    data-src="${product.image}"
-                    data-alt="${product.alt}"
-                    data-caption="${product.name} ${product.variant} · ${product.print} · ${shopEuro(product.price)}"
-                    aria-label="${product.name} ${product.variant} groß ansehen"
-                  >
-                    <img src="${product.image}" width="1020" height="1532" alt="${product.alt}"${imageLoadingAttributes({ eager: index < 2 })}>
-                  </button>
-                </figure>
-              `
-            )
-            .join("")}
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--tight" aria-labelledby="ablauf-title">
-      <div class="section-shell">
-        ${sectionHeader({
-          eyebrow: "So läuft es ab",
-          title: "Vorbestellen dann bezahlen.",
-          text:
-            "Es gibt keinen Warenkorb und keine Kasse. Drei Schritte, dazwischen eine persönliche Rückmeldung von mir.",
-          align: "center"
-        }).replace("<h2", '<h2 id="ablauf-title"')}
-        ${stepGrid(ablauf)}
-      </div>
-    </section>
-
     <section class="section section--muted" id="kollektion" aria-labelledby="kollektion-title" data-shop>
       <div class="section-shell">
         ${sectionHeader({
           eyebrow: "Kollektion & Gutscheine",
-          title: "Für Member und zum Verschenken",
+          title: "Der Camp Dörfl #Member Shop",
+          headingLevel: 1,
           text:
             "Elf Teile zum Anziehen, Bär und Beutel dazu, sechs Gutscheine für Training, Analyse und Coaching. Alles landet in derselben Vorbestellung.",
           align: "center"
@@ -10036,6 +9978,67 @@ function shopPage() {
         </button>
       </div>
     </dialog>
+
+    <section class="shop-hero">
+      <div class="shop-hero__glow" aria-hidden="true"></div>
+      <div class="section-shell shop-hero__shell">
+        <div class="shop-hero__copy" data-reveal>
+          <p class="shop-hero__eyebrow">Camp Dörfl Kollektion</p>
+          <h2 class="shop-hero__title">Für Member<br><span>und zum Verschenken</span></h2>
+          <p class="shop-hero__lead">
+            Acht Shirts, ein Sweatshirt, zwei Jacken, ein Bär, ein Beutel, ein Emblem: Camp Dörfl #MEMBER und darunter
+            <em>NO TIME TO BE LAZY</em>. Dazu Gutscheine für Training, Körperanalyse und
+            Online Coaching. Ausgesucht wird hier — gekauft wird nicht. Du stellst deine
+            Auswahl zusammen und schickst sie mir als Vorbestellung.
+          </p>
+          <div class="shop-hero__actions">
+            <a class="button button--primary" href="#kollektion"><span>Kollektion ansehen</span><span aria-hidden="true">&uarr;</span></a>
+            <a class="button button--secondary-light" href="#vorbestellung"><span>Vorbestellung</span><span aria-hidden="true">&rarr;</span></a>
+          </div>
+          <div class="shop-hero__facts">
+            <div><span class="shop-hero__fact-value">ab ${shopEuro(Math.min(...shirts.map((product) => product.price)))}</span><span>je Shirt</span></div>
+            <div><span class="shop-hero__fact-value">${shopEuro(sweatshirt.price)}</span><span>je Sweatshirt</span></div>
+            <div><span class="shop-hero__fact-value">${shopEuro(jacke.price)}</span><span>je Jacke</span></div>
+            <div><span class="shop-hero__fact-value">ab ${shopEuro(guenstigsterGutschein)}</span><span>je Gutschein</span></div>
+            <div><span class="shop-hero__fact-value">ab ${shopEuro(shopShipping.voucherPrice)}</span><span>Versand</span></div>
+          </div>
+        </div>
+        <div class="shop-hero__mosaic" data-reveal>
+          ${kacheln
+            .map(
+              (product, index) => `
+                <figure class="shop-hero__tile">
+                  <button
+                    class="shop-zoom"
+                    type="button"
+                    data-shop-zoom
+                    data-src="${product.image}"
+                    data-alt="${product.alt}"
+                    data-caption="${product.name} ${product.variant} · ${product.print} · ${shopEuro(product.price)}"
+                    aria-label="${product.name} ${product.variant} groß ansehen"
+                  >
+                    <img src="${product.image}" width="1020" height="1532" alt="${product.alt}"${imageLoadingAttributes({ eager: index < 2 })}>
+                  </button>
+                </figure>
+              `
+            )
+            .join("")}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight" aria-labelledby="ablauf-title">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "So läuft es ab",
+          title: "Vorbestellen dann bezahlen.",
+          text:
+            "Es gibt keinen Warenkorb und keine Kasse. Drei Schritte, dazwischen eine persönliche Rückmeldung von mir.",
+          align: "center"
+        }).replace("<h2", '<h2 id="ablauf-title"')}
+        ${stepGrid(ablauf)}
+      </div>
+    </section>
 
     <section class="section" id="vorbestellung" aria-labelledby="vorbestellung-title">
       <div class="section-shell shop-order">

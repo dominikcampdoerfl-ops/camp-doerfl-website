@@ -1,3 +1,4 @@
+import { ALLE_SPRACHEN, flaggenSvg } from "./i18n/sprachen.mjs";
 import { encodePath, navCategories, navItems, site, sponsors } from "./data.mjs";
 import { contactTopics, resolveContactTopicKey } from "./contact-topics.js";
 import { MEMBER_BASE_PATH } from "./member-area.mjs";
@@ -308,30 +309,6 @@ function uiIcon(name) {
   return `<span class="program-icon">${icons[name] || icons.app}</span>`;
 }
 
-// Flaggen für die Sprachwahl. Bewusst als Inline-SVG: keine zusätzliche
-// Anfrage, gestochen scharf auf jedem Bildschirm und mitfärbbar über CSS.
-function flagIcon(language) {
-  if (language === "en") {
-    return `
-      <svg class="language-switcher__flag" viewBox="0 0 60 30" role="img" aria-hidden="true" focusable="false">
-        <clipPath id="flag-en-band"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"></path></clipPath>
-        <rect width="60" height="30" fill="#012169"></rect>
-        <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"></path>
-        <path d="M0,0 L60,30 M60,0 L0,30" stroke="#c8102e" stroke-width="4" clip-path="url(#flag-en-band)"></path>
-        <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"></path>
-        <path d="M30,0 v30 M0,15 h60" stroke="#c8102e" stroke-width="6"></path>
-      </svg>
-    `;
-  }
-
-  return `
-    <svg class="language-switcher__flag" viewBox="0 0 60 30" role="img" aria-hidden="true" focusable="false">
-      <rect width="60" height="10" y="0" fill="#161616"></rect>
-      <rect width="60" height="10" y="10" fill="#dd0000"></rect>
-      <rect width="60" height="10" y="20" fill="#ffce00"></rect>
-    </svg>
-  `;
-}
 
 function navIconForHref(href) {
   if (href === "/") return "home";
@@ -1068,12 +1045,12 @@ function navbar(activePath) {
   // "Deutsch" bzw. "English" vorfinden.
   const languageSwitcher = (className = "") => `
     <div class="language-switcher${className ? ` ${className}` : ""}" data-language-switcher translate="no" role="group" aria-label="Sprache auswählen">
-      <button class="language-switcher__button is-active" type="button" data-language="de" aria-pressed="true" title="Deutsch">
-        ${flagIcon("de")}<span class="language-switcher__name">Deutsch</span>
-      </button>
-      <button class="language-switcher__button" type="button" data-language="en" aria-pressed="false" title="English">
-        ${flagIcon("en")}<span class="language-switcher__name">English</span>
-      </button>
+      ${ALLE_SPRACHEN.map(
+        (sprache, index) => `
+      <button class="language-switcher__button${index === 0 ? " is-active" : ""}" type="button" data-language="${sprache.code}" aria-pressed="${index === 0}" title="${sprache.titel}">
+        ${flaggenSvg(sprache.code)}<span class="language-switcher__name">${sprache.name}</span>
+      </button>`
+      ).join("")}
     </div>
   `;
 
@@ -1595,6 +1572,23 @@ export function layout({
 	    <link rel="stylesheet" href="/assets/__ASSET_VERSION__/styles.css">
 	    <link rel="stylesheet" href="/assets/__ASSET_VERSION__/mobile-overrides.css">
 	    <link rel="stylesheet" href="/assets/__ASSET_VERSION__/design-contract.css">
+	    <!-- Die Startseite inszeniert ihren Hero beim Scrollen: erst steht nur das
+	         Bild, dann steigt der Text ein. Diese Kennung muss vor dem ersten
+	         Bild stehen, sonst blitzt der Text kurz auf. Ohne JavaScript fehlt
+	         sie, und der Text ist wie bisher sofort da. Meldet sich main.js
+	         nicht innerhalb von 2,5 Sekunden, faellt die Seite ebenfalls zurueck. -->
+	    <script>
+	      (function () {
+	        try {
+	          if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+	          var wurzel = document.documentElement;
+	          wurzel.classList.add("js-hero-cinema");
+	          window.setTimeout(function () {
+	            if (!wurzel.dataset.heroCinemaReady) wurzel.classList.remove("js-hero-cinema");
+	          }, 2500);
+	        } catch (fehler) {}
+	      })();
+	    </script>
 	    <script type="application/ld+json">${JSON.stringify(structuredData)}</script>
   </head>
   <body${bodyClass || hasMobileInquiry ? ` class="${[bodyClass, hasMobileInquiry ? "has-mobile-inquiry-bar" : ""].filter(Boolean).join(" ")}"` : ""}>

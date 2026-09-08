@@ -4,131 +4,58 @@ const header = document.querySelector("[data-site-header]");
 const navToggle = document.querySelector("[data-nav-toggle]");
 const nav = document.querySelector("[data-site-nav]");
 
-const LANGUAGE_STORAGE_KEY = "campdoerfl-language";
-const requestedLanguage = new URLSearchParams(window.location.search).get("lang");
-const storedLanguage = (() => {
-  try {
-    return localStorage.getItem(LANGUAGE_STORAGE_KEY);
-  } catch {
-    return null;
+// ============================================================
+// Sprachumschaltung
+//
+// Frueher wurde die Seite im Browser ueber einen inoffiziellen Google-Endpunkt
+// uebersetzt. Google liess zwei Anfragen durch und blockte dann mit einem
+// CORS-Fehler, sodass Seiten halb deutsch stehen blieben. Jetzt gibt es echte
+// uebersetzte Seiten unter /en/ und /zh/, die beim Build entstehen. Hier bleibt
+// nur noch das Umschalten zwischen den Fassungen.
+//
+// Die Praefixe stehen als Datenattribut an den Schaltflaechen, damit eine neue
+// Sprache allein im Sprachregister ergaenzt werden kann.
+// ============================================================
+
+const SPRACH_PRAEFIXE = ["/en", "/zh"];
+
+const praefixVon = (pfad) =>
+  SPRACH_PRAEFIXE.find((praefix) => pfad === praefix || pfad.startsWith(`${praefix}/`)) || "";
+
+const ohnePraefix = (pfad) => {
+  const praefix = praefixVon(pfad);
+  if (!praefix) return pfad;
+  return pfad.slice(praefix.length) || "/";
+};
+
+const gegenstueck = (pfad, sprache) => {
+  const grund = ohnePraefix(pfad);
+  if (sprache === "de") return grund;
+  return grund === "/" ? `/${sprache}/` : `/${sprache}${grund}`;
+};
+
+// Alte Links mit ?lang=en zeigen weiter auf die deutsche Adresse. Sie werden
+// einmalig auf die echte Sprachseite umgeleitet.
+const angefragteSprache = new URLSearchParams(window.location.search).get("lang");
+if (angefragteSprache && SPRACH_PRAEFIXE.includes(`/${angefragteSprache}`)) {
+  const ziel = new URL(window.location.href);
+  const neuerPfad = gegenstueck(ziel.pathname, angefragteSprache);
+  if (neuerPfad !== ziel.pathname) {
+    ziel.pathname = neuerPfad;
+    ziel.searchParams.delete("lang");
+    window.location.replace(ziel);
   }
-})();
-const selectedLanguage = requestedLanguage === "en" || (!requestedLanguage && storedLanguage === "en") ? "en" : "de";
+}
 
-const setLanguageControls = (language) => {
-  document.querySelectorAll("[data-language]").forEach((button) => {
-    const isActive = button.dataset.language === language;
-    button.classList.toggle("is-active", isActive);
-    button.setAttribute("aria-pressed", String(isActive));
-  });
-};
-
-const setEnglishPageMetadata = () => {
-  document.documentElement.lang = "en";
-  document.documentElement.dataset.language = "en";
-  document.title = `${document.title} | English`;
-  document.querySelector('meta[property="og:locale"]')?.setAttribute("content", "en_US");
-};
-
-const translateText = async (texts) => {
-  const separator = (index) => `[[[CAMPDOERFL_TRANSLATION_SPLIT_${index}]]]`;
-  const source = texts.map((text, index) => `${text}\n${separator(index)}`).join("\n");
-  const query = new URLSearchParams({ client: "gtx", sl: "de", tl: "en", dt: "t" });
-  query.append("q", source);
-  const response = await fetch(`https://translate.googleapis.com/translate_a/single?${query.toString()}`);
-  if (!response.ok) throw new Error("Translation request failed");
-
-  const data = await response.json();
-  const translatedSource = data[0].map((entry) => entry?.[0] || "").join("");
-  const translations = [];
-  let remainder = translatedSource;
-
-  texts.forEach((_, index) => {
-    const marker = separator(index);
-    const markerIndex = remainder.indexOf(marker);
-    if (markerIndex === -1) {
-      translations.push("");
-      return;
-    }
-    translations.push(remainder.slice(0, markerIndex).trim());
-    remainder = remainder.slice(markerIndex + marker.length).trimStart();
-  });
-
-  return translations;
-};
-
-const pageTextEntries = () => {
-  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
-    acceptNode(node) {
-      const parent = node.parentElement;
-      if (!parent || !node.nodeValue?.trim()) return NodeFilter.FILTER_REJECT;
-      if (parent.closest("script, style, svg, [translate='no'], .notranslate")) return NodeFilter.FILTER_REJECT;
-      return NodeFilter.FILTER_ACCEPT;
-    }
-  });
-  const entries = [];
-  let node;
-  while ((node = walker.nextNode())) entries.push({ node, text: node.nodeValue.trim() });
-
-  document.querySelectorAll("[alt], [placeholder], [aria-label], [title]").forEach((element) => {
-    if (element.closest("[translate='no'], .notranslate")) return;
-    ["alt", "placeholder", "aria-label", "title"].forEach((attribute) => {
-      const text = element.getAttribute(attribute)?.trim();
-      if (text && !/^(?:DE|EN)$/i.test(text)) entries.push({ element, attribute, text });
-    });
-  });
-  return entries;
-};
-
-const translatePageToEnglish = async () => {
-  const entries = pageTextEntries();
-  const batches = [];
-  let batch = [];
-  let batchLength = 0;
-
-  entries.forEach((entry) => {
-    const entryLength = encodeURIComponent(entry.text).length;
-    if (batch.length && (batch.length >= 18 || batchLength + entryLength > 4000)) {
-      batches.push(batch);
-      batch = [];
-      batchLength = 0;
-    }
-    batch.push(entry);
-    batchLength += entryLength;
-  });
-  if (batch.length) batches.push(batch);
-
-  for (const batch of batches) {
-    const translations = await translateText(batch.map((entry) => entry.text));
-    batch.forEach((entry, index) => {
-      const translation = translations[index];
-      if (!translation) return;
-      if (entry.node) entry.node.nodeValue = entry.node.nodeValue.replace(entry.text, translation);
-      if (entry.element) entry.element.setAttribute(entry.attribute, translation);
-    });
-  }
-};
-
-setLanguageControls(selectedLanguage);
-document.querySelectorAll("[data-language]").forEach((button) => {
-  button.addEventListener("click", () => {
-    const language = button.dataset.language === "en" ? "en" : "de";
-    try {
-      localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
-    } catch {}
-    const url = new URL(window.location.href);
-    if (language === "en") url.searchParams.set("lang", "en");
-    else url.searchParams.delete("lang");
-    window.location.assign(url);
+document.querySelectorAll("[data-language]").forEach((schalter) => {
+  schalter.addEventListener("click", () => {
+    if (schalter.disabled) return;
+    const ziel = new URL(window.location.href);
+    ziel.pathname = gegenstueck(ziel.pathname, schalter.dataset.language);
+    ziel.searchParams.delete("lang");
+    window.location.assign(ziel);
   });
 });
-
-if (selectedLanguage === "en") {
-  setEnglishPageMetadata();
-  translatePageToEnglish().catch(() => {
-    // Keep the original German content visible if the translation service is temporarily unavailable.
-  });
-}
 
 if (navToggle && nav) {
   const navToggleLabel = navToggle.querySelector(".nav-toggle__label");
@@ -154,7 +81,8 @@ if (navToggle && nav) {
     const isDesktop = desktopNav.matches;
     const shouldOpen = !isDesktop && isOpen;
     navToggle.setAttribute("aria-expanded", String(shouldOpen));
-    const isEnglish = selectedLanguage === "en";
+    // Die englischen Seiten tragen lang="en" — daran haengt auch die Beschriftung.
+    const isEnglish = document.documentElement.lang === "en";
     navToggle.setAttribute("aria-label", shouldOpen ? (isEnglish ? "Close navigation" : "Navigation schließen") : isEnglish ? "Open navigation" : "Navigation öffnen");
     navToggle.classList.toggle("is-open", shouldOpen);
     nav.classList.toggle("is-open", shouldOpen);
@@ -299,6 +227,57 @@ const heroSections = document.querySelectorAll(".ff-hero, .hero, .bbcal-hero, .s
 requestAnimationFrame(() => {
   heroSections.forEach((heroSection) => heroSection.classList.add("is-hero-ready"));
 });
+
+/* Startseite: Der Hero ist eine Laufbahn, die Bühne darin klebt einen
+   Bildschirm hoch oben. Solange man daran vorbeiscrollt, übersetzt
+   --cinema den zurückgelegten Weg in 0 bis 1; das CSS verteilt daraus
+   die Einsätze von Zeile, Buttons und Zahlenleiste. Die Kennung
+   .js-hero-cinema setzt bereits das Kopfskript, damit beim Laden nichts
+   aufblitzt — hier wird sie nur noch als erledigt gemeldet, sonst nimmt
+   das Kopfskript sie nach 2,5 Sekunden wieder zurück. */
+const cinemaHero = document.querySelector(".js-hero-cinema .ff-hero--home-photo");
+if (cinemaHero) {
+  document.documentElement.dataset.heroCinemaReady = "1";
+
+  /* Notbremse: Passt die fertige Kopie trotz gedeckeltem Abstand nicht auf
+     einen Bildschirm, wird auf der klebenden Bühne unweigerlich etwas
+     abgeschnitten. Dann lieber gar keine Inszenierung als eine halbe
+     Zahlenleiste — der Hero fällt auf sein gewohntes Verhalten zurück. */
+  const cinemaFits = () => {
+    const stage = cinemaHero.querySelector(".ff-hero__stage");
+    const inner = cinemaHero.querySelector(".ff-hero__inner");
+    if (!stage || !inner) return false;
+    return inner.scrollHeight <= stage.clientHeight + 1;
+  };
+  if (!cinemaFits()) {
+    document.documentElement.classList.remove("js-hero-cinema");
+  }
+}
+
+if (document.documentElement.classList.contains("js-hero-cinema") && cinemaHero) {
+
+  let cinemaFrame = 0;
+  const updateCinema = () => {
+    cinemaFrame = 0;
+    const track = cinemaHero.offsetHeight - window.innerHeight;
+    if (track <= 0) {
+      cinemaHero.style.setProperty("--cinema", "1");
+      return;
+    }
+    const passed = Math.min(Math.max(-cinemaHero.getBoundingClientRect().top, 0), track);
+    const progress = passed / track;
+    cinemaHero.style.setProperty("--cinema", progress.toFixed(4));
+    // Erst wenn die Buttons sichtbar genug sind, werden sie auch anklickbar.
+    cinemaHero.classList.toggle("is-cinema-open", progress >= 0.6);
+  };
+  const requestCinemaUpdate = () => {
+    if (!cinemaFrame) cinemaFrame = requestAnimationFrame(updateCinema);
+  };
+
+  updateCinema();
+  window.addEventListener("scroll", requestCinemaUpdate, { passive: true });
+  window.addEventListener("resize", requestCinemaUpdate, { passive: true });
+}
 
 const counterItems = document.querySelectorAll(
   ".ff-hero__facts dt, .ff-hero__facts dd, .hero__stat-value, .landing-stat__value, .stat-card__value, .offer40-price__amount, .bbcal-hero__stat strong, .spot-results-count strong, .coaching-success-proof__stats strong, .coach-success__totals strong, .ed-proof__item dt, .ed-google-reviews__score, .pricing-card__price, .start-card__price, .guenter-story-preview__facts strong, .guenter-story-hero__facts dt, .guenter-story-health__facts dt, .guenter-story-medals strong, .guenter-story-chart__bars b"

@@ -10799,7 +10799,7 @@ html body.page-premium main .app-traffic-promo__content li strong {
     background: #0a0a0d;
   }
 
-  .page-home-reboot .ff-hero--home-photo > picture .ff-hero__img {
+  .page-home-reboot .ff-hero--home-photo picture .ff-hero__img {
     inset: var(--home-mobile-media-top) 0 auto;
     width: 100%;
     height: var(--home-mobile-media-height);
@@ -13977,6 +13977,145 @@ html body.page-premium.page-coaching main .coaching-price .summary-row {
 
   .page-home-reboot .ff-hero--home-photo :is(.ff-hero__eyebrow, .ff-hero__line, .ff-hero__actions, .ff-hero__mobile-welcome, .ff-hero__facts) {
     transform: none;
+  }
+}
+
+/* ============================================================
+   SHOP — ARTIKEL STEHEN JETZT GANZ OBEN
+   Seit dem Umbau eroeffnet der Kollektionsblock die Seite. Vorher lag
+   dort der Hero, der seinen Abstand zur festen Kopfzeile selbst
+   mitbrachte. Ohne diesen Ausgleich schoebe sich die Zeile
+   "Kollektion & Gutscheine" unter die Navigationsleiste.
+   ============================================================ */
+
+.page-shop main > #kollektion {
+  padding-top: calc(var(--header-height, 76px) + 48px);
+}
+
+@media (max-width: 900px) {
+  .page-shop main > #kollektion {
+    padding-top: calc(var(--header-height, 76px) + 24px);
+  }
+}
+
+/* ============================================================
+   STARTSEITE — HERO ALS SCROLL-INSZENIERUNG
+   Beim Laden steht nur das Bild. Der Hero wird dafür zur Laufbahn:
+   die Bühne bleibt einen Bildschirm hoch oben kleben, und während
+   man an ihr vorbeiscrollt, steigt der Text Zeile für Zeile ein.
+   Den Weg übersetzt main.js in --cinema (0 bis 1), die Einsätze
+   verteilt das CSS darunter.
+
+   Alles hängt an .js-hero-cinema am <html>. Die Kennung setzt das
+   Kopfskript nur, wenn JavaScript läuft und keine Bewegungsbremse
+   aktiv ist. Fehlt sie, gilt unverändert die Ladeanimation von
+   oben — ohne JavaScript steht der Text also weiterhin sofort da.
+
+   Ab 900px abwärts ist der Hero eine andere Komposition: ein Bildband
+   von 430px Höhe mit einer Textkarte darunter, kein bildschirmfüllendes
+   Foto. Dort gäbe es kein "erst nur das Bild", nur eine leere Karte.
+   Deshalb bleibt die Inszenierung dem breiten Layout vorbehalten.
+   ============================================================ */
+
+/* Ohne Kino-Kennung ist die Bühne nicht vorhanden: display:contents
+   nimmt sie aus dem Kasten-Baum, Bild, Schleier und Text bleiben
+   direkte Flex-Kinder des Heros wie bisher. */
+.ff-hero__stage {
+  display: contents;
+}
+
+@media (min-width: 901px) {
+  .js-hero-cinema .page-home-reboot .ff-hero--home-photo {
+    --cinema: 0;
+    --cinema-track: 130vh;
+    min-height: 0;
+    display: block;
+    /* Das Schneiden übernimmt die Bühne — ein schneidender Vorfahre
+       würde das Kleben unterbinden. */
+    overflow: visible;
+    height: calc(100vh + var(--cinema-track));
+    height: calc(100lvh + var(--cinema-track));
+  }
+
+  .js-hero-cinema .page-home-reboot .ff-hero--home-photo .ff-hero__stage {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    height: 100vh;
+    height: 100lvh;
+  }
+
+  /* Der Hero setzt seine Kopie mit einem Abstand von bis zu 430px nach
+     unten. Ohne Inszenierung darf er dafür höher werden als der Bildschirm
+     und man scrollt die Zahlenleiste nach. Auf der klebenden Bühne geht das
+     nicht: Was nicht auf einen Bildschirm passt, bliebe abgeschnitten.
+     Deshalb wird der Abstand hier nur so weit zugelassen, wie darunter noch
+     alles Platz hat — auf hohen Bildschirmen bleibt der Originalwert. */
+  .js-hero-cinema .page-home-reboot .ff-hero--home-photo .ff-hero__inner {
+    padding-top: min(clamp(300px, 28vw, 430px), max(24px, calc(100lvh - 740px)));
+  }
+
+  /* Langsame Annäherung des Bildes über die gesamte Laufbahn. */
+  .js-hero-cinema .page-home-reboot .ff-hero--home-photo.is-hero-ready .ff-hero__img {
+    animation: none;
+    transform: translate3d(0, var(--parallax-y, 0px), 0) scale(calc(1.025 + var(--cinema, 0) * 0.05));
+  }
+
+  /* Der Schleier zieht mit: zuerst liegt das Foto fast frei, mit jedem
+     Textblock dunkelt er nach, damit die Schrift ihren Grund behält. */
+  .js-hero-cinema .page-home-reboot .ff-hero--home-photo .ff-hero__scrim {
+    opacity: calc(0.62 + var(--cinema, 0) * 0.38);
+  }
+
+  /* Gemeinsamer Auftritt: --cinema-step ist der eigene Fortschritt eines
+     Elements von 0 bis 1. Die Ladeanimation wird dafür abgeschaltet. */
+  .js-hero-cinema .page-home-reboot .ff-hero--home-photo :is(.ff-hero__eyebrow, .ff-hero__actions, .ff-hero__mobile-welcome, .ff-hero__facts),
+  .js-hero-cinema .page-home-reboot .ff-hero--home-photo .ff-hero__title--staged > span.ff-hero__line {
+    animation: none;
+    /* Das Bewegungssystem legt auf die Hero-Kinder pauschal einen Übergang
+       von 0,95 s. Hier muss er weg: Der Text soll exakt am Scrollrad hängen
+       und nicht eine Sekunde hinterherziehen. */
+    transition: none;
+    opacity: var(--cinema-step, 1);
+    transform: translate3d(0, calc((1 - var(--cinema-step, 1)) * 30px), 0);
+    will-change: opacity, transform;
+  }
+
+  /* Wer mit der Tastatur in den Hero springt, bekommt ihn sofort ganz zu
+     sehen. Sonst läge der Fokus auf einem unsichtbaren Button. */
+  .js-hero-cinema .page-home-reboot .ff-hero--home-photo:focus-within :is(.ff-hero__eyebrow, .ff-hero__actions, .ff-hero__mobile-welcome, .ff-hero__facts),
+  .js-hero-cinema .page-home-reboot .ff-hero--home-photo:focus-within .ff-hero__title--staged > span.ff-hero__line {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Solange die Buttons noch nicht da sind, darf man sie auch nicht
+     versehentlich treffen. is-cinema-open setzt main.js ab 60 Prozent. */
+  .js-hero-cinema .page-home-reboot .ff-hero--home-photo:not(.is-cinema-open):not(:focus-within) .ff-hero__actions {
+    pointer-events: none;
+  }
+
+  /* Die Einsätze. Jede Zeile bekommt ein eigenes Fenster auf der Laufbahn;
+     die Fallwerte sorgen dafür, dass ohne --cinema alles sichtbar bleibt. */
+  .js-hero-cinema .page-home-reboot .ff-hero--home-photo .ff-hero__eyebrow {
+    --cinema-step: clamp(0, (var(--cinema, 1) - 0.02) / 0.12, 1);
+  }
+  .js-hero-cinema .page-home-reboot .ff-hero--home-photo .ff-hero__title--staged > span.ff-hero__line:nth-child(1) {
+    --cinema-step: clamp(0, (var(--cinema, 1) - 0.12) / 0.13, 1);
+  }
+  .js-hero-cinema .page-home-reboot .ff-hero--home-photo .ff-hero__title--staged > span.ff-hero__line:nth-child(2) {
+    --cinema-step: clamp(0, (var(--cinema, 1) - 0.24) / 0.13, 1);
+  }
+  .js-hero-cinema .page-home-reboot .ff-hero--home-photo .ff-hero__title--staged > span.ff-hero__line:nth-child(3) {
+    --cinema-step: clamp(0, (var(--cinema, 1) - 0.36) / 0.13, 1);
+  }
+  .js-hero-cinema .page-home-reboot .ff-hero--home-photo .ff-hero__actions {
+    --cinema-step: clamp(0, (var(--cinema, 1) - 0.52) / 0.14, 1);
+  }
+  .js-hero-cinema .page-home-reboot .ff-hero--home-photo .ff-hero__facts {
+    --cinema-step: clamp(0, (var(--cinema, 1) - 0.64) / 0.16, 1);
   }
 }
 
