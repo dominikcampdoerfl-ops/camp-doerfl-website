@@ -12470,6 +12470,45 @@ html body.page-premium.page-firmenfitness main .corporate-process-section {
 .bbc-formats__grid li::before,
 .bbc-fit li::before { position: absolute; top: 0.48em; left: 0; width: 8px; height: 8px; border-radius: 50%; background: var(--bbc-gold-deep); content: ""; }
 
+/* Preis und Laufzeit der beiden Coaching-Wege. Die Zahl traegt dieselbe
+   kondensierte Kursive wie die Nummern der Ausgangspunkt-Karten, der Zusatz
+   daneben dieselbe goldene Kennzeichnung wie die Kicker darueber. */
+.bbc-formats__grid .bbc-formats__price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  margin: 24px 0 0;
+  padding-top: 22px;
+  border-top: 1px solid var(--bbc-line);
+}
+
+.bbc-formats__grid .bbc-formats__price strong {
+  color: var(--bbc-ink);
+  font-family: var(--font-cond);
+  font-size: clamp(2rem, 3vw, 2.75rem);
+  font-style: italic;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.bbc-formats__grid .bbc-formats__price span {
+  color: var(--bbc-gold-deep);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.bbc-formats__note {
+  max-width: 62ch;
+  margin: 28px auto 0;
+  color: #655d50;
+  font-size: 0.95rem;
+  line-height: 1.62;
+  text-align: center;
+}
+
 html body.page-premium.page-bodybuilding-coaching main .bbc-authority {
   background: #0d0f13 !important;
 }
@@ -12501,6 +12540,13 @@ html body.page-premium.page-bodybuilding-coaching main .bbc-authority {
 .bbc-formats__grid article:nth-child(2) li { color: rgba(255, 253, 248, 0.8); }
 .bbc-formats__grid a { margin-top: auto; padding-top: 24px; border-top: 1px solid var(--bbc-line); color: var(--bbc-gold-deep); font-size: 0.78rem; font-weight: 900; text-decoration: none; text-transform: uppercase; }
 .bbc-formats__grid article:nth-child(2) a { border-color: rgba(255,255,255,.12); color: var(--bbc-gold); }
+/* Die zweite Karte steht auf dunklem Grund und regelt ihre Textfarben selbst.
+   Ohne diese drei Zeilen bliebe der Betrag im dunklen --bbc-ink stehen und
+   waere schwarz auf schwarz; die Trennlinie darueber ebenso unsichtbar.
+   Gold hier in der hellen Variante, wie beim Link darunter. */
+.bbc-formats__grid article:nth-child(2) .bbc-formats__price { border-top-color: rgba(255, 255, 255, 0.14); }
+.bbc-formats__grid article:nth-child(2) .bbc-formats__price strong { color: #fffdf8; }
+.bbc-formats__grid article:nth-child(2) .bbc-formats__price span { color: var(--bbc-gold); }
 
 .bbc-flow__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; }
 .bbc-flow__grid > * { display: flex; min-height: 390px; flex-direction: column; padding: clamp(25px, 3vw, 38px); border: 1px solid var(--bbc-line); border-radius: 26px; color: inherit; background: linear-gradient(145deg, #fffefa, #f4ead8); text-decoration: none; }
