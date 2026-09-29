@@ -13,11 +13,24 @@ const nav = document.querySelector("[data-site-nav]");
 // uebersetzte Seiten unter /en/ und /zh/, die beim Build entstehen. Hier bleibt
 // nur noch das Umschalten zwischen den Fassungen.
 //
-// Die Praefixe stehen als Datenattribut an den Schaltflaechen, damit eine neue
-// Sprache allein im Sprachregister ergaenzt werden kann.
+// Die Praefixe werden aus den Schaltflaechen gelesen, nicht hier gefuehrt.
+// Vorher stand hier eine feste Liste ["/en", "/zh"]. Als Tuerkisch dazukam,
+// blieb sie stehen: Auf jeder /tr/-Seite fand die Umschaltung kein Praefix,
+// "Deutsch" liess einen stehen, und die uebrigen Flaggen bauten /en/tr/... —
+// drei von vier Klicks endeten im Nichts. Wer einmal auf einer tuerkischen
+// Seite war, kam nicht mehr weg.
+//
+// Das Sprachregister erzeugt die Schaltflaechen, also steht die Wahrheit dort.
+// Eine neue Sprache braucht damit wirklich nur den Eintrag im Register.
 // ============================================================
 
-const SPRACH_PRAEFIXE = ["/en", "/zh"];
+const SPRACH_PRAEFIXE = [
+  ...new Set(
+    [...document.querySelectorAll("[data-language]")]
+      .map((schalter) => schalter.dataset.language)
+      .filter((code) => code && code !== "de")
+  )
+].map((code) => `/${code}`);
 
 const praefixVon = (pfad) =>
   SPRACH_PRAEFIXE.find((praefix) => pfad === praefix || pfad.startsWith(`${praefix}/`)) || "";
@@ -81,9 +94,14 @@ if (navToggle && nav) {
     const isDesktop = desktopNav.matches;
     const shouldOpen = !isDesktop && isOpen;
     navToggle.setAttribute("aria-expanded", String(shouldOpen));
-    // Die englischen Seiten tragen lang="en" — daran haengt auch die Beschriftung.
-    const isEnglish = document.documentElement.lang === "en";
-    navToggle.setAttribute("aria-label", shouldOpen ? (isEnglish ? "Close navigation" : "Navigation schließen") : isEnglish ? "Open navigation" : "Navigation öffnen");
+    // Die übersetzten Seiten tragen ihr lang-Attribut — daran hängt die Beschriftung.
+    const navLabels = {
+      en: { open: "Open navigation", close: "Close navigation", menu: "Menu", closeShort: "Close" },
+      tr: { open: "Menüyü aç", close: "Menüyü kapat", menu: "Menü", closeShort: "Kapat" },
+      de: { open: "Navigation öffnen", close: "Navigation schließen", menu: "Menü", closeShort: "Schließen" }
+    };
+    const labels = navLabels[document.documentElement.lang] || navLabels.de;
+    navToggle.setAttribute("aria-label", shouldOpen ? labels.close : labels.open);
     navToggle.classList.toggle("is-open", shouldOpen);
     nav.classList.toggle("is-open", shouldOpen);
     nav.setAttribute("aria-hidden", String(!isDesktop && !shouldOpen));
@@ -93,7 +111,7 @@ if (navToggle && nav) {
     }
 
     if (navToggleLabel instanceof HTMLElement) {
-      navToggleLabel.textContent = shouldOpen ? (isEnglish ? "Close" : "Schließen") : isEnglish ? "Menu" : "Menü";
+      navToggleLabel.textContent = shouldOpen ? labels.closeShort : labels.menu;
     }
 
     document.body.classList.toggle("nav-open", shouldOpen);
@@ -186,6 +204,9 @@ document
   .forEach((item) => item.setAttribute("data-reveal", "card"));
 
 document.querySelectorAll("main > section:not(.ff-hero):not(.hero)").forEach((section) => {
+  // Auf der Coaching-Seite animieren die einzelnen Inhalte. Ein zusätzlicher
+  // unsichtbarer Außencontainer würde den ganzen Abschnitt verzögert freigeben.
+  if (document.body.classList.contains("page-coaching--refined")) return;
   const revealTarget = section.querySelector(":scope > .section-shell, :scope > .hero__inner, :scope > [class*='__inner']");
   if (revealTarget && !revealTarget.hasAttribute("data-reveal")) {
     revealTarget.setAttribute("data-reveal", "section");
@@ -196,6 +217,31 @@ const revealItems = document.querySelectorAll("[data-reveal]");
 revealItems.forEach((item, index) => {
   item.style.setProperty("--reveal-order", String(index % 4));
 });
+
+// Zusammengehörige Elemente treten in ihrer lokalen Reihenfolge ein.
+// Die Abschnittslinien zeichnen sich einmal ein; kein dauernder Scroll-Loop.
+if (document.body.classList.contains("page-coaching--refined")) {
+  document.querySelectorAll("main > section").forEach((section) => {
+    section.querySelectorAll("[data-reveal]").forEach((item, index) => {
+      item.style.setProperty("--reveal-order", String(Math.min(index, 3)));
+    });
+  });
+  if ("IntersectionObserver" in window && !prefersReducedMotion.matches) {
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("pt-in-view");
+        sectionObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: "0px 0px -8%", threshold: 0 });
+    document.querySelectorAll("main > section:not(.ff-hero)").forEach((section) => sectionObserver.observe(section));
+    prefersReducedMotion.addEventListener("change", () => {
+      if (!prefersReducedMotion.matches) return;
+      sectionObserver.disconnect();
+      revealItems.forEach((item) => item.classList.add("is-visible"));
+    });
+  }
+}
 
 if ("IntersectionObserver" in window && !prefersReducedMotion.matches) {
   const observer = new IntersectionObserver(
@@ -228,55 +274,99 @@ requestAnimationFrame(() => {
   heroSections.forEach((heroSection) => heroSection.classList.add("is-hero-ready"));
 });
 
-/* Startseite: Der Hero ist eine Laufbahn, die Bühne darin klebt einen
-   Bildschirm hoch oben. Solange man daran vorbeiscrollt, übersetzt
-   --cinema den zurückgelegten Weg in 0 bis 1; das CSS verteilt daraus
-   die Einsätze von Zeile, Buttons und Zahlenleiste. Die Kennung
-   .js-hero-cinema setzt bereits das Kopfskript, damit beim Laden nichts
-   aufblitzt — hier wird sie nur noch als erledigt gemeldet, sonst nimmt
-   das Kopfskript sie nach 2,5 Sekunden wieder zurück. */
-const cinemaHero = document.querySelector(".js-hero-cinema .ff-hero--home-photo");
+/* Startseite: Eine am Scrollweg geführte Choreografie. Die Bühne bleibt
+   nur aktiv, wenn ihre Inhalte vollständig in den Bildschirm passen. */
+const cinemaHero = document.querySelector(".ff-hero--home-photo");
 if (cinemaHero) {
-  document.documentElement.dataset.heroCinemaReady = "1";
-
-  /* Notbremse: Passt die fertige Kopie trotz gedeckeltem Abstand nicht auf
-     einen Bildschirm, wird auf der klebenden Bühne unweigerlich etwas
-     abgeschnitten. Dann lieber gar keine Inszenierung als eine halbe
-     Zahlenleiste — der Hero fällt auf sein gewohntes Verhalten zurück. */
-  const cinemaFits = () => {
-    const stage = cinemaHero.querySelector(".ff-hero__stage");
-    const inner = cinemaHero.querySelector(".ff-hero__inner");
-    if (!stage || !inner) return false;
-    return inner.scrollHeight <= stage.clientHeight + 1;
-  };
-  if (!cinemaFits()) {
-    document.documentElement.classList.remove("js-hero-cinema");
-  }
-}
-
-if (document.documentElement.classList.contains("js-hero-cinema") && cinemaHero) {
-
+  const root = document.documentElement;
+  const desktopCinema = window.matchMedia("(min-width: 901px)");
+  const stage = cinemaHero.querySelector(".ff-hero__stage");
+  const inner = cinemaHero.querySelector(".ff-hero__inner");
+  root.dataset.heroCinemaReady = "1";
   let cinemaFrame = 0;
+  let layoutDirty = true;
+  const clamp = (value) => Math.min(1, Math.max(0, value));
+  const ease = (value) => 1 - (1 - clamp(value)) ** 3;
+
   const updateCinema = () => {
     cinemaFrame = 0;
-    const track = cinemaHero.offsetHeight - window.innerHeight;
-    if (track <= 0) {
-      cinemaHero.style.setProperty("--cinema", "1");
-      return;
+    if (layoutDirty) {
+      layoutDirty = false;
+      const enabled = desktopCinema.matches && !prefersReducedMotion.matches;
+      root.classList.toggle("js-hero-cinema", enabled);
+      if (enabled && (!stage || !inner || inner.scrollHeight > stage.clientHeight + 1)) {
+        root.classList.remove("js-hero-cinema");
+      }
     }
-    const passed = Math.min(Math.max(-cinemaHero.getBoundingClientRect().top, 0), track);
-    const progress = passed / track;
+    if (!root.classList.contains("js-hero-cinema")) return;
+
+    const track = cinemaHero.offsetHeight - stage.clientHeight;
+    const progress = track > 0 ? clamp(-cinemaHero.getBoundingClientRect().top / track) : 1;
     cinemaHero.style.setProperty("--cinema", progress.toFixed(4));
-    // Erst wenn die Buttons sichtbar genug sind, werden sie auch anklickbar.
+    cinemaHero.style.setProperty("--cinema-energy", (4 * progress * (1 - progress)).toFixed(4));
+    // Die drei Titel lösen sich mit unterschiedlichem Timing aus der Tiefe.
+    [0.10, 0.24, 0.38].forEach((start, index) => {
+      cinemaHero.style.setProperty(`--cinema-line-${index + 1}`, ease((progress - start) / 0.22).toFixed(4));
+    });
     cinemaHero.classList.toggle("is-cinema-open", progress >= 0.6);
   };
   const requestCinemaUpdate = () => {
     if (!cinemaFrame) cinemaFrame = requestAnimationFrame(updateCinema);
   };
+  const refreshCinemaLayout = () => {
+    layoutDirty = true;
+    requestCinemaUpdate();
+  };
 
   updateCinema();
   window.addEventListener("scroll", requestCinemaUpdate, { passive: true });
-  window.addEventListener("resize", requestCinemaUpdate, { passive: true });
+  window.addEventListener("resize", refreshCinemaLayout, { passive: true });
+  window.addEventListener("pageshow", refreshCinemaLayout);
+  prefersReducedMotion.addEventListener("change", refreshCinemaLayout);
+  document.fonts?.ready.then(refreshCinemaLayout);
+}
+
+/* Fotokarten und Coaching-Angebote: Lichtpunkt und Tiefe folgen einem präzisen
+   Zeiger. Es läuft kein Animationsloop, solange die Maus stillsteht. */
+const entryPointerMedia = window.matchMedia("(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
+const entryPointerResets = [];
+document.querySelectorAll(".page-home-reboot .ed-entry-grid .ed-entry, .page-coaching--refined .feature-grid--coaching-start > a, .page-coaching--refined .coaching-success-proof, .page-coaching--refined .pt-authority__facts > div, .page-coaching--refined .feature-grid--audience .feature-card").forEach((card) => {
+  let frame = 0;
+  let bounds = null;
+  let x = 0.5;
+  let y = 0.5;
+  const reset = () => {
+    cancelAnimationFrame(frame);
+    frame = 0;
+    bounds = null;
+    ["--entry-x", "--entry-y", "--entry-rx", "--entry-ry", "--entry-image-x", "--entry-image-y"].forEach((property) => card.style.removeProperty(property));
+  };
+  const draw = () => {
+    frame = 0;
+    card.style.setProperty("--entry-x", `${(x * 100).toFixed(2)}%`);
+    card.style.setProperty("--entry-y", `${(y * 100).toFixed(2)}%`);
+    card.style.setProperty("--entry-rx", `${((0.5 - y) * 5).toFixed(2)}deg`);
+    card.style.setProperty("--entry-ry", `${((x - 0.5) * 5).toFixed(2)}deg`);
+    card.style.setProperty("--entry-image-x", `${((x - 0.5) * -12).toFixed(2)}px`);
+    card.style.setProperty("--entry-image-y", `${((y - 0.5) * -12).toFixed(2)}px`);
+  };
+  card.addEventListener("pointermove", (event) => {
+    if (!entryPointerMedia.matches || event.pointerType === "touch") return;
+    bounds ??= card.getBoundingClientRect();
+    x = Math.min(1, Math.max(0, (event.clientX - bounds.left) / bounds.width));
+    y = Math.min(1, Math.max(0, (event.clientY - bounds.top) / bounds.height));
+    if (!frame) frame = requestAnimationFrame(draw);
+  }, { passive: true });
+  card.addEventListener("pointerleave", reset);
+  card.addEventListener("pointercancel", reset);
+  entryPointerResets.push(reset);
+});
+if (entryPointerResets.length) {
+  const resetEntryPointers = () => entryPointerResets.forEach((reset) => reset());
+  window.addEventListener("scroll", resetEntryPointers, { passive: true });
+  window.addEventListener("resize", resetEntryPointers, { passive: true });
+  window.addEventListener("blur", resetEntryPointers);
+  entryPointerMedia.addEventListener("change", resetEntryPointers);
 }
 
 const counterItems = document.querySelectorAll(

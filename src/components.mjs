@@ -4,10 +4,10 @@ import { contactTopics, resolveContactTopicKey } from "./contact-topics.js";
 import { MEMBER_BASE_PATH } from "./member-area.mjs";
 
 // Ein Markenzeichen, zwei Dateien mit klar getrennter Aufgabe:
-// - brandLogoSourcePath ist die 2000er Originaldatei für strukturierte Daten,
-//   das Apple-Touch-Icon und den Presse-Download.
+// - brandLogoSourcePath ist die 2000er Originaldatei für strukturierte Daten
+//   und den Presse-Download.
 // - brandLogoDisplayPath ist die 96er Anzeigegröße für alles Sichtbare im Layout
-//   (Kopfzeile, Navigation, Fußzeile) und für das Favicon.
+//   (Kopfzeile, Navigation, Fußzeile). Die Browser-Symbole erzeugt scripts/favicon.mjs.
 const brandLogoSourcePath = "/assets/images/camp-doerfl-logo.png";
 const brandLogoDisplayPath = "/assets/images/camp-doerfl-logo-96.webp";
 const defaultRobotsContent = "index,follow,max-image-preview:large";
@@ -136,7 +136,9 @@ function breadcrumbSchema(path, pageName) {
     "/bia-inbody-koerperanalyse-vergleich/": ["Körperanalyse Nürnberg", "/koerperanalyse-nuernberg/"],
     "/keynote-speaker-nuernberg/": ["Moderator Nürnberg", "/moderator-nuernberg/"],
     "/fit-werden/": ["Personal Trainer Nürnberg", "/personal-trainer-nuernberg/"],
-    "/xxl-nutrition-rabattcode/": ["Partner", "/partner/"]
+    "/diabetes-coach-nuernberg/": ["Personal Trainer Nürnberg", "/personal-trainer-nuernberg/"],
+    "/xxl-nutrition-rabattcode/": ["Partner", "/partner/"],
+    "/triathlon-distanzen/": ["Triathlon Kalender 2026", "/triathlon-kalender-2026/"]
   };
   const parent = parentPages[path];
   const itemListElement = [{
@@ -332,6 +334,26 @@ export function sectionHeader({ eyebrow, title, text, align = "left", headingLev
       <${headingTag}>${title}</${headingTag}>
       ${text ? `<p>${text}</p>` : ""}
     </div>
+  `;
+}
+
+/* Sichtbare Brotkrumen. Wortlaut und Reihenfolge stimmen mit der
+   BreadcrumbList in den strukturierten Daten überein — sonst behauptet die
+   Seite gegenüber Maschinen eine Einordnung, die für Menschen nirgends steht.
+   Der letzte Eintrag ist die Seite selbst und deshalb kein Link. */
+export function breadcrumbTrail(items) {
+  const spur = items
+    .map((item, index) =>
+      index === items.length - 1
+        ? `<li><span aria-current="page">${item.label}</span></li>`
+        : `<li><a href="${item.href}">${item.label}</a></li>`
+    )
+    .join("");
+
+  return `
+    <nav class="breadcrumb-trail" aria-label="Brotkrumennavigation" data-reveal>
+      <ol>${spur}</ol>
+    </nav>
   `;
 }
 
@@ -813,6 +835,10 @@ export function testimonialSection() {
   `;
 }
 
+/* `answer` ist die Antwort im Klartext und geht so in die strukturierten Daten.
+   Wo die sichtbare Antwort einen Link tragen soll, steht er in `answerHtml` —
+   im JSON-LD hat Markup nichts verloren, und ein "<" darin würde die
+   Auszeichnung für jeden Leser zerlegen, der sie zeichenweise ausliest. */
 export function faq(items) {
   return `
     <div class="faq">
@@ -821,7 +847,7 @@ export function faq(items) {
           (item) => `
             <details data-reveal>
               <summary>${item.question}</summary>
-              <p>${item.answer}</p>
+              <p>${item.answerHtml || item.answer}</p>
             </details>
           `
         )
@@ -912,6 +938,7 @@ const inquiryByPath = Object.freeze({
   "/personal-training-kosten-nuernberg/": { topic: "premium-training", label: "Training anfragen" },
   "/bodybuilding-coaching-wettkampfvorbereitung/": { topic: "bodybuilding-coaching", label: "Coaching anfragen" },
   "/koerperanalyse-nuernberg/": { topic: "koerperanalyse", label: "Analyse anfragen" },
+  "/diabetes-coach-nuernberg/": { topic: "hba1c-programm", label: "Erstgespräch anfragen" },
   "/executive-performance/": { topic: "executive-performance", label: "Platz anfragen" },
   "/firmenfitness/": { topic: "firmenfitness", label: "Firmenfitness anfragen" },
   "/gesundheitstag-nuernberg/": { topic: "firmenfitness", label: "Gesundheitstag anfragen" },
@@ -1377,7 +1404,11 @@ export function layout({
   dateModified = "2026-08-11",
   socialImage = defaultSocialImage,
   socialImageAlt = "Camp Dörfl Performance System in Nürnberg",
-  extraStructuredData = []
+  extraStructuredData = [],
+  // Entitäten, über die die Seite spricht, ohne selbst eine davon zu sein —
+  // etwa eine Partnermarke. Jeder Eintrag ist ein vollständiger Knoten mit
+  // eigener "@id"; die Seite verweist unten nur noch darauf.
+  mentions = []
 }) {
   const canonicalPath = path === "/" ? "/" : path;
   const hasMobileInquiry = Boolean(inquiryForPath(path));
@@ -1474,7 +1505,7 @@ export function layout({
         image: normalizedAbsoluteUrl("/assets/images/dominik-about-gym-portrait.webp"),
         description:
           "Dominik Dörfl ist Personal Trainer, Bodybuilding- und Performance-Coach, Moderator und Gründer von Camp Dörfl in Nürnberg.",
-        jobTitle: "Personal Trainer, Bodybuilding- und Performance-Coach",
+        jobTitle: "Personal Trainer, Bodybuilding- und Performance-Coach, Moderator",
         worksFor: {
           "@id": organizationId
         },
@@ -1486,7 +1517,8 @@ export function layout({
           "Körperanalyse",
           "Sporternährung",
           "Firmenfitness",
-          "Ausdauertraining"
+          "Ausdauertraining",
+          "Eventmoderation"
         ],
         award: [
           "Deutscher Meister im Bodybuilding",
@@ -1529,9 +1561,11 @@ export function layout({
           "@type": "ImageObject",
           url: resolvedSocialImage
         },
-        ...(breadcrumb ? { breadcrumb: { "@id": breadcrumb["@id"] } } : {})
+        ...(breadcrumb ? { breadcrumb: { "@id": breadcrumb["@id"] } } : {}),
+        ...(mentions.length ? { mentions: mentions.map((eintrag) => ({ "@id": eintrag["@id"] })) } : {})
       },
       ...(breadcrumb ? [breadcrumb] : []),
+      ...mentions,
       ...extraStructuredData
     ]
   };
@@ -1559,9 +1593,11 @@ export function layout({
     <meta name="twitter:image" content="${resolvedSocialImage}">
     <meta name="twitter:image:alt" content="${socialImageAlt}">
 	    <meta name="theme-color" content="#fbf7ef">
-	    <link rel="icon" type="image/webp" href="${brandLogoDisplayPath}">
-	    <link rel="icon" type="image/png" href="${brandLogoSourcePath}">
-	    <link rel="apple-touch-icon" sizes="180x180" href="${brandLogoSourcePath}">
+	    <!-- Browser-Symbole aus scripts/favicon.mjs. Safari braucht ICO/PNG in kleiner Größe. -->
+	    <link rel="icon" type="image/x-icon" href="/assets/__ICON_VERSION__/favicon.ico" sizes="16x16 32x32 48x48">
+	    <link rel="icon" type="image/png" sizes="32x32" href="/assets/__ICON_VERSION__/camp-doerfl-symbol-32.png">
+	    <link rel="icon" type="image/png" sizes="192x192" href="/assets/__ICON_VERSION__/camp-doerfl-symbol-192.png">
+	    <link rel="apple-touch-icon" sizes="180x180" href="/assets/__ICON_VERSION__/camp-doerfl-symbol-180.png">
 	    <!-- Vorgeladen werden nur die drei Schnitte über der Falz: Inter 400 traegt
 	         den Fliesstext, Inter 700 Marke und Navigation, Roboto Condensed 700 die
 	         Hero-Titel. Ohne Preload werden sie erst nach dem CSS entdeckt und der

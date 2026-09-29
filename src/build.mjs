@@ -514,6 +514,22 @@ export async function buildSite() {
   }
   const coreAssetNames = ["styles.css", "mobile-overrides.css", "design-contract.css", "main.js", "contact-topics.js"];
   const coreAssetContents = await Promise.all(coreAssetNames.map((name) => readFile(join(root, "src", name))));
+  // Auch Favicons werden vom Browser dauerhaft gecacht. Eine eigene,
+  // inhaltsabhängige Adresse ersetzt alte Tab-Symbole auf allen Seiten.
+  // /favicon.ico bleibt als Fallback für Browser ohne Link-Auswertung erhalten.
+  const iconSources = [
+    "public/favicon.ico",
+    "assets/images/camp-doerfl-symbol-32.png",
+    "assets/images/camp-doerfl-symbol-192.png",
+    "assets/images/camp-doerfl-symbol-180.png"
+  ];
+  const iconContents = await Promise.all(iconSources.map((name) => readFile(join(root, name))));
+  const iconVersion = `icons-${createHash("sha256").update(Buffer.concat(iconContents)).digest("hex").slice(0, 12)}`;
+  const iconDir = join(dist, "assets", iconVersion);
+  await mkdir(iconDir, { recursive: true });
+  await Promise.all(iconSources.map((name, index) =>
+    writeFile(join(iconDir, name.split("/").at(-1)), iconContents[index])
+  ));
   // Die Schriften liegen unter einer festen Adresse und werden ein Jahr lang als
   // "immutable" ausgeliefert. Ohne eigene Kennung bekaemen wiederkehrende Besucher
   // nach einem Austausch weiter die alten Dateien aus dem Cache. Die Kennung wird
@@ -584,6 +600,7 @@ export async function buildSite() {
     const html = page
       .render()
       .replaceAll("__ASSET_VERSION__", assetVersion)
+      .replaceAll("__ICON_VERSION__", iconVersion)
       .replaceAll("__FONT_VERSION__", fontVersion)
       .replaceAll("__MEMBER_APP_BUILD_NOTE__", memberBuildNoteMarkup);
     renderedPages.set(page.route, html);
@@ -789,6 +806,7 @@ Camp Dörfl is a public German-language website for personal training, body anal
 - [Home](${site.url}/): Overview of Camp Dörfl and all services
 - [Körperanalyse Nürnberg](${site.url}/koerperanalyse-nuernberg/): 2D body analysis, InBody BIA measurement and personal evaluation
 - [Personal Trainer Nürnberg](${site.url}/personal-trainer-nuernberg/): Premium personal training and coaching
+- [Diabetes Coach Nürnberg](${site.url}/diabetes-coach-nuernberg/): Diabetes coaching – 12-week training and nutrition programme for people with elevated HbA1c or early type 2 diabetes, alongside medical care (Nürnberg or online)
 - [Firmenfitness deutschlandweit](${site.url}/firmenfitness/): Germany-wide corporate health days, InBody consultation, workplace-specific nutrition talks and team activation
 - [Gesundheitstag Nürnberg](${site.url}/gesundheitstag-nuernberg/): Health-day formats for companies
 - [Moderator Nürnberg](${site.url}/moderator-nuernberg/): Event moderation and stage formats

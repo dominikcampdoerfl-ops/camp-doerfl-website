@@ -69,12 +69,15 @@
       .find((eintrag) => eintrag.url.includes("/product/file/get/"));
     if (!bild) continue;
 
-    // Die zwei Stichpunkte stehen zwischen Produktnamen und Preiszeile.
-    const zeilen = kachel.innerText.split("\n").map((zeile) => zeile.trim()).filter(Boolean);
-    const namensZeile = zeilen.indexOf(bild.alt);
-    const merkmale = namensZeile === -1
-      ? []
-      : zeilen.slice(namensZeile + 1).filter((zeile) => !/€|^Inhalt:/.test(zeile)).slice(0, 2);
+    // Die zwei Stichpunkte stehen als Liste zwischen Produktname und Preiszeile.
+    // Gelesen wird der Textinhalt, nicht innerText: die Seite legt jede Kachel
+    // zweimal an, fürs Desktop- und fürs Mobilraster. Im gerade verborgenen
+    // Raster liefert innerText keine Zeilenumbrüche, dann blieben die
+    // Stichpunkte leer — je nach Fensterbreite mal hier, mal dort.
+    const merkmale = [...kachel.querySelectorAll("li span")]
+      .map((zelle) => zelle.textContent.trim())
+      .filter(Boolean)
+      .slice(0, 2);
 
     kacheln.push({
       name: bild.alt,

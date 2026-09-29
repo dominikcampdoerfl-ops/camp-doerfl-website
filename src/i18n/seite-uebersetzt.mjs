@@ -109,7 +109,8 @@ export function baueUebersetzteSeite(
 // gibt, sie hier aber noch nicht fertig ist.
 const HINWEIS = {
   en: "English version in preparation",
-  zh: "中文版本正在准备中"
+  zh: "中文版本正在准备中",
+  tr: "Türkçe sürüm hazırlanıyor"
 };
 
 export function sperreSchalter(html, sprache) {

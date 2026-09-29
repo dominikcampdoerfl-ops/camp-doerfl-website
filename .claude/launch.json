@@ -4,8 +4,29 @@
     {
       "name": "preview",
       "runtimeExecutable": "sh",
-      "runtimeArgs": ["-c", "PORT=4188 node src/server.mjs"],
+      "runtimeArgs": [
+        "-c",
+        "PORT=4188 node src/server.mjs"
+      ],
       "port": 4188
+    },
+    {
+      "name": "at",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "cd '/Users/dominikdoerfl/Documents/Camp Dörfl Website' && AT_PORT=4180 node at/server.mjs"
+      ],
+      "port": 4180
+    },
+    {
+      "name": "ch",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "cd '/Users/dominikdoerfl/Documents/Camp Dörfl Website' && CH_PORT=4190 node ch/server.mjs"
+      ],
+      "port": 4190
     }
   ]
 }

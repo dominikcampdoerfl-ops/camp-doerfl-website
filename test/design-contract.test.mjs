@@ -60,3 +60,20 @@ test("the design contract meets WCAG AA contrast for normal body text", async ()
   assert.ok(contrast("#ded5c5", "#11100d") >= 4.5);
   assert.ok(contrast("#fffdf8", "#11100d") >= 4.5, "table header contrast must remain accessible");
 });
+
+test("jeder aria-labelledby-Verweis findet seine Überschrift", () => {
+  // Auf /shop/ zeigte aria-labelledby ins Leere: Die Kennung wurde über
+  // .replace("<h2", …) gesetzt, die Überschrift war aber ein <h1>. Für
+  // Vorleseprogramme hatte der Abschnitt damit keinen Namen — im Bild sieht
+  // man davon nichts, deshalb steht die Prüfung hier.
+  for (const seite of pages) {
+    const markup = seite.render();
+    const kennungen = new Set([...markup.matchAll(/\sid="([^"]+)"/g)].map((treffer) => treffer[1]));
+
+    for (const treffer of markup.matchAll(/aria-labelledby="([^"]+)"/g)) {
+      for (const ziel of treffer[1].split(/\s+/)) {
+        assert.ok(kennungen.has(ziel), `${seite.route}: aria-labelledby="${ziel}" zeigt ins Leere`);
+      }
+    }
+  }
+});

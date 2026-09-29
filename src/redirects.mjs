@@ -10,6 +10,10 @@ export const legacyRedirectRules = Object.freeze({
     "/agb/": "/impressum/",
     // Kurz unter der langen Adresse veröffentlicht, bevor sie auf /fit-werden/ verkürzt wurde.
     "/personal-training-ab-40-nuernberg/": "/fit-werden/",
+    // Am 13.09.2026 als /hba1c-programm/ gestartet, drei Tage später auf das Suchwort „Diabetes Coach Nürnberg“ umgezogen.
+    "/hba1c-programm/": "/diabetes-coach-nuernberg/",
+    "/en/hba1c-programm/": "/en/diabetes-coach-nuernberg/",
+    "/zh/hba1c-programm/": "/zh/diabetes-coach-nuernberg/",
     "/archiv/bodybuilding-wettkaempfe-2024/": "/bodybuilding-wettkaempfe-2026/",
     "/archiv/halbmarathon-termine-2024/": "/laufkalender-2026/",
     "/athletenbereich/archiv/bodybuilding-wettkaempfe-2024/": "/bodybuilding-wettkaempfe-2026/",

@@ -14,7 +14,7 @@ test("der Shop ist eine eigene Seite und kein Rest der alten Jimdo-Adresse", () 
 });
 
 test("jeder Artikel steht mit Farbe, Preis und allen Größen auf der Seite", () => {
-  assert.equal(shopProducts.length, 13);
+  assert.equal(shopProducts.length, 16);
 
   for (const artikel of shopProducts) {
     assert.ok(shop.includes(`${artikel.name} ${artikel.variant}`), `${artikel.id}: Name fehlt`);
@@ -23,11 +23,12 @@ test("jeder Artikel steht mit Farbe, Preis und allen Größen auf der Seite", ()
     assert.ok(shop.includes(`data-id="${artikel.id}"`), `${artikel.id}: Kennung für die Auswahl fehlt`);
   }
 
-  // Vier Shirts zu 20 €, ein Sweatshirt zu 49 €, zwei Jacken zu 45 €.
+  // Vier Basic Shirts zu 25 €, ein Summer Shirt zu 20 €, drei Oversized zu 30 €, vier Sweatshirts zu 49 €,
+  // zwei Jacken zu 45 €, Buddy und Bag zu 20 €.
   const jeKategorie = (kategorie) => shopProducts.filter((artikel) => artikel.category === kategorie);
   for (const [kategorie, anzahl, preise] of [
-    ["Shirt", 8, [20, 30]],
-    ["Sweatshirt", 1, [49]],
+    ["Shirt", 8, [20, 25, 30]],
+    ["Sweatshirt", 4, [49]],
     ["Jacke", 2, [45]],
     ["Sonstiges", 2, [20]]
   ]) {
@@ -38,11 +39,22 @@ test("jeder Artikel steht mit Farbe, Preis und allen Größen auf der Seite", ()
     );
   }
 
-  // Der einzige Oversized-Schnitt kostet mehr als die übrigen Shirts.
-  const oversized = jeKategorie("Shirt").filter((artikel) => artikel.variant.startsWith("Oversized"));
+  // Der Schnitt steckt im Namen, die Farbe in der Variante. Der Oversized-Schnitt
+  // kostet mehr als das Basic Shirt.
+  const oversized = jeKategorie("Shirt").filter((artikel) => artikel.name === "Camp Dörfl Oversized Shirt");
+  assert.equal(
+    jeKategorie("Shirt").filter((artikel) => artikel.name === "Camp Dörfl Basic Shirt").length,
+    4,
+    "die vier normal geschnittenen Shirts heißen Basic Shirt"
+  );
   assert.equal(oversized.length, 3);
   assert.ok(oversized.every((artikel) => artikel.price === 30), "Oversized kostet 30 €");
-  assert.equal(jeKategorie("Shirt").filter((artikel) => artikel.price === 20).length, 5);
+  assert.equal(jeKategorie("Shirt").filter((artikel) => artikel.price === 25).length, 4);
+  // Das Summer Shirt kommt von einem anderen Hersteller, ist dünner und deshalb
+  // das einzige Shirt zu 20 €.
+  const sommer = jeKategorie("Shirt").filter((artikel) => artikel.name.startsWith("Camp Dörfl Summer Shirt"));
+  assert.equal(sommer.length, 1);
+  assert.equal(sommer[0].price, 20);
 
   // Zwei Gruppen im Katalog: die Shirts allein, alles andere in einer Reihe.
   assert.ok(shop.includes(">Shirts</h3>"), "Gruppe Shirts fehlt");
@@ -50,6 +62,61 @@ test("jeder Artikel steht mit Farbe, Preis und allen Größen auf der Seite", ()
 
   for (const groesse of shopSizes) {
     assert.ok(shop.includes(`<option value="${groesse}">${groesse}</option>`), `Größe ${groesse} fehlt`);
+  }
+});
+
+test("der Einstieg zählt die Kollektion so auf, wie sie wirklich ist", () => {
+  // Die Aufzählung stand einmal fest im Text und nannte noch ein Sweatshirt,
+  // als es längst vier waren. Sie wird jetzt gerechnet — hier steht, dass das
+  // so bleibt.
+  const beginn = shop.indexOf('class="shop-hero__lead"');
+  const satz = shop.slice(beginn, shop.indexOf("</span>", beginn));
+  const wort = ["null", "ein", "zwei", "drei", "vier", "fünf", "sechs", "sieben", "acht", "neun",
+    "zehn", "elf", "zwölf", "dreizehn", "vierzehn", "fünfzehn", "sechzehn", "siebzehn",
+    "achtzehn", "neunzehn", "zwanzig"];
+  const je = (kategorie) => shopProducts.filter((artikel) => artikel.category === kategorie).length;
+
+  for (const [kategorie, plural] of [["Shirt", "Shirts"], ["Sweatshirt", "Sweatshirts"], ["Jacke", "Jacken"]]) {
+    const anzahl = je(kategorie);
+    const erwartet = `${wort[anzahl]} ${plural}`;
+    assert.ok(
+      satz.toLowerCase().includes(erwartet.toLowerCase()),
+      `Der Einstieg nennt nicht „${erwartet}“ — dort steht: ${satz.replace(/<[^>]+>/g, " ").trim()}`
+    );
+  }
+
+  const teile = je("Shirt") + je("Sweatshirt") + je("Jacke");
+  assert.ok(satz.includes(`${wort[teile]} Teile`), `Der Einstieg nennt nicht ${wort[teile]} Teile zum Anziehen`);
+});
+
+test("jeder Artikel bietet genau die Größen an, die es von ihm gibt", () => {
+  // Nicht jeder Schnitt läuft gleich weit nach oben. Böte eine Karte eine
+  // Größe an, die es nicht gibt, fiele das erst bei der Bestellung auf.
+  const erwartet = {
+    "Camp Dörfl Basic Shirt": "5XL",
+    "Camp Dörfl Oversized Shirt": "3XL",
+    "Camp Dörfl Summer Shirt ’26": "XXL",
+    "Camp Dörfl Sweatshirt": "XXL",
+    "Camp Dörfl Jacke": "XXL"
+  };
+
+  for (const artikel of shopProducts) {
+    const groessen = artikel.sizes || shopSizes;
+    const grenze = erwartet[artikel.name];
+    if (!grenze) continue;
+
+    assert.equal(groessen[0], "XS", `${artikel.id}: beginnt nicht bei XS`);
+    assert.equal(groessen[groessen.length - 1], grenze, `${artikel.id}: falsche größte Größe`);
+
+    // Die Karte des Artikels darf keine Größe darüber hinaus anbieten.
+    const karte = shop.slice(shop.indexOf(`data-id="${artikel.id}"`));
+    const feld = karte.slice(0, karte.indexOf("</select>"));
+    for (const zuviel of ["3XL", "4XL", "5XL"].filter((g) => !groessen.includes(g))) {
+      assert.ok(!feld.includes(`>${zuviel}</option>`), `${artikel.id}: bietet ${zuviel} an, gibt es aber nicht`);
+    }
+    for (const groesse of groessen) {
+      assert.ok(feld.includes(`>${groesse}</option>`), `${artikel.id}: Größe ${groesse} fehlt in der Auswahl`);
+    }
   }
 });
 

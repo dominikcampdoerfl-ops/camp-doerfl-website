@@ -4,7 +4,8 @@
 // QUELLENLAGE: Jede Zeile ist belegt, nichts ist ergänzt oder geschätzt.
 // Gegengeprüft wurden die Jahre ab 2019 mit der gepflegten Datei
 // lib/bodybuildingSceneKnowledge.ts im App-Repo; die fünf 2025er Titel stimmen
-// dort und in den externen Quellen überein.
+// dort und in den externen Quellen überein. Die 2026er Titel (Olympia
+// 24.–27.09.2026, Las Vegas) sind mit Fitness Volt und Generation Iron belegt.
 //
 // WARTUNG: Nach jedem Mr. Olympia (September/Oktober) und jedem Arnold Classic
 // (Februar/März) die jeweils neue Zeile ergänzen und CHAMPIONS_STAND neu setzen.
@@ -12,7 +13,7 @@
 // SCHREIBWEISE: `jahr` ist entweder eine Zahl oder [von, bis] für eine Serie
 // aufeinanderfolgender Titel. Die Seite rechnet das in einzelne Jahre um.
 
-export const CHAMPIONS_STAND = "2026-08-28";
+export const CHAMPIONS_STAND = "2026-09-29";
 
 // Klassen, für die noch keine belegte Jahresliste vorliegt. Sie werden auf der
 // Seite offen benannt, statt sie stillschweigend wegzulassen.
@@ -55,7 +56,8 @@ export const olympiaKlassen = [
       { jahr: 2022, name: "Hadi Choopan" },
       { jahr: 2023, name: "Derek Lunsford" },
       { jahr: 2024, name: "Samson Dauda" },
-      { jahr: 2025, name: "Derek Lunsford" }
+      { jahr: 2025, name: "Derek Lunsford" },
+      { jahr: 2026, name: "Nick Walker" }
     ]
   },
   {
@@ -72,7 +74,7 @@ export const olympiaKlassen = [
       { jahr: 2020, name: "Shaun Clarida" },
       { jahr: 2021, name: "Derek Lunsford" },
       { jahr: 2022, name: "Shaun Clarida" },
-      { jahr: [2023, 2025], name: "Keone Pearson" }
+      { jahr: [2023, 2026], name: "Keone Pearson" }
     ]
   },
   {
@@ -85,7 +87,8 @@ export const olympiaKlassen = [
       { jahr: 2016, name: "Danny Hester" },
       { jahr: [2017, 2018], name: "Breon Ansley" },
       { jahr: [2019, 2024], name: "Chris Bumstead" },
-      { jahr: 2025, name: "Ramon Rocha Queiroz" }
+      { jahr: 2025, name: "Ramon Rocha Queiroz" },
+      { jahr: 2026, name: "Niall Darwen" }
     ]
   },
   {
@@ -101,7 +104,7 @@ export const olympiaKlassen = [
       { jahr: 2019, name: "Raymont Edmonds" },
       { jahr: [2020, 2021], name: "Brandon Hendrickson" },
       { jahr: 2022, name: "Erin Banks" },
-      { jahr: [2023, 2025], name: "Ryan Terry" }
+      { jahr: [2023, 2026], name: "Ryan Terry" }
     ]
   },
   {
@@ -124,7 +127,7 @@ export const olympiaKlassen = [
       { jahr: 2004, name: "Iris Kyle" },
       { jahr: 2005, name: "Yaxeni Oriquen" },
       { jahr: [2006, 2014], name: "Iris Kyle" },
-      { jahr: [2020, 2025], name: "Andrea Shaw" }
+      { jahr: [2020, 2026], name: "Andrea Shaw" }
     ],
     luecke: { von: 2015, bis: 2019, grund: "Der Titel wurde in diesen Jahren nicht ausgetragen." }
   },
@@ -153,7 +156,7 @@ export const olympiaKlassen = [
       { jahr: 2022, name: "Missy Truscott" },
       { jahr: 2023, name: "Oksana Grishina" },
       { jahr: 2024, name: "Missy Truscott" },
-      { jahr: 2025, name: "Michelle Fredua-Mensah" }
+      { jahr: [2025, 2026], name: "Michelle Fredua-Mensah" }
     ]
   },
   {
@@ -173,7 +176,8 @@ export const olympiaKlassen = [
       { jahr: [2013, 2014], name: "Nicole Wilkins" },
       { jahr: [2015, 2016], name: "Latorya Watts" },
       { jahr: [2017, 2024], name: "Cydney Gillon" },
-      { jahr: 2025, name: "Rhea Gayle" }
+      { jahr: 2025, name: "Rhea Gayle" },
+      { jahr: 2026, name: "Lola Montez" }
     ]
   },
   {
@@ -195,7 +199,8 @@ export const olympiaKlassen = [
       { jahr: 2022, name: "Maureen Blanquisco" },
       { jahr: 2023, name: "Jennifer Dorie" },
       { jahr: 2024, name: "Lauralie Chapados" },
-      { jahr: 2025, name: "Maureen Blanquisco" }
+      { jahr: 2025, name: "Maureen Blanquisco" },
+      { jahr: 2026, name: "Jasmine Gonzalez" }
     ]
   },
   {
@@ -211,7 +216,7 @@ export const olympiaKlassen = [
       { jahr: [2020, 2021], name: "Sarah Villegas" },
       { jahr: 2022, name: "Natalia Abraham Coelho" },
       { jahr: [2023, 2024], name: "Sarah Villegas" },
-      { jahr: 2025, name: "Natalia Abraham Coelho" }
+      { jahr: [2025, 2026], name: "Natalia Abraham Coelho" }
     ]
   },
   {
@@ -223,7 +228,7 @@ export const olympiaKlassen = [
     sieger: [
       { jahr: [2021, 2023], name: "Francielle Mattos" },
       { jahr: 2024, name: "Isabelle Nunes" },
-      { jahr: 2025, name: "Eduarda Bezerra" }
+      { jahr: [2025, 2026], name: "Eduarda Bezerra" }
     ]
   }
 ];

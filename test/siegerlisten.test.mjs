@@ -62,6 +62,10 @@ test("die Eckpunkte der Geschichte stehen richtig in den Daten", () => {
   assert.equal(treffer(2008, "mens-open"), "Dexter Jackson");
   assert.equal(treffer(2025, "mens-open"), "Derek Lunsford");
   assert.equal(treffer(2024, "mens-open"), "Samson Dauda");
+  assert.equal(treffer(2026, "mens-open"), "Nick Walker");
+  assert.equal(treffer(2026, "classic-physique"), "Niall Darwen");
+  assert.equal(treffer(2026, "bikini"), "Jasmine Gonzalez");
+  assert.equal(treffer(2026, "figure"), "Lola Montez");
 
   // Die Ms. Olympia pausierte zwischen 2015 und 2019.
   for (const jahr of [2015, 2016, 2017, 2018, 2019]) {

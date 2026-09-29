@@ -25,6 +25,12 @@ export const site = {
   facebook: "https://www.facebook.com/dominik.dorfl/?locale=de_DE",
   linkedin: "https://de.linkedin.com/in/dominik-dörfl-328445211",
   spotify: "https://open.spotify.com/show/4J0iYTYCdGDuhwkLsXxNo8",
+  // Android-APK zum Direktdownload (EAS-Build 5e8ec08e, Version 2.9, versionCode 36,
+  // signiert mit dem EAS-Keystore F6:C7:DB:77:…).
+  // ACHTUNG: Diese EAS-Artefakt-URL läuft am 16.12.2026 ab. Danach ist der Download tot.
+  // Dauerhafte Lösung: Datei nach Cloudflare R2 umziehen und hier die R2-Adresse eintragen.
+  androidApkUrl: "https://expo.dev/artifacts/eas/JXICAszy4f6ni6O_rIpAFTojt1U__D57jvMzOIEjE-M.apk",
+  androidApkVersion: "2.9",
   location: "Nürnberg",
   streetAddress: "Kraftshofer Hauptstraße 154",
   postalCode: "90427",
@@ -73,6 +79,7 @@ export const navCategories = [
     items: [
       { label: "Personal Trainer Nürnberg", href: "/personal-trainer-nuernberg/" },
       { label: "Fit werden in 12 Wochen", href: "/fit-werden/" },
+      { label: "Diabetes Coach Nürnberg", href: "/diabetes-coach-nuernberg/" },
       { label: "Körperanalyse Nürnberg", href: "/koerperanalyse-nuernberg/" },
       { label: "Bodybuilding Coaching", href: "/bodybuilding-coaching-wettkampfvorbereitung/" },
       { label: "Personal Training Kosten", href: "/personal-training-kosten-nuernberg/" }
@@ -116,6 +123,7 @@ export const navCategories = [
       { label: "Bodybuilding Klassen & Gewichtslimits", href: "/bodybuilding-klassen-gewichtslimits/" },
       { label: "Dauer der Wettkampfvorbereitung", href: "/bodybuilding-wettkampfvorbereitung-dauer/" },
       { label: "BIA & InBody Vergleich", href: "/bia-inbody-koerperanalyse-vergleich/" },
+      { label: "Triathlon Distanzen", href: "/triathlon-distanzen/" },
       { label: "Redaktionelle Richtlinien", href: "/redaktionelle-richtlinien/" }
     ]
   },
@@ -732,6 +740,12 @@ export const contactTopics = contactTopicConfigs.map((topic) => topic.value);
 
 export const shopSizes = ["XS", "S", "M", "L", "XL", "XXL"];
 
+// Nicht jeder Artikel läuft gleich weit nach oben: Das Basic Shirt geht bis
+// 5XL, der Oversized-Schnitt bis 3XL, alles übrige endet bei XXL. Deshalb steht
+// die Größenreihe am Artikel; shopSizes bleibt die Vorgabe ohne eigene Angabe.
+export const shopSizesBis3XL = [...shopSizes, "3XL"];
+export const shopSizesBis5XL = [...shopSizesBis3XL, "4XL", "5XL"];
+
 export const shopShipping = Object.freeze({
   price: 4.9,
   voucherPrice: 2.9,
@@ -742,98 +756,105 @@ export const shopShipping = Object.freeze({
 export const shopProducts = [
   {
     id: "shirt-creme",
-    name: "Camp Dörfl Shirt",
+    name: "Camp Dörfl Summer Shirt ’26",
     variant: "Creme",
     category: "Shirt",
     price: 20,
     print: "Goldenes Emblem",
     swatch: "#d5c39f",
     image: "/assets/images/shop/camp-doerfl-shirt-creme.webp",
-    alt: "Camp Dörfl Shirt in Creme mit goldenem #MEMBER Emblem auf der Brust",
-    text: "Warmer Sandton mit goldenem Emblem — der Ton, mit dem die Kollektion angefangen hat."
+    alt: "Camp Dörfl Summer Shirt ’26 in Creme mit goldenem #MEMBER Emblem auf der Brust",
+    text: "Warmer Sandton mit goldenem Emblem — der Ton, mit dem die Kollektion angefangen hat. Leichterer Sommerstoff, dünner als die Basic Shirts."
   },
   {
     id: "shirt-off-white",
-    name: "Camp Dörfl Shirt",
+    name: "Camp Dörfl Basic Shirt",
     variant: "Off White",
     category: "Shirt",
-    price: 20,
+    sizes: shopSizesBis5XL,
+    price: 25,
     print: "Goldenes Emblem",
     swatch: "#e7e0d1",
     image: "/assets/images/shop/camp-doerfl-shirt-off-white.webp",
-    alt: "Camp Dörfl Shirt in Off White mit goldenem #MEMBER Emblem auf der Brust",
+    alt: "Camp Dörfl Basic Shirt in Off White mit goldenem #MEMBER Emblem auf der Brust",
     text: "Heller, ruhiger Grundton mit goldenem Emblem. Fällt im Alltag nicht auf, im Studio schon."
   },
   {
     id: "shirt-black",
-    name: "Camp Dörfl Shirt",
+    name: "Camp Dörfl Basic Shirt",
     variant: "Black",
     category: "Shirt",
-    price: 20,
+    sizes: shopSizesBis5XL,
+    price: 25,
     print: "Goldenes Emblem",
     swatch: "#16151a",
     image: "/assets/images/shop/camp-doerfl-shirt-black.webp",
-    alt: "Camp Dörfl Shirt in Schwarz mit goldenem #MEMBER Emblem auf der Brust",
+    alt: "Camp Dörfl Basic Shirt in Schwarz mit goldenem #MEMBER Emblem auf der Brust",
     text: "Schwarz auf Gold — der stärkste Kontrast der Kollektion und die sicherste Wahl."
   },
   {
     id: "shirt-wine",
-    name: "Camp Dörfl Shirt",
+    name: "Camp Dörfl Basic Shirt",
     variant: "Wine",
     category: "Shirt",
-    price: 20,
+    sizes: shopSizesBis5XL,
+    price: 25,
     print: "Goldenes Emblem",
     swatch: "#6d1f39",
     image: "/assets/images/shop/camp-doerfl-shirt-wine.webp",
-    alt: "Camp Dörfl Shirt in Wine mit goldenem #MEMBER Emblem auf der Brust",
+    alt: "Camp Dörfl Basic Shirt in Wine mit goldenem #MEMBER Emblem auf der Brust",
     text: "Tiefes Bordeaux mit Gold. Die Farbe, nach der auf der Trainingsfläche am häufigsten gefragt wird."
   },
   {
     id: "shirt-aprikose",
-    name: "Camp Dörfl Shirt",
+    name: "Camp Dörfl Basic Shirt",
     variant: "Aprikose",
     category: "Shirt",
-    price: 20,
+    sizes: shopSizesBis5XL,
+    price: 25,
     print: "Goldenes Emblem",
     swatch: "#e6938c",
     image: "/assets/images/shop/camp-doerfl-shirt-aprikose.webp",
-    alt: "Camp Dörfl Shirt in Aprikose mit goldenem #MEMBER Emblem auf der Brust",
+    alt: "Camp Dörfl Basic Shirt in Aprikose mit goldenem #MEMBER Emblem auf der Brust",
     text: "Warmes Altrosa mit goldenem Emblem — der hellste Ton der Kollektion und der auffälligste."
   },
   {
     id: "shirt-oversized-sand",
-    name: "Camp Dörfl Shirt",
-    variant: "Oversized Sand",
+    name: "Camp Dörfl Oversized Shirt",
+    variant: "Sand",
     category: "Shirt",
+    sizes: shopSizesBis3XL,
     price: 30,
     print: "Goldenes Emblem",
     swatch: "#c9bba8",
     image: "/assets/images/shop/camp-doerfl-shirt-oversized-sand.webp",
-    alt: "Camp Dörfl Shirt in Sand, oversized geschnitten, mit goldenem #MEMBER Emblem",
+    alt: "Camp Dörfl Oversized Shirt in Sand mit goldenem #MEMBER Emblem",
     text: "Oversized geschnitten, 220 g/m² schwerer Stoff aus 100 % Baumwolle. Lockere Schulter, fällt gerade."
   },
   {
     id: "shirt-oversized-schwarz",
-    name: "Camp Dörfl Shirt",
-    variant: "Oversized Schwarz",
+    name: "Camp Dörfl Oversized Shirt",
+    variant: "Schwarz",
     category: "Shirt",
+    sizes: shopSizesBis3XL,
     price: 30,
     print: "Goldenes Emblem",
     swatch: "#121316",
     image: "/assets/images/shop/camp-doerfl-shirt-oversized-schwarz.webp",
-    alt: "Camp Dörfl Shirt in Schwarz, oversized geschnitten, mit goldenem #MEMBER Emblem",
+    alt: "Camp Dörfl Oversized Shirt in Schwarz mit goldenem #MEMBER Emblem",
     text: "Derselbe Schnitt in Schwarz: 220 g/m² schwerer Stoff aus 100 % Baumwolle, lockere Schulter."
   },
   {
     id: "shirt-oversized-marineblau",
-    name: "Camp Dörfl Shirt",
-    variant: "Oversized Marineblau",
+    name: "Camp Dörfl Oversized Shirt",
+    variant: "Marineblau",
     category: "Shirt",
+    sizes: shopSizesBis3XL,
     price: 30,
     print: "Goldenes Emblem",
     swatch: "#141c2d",
     image: "/assets/images/shop/camp-doerfl-shirt-oversized-marineblau.webp",
-    alt: "Camp Dörfl Shirt in Marineblau, oversized geschnitten, mit goldenem #MEMBER Emblem",
+    alt: "Camp Dörfl Oversized Shirt in Marineblau mit goldenem #MEMBER Emblem",
     text: "Derselbe Schnitt in tiefem Marineblau: 220 g/m² aus 100 % Baumwolle, lockere Schulter."
   },
   {
@@ -847,6 +868,42 @@ export const shopProducts = [
     image: "/assets/images/shop/camp-doerfl-sweatshirt-grey.webp",
     alt: "Camp Dörfl Sweatshirt in Grau mit Kapuze und goldenem #MEMBER Emblem",
     text: "Kapuzenpullover ohne Reißverschluss, Kängurutasche, goldenes Emblem auf hellem Grau."
+  },
+  {
+    id: "sweatshirt-marineblau",
+    name: "Camp Dörfl Sweatshirt",
+    variant: "Marineblau",
+    category: "Sweatshirt",
+    price: 49,
+    print: "Goldenes Emblem",
+    swatch: "#141c2d",
+    image: "/assets/images/shop/camp-doerfl-sweatshirt-marineblau.webp",
+    alt: "Camp Dörfl Sweatshirt in Marineblau mit Kapuze und goldenem #MEMBER Emblem",
+    text: "Derselbe Kapuzenpullover in tiefem Marineblau: ohne Reißverschluss, mit Kängurutasche und goldenem Emblem."
+  },
+  {
+    id: "sweatshirt-wine",
+    name: "Camp Dörfl Sweatshirt",
+    variant: "Wine",
+    category: "Sweatshirt",
+    price: 49,
+    print: "Goldenes Emblem",
+    swatch: "#6d1f39",
+    image: "/assets/images/shop/camp-doerfl-sweatshirt-wine.webp",
+    alt: "Camp Dörfl Sweatshirt in Wine mit Kapuze und goldenem #MEMBER Emblem",
+    text: "Derselbe Schnitt in tiefem Bordeaux: Kapuze ohne Reißverschluss, Kängurutasche, goldenes Emblem."
+  },
+  {
+    id: "sweatshirt-purple",
+    name: "Camp Dörfl Sweatshirt",
+    variant: "Purple",
+    category: "Sweatshirt",
+    price: 49,
+    print: "Goldenes Emblem",
+    swatch: "#5c4c87",
+    image: "/assets/images/shop/camp-doerfl-sweatshirt-purple.webp",
+    alt: "Camp Dörfl Sweatshirt in Violett mit Kapuze und goldenem #MEMBER Emblem",
+    text: "Derselbe Schnitt in gedecktem Violett: Kapuze ohne Reißverschluss, Kängurutasche, goldenes Emblem."
   },
   {
     id: "jacke-creme",

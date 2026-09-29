@@ -1,0 +1,42 @@
+# Eigener Worker für campdoerfl.ch. Getrennt von wrangler.toml (campdoerfl.de) und wrangler.at.toml (campdoerfl.at):
+# eigener Name, eigenes Verzeichnis, eigener Deploy.
+#
+#   npm run ch:deploy
+#
+# Die Domain hängt weiter unten als Custom Domain am Worker — ein Deploy legt
+# DNS-Eintrag und Zertifikat mit an, im Dashboard ist nichts zu tun.
+
+name = "camp-doerfl-ch"
+main = "dist-ch/server/index.js"
+compatibility_date = "2026-07-01"
+workers_dev = true
+
+# Die Domain selbst. Cloudflare legt den DNS-Eintrag und das Zertifikat beim
+# Deploy an. www zeigt ebenfalls hierher — der Worker leitet von dort auf die
+# Hauptadresse um, damit es nur eine kanonische Adresse gibt.
+[[routes]]
+pattern = "campdoerfl.ch"
+custom_domain = true
+
+[[routes]]
+pattern = "www.campdoerfl.ch"
+custom_domain = true
+
+[assets]
+directory = "dist-ch/server/public"
+binding = "ASSETS"
+run_worker_first = true
+# Ohne diese beiden Zeilen leitet Cloudflares Asset-Server selbst um: Auf die
+# Anfrage nach /index.html antwortet er mit 307 auf / — und weil der Worker
+# genau diese Datei für / holt, reicht er die Umleitung an den Browser weiter.
+# Ergebnis war eine Endlosschleife auf der Startseite. Umleitungen und die
+# 404-Seite macht hier ausschliesslich der Worker.
+html_handling = "none"
+not_found_handling = "none"
+
+[observability]
+enabled = true
+
+[observability.logs]
+invocation_logs = false
+head_sampling_rate = 1

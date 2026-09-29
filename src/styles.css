@@ -10973,6 +10973,30 @@ h1, h2, h3 {
   letter-spacing: 0.26em;
   text-transform: uppercase;
 }
+.ff-hero__notice {
+  max-width: 640px;
+  margin: 0 0 28px;
+  padding: 16px 20px;
+  border-left: 3px solid var(--cd-gold);
+  border-radius: 4px;
+  background: rgba(10, 10, 10, 0.72);
+  color: #fff;
+  font-family: var(--font-sans);
+  backdrop-filter: blur(6px);
+}
+.ff-hero__notice strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--cd-gold);
+  font-size: 1.02rem;
+  font-weight: 700;
+}
+.ff-hero__notice p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.9);
+}
 .ff-hero__title {
   margin: 0;
   max-width: none;
@@ -16155,6 +16179,13 @@ body.consent-modal-open {
   }
 }
 
+/* /diabetes-coach-nuernberg/: Die Überschriften setzen alles in Versalien. „HbA1c“ ist
+   ein Laborwert mit fester Schreibweise und bleibt deshalb, wie er ist. */
+.page-hba1c .hba1c-term {
+  color: inherit;
+  text-transform: none;
+}
+
 .page-offer-40 .offer40-disclaimer {
   margin-top: 18px;
   color: rgba(25, 21, 14, 0.62);
@@ -16856,6 +16887,50 @@ body.member-login-open {
   box-shadow: 0 5px 14px -11px rgba(38, 28, 10, 0.65);
 }
 
+/* ------------------------------------------------------------
+   SPRACHE NOCH NICHT FERTIG
+
+   Seiten ohne vollständige Übersetzung stellen die betroffene
+   Flagge still — damit niemand auf einer halb deutschen Seite
+   landet. Sichtbar war davon nichts: gesperrte und freie Flagge
+   hatten dieselbe Deckkraft (0,55) und beide „cursor: pointer“.
+   Man tippte darauf, und es passierte nichts; der erklärende
+   title erscheint auf dem Handy nie.
+
+   Jetzt ist die Flagge entfärbt, blasser und trägt den
+   Verboten-Zeiger. Das kommt ohne Text aus und gilt damit in
+   jeder Sprache.
+   ------------------------------------------------------------ */
+
+.language-switcher__button[data-language-pending] {
+  cursor: not-allowed;
+}
+
+.language-switcher__button[data-language-pending] .language-switcher__flag {
+  filter: grayscale(1);
+  opacity: 0.55;
+}
+
+.language-switcher--brand .language-switcher__button[data-language-pending] {
+  opacity: 0.4;
+}
+
+/* Kein Aufhellen beim Überfahren: Die Flagge reagiert nicht, also
+   darf sie auch nicht so aussehen. Der Tastaturfokus bleibt
+   sichtbar, sonst verschwindet die Schaltfläche beim Durchtabben. */
+.language-switcher--brand .language-switcher__button[data-language-pending]:hover {
+  opacity: 0.4;
+}
+
+.language-switcher__button[data-language-pending]:hover {
+  color: inherit;
+  background: transparent;
+}
+
+.language-switcher__button[data-language-pending]:focus-visible {
+  opacity: 0.75;
+}
+
 .language-switcher__flag {
   display: block;
   width: 24px;
@@ -16879,6 +16954,25 @@ body.member-login-open {
 @media (max-width: 979px) {
   .language-switcher--brand {
     margin-right: 0;
+  }
+}
+
+/* Vier Sprachen passen auf schmalen Handys nur mit kompakteren Flaggen-Knöpfen
+   neben Wortmarke und Menü-Knopf, sonst ragt der Knopf über den Rand. */
+@media (max-width: 480px) {
+  .language-switcher--brand {
+    gap: 1px;
+    padding: 2px;
+  }
+
+  .language-switcher--brand .language-switcher__button {
+    min-width: 28px;
+    padding: 3px 2px;
+  }
+
+  .language-switcher__flag {
+    width: 21px;
+    height: 14px;
   }
 }
 
@@ -17470,6 +17564,169 @@ body.member-login-open {
   min-height: 1.2em;
   margin: 0;
   font-size: 0.85rem;
+}
+
+/* ------------------------------------------------------------
+   ANTWORTBOX (/xxl-nutrition-rabattcode/)
+   Wer die Seite öffnet, will eine Auskunft: Code, Höhe, Stand.
+   Die Box steht deshalb direkt unter der Überschrift und
+   beantwortet die Frage, bevor irgendein Fließtext beginnt.
+   Als Beschreibungsliste ist die Zuordnung Frage → Antwort auch
+   für Vorleseprogramme und Maschinen eindeutig.
+   ------------------------------------------------------------ */
+
+.code-card--answer {
+  max-width: 34rem;
+  gap: 18px;
+}
+
+.answer-facts {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  width: 100%;
+}
+
+.answer-facts > div {
+  display: grid;
+  gap: 4px;
+}
+
+/* Ab der zweiten Zeile stehen Bezeichnung und Wert nebeneinander:
+   Rabatt und Stand sind kurz, eine eigene Zeile je Angabe würde die
+   Karte ohne Gewinn in die Länge ziehen. */
+.answer-facts > div + div {
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(215, 195, 148, 0.18);
+}
+
+.answer-facts dt {
+  margin: 0;
+  color: #d7c394;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.answer-facts dd {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 1.02rem;
+  font-weight: 600;
+}
+
+/* Der Code selbst trägt dieselbe Schrift wie auf der alten Karte:
+   Versalien im Kondensschnitt, damit er als Code lesbar ist. Der
+   Text im Markup bleibt die echte Schreibweise — die Versalien
+   macht das Stylesheet, die Zwischenablage bekommt das Original. */
+.answer-facts__code {
+  color: #f2dfa8 !important;
+  font-family: var(--font-cond);
+  font-size: clamp(2.4rem, 4.5vw, 3.4rem) !important;
+  font-style: italic;
+  font-weight: 900 !important;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+  user-select: all;
+}
+
+/* ------------------------------------------------------------
+   BROTKRUMEN
+   Sichtbare Entsprechung der BreadcrumbList aus den strukturierten
+   Daten. Sie steht über der Überschrift und bleibt bewusst leise.
+   ------------------------------------------------------------ */
+
+.breadcrumb-trail {
+  margin-bottom: 14px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.breadcrumb-trail ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.breadcrumb-trail li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+
+.breadcrumb-trail li + li::before {
+  content: "/";
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.breadcrumb-trail a {
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.breadcrumb-trail a:hover,
+.breadcrumb-trail a:focus-visible {
+  color: #f2dfa8;
+  border-bottom-color: rgba(242, 223, 168, 0.6);
+}
+
+.breadcrumb-trail [aria-current="page"] {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ------------------------------------------------------------
+   QUERVERWEIS ZWISCHEN DEN TERMINKALENDERN
+   Eine Zeile, keine Kachelreihe: Der Hinweis gehört zum Lesefluss
+   der Kalenderseite und soll ihn nicht unterbrechen.
+   ------------------------------------------------------------ */
+
+.kalender-verwandt__zeile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px 22px;
+  margin: 0;
+  padding: clamp(15px, 1.7vw, 21px) clamp(17px, 2vw, 25px);
+  border: 1px solid var(--cd-line-dark);
+  border-radius: 16px;
+  background: var(--cd-surface-dark);
+  font-size: 0.98rem;
+}
+
+/* Farbe kommt aus design-contract.css: Der Abschnitt erklärt sich als dunkle
+   Fläche, die Auszeichnung tritt über Deckkraft zurück statt über einen
+   eigenen Farbwert. So bleibt der Kontrast auch dann richtig, wenn eine
+   Kalenderseite ihren Untergrund ändert. */
+.kalender-verwandt__auszeichnung {
+  opacity: 0.66;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.kalender-verwandt__zeile a {
+  text-decoration: none;
+  border-bottom: 1px solid rgba(215, 195, 148, 0.55);
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.kalender-verwandt__zeile a:hover,
+.kalender-verwandt__zeile a:focus-visible {
+  color: var(--cd-accent);
+  border-bottom-color: var(--cd-accent);
 }
 
 /* Der Hinweis auf der Partnerseite steht unter dem Sponsorenraster. */
@@ -18925,32 +19182,6 @@ body.page-shop main {
   font-weight: 600;
 }
 
-/* Die Bag-Karte steht am Kopf des Gutschein-Bereichs neben der Ansicht.
-   Dadurch bleibt die Reihe mit Sweatshirt und Jacken bei vier Karten, und
-   der Beutel steht nicht mehr allein in einer angebrochenen Zeile. */
-
-.shop-voucher-stage__oben {
-  display: grid;
-  gap: clamp(16px, 2vw, 28px);
-  grid-template-columns: minmax(0, 1fr);
-  align-items: start;
-  width: 100%;
-}
-
-@container (min-width: 760px) {
-  .shop-voucher-stage__oben {
-    grid-template-columns: minmax(0, 250px) minmax(0, 1fr);
-  }
-}
-
-.shop-voucher-stage__artikel {
-  display: grid;
-}
-
-.shop-voucher-stage__oben .shop-voucher-stage__sides {
-  max-width: none;
-}
-
 /* ============================================================
    SIEGERLISTEN — Mr. Olympia und Arnold Classic
 
@@ -19608,5 +19839,130 @@ body.page-shop main {
   .hero-szene .ff-hero__scrim::after,
   .hero-szene.ist-aktiv .ff-hero__scrim::after {
     opacity: 0;
+  }
+}
+
+/* ------------------------------------------------------------
+   TRIATHLON-DISTANZEN (/triathlon-distanzen/)
+
+   Die Seite wird wegen einer Zahl geöffnet. Tabelle und Kennzahlen
+   stehen deshalb ruhig und eng beieinander; Farbe kommt nur dort
+   dazu, wo sie eine Zuordnung erleichtert.
+   ------------------------------------------------------------ */
+
+.tri-tabelle th[scope="row"] {
+  white-space: nowrap;
+}
+
+.tri-tabelle th[scope="row"] small {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  opacity: 0.72;
+  white-space: normal;
+}
+
+/* Die Quellenzeile stand als <caption> in der Tabelle und wurde auf schmalen
+   Bildschirmen mit ihr weggescrollt — sie steht jetzt darüber und bleibt
+   lesbar, egal wie breit die Tabelle wird. */
+.tri-tabelle__quelle {
+  margin-bottom: 10px;
+  font-size: 0.88rem;
+  opacity: 0.74;
+}
+
+/* Die drei Kennzahlen unter jeder Distanz: Gesamtstrecke, Zielzeit,
+   Umfang. Als Zeile lesbar, auf schmalen Bildschirmen untereinander. */
+.tri-distanz__kennzahlen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 26px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(23, 19, 13, 0.12);
+  font-size: 0.92rem;
+}
+
+.tri-distanz__kennzahlen b {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  opacity: 0.62;
+  text-transform: uppercase;
+}
+
+.tri-startorte {
+  display: grid;
+  gap: clamp(20px, 2.4vw, 30px);
+}
+
+.tri-startorte__gruppe h3 {
+  margin-bottom: 4px;
+}
+
+.tri-startorte__liste {
+  display: grid;
+  gap: 0;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tri-startorte__liste li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 18px;
+  padding: 11px 0;
+  border-top: 1px solid rgba(23, 19, 13, 0.12);
+}
+
+.tri-startorte__liste li:last-child {
+  border-bottom: 1px solid rgba(23, 19, 13, 0.12);
+}
+
+.tri-startorte__liste small {
+  font-size: 0.86rem;
+  opacity: 0.74;
+}
+
+.tri-sonderformen {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tri-sonderformen li {
+  padding-left: 16px;
+  border-left: 2px solid var(--cd-accent, #d7c394);
+}
+
+/* ============================================================
+   TÜRKISCHE KOPFZEILE
+   Die türkischen Menüwörter („Kurumsal fitness“, „Etkinlikler“,
+   „Partnerler“) sind länger als die deutschen. Zwischen 980 und
+   1679 px ragte der Anfrage-Knopf sonst über den rechten Rand.
+   ============================================================ */
+
+@media (min-width: 980px) and (max-width: 1679px) {
+  html[lang="tr"] .site-nav__label-city {
+    display: none;
+  }
+
+  html[lang="tr"] .site-header .brand small {
+    display: none;
+  }
+}
+
+/* Auf kleinen Desktop-Breiten reicht das nicht: Dort trägt das Emblem die Marke
+   allein, der Schriftzug „Camp Dörfl“ steht erst ab 1101 px daneben. */
+@media (min-width: 980px) and (max-width: 1100px) {
+  html[lang="tr"] .site-header .brand__name {
+    display: none;
   }
 }

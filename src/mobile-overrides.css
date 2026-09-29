@@ -3445,6 +3445,16 @@ html body.page-premium.page-team main .coach-success__results li > span:last-chi
   line-height: 0.9 !important;
 }
 
+/* Rabattcode-Seite: Die Überschrift ist hier ein ganzer Satz und kein
+   Schlagwort. In der Plakatgröße der übrigen Partner-Einstiege füllte sie
+   allein den halben Bildschirm — und schöbe damit genau die Antwortbox
+   nach unten, wegen der die Seite geöffnet wird. */
+.page-discount-code .ff-hero__title {
+  max-width: 26ch;
+  font-size: clamp(2.1rem, 3.4vw, 3.4rem) !important;
+  line-height: 0.98 !important;
+}
+
 /* Firmenfitness references: scan-friendly logo grid instead of dense mini articles. */
 .page-firmenfitness .corporate-reference-band {
   grid-template-columns: 1fr;
@@ -13957,6 +13967,19 @@ html body.page-premium.page-coaching main .coaching-price .summary-row {
   to { scale: 1; }
 }
 
+@keyframes cd-hero-unfold {
+  from {
+    opacity: 0;
+    clip-path: inset(0 -50% 100% -50%);
+    transform: perspective(900px) translate3d(22px, 36px, -65px) rotateX(-16deg);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-15% -50% -20% -50%);
+    transform: perspective(900px) translate3d(0, 0, 0) rotateX(0);
+  }
+}
+
 /* Der Grundzoom von 1,025 bleibt als Reserve für den Parallax-Versatz
    erhalten; darüber läuft die Beruhigung von 1,03 auf 1. Beide Zustände
    sind gleich, damit beim Setzen von .is-hero-ready nichts springt. */
@@ -13981,7 +14004,8 @@ html body.page-premium.page-coaching main .coaching-price .summary-row {
   background: none !important;
   color: #fffdf8 !important;
   -webkit-text-fill-color: #fffdf8;
-  animation: cd-hero-rise 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: left bottom;
+  animation: cd-hero-unfold 780ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 /* Gleiche Spezifität wie die Kurzschreibweise oben, sonst setzt diese die
@@ -14018,6 +14042,7 @@ html body.page-premium.page-coaching main .coaching-price .summary-row {
     animation: none !important;
     opacity: 1;
     scale: 1;
+    clip-path: none;
     transform: translate3d(0, var(--parallax-y), 0) scale(1.025);
   }
 
@@ -14070,9 +14095,19 @@ html body.page-premium.page-coaching main .coaching-price .summary-row {
   display: contents;
 }
 
-@media (min-width: 901px) {
+.ff-hero__cinema-art,
+.ff-hero__cinema-cue,
+.ff-hero__cinema-chapters {
+  display: none;
+  pointer-events: none;
+}
+
+@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
   .js-hero-cinema .page-home-reboot .ff-hero--home-photo {
     --cinema: 0;
+    --cinema-line-1: 0;
+    --cinema-line-2: 0;
+    --cinema-line-3: 0;
     --cinema-track: 130vh;
     min-height: 0;
     display: block;
@@ -14106,7 +14141,9 @@ html body.page-premium.page-coaching main .coaching-price .summary-row {
   /* Langsame Annäherung des Bildes über die gesamte Laufbahn. */
   .js-hero-cinema .page-home-reboot .ff-hero--home-photo.is-hero-ready .ff-hero__img {
     animation: none;
-    transform: translate3d(0, var(--parallax-y, 0px), 0) scale(calc(1.025 + var(--cinema, 0) * 0.05));
+    transition: none;
+    transform-origin: 62% 42%;
+    transform: translate3d(calc(var(--cinema, 0) * -12px), calc(var(--cinema, 0) * -16px), 0) scale(calc(1.025 + var(--cinema, 0) * 0.095));
   }
 
   /* Der Schleier zieht mit: zuerst liegt das Foto fast frei, mit jedem
@@ -14129,12 +14166,22 @@ html body.page-premium.page-coaching main .coaching-price .summary-row {
     will-change: opacity, transform;
   }
 
+  .js-hero-cinema .page-home-reboot .ff-hero--home-photo .ff-hero__title--staged > span.ff-hero__line {
+    transform-origin: left bottom;
+    clip-path: inset(-15% -50% calc((1 - var(--cinema-step)) * 120% - 20%) -50%);
+    transform: perspective(1000px)
+      translate3d(calc((1 - var(--cinema-step)) * 70px), calc((1 - var(--cinema-step)) * 48px), calc((1 - var(--cinema-step)) * -110px))
+      rotateX(calc((1 - var(--cinema-step)) * -24deg))
+      rotateZ(calc((1 - var(--cinema-step)) * -3deg));
+  }
+
   /* Wer mit der Tastatur in den Hero springt, bekommt ihn sofort ganz zu
      sehen. Sonst läge der Fokus auf einem unsichtbaren Button. */
   .js-hero-cinema .page-home-reboot .ff-hero--home-photo:focus-within :is(.ff-hero__eyebrow, .ff-hero__actions, .ff-hero__mobile-welcome, .ff-hero__facts),
   .js-hero-cinema .page-home-reboot .ff-hero--home-photo:focus-within .ff-hero__title--staged > span.ff-hero__line {
     opacity: 1;
     transform: none;
+    clip-path: none;
   }
 
   /* Solange die Buttons noch nicht da sind, darf man sie auch nicht
@@ -14149,13 +14196,13 @@ html body.page-premium.page-coaching main .coaching-price .summary-row {
     --cinema-step: clamp(0, (var(--cinema, 1) - 0.02) / 0.12, 1);
   }
   .js-hero-cinema .page-home-reboot .ff-hero--home-photo .ff-hero__title--staged > span.ff-hero__line:nth-child(1) {
-    --cinema-step: clamp(0, (var(--cinema, 1) - 0.12) / 0.13, 1);
+    --cinema-step: var(--cinema-line-1, 1);
   }
   .js-hero-cinema .page-home-reboot .ff-hero--home-photo .ff-hero__title--staged > span.ff-hero__line:nth-child(2) {
-    --cinema-step: clamp(0, (var(--cinema, 1) - 0.24) / 0.13, 1);
+    --cinema-step: var(--cinema-line-2, 1);
   }
   .js-hero-cinema .page-home-reboot .ff-hero--home-photo .ff-hero__title--staged > span.ff-hero__line:nth-child(3) {
-    --cinema-step: clamp(0, (var(--cinema, 1) - 0.36) / 0.13, 1);
+    --cinema-step: var(--cinema-line-3, 1);
   }
   .js-hero-cinema .page-home-reboot .ff-hero--home-photo .ff-hero__actions {
     --cinema-step: clamp(0, (var(--cinema, 1) - 0.52) / 0.14, 1);
@@ -14163,6 +14210,105 @@ html body.page-premium.page-coaching main .coaching-price .summary-row {
   .js-hero-cinema .page-home-reboot .ff-hero--home-photo .ff-hero__facts {
     --cinema-step: clamp(0, (var(--cinema, 1) - 0.64) / 0.16, 1);
   }
+
+  /* Eine gezeichnete Goldbahn rahmt das Foto; der Lichtzug begleitet den
+     Aufbau genau einmal pro Scrollweg. Keine endlose Hintergrundanimation. */
+  .js-hero-cinema .ff-hero__cinema-art {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .ff-hero__orbit {
+    position: absolute;
+    width: min(78vw, 1100px);
+    height: auto;
+    right: -18%;
+    top: 50%;
+    opacity: calc(0.22 + var(--cinema-energy, 0) * 0.32);
+    transform: translateY(-50%) rotate(calc(-125deg + var(--cinema, 0) * 55deg));
+  }
+
+  .ff-hero__orbit-guide { stroke: rgba(242, 223, 168, 0.2); stroke-width: 0.5; }
+  .ff-hero__orbit-trace {
+    stroke: #f2dfa8;
+    stroke-width: 1;
+    stroke-linecap: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: calc(0.94 - var(--cinema, 0) * 0.72);
+  }
+
+  .ff-hero__light-sweep {
+    position: absolute;
+    inset: -40% -20%;
+    background: linear-gradient(110deg, transparent 43%, rgba(242, 223, 168, 0.14) 49.8%, rgba(255, 248, 224, 0.3) 50%, transparent 56%);
+    opacity: var(--cinema-energy, 0);
+    transform: translate3d(calc(-40% + var(--cinema, 0) * 80%), 0, 0);
+  }
+
+  .js-hero-cinema .ff-hero__cinema-cue {
+    position: absolute;
+    z-index: 3;
+    bottom: 32px;
+    left: max(32px, calc((100vw - 1200px) / 2));
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: #f2dfa8;
+    font: 600 10px / 1 var(--font-sans);
+    letter-spacing: 0.24em;
+    opacity: clamp(0, 1 - var(--cinema, 0) * 4, 1);
+    transform: translateY(calc(var(--cinema, 0) * 24px));
+  }
+
+  .ff-hero__cinema-cue i {
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(242, 223, 168, 0.5);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+  }
+
+  .ff-hero__cinema-cue i::after {
+    content: "↓";
+    font: 18px / 1 var(--font-sans);
+    letter-spacing: 0;
+  }
+
+  .js-hero-cinema .ff-hero__cinema-chapters {
+    position: absolute;
+    z-index: 3;
+    right: max(32px, calc((100vw - 1200px) / 2));
+    bottom: 32px;
+    display: flex;
+    gap: 12px;
+    color: #f2dfa8;
+    opacity: calc(0.55 + var(--cinema, 0) * 0.45);
+  }
+
+  .ff-hero__cinema-chapters > span { width: 46px; }
+  .ff-hero__cinema-chapters b { font: 500 9px / 1 var(--font-sans); letter-spacing: 0.12em; }
+  .ff-hero__cinema-chapters i {
+    position: relative;
+    display: block;
+    height: 2px;
+    margin-top: 8px;
+    background: rgba(242, 223, 168, 0.25);
+  }
+  .ff-hero__cinema-chapters i::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #f2dfa8;
+    transform-origin: left;
+    transform: scaleX(var(--chapter-progress, 0));
+  }
+  .ff-hero__cinema-chapters > span:nth-child(1) { --chapter-progress: var(--cinema-line-1, 0); }
+  .ff-hero__cinema-chapters > span:nth-child(2) { --chapter-progress: var(--cinema-line-2, 0); }
+  .ff-hero__cinema-chapters > span:nth-child(3) { --chapter-progress: var(--cinema-line-3, 0); }
 }
 
 /* ============================================================
@@ -15427,6 +15573,139 @@ html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n):is(:hover,
 }
 
 
+/* Vier Wege: Goldkante, Lichtreflex und ein deutliches CTA-Signal.
+   Die vorhandene Fotokomposition und die schmale Buttonhöhe bleiben erhalten. */
+html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n) {
+  isolation: isolate;
+}
+
+html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n).is-visible {
+  transition: transform 550ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 450ms ease, border-color 350ms ease;
+  transition-delay: 0ms;
+}
+
+html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n)::before {
+  inset: 0;
+  z-index: 4;
+  height: auto;
+  border: 1px solid rgba(242, 223, 168, 0.75);
+  border-radius: inherit;
+  background: transparent !important;
+  box-shadow: inset 0 0 20px rgba(242, 223, 168, 0.1);
+  transform: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 350ms ease;
+}
+
+html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n)::after {
+  inset: 0;
+  z-index: 2;
+  border: 0;
+  border-radius: inherit;
+  background: radial-gradient(ellipse 300px 340px at var(--entry-x, 50%) var(--entry-y, 35%), rgba(255, 236, 182, 0.22), transparent 72%);
+  opacity: 0;
+  transition: opacity 450ms ease;
+}
+
+html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n) .ed-entry__media::before {
+  content: "";
+  position: absolute;
+  inset: -25% -50%;
+  z-index: 1;
+  background: linear-gradient(112deg, transparent 38%, rgba(255, 246, 215, 0.2) 49.5%, rgba(255, 251, 232, 0.38) 50%, transparent 62%);
+  transform: translateX(-110%);
+  pointer-events: none;
+}
+
+/* Tastaturfokus erhält dieselbe klare Goldkante und den gefüllten Button. */
+html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n) .ed-entry__cta-label,
+html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n):is(:hover, :focus-visible) .ed-entry__cta-label {
+  white-space: normal !important;
+  line-height: 1.05 !important;
+}
+
+html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n) .ed-entry__cta i {
+  display: inline-block;
+  font-style: normal;
+  transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n):focus-visible {
+  outline: 2px solid #8f6a1e;
+  outline-offset: 5px;
+}
+
+html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n):is(:hover, :focus-visible)::before,
+html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n):is(:hover, :focus-visible)::after {
+  opacity: 1;
+}
+
+html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n):is(:hover, :focus-visible) .ed-entry__cta {
+  border-color: #f2dfa8 !important;
+  background: linear-gradient(110deg, #f7e8b9, #d7bd7c) !important;
+  box-shadow: 0 8px 26px rgba(215, 189, 124, 0.2) !important;
+}
+
+html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n):is(:hover, :focus-visible) .ed-entry__cta-label {
+  color: #17130d !important;
+  -webkit-text-fill-color: #17130d !important;
+}
+
+html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n):is(:hover, :focus-visible) .ed-entry__cta > span:last-child {
+  color: #f7e8b9 !important;
+  -webkit-text-fill-color: #f7e8b9 !important;
+  background: #17130d !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n):is(:hover, :focus-visible) {
+    z-index: 5;
+    transform: perspective(1000px) translateY(-12px) rotateX(var(--entry-rx, 0deg)) rotateY(var(--entry-ry, 0deg)) scale(1.018);
+    border-color: rgba(215, 189, 124, 0.85) !important;
+    box-shadow: 0 34px 54px -26px rgba(28, 22, 11, 0.55), 0 12px 30px -15px rgba(183, 141, 52, 0.35) !important;
+  }
+
+  html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n) .ed-entry__media img {
+    transition: transform 850ms cubic-bezier(0.22, 1, 0.36, 1), filter 550ms ease;
+  }
+
+  html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n):is(:hover, :focus-visible) .ed-entry__media img {
+    transform: scale(1.105) translate3d(var(--entry-image-x, 0px), var(--entry-image-y, 0px), 0);
+    filter: saturate(1.06) brightness(1.02) contrast(1.04) !important;
+  }
+
+  html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n):is(:hover, :focus-visible) .ed-entry__media::before {
+    transform: translateX(110%);
+    transition: transform 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n) .ed-entry__body {
+    transition: transform 550ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n):is(:hover, :focus-visible) .ed-entry__body {
+    transform: translateY(-5px);
+  }
+
+  html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n):is(:hover, :focus-visible) .ed-entry__cta i {
+    transform: rotate(-35deg) translateX(1px);
+  }
+}
+
+/* Auf Touchscreens und bei reduzierter Bewegung gibt es keine Kippbewegung.
+   Das sichtbare Fokus- und Farbsignal funktioniert weiterhin. */
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n).is-visible,
+  html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n):is(:hover, :focus-visible),
+  html body.page-home-reboot main .ed-entry-grid .ed-entry:nth-child(n) :is(.ed-entry__media img, .ed-entry__body, .ed-entry__cta, .ed-entry__cta > span:last-child) {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
 /* ============================================================
    PARTNERSEITE IN ANTHRAZIT
 
@@ -15621,4 +15900,783 @@ html body.page-premium.page-partner.page-partner.page-partner.page-partner.page-
 .page-premium .partner-value-stage .section-header--center h2 {
   max-width: min(100%, 24ch);
   margin-inline: auto;
+}
+
+/* ------------------------------------------------------------
+   SHOP — Überschrift in einer Zeile
+
+   „Der Camp Dörfl #Member Shop" brach in zwei Zeilen um, wobei die
+   zweite nur noch „Shop" trug. Ab 701 px ist Platz für eine Zeile —
+   bei genau 700 greift noch der Mobilblock oben, der Umbruch und
+   Worttrennung mit !important erzwingt;
+   die Schrift folgt der Fensterbreite und wird bei 3,3 rem gedeckelt,
+   weil die Textspalte dort bei 940 px endet. Darunter bliebe für eine
+   Zeile nur eine Größe unter dem Fließtext — auf schmalen Bildschirmen
+   darf sie deshalb weiter umbrechen.
+   ------------------------------------------------------------ */
+
+@media (min-width: 701px) {
+  body.page-shop main #kollektion-title {
+    white-space: nowrap !important;
+    overflow-wrap: normal !important;
+    font-size: min(5.2vw, 3.3rem) !important;
+  }
+}
+
+/* Personal Training — zusammenhängende Bildsprache und gezielte Bewegung.
+   Die Zusatzklasse begrenzt sämtliche Änderungen auf diese Leistungsseite. */
+html body.page-premium.page-coaching.page-coaching--refined main {
+  --pt-ink: #151719;
+  --pt-gold: #ead69c;
+  --pt-radius: 28px;
+}
+html body.page-premium.page-coaching.page-coaching--refined main > .section {
+  padding-block: clamp(42px, 5.5vw, 80px);
+}
+html body.page-premium.page-coaching.page-coaching--refined main .section-shell {
+  /* Gleiche breite Bühne wie auf den anderen Premium-Seiten. Eine feste
+     Maximalbreite ließe die dunklen Panels zwischen den Farbbändern einrücken. */
+  width: calc(100% - 28px);
+}
+html body.page-premium.page-coaching.page-coaching--refined main .section-header h2 {
+  max-width: 23ch;
+  font-size: clamp(2.1rem, 3.6vw, 3.65rem);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .section-header--center h2 {
+  margin-inline: auto;
+}
+html body.page-premium.page-coaching.page-coaching--refined main [data-reveal] {
+  transition-duration: 650ms;
+}
+
+/* Auftakt: räumlicher Titel und eine einmalig einzeichnende Goldbahn. */
+.pt-hero-aura { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; }
+.pt-hero-aura span {
+  position: absolute;
+  width: min(62vw, 940px);
+  aspect-ratio: 1;
+  top: 2%;
+  right: -8%;
+  border: 1px solid rgba(234, 214, 156, 0.2);
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  transform: rotate(-28deg);
+}
+.pt-hero-aura span + span { inset: 8% -12% auto auto; opacity: 0.4; }
+@keyframes pt-orbit-enter {
+  from { opacity: 0; transform: rotate(-80deg) scale(0.9); }
+  to { opacity: 1; transform: rotate(-28deg) scale(1); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pt-hero-aura { animation: cd-hero-rise 1200ms ease 450ms both; }
+  .pt-hero-aura span { animation: pt-orbit-enter 1600ms cubic-bezier(0.22, 1, 0.36, 1) 300ms both; }
+  html body.page-premium.page-coaching.page-coaching--refined .ff-hero__title--staged > .ff-hero__line {
+    transform-origin: left bottom;
+    animation: cd-hero-unfold 850ms cubic-bezier(0.22, 1, 0.36, 1) 180ms both;
+  }
+  html body.page-premium.page-coaching.page-coaching--refined .ff-hero__title--staged > .ff-hero__line:nth-child(2) { animation-delay: 340ms; }
+}
+
+/* Kennzahlen: kompakte, beleuchtete Felder statt einer flachen Tabelle. */
+html body.page-premium.page-coaching.page-coaching--refined main .pt-authority {
+  padding-block: clamp(42px, 5vw, 72px);
+  background: radial-gradient(ellipse at 85% 0, rgba(215, 189, 124, 0.13), transparent 55%), #111416;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__grid { align-items: center; gap: 54px; }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__copy h2 {
+  max-width: 22ch;
+  font-size: clamp(2.25rem, 3.3vw, 3.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__facts {
+  gap: 12px;
+  border: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__facts > div {
+  position: relative;
+  min-height: 174px;
+  padding: 28px;
+  border: 1px solid rgba(234, 214, 156, 0.17);
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.01));
+  transition: border-color 350ms ease, background 350ms ease;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__facts dt {
+  font-size: clamp(2.6rem, 4.2vw, 4.7rem);
+  color: #f0dea8 !important;
+  -webkit-text-fill-color: #f0dea8 !important;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__facts > div:hover {
+  border-color: rgba(234,214,156,0.55);
+  background: linear-gradient(135deg, rgba(234,214,156,0.12), rgba(255,255,255,0.02));
+}
+html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__links { gap: 16px; }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__links a { text-decoration: none; text-underline-offset: 5px; }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__links a:hover { text-decoration: underline; }
+
+/* Film und Methode: weniger Kästen im Kasten, mehr Raum für die Bilder. */
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-reference-stage {
+  padding: clamp(24px, 3.8vw, 52px);
+  border: 1px solid rgba(215,195,148,0.24);
+  border-radius: 32px;
+  background: radial-gradient(ellipse at 0 0, rgba(215,195,148,0.1), transparent 60%), #151719;
+  box-shadow: 0 28px 65px -42px rgba(20,20,20,0.5);
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-reference-stage .summary-rows {
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin-top: 26px;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-reference-stage .summary-row {
+  padding: 20px 0 !important;
+  border: 0 !important;
+  border-top: 1px solid rgba(234,214,156,0.2) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-reference-stage .summary-rows .summary-row > h3 {
+  max-width: none;
+  color: #fffdf8 !important;
+  -webkit-text-fill-color: #fffdf8 !important;
+  font-size: 1.25rem;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-reference-stage .summary-rows .summary-row > p {
+  color: #c7c6c1 !important;
+  -webkit-text-fill-color: #c7c6c1 !important;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-reference-stage .summary-row::before,
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-reference-stage .summary-row::after { display: none; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-reference-stage__media {
+  width: min(100%, 330px);
+  border: 1px solid rgba(234,214,156,0.4);
+  border-radius: 26px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3), 0 0 0 8px rgba(234,214,156,0.035);
+}
+html body.page-premium.page-coaching.page-coaching--refined main .pt-method-section .editorial-stage {
+  gap: clamp(28px, 4vw, 64px);
+  align-items: center;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .pt-method-section .summary-rows { grid-template-columns: 1fr; gap: 12px; }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-method-section .summary-row {
+  padding: 20px 24px !important;
+  border: 1px solid rgba(126,95,37,0.14) !important;
+  border-left: 3px solid #c3a565 !important;
+  border-radius: 0 18px 18px 0 !important;
+  box-shadow: none !important;
+  background: #fffcf6 !important;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .premium-video-launch img { transition: transform 850ms cubic-bezier(0.22,1,0.36,1), filter 500ms ease; }
+html body.page-premium.page-coaching.page-coaching--refined main .premium-video-launch__action {
+  border: 1px solid rgba(234,214,156,0.65);
+  box-shadow: 0 0 0 6px rgba(234,214,156,0.08);
+}
+
+/* Zielgruppen: nummerierte, ruhige Karten mit einer feinen Goldkante. */
+html body.page-premium.page-coaching.page-coaching--refined main .feature-grid--audience { counter-reset: pt-audience; gap: 18px; }
+html body.page-premium.page-coaching.page-coaching--refined main .feature-grid--audience .feature-card {
+  counter-increment: pt-audience;
+  position: relative;
+  padding: 32px 24px !important;
+  padding-top: 76px !important;
+  border-radius: 24px !important;
+  border: 1px solid rgba(136,107,54,0.2) !important;
+  background: linear-gradient(150deg,#fffcf5,#f4efe4) !important;
+  box-shadow: 0 18px 38px -32px rgba(47,34,13,0.35) !important;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .feature-grid--audience .feature-card::before {
+  content: counter(pt-audience, decimal-leading-zero);
+  position: absolute;
+  top: 22px;
+  left: 24px;
+  right: auto;
+  color: #9c7731;
+  font: 500 1.5rem / 1 var(--font-cond);
+  opacity: 1;
+  background: none;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .feature-grid--audience .feature-card::after { display: none; }
+html body.page-premium.page-coaching.page-coaching--refined main .feature-grid--audience .feature-card__detail {
+  padding: 0;
+  margin: 0 0 14px;
+  border: 0;
+  background: none;
+  color: #806020 !important;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .feature-grid--audience .feature-card h3 { font-size: 1.45rem; line-height: 1.04; }
+html body.page-premium.page-coaching.page-coaching--refined main .feature-grid--audience .feature-card p { font-size: 0.96rem; line-height: 1.65; }
+
+/* Drei Wege: eigenständige Angebote, die auf den Zeiger reagieren. */
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage {
+  padding: clamp(26px, 4vw, 56px);
+  border-radius: 32px;
+  background: radial-gradient(ellipse at 90% 0,rgba(215,195,148,0.12),transparent 60%), #141719;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage__top { grid-template-columns: minmax(0,1.3fr) minmax(0,0.7fr); gap: 40px; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage__photo { height: 300px; border-radius: 24px; overflow: hidden; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage__photo img { object-position: center 47%; width: 100%; height: 100%; object-fit: cover; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage .feature-grid--coaching-start { gap: 18px; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage .feature-grid--coaching-start .feature-card {
+  position: relative;
+  isolation: isolate;
+  min-height: 330px !important;
+  border-radius: 23px !important;
+  border: 1px solid rgba(234,214,156,0.25) !important;
+  background: radial-gradient(ellipse at var(--entry-x,50%) var(--entry-y,0%), rgba(234,214,156,0.13), transparent 75%), #202326 !important;
+  box-shadow: 0 18px 36px -24px rgba(0,0,0,0.45) !important;
+  transition: transform 500ms cubic-bezier(0.22,1,0.36,1), border-color 350ms ease, box-shadow 350ms ease;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage .feature-grid--coaching-start .feature-card::after { height: 2px; opacity: 0.65; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage .feature-grid--coaching-start .feature-card::before { color: rgba(234,214,156,0.1); }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage .feature-grid--coaching-start .feature-card h3 {
+  max-width: none;
+  color: #fffdf8 !important;
+  -webkit-text-fill-color: #fffdf8 !important;
+  font-size: clamp(1.7rem,2.1vw,2.3rem);
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage .feature-grid--coaching-start .feature-card p {
+  color: #d1cfca !important;
+  -webkit-text-fill-color: #d1cfca !important;
+  font-size: 0.94rem;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage .feature-grid--coaching-start .feature-card .feature-card__detail { color: #ead69c !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage .feature-grid--coaching-start .feature-card .feature-card__cta {
+  min-height: 66px;
+  color: #f5e4b4 !important;
+  background: rgba(0,0,0,0.22) !important;
+  font-size: 0.76rem;
+  letter-spacing: 0.025em;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage .feature-grid--coaching-start .feature-card:nth-child(2) {
+  border-color: rgba(234,214,156,0.65) !important;
+  background: radial-gradient(ellipse at var(--entry-x,50%) var(--entry-y,0%),rgba(234,214,156,0.18),transparent 80%), #292821 !important;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage .feature-grid--coaching-start .feature-card:is(:hover,:focus-visible) .feature-card__cta {
+  background: #ead69c !important;
+  color: #191713 !important;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage .feature-grid--coaching-start .feature-card:is(:hover,:focus-visible) .feature-card__cta > span { color: inherit !important; -webkit-text-fill-color: currentColor !important; }
+
+/* Ergebnisse: drei klare Felder, keine versetzten, unterschiedlich hohen Boxen. */
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-outcome-stage { padding: clamp(26px,4vw,52px); border-radius: 32px; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-outcome-stage .summary-rows { gap: 18px; align-items: stretch; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-outcome-stage .summary-rows .summary-row {
+  top: auto;
+  transform: none;
+  min-height: 0;
+  padding: 30px 26px !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(234,214,156,0.23) !important;
+  background: linear-gradient(145deg,#242729,#1b1e20) !important;
+  box-shadow: none !important;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-outcome-stage .summary-rows .summary-row > h3 { color: #f3dfaa !important; -webkit-text-fill-color: #f3dfaa !important; font-size: 1.65rem; line-height: 1.04; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-outcome-stage .summary-rows .summary-row > p { color: #d1cfca !important; -webkit-text-fill-color: #d1cfca !important; font-size: 0.98rem; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-outcome-stage .summary-row::after { display: none; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-success-proof { transition: transform 550ms cubic-bezier(0.22,1,0.36,1), box-shadow 450ms ease; }
+
+/* Preis und FAQ bekommen eine klare linke Orientierung und kürzere Wege. */
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-price,
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-faq {
+  display: grid;
+  grid-template-columns: minmax(0,0.85fr) minmax(0,1.15fr);
+  gap: 22px 56px;
+  align-items: start;
+}
+html body.page-premium.page-coaching.page-coaching--refined main :is(.coaching-price,.coaching-faq) .section-header { text-align: left; margin: 0; }
+html body.page-premium.page-coaching.page-coaching--refined main :is(.coaching-price,.coaching-faq) .section-header h2 { max-width: 18ch !important; margin-inline: 0; }
+html body.page-premium.page-coaching.page-coaching--refined main :is(.coaching-price,.coaching-faq) .section-header p:not(.eyebrow) { margin-inline: 0; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-price .summary-rows { grid-template-columns: 1fr; margin: 0; gap: 14px; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-price .ff-hero__actions { grid-column: 1; grid-row: 2; justify-content: flex-start; margin-top: 0; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-price .summary-rows { grid-column: 2; grid-row: 1 / 3; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-faq .faq { min-width: 0; margin: 0; gap: 12px; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-faq .faq details {
+  border-radius: 18px !important;
+  transition: border-color 250ms ease, background 250ms ease;
+  overflow: hidden;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-faq .faq details[open] {
+  border-color: #b39961 !important;
+  background: #fffcf4 !important;
+  box-shadow: 0 14px 35px -26px rgba(118,87,30,0.4) !important;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-faq .faq summary { padding: 23px 24px; font-size: 1rem; line-height: 1.4; gap: 18px; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-faq .faq details > p { padding: 0 24px 24px; margin: 0; line-height: 1.7; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-local .feature-card { border-radius: 24px !important; padding: 30px !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .cta-band { padding: clamp(58px,8vw,110px) 0; }
+html body.page-premium.page-coaching.page-coaching--refined main .cta-band h2 { max-width: 24ch; margin-inline: auto; font-size: clamp(2.4rem,4.5vw,4.8rem); line-height: 1.02; text-wrap: balance; }
+
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage .feature-grid--coaching-start .feature-card.is-visible:is(:hover,:focus-visible),
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-success-proof.is-visible:is(:hover,:focus-visible) {
+    transform: perspective(1200px) translateY(-8px) rotateX(var(--entry-rx,0deg)) rotateY(var(--entry-ry,0deg));
+    border-color: #ead69c !important;
+    box-shadow: 0 28px 45px -24px rgba(0,0,0,0.5) !important;
+    transition-delay: 0ms;
+  }
+  html body.page-premium.page-coaching.page-coaching--refined main .premium-video-launch:is(:hover,:focus-visible) img { transform: scale(1.055); filter: brightness(1.08); }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-faq .section-header { position: sticky; top: 120px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-faq .faq details[open] > p { animation: cd-hero-rise 280ms ease both; }
+}
+@media (max-width:1000px) {
+  html body.page-premium.page-coaching.page-coaching--refined main .feature-grid--audience { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__grid { gap: 30px; }
+}
+@media (max-width:800px) {
+  html body.page-premium.page-coaching.page-coaching--refined main .section-shell { width: calc(100% - 32px); }
+  html body.page-premium.page-coaching.page-coaching--refined main :is(.coaching-price,.coaching-faq,.coaching-start-stage__top,.pt-authority__grid) { grid-template-columns: 1fr; gap: 28px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage .feature-grid--coaching-start { grid-template-columns: 1fr; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-price .summary-rows,
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-price .ff-hero__actions { grid-column: auto; grid-row: auto; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-faq .section-header { position: static; }
+  html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__facts > div { min-height: 150px; padding: 23px 18px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__facts dd { font-size: 0.68rem; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage__photo { height: 260px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-reference-stage { grid-template-columns: 1fr; }
+  .pt-hero-aura { display: none; }
+}
+@media (max-width:540px) {
+  html body.page-premium.page-coaching.page-coaching--refined main .feature-grid--audience { grid-template-columns: 1fr; }
+  html body.page-premium.page-coaching.page-coaching--refined main .feature-grid--audience .feature-card { padding: 28px 24px 28px 78px !important; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage .feature-grid--coaching-start .feature-card { min-height: 290px !important; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-price .button { width: 100%; white-space: normal; }
+}
+@media (prefers-reduced-motion:reduce), (hover:none) {
+  html body.page-premium.page-coaching.page-coaching--refined main .feature-card.is-visible,
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-success-proof.is-visible { transform: none !important; transition: none !important; }
+}
+
+/* Metropolregion: eine durchgehende dunkle Bühne mit einer ruhigen
+   Ortsfolge. Keine einzelnen hellen Karten auf einem gelben Hintergrund. */
+html body.page-premium.page-coaching.page-coaching--refined main .section.coaching-local-section {
+  position: relative;
+  overflow: hidden;
+  padding-block: clamp(56px, 6vw, 96px);
+  border-block: 1px solid rgba(218, 192, 131, 0.22);
+  background: radial-gradient(ellipse at 5% 90%, rgba(191, 154, 76, 0.11), transparent 55%), linear-gradient(115deg, #191b1b, #101315) !important;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: clamp(40px, 6vw, 110px);
+  padding: 0 clamp(24px, 3.7vw, 72px);
+  isolation: isolate;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial .section-header {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  text-align: left;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial .section-header .eyebrow {
+  justify-content: flex-start;
+  color: #d8bf86 !important;
+  -webkit-text-fill-color: #d8bf86 !important;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em !important;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial .section-header h2 {
+  max-width: 19ch !important;
+  margin: 22px 0 24px;
+  color: #fffdf7 !important;
+  -webkit-text-fill-color: #fffdf7 !important;
+  font-size: clamp(2.3rem, 3.6vw, 4.4rem);
+  line-height: 1.02;
+  text-wrap: balance;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial .section-header p:not(.eyebrow) {
+  max-width: 49ch;
+  margin-inline: 0;
+  color: #c4c3bc !important;
+  -webkit-text-fill-color: #c4c3bc !important;
+  font-size: 1rem;
+  line-height: 1.8;
+}
+.coaching-local__orbits { position: absolute; inset: -50px 45% -80px -110px; z-index: -1; pointer-events: none; }
+.coaching-local__orbits span { position: absolute; width: 660px; aspect-ratio: 1; left: -8%; top: 10%; border: 1px solid rgba(218,192,131,0.07); border-radius: 50%; }
+.coaching-local__orbits span:nth-child(2) { width: 810px; left: -17%; top: -3%; }
+.coaching-local__orbits span:nth-child(3) { width: 960px; left: -26%; top: -16%; }
+
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial .feature-grid--local-service {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin: 0;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial .feature-grid--local-service::before {
+  content: "";
+  position: absolute;
+  top: 44px;
+  bottom: 44px;
+  left: 5px;
+  width: 1px;
+  background: linear-gradient(180deg, #ddc590, rgba(221,197,144,0.12));
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial .feature-grid--local-service .feature-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: start;
+  min-height: 0;
+  gap: 10px;
+  margin: 0;
+  padding: 30px 18px 30px 44px !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(231,212,165,0.15) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  text-align: left;
+  transform: none;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial .feature-grid--local-service .feature-card:last-child { border-bottom: 0 !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial .feature-grid--local-service .feature-card::before {
+  content: "";
+  position: absolute;
+  inset: 38px auto auto 0;
+  width: 11px;
+  height: 11px;
+  border: 1px solid #dac083;
+  border-radius: 50%;
+  background: #171a1b !important;
+  box-shadow: 0 0 0 5px rgba(218,192,131,0.055);
+  transform: none;
+  opacity: 1;
+  transition: background 300ms ease, box-shadow 300ms ease;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial .feature-grid--local-service .feature-card::after { display: none; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial .feature-card .feature-card__detail {
+  justify-self: start;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  color: #dfc58e !important;
+  -webkit-text-fill-color: #dfc58e !important;
+  background: none !important;
+  font-size: 0.72rem;
+  font-weight: 650;
+  line-height: 1.35;
+  letter-spacing: 0.13em !important;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial .feature-card h3 {
+  max-width: none;
+  margin: 0;
+  color: #fffdf7 !important;
+  -webkit-text-fill-color: #fffdf7 !important;
+  font-size: clamp(1.45rem, 1.7vw, 2rem);
+  font-style: normal;
+  line-height: 1.1;
+  transition: color 300ms ease;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial .feature-card p {
+  max-width: 56ch;
+  margin: 0;
+  color: #c4c3bc !important;
+  -webkit-text-fill-color: #c4c3bc !important;
+  font-size: 0.96rem;
+  line-height: 1.65;
+}
+@media (hover: hover) and (pointer: fine) {
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial .feature-grid--local-service .feature-card:hover::before {
+    background: #dfc58e !important;
+    box-shadow: 0 0 0 6px rgba(218,192,131,0.1), 0 0 24px rgba(218,192,131,0.22);
+  }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial .feature-card:hover h3 {
+    color: #f1deb2 !important;
+    -webkit-text-fill-color: #f1deb2 !important;
+  }
+}
+@media (max-width: 950px) {
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial { grid-template-columns: 1fr; gap: 26px; padding-inline: 22px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial .section-header h2 { max-width: 24ch !important; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial .section-header p:not(.eyebrow) { max-width: 65ch; }
+  .coaching-local__orbits { right: 0; opacity: 0.65; }
+}
+@media (max-width: 540px) {
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial { padding-inline: 8px; gap: 18px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial .section-header h2 { font-size: clamp(2.1rem, 8.8vw, 2.7rem); }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial .feature-grid--local-service .feature-card { padding: 28px 0 28px 32px !important; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial .feature-card h3 { font-size: 1.5rem; }
+}
+
+/* Personal Training / Editorial 2026.
+   Einheitliche Außenkanten, volle Farbbänder und Bewegung ohne Textänderung. */
+html body.page-premium.page-coaching.page-coaching--refined main { --pt-space: clamp(24px, 4.2vw, 80px); --pt-line: rgba(220,194,137,.23); background: #f5f2eb; }
+html body.page-premium.page-coaching.page-coaching--refined main > :is(.section,.pt-authority,.cta-band) { position: relative; padding-block: clamp(64px,7vw,112px); }
+html body.page-premium.page-coaching.page-coaching--refined main .section-shell { max-width: none; }
+html body.page-premium.page-coaching.page-coaching--refined main > section > .section-shell { padding-inline: var(--pt-space); }
+html body.page-premium.page-coaching.page-coaching--refined main :is(h2,h3) { font-style: normal; letter-spacing: -.035em; text-wrap: balance; }
+html body.page-premium.page-coaching.page-coaching--refined main .section-header h2 { font-size: clamp(2.2rem,3.8vw,4.4rem); line-height: 1.05; }
+html body.page-premium.page-coaching.page-coaching--refined main .section-header > p:not(.eyebrow) { font-size: 1rem; line-height: 1.8; max-width: 62ch; }
+html body.page-premium.page-coaching.page-coaching--refined main .eyebrow { font-size: .69rem; letter-spacing: .13em !important; }
+html body.page-premium.page-coaching.page-coaching--refined main > section:not(.ff-hero)::after { content: ''; position: absolute; inset: 0 var(--pt-space) auto; height: 1px; background: linear-gradient(90deg,transparent,rgba(179,143,70,.4),transparent); pointer-events: none; transform-origin: left; }
+html body.page-premium.page-coaching.page-coaching--refined main .button { position: relative; overflow: hidden; border-radius: 8px; transition: background .3s ease, box-shadow .3s ease, transform .3s ease; }
+html body.page-premium.page-coaching.page-coaching--refined main a:focus-visible, html body.page-premium.page-coaching.page-coaching--refined main summary:focus-visible { outline: 2px solid #be9646; outline-offset: 6px; }
+html body.page-premium.page-coaching.page-coaching--refined main .button::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(110deg,transparent 25%,rgba(255,255,255,.3) 48%,transparent 72%); transform: translateX(-120%); }
+
+/* Auftakt und Erfahrung: eine zusammenhängende dunkle Eröffnung. */
+html body.page-premium.page-coaching.page-coaching--refined main .ff-hero__inner { padding-inline: var(--pt-space); }
+html body.page-premium.page-coaching.page-coaching--refined main .ff-hero--coaching-photo .ff-hero__title { font-size: clamp(3rem,6.2vw,7.5rem); line-height: .97; letter-spacing: -.045em; }
+html body.page-premium.page-coaching.page-coaching--refined main .ff-hero--coaching-photo .ff-hero__lead { max-width: 49ch; font-size: clamp(1rem,1.3vw,1.18rem); line-height: 1.75; }
+html body.page-premium.page-coaching.page-coaching--refined main .ff-hero__facts { border-top-color: var(--pt-line); gap: 36px; }
+html body.page-premium.page-coaching.page-coaching--refined main .ff-hero__facts > div { position: relative; padding-top: 8px; }
+html body.page-premium.page-coaching.page-coaching--refined main .ff-hero__facts dt { color: #ecd8a3 !important; -webkit-text-fill-color: #ecd8a3 !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-authority { background: radial-gradient(ellipse at 80% 100%,rgba(205,167,84,.1),transparent 55%),#111517; }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__grid { gap: clamp(36px,6vw,100px); grid-template-columns: 1fr 1fr; }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__copy h2 { max-width: 22ch; font-size: clamp(2.2rem,3.8vw,4.3rem); line-height: 1.04; }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__links { display: flex; flex-direction: column; align-items: flex-start; margin-top: 28px; }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__links a { padding-block: 6px; font-size: .84rem; border-bottom: 1px solid rgba(218,192,131,.3); }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__facts { gap: 0; }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__facts > div { min-height: 185px; padding: 30px; border: 0; border-bottom: 1px solid var(--pt-line); border-radius: 0; background: radial-gradient(ellipse at var(--entry-x,50%) var(--entry-y,50%),rgba(225,195,128,.07),transparent 72%); }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__facts > div:nth-child(odd) { border-right: 1px solid var(--pt-line); }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__facts > div:nth-last-child(-n+2) { border-bottom: 0; }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__facts dt { font-style: normal; font-size: clamp(3rem,5vw,5.5rem); letter-spacing: -.05em; line-height: 1.1; }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__facts dd { max-width: 23ch; margin-top: 12px; line-height: 1.5; }
+
+/* Film: offenes Editorial mit beleuchtetem Porträt, ohne Kasten im Kasten. */
+html body.page-premium.page-coaching.page-coaching--refined main .section--coaching-reference { overflow: hidden; background: #15191a !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-reference-stage { position: relative; grid-template-columns: minmax(0,1.25fr) minmax(280px,.75fr); gap: clamp(48px,8vw,130px); padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-reference-stage::before { content: ''; position: absolute; width: min(50vw,680px); aspect-ratio: 1; right: -8%; top: 4%; border: 1px solid var(--pt-line); border-radius: 50%; box-shadow: 0 0 0 65px rgba(219,189,122,.025),0 0 0 130px rgba(219,189,122,.018); pointer-events: none; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-reference-stage__copy { position: relative; z-index: 1; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-reference-stage__media { width: min(100%,350px); justify-self: center; border-radius: 120px 120px 16px 16px; border-color: rgba(227,201,148,.45); box-shadow: 0 30px 65px rgba(0,0,0,.35); }
+html body.page-premium.page-coaching.page-coaching--refined main .premium-proof-pills { gap: 9px; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-reference-stage .premium-proof-pills span { background: transparent; border: 1px solid var(--pt-line); border-radius: 4px; font-size: .64rem; letter-spacing: .06em; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-reference-stage .summary-row { display: grid; grid-template-columns: minmax(0,.8fr) minmax(0,1.2fr); gap: 24px; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-reference-stage .summary-row > :is(h3,p) { margin: 0; }
+
+/* Methode und Zielgruppen: warme, typografische Seiten mit feinen Trennlinien. */
+html body.page-premium.page-coaching.page-coaching--refined main :is(.pt-method-section,.pt-audience-section) { background: #f5f2eb !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-method-section .editorial-stage { grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: clamp(36px,6vw,100px); }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-method-section .editorial-stage__media { border: 1px solid rgba(118,91,40,.25); border-radius: 16px; box-shadow: 18px 18px 0 #e9e3d5; overflow: hidden; }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-method-section .summary-rows { gap: 0; margin-top: 36px; }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-method-section .summary-row { padding: 24px 0 24px 24px !important; border: 0 !important; border-left: 1px solid #b59960 !important; border-radius: 0 !important; background: transparent !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-method-section .summary-row::before, html body.page-premium.page-coaching.page-coaching--refined main .pt-method-section .summary-row::after { display: none; }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-method-section .summary-row h3 { font-size: 1.15rem; line-height: 1.25; }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-method-section .summary-row p { font-size: .94rem; line-height: 1.75; }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-audience-section > .section-shell { display: grid; grid-template-columns: minmax(0,.8fr) minmax(0,1.2fr); gap: clamp(32px,5vw,90px); align-items: start; }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-audience-section .section-header { text-align: left; margin: 0; }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-audience-section .section-header h2 { margin-inline: 0; max-width: 14ch; }
+html body.page-premium.page-coaching.page-coaching--refined main .pt-audience-section .section-header p { margin-inline: 0; }
+html body.page-premium.page-coaching.page-coaching--refined main .feature-grid--audience { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0 32px; }
+html body.page-premium.page-coaching.page-coaching--refined main .feature-grid--audience .feature-card { min-height: 0; padding: 66px 0 30px !important; border: 0 !important; border-top: 1px solid rgba(128,98,40,.3) !important; border-radius: 0 !important; background: radial-gradient(ellipse at var(--entry-x,50%) var(--entry-y,0%),rgba(190,153,77,.08),transparent 70%) !important; box-shadow: none !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .feature-grid--audience .feature-card::before { top: 20px; left: 0; font-size: 1.15rem; }
+html body.page-premium.page-coaching.page-coaching--refined main .feature-grid--audience .feature-card h3 { font-size: clamp(1.2rem,1.6vw,1.7rem); line-height: 1.12; max-width: 20ch; }
+html body.page-premium.page-coaching.page-coaching--refined main .feature-grid--audience .feature-card p { font-size: .91rem; line-height: 1.75; }
+
+/* Angebote: dunkle, durchgehende Bühne mit eigener Tiefe pro Einstieg. */
+html body.page-premium.page-coaching.page-coaching--refined main .section--coaching-start { overflow: hidden; background: #111517 !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage { padding-block: 0; border-radius: 0; background: none; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage__top { grid-template-columns: minmax(0,1.2fr) minmax(0,.8fr); align-items: center; gap: clamp(36px,6vw,100px); }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage__photo { height: 320px; margin: 0; border-radius: 100px 12px 12px 12px; border: 1px solid var(--pt-line); }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage__photo img { object-position: center 40%; transition: transform 1s cubic-bezier(.22,1,.36,1); }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage .feature-grid--coaching-start { margin-top: 56px; gap: 22px; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage .feature-grid--coaching-start .feature-card { padding: 36px 28px 0 !important; min-height: 370px !important; border-radius: 12px !important; border-color: rgba(234,214,156,.22) !important; background: radial-gradient(ellipse at var(--entry-x,50%) var(--entry-y,0%),rgba(226,197,132,.13),transparent 70%),#1c2021 !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage .feature-grid--coaching-start .feature-card:nth-child(2) { border-color: #a98c52 !important; background: radial-gradient(ellipse at var(--entry-x,50%) var(--entry-y,0%),rgba(226,197,132,.19),transparent 70%),#282820 !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage .feature-grid--coaching-start .feature-card h3 { font-style: normal; font-size: clamp(1.6rem,2.3vw,2.6rem); }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage .feature-grid--coaching-start .feature-card__cta { margin-top: auto; border-top: 1px solid var(--pt-line); transition: background .3s ease,color .3s ease; }
+
+/* Ergebnisse als drei offene Säulen. */
+html body.page-premium.page-coaching.page-coaching--refined main .section--coaching-outcome { background: #eee9de !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-outcome-stage { padding: 0; border: 0; border-radius: 0; background: transparent !important; box-shadow: none; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-outcome-stage .section-header h2, html body.page-premium.page-coaching.page-coaching--refined main .coaching-outcome-stage .section-header h2 span { color: #1b201f !important; -webkit-text-fill-color: #1b201f !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-outcome-stage .section-header p:not(.eyebrow) { color: #56594f !important; -webkit-text-fill-color: #56594f !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-outcome-stage .eyebrow { color: #7c6028 !important; -webkit-text-fill-color: #7c6028 !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-outcome-stage .summary-rows { counter-reset: pt-result; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 32px; margin-top: 54px; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-outcome-stage .summary-rows .summary-row { counter-increment: pt-result; position: relative; padding: 72px 0 0 !important; border: 0 !important; border-top: 1px solid #baa574 !important; border-radius: 0 !important; background: transparent !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-outcome-stage .summary-rows .summary-row::before { content: counter(pt-result,decimal-leading-zero); position: absolute; inset: 20px auto auto 0; color: #896b31; font: 500 1.4rem / 1 var(--font-sans); background: none; opacity: 1; transform: none; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-outcome-stage .summary-rows .summary-row > h3 { color: #1c211e !important; -webkit-text-fill-color: #1c211e !important; font-size: clamp(1.5rem,2vw,2.2rem); }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-outcome-stage .summary-rows .summary-row > p { color: #54584e !important; -webkit-text-fill-color: #54584e !important; line-height: 1.8; }
+
+/* Erfolgsgeschichten: große Bilder, offene Zahlen und ruhige Flächen. */
+html body.page-premium.page-coaching.page-coaching--refined main :is(.guenter-story-preview-section,.coaching-success-proof-section) { background: #141819 !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview { grid-template-columns: minmax(0,.85fr) minmax(0,1.15fr); border: 1px solid var(--pt-line); border-radius: 14px; color: #faf7ee; background: #1b2021; box-shadow: none; }
+html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview__media { min-height: 580px; }
+html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview__copy { padding: clamp(28px,4vw,68px); }
+html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview__copy h2 { max-width: 15ch; font-size: clamp(2.5rem,4.7vw,5.6rem); line-height: 1; color: #fffdf7 !important; -webkit-text-fill-color: #fffdf7 !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview__copy h2 span, html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview__copy .eyebrow { color: #dfc58e !important; -webkit-text-fill-color: #dfc58e !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview__copy > p:not(.eyebrow) { color: #c4c7bf !important; line-height: 1.8; }
+html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview__facts { border-color: var(--pt-line); }
+html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview__facts strong { color: #e6cd98 !important; -webkit-text-fill-color: #e6cd98 !important; font-style: normal; }
+html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview__facts span { color: #c4c7bf !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview__cta { color: #e6cd98 !important; font-size: .86rem; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-success-proof { grid-template-columns: minmax(0,1.1fr) minmax(0,.8fr) minmax(0,.7fr); border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-success-proof__copy { padding: 24px 32px 24px 0; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-success-proof__copy h2 { max-width: 18ch; line-height: 1.04; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-success-proof__stats { align-self: center; border: 0; padding-right: 32px; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-success-proof__stats div { padding: 24px 14px; border: 0; border-bottom: 1px solid var(--pt-line); }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-success-proof__stats strong { font-style: normal; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-success-proof__stats span { font-size: .63rem; letter-spacing: .04em; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-success-proof__media { border-radius: 100px 100px 8px 8px; min-height: 400px; }
+
+/* Preis, FAQ und Abschluss. */
+html body.page-premium.page-coaching.page-coaching--refined main :is(.coaching-price-section,.coaching-faq-section) { background: #f5f2eb !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-price { gap: 26px clamp(36px,7vw,110px); }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-price .summary-rows { gap: 0; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-price .summary-row { padding: 28px 0 !important; border: 0 !important; border-top: 1px solid #bfa978 !important; border-radius: 0 !important; box-shadow: none !important; background: transparent !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-price .summary-row::before, html body.page-premium.page-coaching.page-coaching--refined main .coaching-price .summary-row::after { display: none; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-price .summary-row h3 { font-size: 1.35rem; line-height: 1.15; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-price .summary-row p { font-size: .97rem; line-height: 1.8; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-faq { gap: clamp(32px,7vw,120px); }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-faq .faq { gap: 0; border-top: 1px solid #b7a47a; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-faq .faq details { border: 0 !important; border-bottom: 1px solid #d2c9b5 !important; border-radius: 0 !important; box-shadow: none !important; background: transparent !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-faq .faq summary { padding: 27px 12px 27px 0; font-size: .98rem; font-weight: 600; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-faq .faq details > p { padding: 0 44px 28px 0; font-size: .95rem; }
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-faq .faq details[open] { background: rgba(226,210,174,.15) !important; box-shadow: none !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .cta-band { overflow: hidden; isolation: isolate; background: radial-gradient(ellipse at 50% 120%,rgba(203,161,71,.19),transparent 65%),#101617 !important; border-top: 1px solid var(--pt-line); }
+html body.page-premium.page-coaching.page-coaching--refined main .cta-band::before { content: ''; position: absolute; z-index: -1; width: min(75vw,1000px); aspect-ratio: 1; top: 26%; left: 50%; transform: translateX(-50%); border: 1px solid rgba(220,194,137,.18); border-radius: 50%; box-shadow: 0 0 0 75px rgba(220,194,137,.035),0 0 0 150px rgba(220,194,137,.025); pointer-events: none; }
+html body.page-premium.page-coaching.page-coaching--refined main .cta-band h2 { font-size: clamp(2.4rem,4.8vw,5.5rem); max-width: 24ch; line-height: 1.03; color: #fffdf7 !important; -webkit-text-fill-color: #fffdf7 !important; }
+html body.page-premium.page-coaching.page-coaching--refined main .cta-band p:not(.eyebrow) { color: #c7c9c0 !important; max-width: 60ch; line-height: 1.8; margin-inline: auto; }
+html body.page-premium.page-coaching.page-coaching--refined main .cta-band .eyebrow { color: #dfc58e !important; -webkit-text-fill-color: #dfc58e !important; }
+
+/* Einmalige Eintritte und präzise Mikrointeraktionen. Keine Dauerschleifen. */
+@keyframes pt-rule-draw { from { transform: scaleX(0); opacity: 0; } to { transform: scaleX(1); opacity: 1; } }
+@keyframes pt-media-reveal { from { clip-path: inset(8% 4% 8% 4% round 20px); } to { clip-path: inset(0 round 0); } }
+@media (prefers-reduced-motion:no-preference) {
+  html body.page-premium.page-coaching.page-coaching--refined main > section.pt-in-view::after { animation: pt-rule-draw 1.2s cubic-bezier(.22,1,.36,1) both; }
+  html body.page-premium.page-coaching.page-coaching--refined main [data-reveal] { transition-timing-function: cubic-bezier(.22,1,.36,1); transition-duration: 850ms; transition-delay: calc(var(--reveal-order,0) * 65ms); }
+  html body.page-premium.page-coaching.page-coaching--refined main :is(.editorial-stage__media,.coaching-start-stage__photo,.guenter-story-preview).is-visible { animation: pt-media-reveal 1.1s cubic-bezier(.22,1,.36,1) both; }
+}
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+  html body.page-premium.page-coaching.page-coaching--refined main .button:is(:hover,:focus-visible)::after { transform: translateX(120%); transition: transform .8s ease; }
+  html body.page-premium.page-coaching.page-coaching--refined main .button:is(:hover,:focus-visible) { transform: translateY(-3px); box-shadow: 0 12px 28px -15px rgba(159,120,39,.6); }
+  html body.page-premium.page-coaching.page-coaching--refined main .pt-audience-section .section-header { position: sticky; top: 128px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .feature-grid--audience .feature-card.is-visible:hover { transform: translateY(-4px); }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage__photo:hover img { transform: scale(1.055); }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-success-proof.is-visible:is(:hover,:focus-visible) { transform: none; box-shadow: none !important; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-success-proof:is(:hover,:focus-visible) .coaching-success-proof__media img { transform: scale(1.055); }
+  html body.page-premium.page-coaching.page-coaching--refined main .pt-method-section .summary-row:hover, html body.page-premium.page-coaching.page-coaching--refined main .coaching-price .summary-row:hover { transform: translateX(5px); }
+}
+@media (max-width:1100px) {
+  html body.page-premium.page-coaching.page-coaching--refined main .pt-audience-section > .section-shell { grid-template-columns: 1fr; }
+  html body.page-premium.page-coaching.page-coaching--refined main .pt-audience-section .section-header { position: static; max-width: 700px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .pt-audience-section .section-header h2 { max-width: 22ch; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-success-proof { grid-template-columns: minmax(0,1fr) minmax(0,.8fr); }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-success-proof__stats { grid-column: 1; grid-row: 2; padding-right: 32px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-success-proof__media { grid-column: 2; grid-row: 1 / 3; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage .feature-grid--coaching-start .feature-card { padding-inline: 20px !important; }
+}
+@media (max-width:800px) {
+  html body.page-premium.page-coaching.page-coaching--refined main { --pt-space: 16px; }
+  html body.page-premium.page-coaching.page-coaching--refined main > :is(.section,.pt-authority,.cta-band) { padding-block: 60px; }
+  html body.page-premium.page-coaching.page-coaching--refined main :is(.pt-authority__grid,.pt-method-section .editorial-stage,.coaching-reference-stage,.coaching-start-stage__top,.guenter-story-preview) { grid-template-columns: 1fr; gap: 36px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__facts > div { min-height: 155px; padding: 24px 18px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-reference-stage::before { width: 85vw; top: auto; bottom: 0; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-reference-stage__media { width: min(100%,310px); }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage__photo { height: 300px; border-radius: 60px 12px 12px 12px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage .feature-grid--coaching-start { margin-top: 36px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage .feature-grid--coaching-start .feature-card { min-height: 290px !important; padding-inline: 28px !important; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-outcome-stage .summary-rows { grid-template-columns: 1fr; gap: 28px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-outcome-stage .summary-rows .summary-row { padding: 28px 0 0 52px !important; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-outcome-stage .summary-rows .summary-row::before { top: 30px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview { gap: 0; }
+  html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview__media { height: 420px; min-height: 0; }
+  html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview__copy { padding: 32px 24px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview__facts div { padding: 18px 8px 18px 0; }
+  html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview__facts div + div { padding-left: 10px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview__facts span { font-size: .6rem; letter-spacing: .025em; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-price .button { white-space: normal; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-local--editorial { padding-inline: var(--pt-space); }
+}
+@media (max-width:540px) {
+  html body.page-premium.page-coaching.page-coaching--refined main { --pt-space: 8px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .ff-hero__inner { padding-inline: 8px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .ff-hero--coaching-photo .ff-hero__title { font-size: clamp(2.4rem,10vw,3.4rem); }
+  html body.page-premium.page-coaching.page-coaching--refined main .ff-hero__facts { gap: 12px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .section-header h2 { font-size: clamp(2rem,8.3vw,2.8rem); }
+  html body.page-premium.page-coaching.page-coaching--refined main .feature-grid--audience { grid-template-columns: 1fr; }
+  html body.page-premium.page-coaching.page-coaching--refined main .feature-grid--audience .feature-card { padding: 28px 0 28px 50px !important; }
+  html body.page-premium.page-coaching.page-coaching--refined main .feature-grid--audience .feature-card::before { top: 30px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .feature-grid--audience .feature-card h3 { max-width: 24ch; font-size: 1.35rem; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-reference-stage .summary-row { grid-template-columns: 1fr; gap: 12px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__facts dt { font-size: 3rem; }
+  html body.page-premium.page-coaching.page-coaching--refined main .pt-authority__facts dd { font-size: .65rem; }
+  html body.page-premium.page-coaching.page-coaching--refined main .pt-method-section .editorial-stage__media { box-shadow: 7px 7px 0 #e9e3d5; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-success-proof { grid-template-columns: 1fr; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-success-proof__copy { padding: 0; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-success-proof__stats { grid-column: auto; grid-row: auto; padding: 8px 0 24px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-success-proof__media { grid-column: auto; grid-row: auto; height: 360px; min-height: 0; }
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-success-proof__media img { object-position: center 18%; }
+  html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview__copy { padding: 30px 20px; }
+  html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview__facts { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview__facts strong { font-size: 2.3rem; }
+  html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview__facts div { min-width: 0; }
+  html body.page-premium.page-coaching.page-coaching--refined main .cta-band h2 { font-size: 2.5rem; }
+}
+@media (prefers-reduced-motion:reduce) {
+  html body.page-premium.page-coaching.page-coaching--refined main *, html body.page-premium.page-coaching.page-coaching--refined main *::before, html body.page-premium.page-coaching.page-coaching--refined main *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  html body.page-premium.page-coaching.page-coaching--refined main [data-reveal] { opacity: 1 !important; transform: none !important; }
+  html body.page-premium.page-coaching.page-coaching--refined main .ff-hero__img { transform: none !important; }
+}
+
+/* Flächen gegen ältere globale Premium-Kartenregeln absichern. */
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage {
+  border: 0 !important;
+  box-shadow: none !important;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview {
+  background: #1b2021 !important;
+  border-color: rgba(220,194,137,.23) !important;
+  box-shadow: none !important;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-success-proof {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview__facts > div {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview__facts > div + div {
+  border-left: 1px solid rgba(220,194,137,.23) !important;
+}
+html body.page-premium.page-coaching.page-coaching--refined main [data-reveal]:focus-within {
+  opacity: 1;
+  transform: none;
+}
+@media (max-width:540px) {
+  html body.page-premium.page-coaching.page-coaching--refined main .ff-hero__facts {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 8px;
+  }
+  html body.page-premium.page-coaching.page-coaching--refined main .ff-hero__facts dd {
+    font-size: .58rem;
+    line-height: 1.5;
+    overflow-wrap: normal;
+  }
+  html body.page-premium.page-coaching.page-coaching--refined main .guenter-story-preview__copy h2 {
+    font-size: clamp(2rem,8.5vw,2.65rem);
+    max-width: 16ch;
+  }
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-reference-stage::before {
+  inset: 4% -8% auto auto;
+  background: none;
+  transform: none;
+  opacity: 1;
+}
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-reference-stage::after,
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage::before,
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-start-stage::after,
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-outcome-stage::before,
+html body.page-premium.page-coaching.page-coaching--refined main .coaching-outcome-stage::after { display: none; }
+@media (max-width:800px) {
+  html body.page-premium.page-coaching.page-coaching--refined main .coaching-reference-stage::before { top: auto; bottom: 0; }
 }

@@ -22,6 +22,7 @@ import {
 } from "./data.mjs";
 import {
   achievementGrid,
+  breadcrumbTrail,
   contactHref,
   contactForm,
   ctaSection,
@@ -446,6 +447,13 @@ const corporateFaq = [
     question: "Wo bietet Camp Dörfl Firmenfitness an?",
     answer:
       "Camp Dörfl hat seinen Ausgangspunkt in Nürnberg und bietet Gesundheitstage, Vorträge und Team-Aktivierungen deutschlandweit direkt in Unternehmen und öffentlichen Einrichtungen an."
+  },
+  {
+    question: "Gibt es auch ein Format für einzelne Führungskräfte?",
+    answer:
+      "Ja. Neben den Gruppenformaten gibt es Executive Performance: eine persönliche Zwölf-Wochen-Begleitung für Führungskräfte, bei der Training, Ernährung und Belastungssteuerung auf einen dichten Kalender abgestimmt werden.",
+    answerHtml:
+      "Ja. Neben den Gruppenformaten gibt es <a href=\"/executive-performance/\">Executive Performance</a>: eine persönliche Zwölf-Wochen-Begleitung für Führungskräfte, bei der Training, Ernährung und Belastungssteuerung auf einen dichten Kalender abgestimmt werden."
   }
 ];
 
@@ -1708,6 +1716,13 @@ function homePage() {
   const content = `
     <section class="ff-hero ff-hero--home-photo">
       <div class="ff-hero__stage">
+      <div class="ff-hero__cinema-art" aria-hidden="true">
+        <svg class="ff-hero__orbit" viewBox="0 0 600 600" fill="none">
+          <circle class="ff-hero__orbit-guide" cx="300" cy="300" r="278" />
+          <circle class="ff-hero__orbit-trace" cx="300" cy="300" r="278" pathLength="1" />
+        </svg>
+        <div class="ff-hero__light-sweep"></div>
+      </div>
       <picture>
         <source media="(max-width: 900px)" srcset="/assets/images/home-hero-ironman-member-mobile-duo-480.webp 480w, /assets/images/home-hero-ironman-member-mobile-duo-720.webp 720w, /assets/images/home-hero-ironman-member-mobile-duo.webp 1065w" sizes="100vw">
         <img class="ff-hero__img" src="/assets/images/home-hero-ironman-member-voll.webp" width="1536" height="1024" srcset="/assets/images/home-hero-ironman-member-voll-960.webp 960w, /assets/images/home-hero-ironman-member-voll.webp 1536w" sizes="100vw" alt="Dominik Dörfl zweifach im Stadion: als Ironman-70.3-Finisher mit Medaille und im Anzug als Moderator"${imageLoadingAttributes({ eager: true })}>
@@ -1732,6 +1747,10 @@ function homePage() {
           </dl>
         </div>
       </div>
+      <div class="ff-hero__cinema-cue" aria-hidden="true"><span>SCROLL</span><i></i></div>
+      <div class="ff-hero__cinema-chapters" aria-hidden="true">
+        <span><b>01</b><i></i></span><span><b>02</b><i></i></span><span><b>03</b><i></i></span>
+      </div>
       </div>
     </section>
 
@@ -1752,7 +1771,7 @@ function homePage() {
                   </div>
                   <div class="ed-entry__body">
                     <h3>${titleHtml}</h3>
-                    <span class="ed-entry__cta"><span class="ed-entry__cta-label">${buttonLabel}</span><span aria-hidden="true">&rarr;</span></span>
+                    <span class="ed-entry__cta"><span class="ed-entry__cta-label">${buttonLabel}</span><span aria-hidden="true"><i>&rarr;</i></span></span>
                   </div>
                   </a>
                 `
@@ -1981,9 +2000,9 @@ function appPage() {
             <a class="app-store-symbol app-store-symbol--apple" href="https://apps.apple.com/de/app/camp-d%C3%B6rfl/id6767655689" target="_blank" rel="noopener noreferrer" aria-label="Camp Dörfl App im Apple App Store öffnen" title="Im Apple App Store öffnen">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.58 9.05 7.3c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.1l.02-.01zM12.03 7.25C11.88 5.02 13.69 3.18 15.77 3c.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
             </a>
-            <span class="app-store-symbol app-store-symbol--android" role="img" aria-label="Android App – Link folgt" title="Android App – Link folgt">
+            <a class="app-store-symbol app-store-symbol--android" href="${site.androidApkUrl}" download rel="noopener" aria-label="Camp Dörfl App für Android herunterladen" title="Android-App direkt herunterladen">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.2 9.1h9.6v8.8a1.2 1.2 0 0 1-1.2 1.2h-.9v2.3a.9.9 0 0 1-1.8 0v-2.3h-1.8v2.3a.9.9 0 0 1-1.8 0v-2.3h-.9a1.2 1.2 0 0 1-1.2-1.2V9.1Zm1.5-3.8 1-1.7.7.4-.9 1.6a6.2 6.2 0 0 1 5 0l-.9-1.6.7-.4 1 1.7A5.2 5.2 0 0 1 17.2 8H6.8a5.2 5.2 0 0 1 1.9-2.7ZM9.7 7.1a.55.55 0 1 0 0-1.1.55.55 0 0 0 0 1.1Zm4.6 0a.55.55 0 1 0 0-1.1.55.55 0 0 0 0 1.1ZM5.4 9.8h.9v7.1a.9.9 0 0 1-1.8 0v-6.2c0-.5.4-.9.9-.9Zm13.2 0c.5 0 .9.4.9.9v6.2a.9.9 0 0 1-1.8 0V9.8h.9Z"/></svg>
-            </span>
+            </a>
           </div>
         </div>
       </div>
@@ -2037,7 +2056,7 @@ function appPage() {
           eyebrow: "Aus der Praxis",
           title: "Gesundheit für unterschiedliche Arbeitswelten.",
           text:
-            "Nicht jedes Team braucht dieselben Beispiele. Entscheidend ist, dass Ernährung, Bewegung und Gesundheit an die tatsächliche Belastung im Beruf anschließen.",
+            "Nicht jedes Team braucht dieselben Beispiele. Entscheidend ist, dass Ernährung, Bewegung und Gesundheit an die tatsächliche Belastung im Beruf anschließen. Die Beispiele stammen aus der <a href=\"/firmenfitness/\">Firmenfitness von Camp Dörfl</a>.",
           align: "center"
         })}
         <div class="corporate-case-grid">
@@ -2081,7 +2100,7 @@ function appPage() {
       text:
         "Die Camp Dörfl Fitness App verbindet KI-gestützte Programmierung mit Expertenwissen, damit du für deinen nächsten Schritt eine klare, passende Antwort bekommst.",
       primary: { label: "App-Zugang anfragen", href: contactHref("app") },
-      secondary: { label: "Zur Startseite", href: "/" }
+      secondary: { label: "Personal Training ansehen", href: "/personal-trainer-nuernberg/" }
     })}
   `;
 
@@ -2113,6 +2132,7 @@ function personalCoachingPage() {
     <section class="ff-hero ff-hero--coaching ff-hero--coaching-photo ff-hero--stage-card">
       <img class="ff-hero__img" src="/assets/images/premium-training-hero-ironman.webp" width="1774" height="887" srcset="/assets/images/premium-training-hero-ironman-960.webp 960w, /assets/images/premium-training-hero-ironman.webp 1774w" sizes="100vw" alt="Dominik Dörfl als Personal Trainer in Nürnberg beim Zieleinlauf im Ironman-Trikot"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
+      <div class="pt-hero-aura" aria-hidden="true"><span></span><span></span></div>
       <div class="section-shell ff-hero__inner">
         <div class="ff-hero__stage-card">
           <p class="ff-hero__mobile-welcome">Willkommen bei Camp Dörfl</p>
@@ -2199,7 +2219,7 @@ function personalCoachingPage() {
       </div>
     </section>
 
-    <section class="section section--tight">
+    <section class="section section--tight pt-method-section">
       <div class="section-shell editorial-stage">
         <div class="editorial-stage__copy" data-reveal>
           ${sectionHeader({
@@ -2233,7 +2253,7 @@ function personalCoachingPage() {
       </div>
     </section>
 
-    <section class="section section--muted" aria-labelledby="pt-audience-title">
+    <section class="section section--muted pt-audience-section" aria-labelledby="pt-audience-title">
       <div class="section-shell">
         ${sectionHeader({
           eyebrow: "Für wen",
@@ -2353,8 +2373,9 @@ function personalCoachingPage() {
       </div>
     </section>
 
-    <section class="section section--muted coaching-local-section">
-      <div class="section-shell section-shell--wide coaching-local">
+    <section class="section section--muted coaching-local-section" id="metropolregion">
+      <div class="section-shell section-shell--wide coaching-local coaching-local--editorial">
+        <div class="coaching-local__orbits" aria-hidden="true"><span></span><span></span><span></span></div>
         ${sectionHeader({
           eyebrow: "Vor Ort in der Metropolregion",
           title: "Personal Training für Nürnberg, Fürth und Erlangen.",
@@ -2392,7 +2413,7 @@ function personalCoachingPage() {
       text:
         "In einer persönlichen Beratung klären wir, ob das Coaching zu deiner Ausgangslage, deinem Kalender und deinem Anspruch passt.",
       primary: { label: "Beratung anfragen", href: contactHref("premium-training") },
-      secondary: { label: "Zur Startseite", href: "/" }
+      secondary: { label: "Executive Performance ansehen", href: "/executive-performance/" }
     })}
   `;
 
@@ -2402,7 +2423,7 @@ function personalCoachingPage() {
     description:
       "Personal Trainer in Nürnberg für Abnehmen, Kraft und mehr Energie im Alltag: 1:1 Training, Körperanalyse und Ernährung, persönlich geführt von Dominik Dörfl.",
     keywords: ["Personal Trainer Nürnberg", "Personal Training Nürnberg", "Personal Trainer Nürnberg Abnehmen", "1:1 Personal Training Nürnberg", "Personal Trainer Nürnberg Einsteiger", "Ernährungscoaching Nürnberg"],
-    bodyClass: "page-premium page-coaching",
+    bodyClass: "page-premium page-coaching page-coaching--refined",
     pageName: "Personal Trainer Nürnberg",
     dateModified: "2026-09-03",
     socialImage: "/assets/images/premium-training-hero-ironman-social.jpg",
@@ -2665,7 +2686,7 @@ function firmenfitnessPage() {
         </div>
         <ol class="corporate-process-list" aria-label="Ablauf einer Firmenfitness-Anfrage">
           <li data-reveal><span>01</span><div><h3>Ziel und Zielgruppe klären</h3><p>Berufsfeld, Mitarbeiterzahl, Standort und gewünschte Wirkung werden kurz eingeordnet.</p></div></li>
-          <li data-reveal><span>02</span><div><h3>Angebot zusammenstellen</h3><p>Gesundheitstag, Vortrag, Aktivierung oder eine passende Kombination werden konkret geplant.</p></div></li>
+          <li data-reveal><span>02</span><div><h3>Angebot zusammenstellen</h3><p><a href="/gesundheitstag-nuernberg/">Gesundheitstag</a>, <a href="/keynote-speaker-nuernberg/">Vortrag</a>, Aktivierung oder eine passende Kombination werden konkret geplant.</p></div></li>
           <li data-reveal><span>03</span><div><h3>Teilnehmerfluss vorbereiten</h3><p>Zeitfenster, Räume, interne Kommunikation und benötigte Ausstattung werden sauber abgestimmt.</p></div></li>
           <li data-reveal><span>04</span><div><h3>Deutschlandweit durchführen</h3><p>Camp Dörfl übernimmt das Format vor Ort und führt Mitarbeitende verständlich durch Inhalte, Analyse und Umsetzung.</p></div></li>
         </ol>
@@ -2708,7 +2729,7 @@ function firmenfitnessPage() {
       text:
         "Nennen Sie uns Berufsfeld, Mitarbeiterzahl, Standort und Wunschformat. Sie erhalten eine klare Einschätzung, welches Firmenfitness-Angebot fachlich und organisatorisch passt.",
       primary: { label: "Firmenfitness anfragen", href: contactHref("firmenfitness") },
-      secondary: { label: "Zur Startseite", href: "/" }
+      secondary: { label: "Moderation für Firmenevents", href: "/moderator-nuernberg/" }
     })}
   `;
 
@@ -3018,7 +3039,7 @@ function eventsPage() {
       text:
         "Camp Dörfl moderiert Sport-, Fitness- und Business-Events mit Energie, Klarheit und einer Handschrift, die hängen bleibt.",
       primary: { label: "Event anfragen", href: contactHref("events") },
-      secondary: { label: "Zur Startseite", href: "/" }
+      secondary: { label: "Über Dominik Dörfl", href: "/ueber-dominik/" }
     })}
   `;
 
@@ -3288,12 +3309,12 @@ function guenterPreisStoryPage() {
     </section>
 
     ${ctaSection({
-      eyebrow: "Personal Training Nürnberg",
-      title: "Dein Ziel beginnt mit einer ehrlichen Bestandsaufnahme.",
+      eyebrow: "12-Wochen-Programm",
+      title: "Deine Werte gehen in die falsche Richtung?",
       text:
-        "Gesundheitliche Voraussetzungen, Alltag, Training und Ziele müssen zusammen betrachtet werden. Genau dort beginnt die persönliche Zusammenarbeit bei Camp Dörfl.",
-      primary: { label: "Beratung anfragen", href: contactHref("premium-training") },
-      secondary: { label: "Personal Training ansehen", href: "/personal-trainer-nuernberg/" }
+        "Wenn sich Diabetes anbahnt oder du gerade mit Metformin eingestellt bist, ist jetzt der beste Zeitpunkt. Training, Ernährung und Dranbleiben übernehmen wir gemeinsam – deine Therapie bleibt bei deinem Arzt.",
+      primary: { label: "Zum 12-Wochen-Programm", href: "/diabetes-coach-nuernberg/" },
+      secondary: { label: "Erstgespräch anfragen", href: contactHref("hba1c-programm") }
     })}
   `;
 
@@ -3676,6 +3697,7 @@ function expertKnowledgePage() {
         <a class="expert-card" href="/personal-trainer-auswaehlen-nuernberg/" data-reveal><span>Personal Training</span><h2>Wie erkennt man einen guten Personal Trainer?</h2><p>Qualifikation, Diagnostik, Betreuung und transparente Erwartungen richtig prüfen.</p><b>Leitfaden lesen →</b></a>
         <a class="expert-card" href="/bodybuilding-wettkampfvorbereitung-dauer/" data-reveal><span>Contest Prep</span><h2>Wie lange dauert eine Wettkampfvorbereitung?</h2><p>Warum Ausgangslage und nachhaltige Abnahmerate wichtiger sind als ein fixes Datum.</p><b>Leitfaden lesen →</b></a>
         <a class="expert-card" href="/bia-inbody-koerperanalyse-vergleich/" data-reveal><span>Körperanalyse</span><h2>BIA, InBody oder 2D-Analyse?</h2><p>Was die Verfahren zeigen, wo ihre Grenzen liegen und wie Verlaufsdaten sinnvoll werden.</p><b>Leitfaden lesen →</b></a>
+        <a class="expert-card" href="/triathlon-distanzen/" data-reveal><span>Triathlon</span><h2>Welche Triathlon-Distanzen gibt es?</h2><p>Alle Strecken von Sprint bis Langdistanz, mit Zielzeiten, Trainingsaufwand und Startorten.</p><b>Leitfaden lesen →</b></a>
       </div>
     </div></section>
     <section class="section section--muted"><div class="section-shell section-shell--wide">
@@ -3759,6 +3781,431 @@ function biaComparisonGuidePage() {
         <section><h2>Häufige Fragen</h2>${faq(guideFaq)}</section>
       </div><aside class="expert-article__rail"><span>Vor Ort in Nürnberg</span><h2>Körperanalyse mit persönlicher Auswertung</h2><p>InBody, 2D-Analyse und konkrete nächste Schritte zusammenführen.</p><a class="button button--primary" href="/koerperanalyse-nuernberg/"><span>Analyse ansehen</span><span aria-hidden="true">→</span></a></aside></div></article>`;
   return layout({ path, title: "BIA, InBody & 2D-Körperanalyse: Vergleich und Grenzen", description, keywords: ["BIA InBody Vergleich", "InBody Genauigkeit", "Körperanalyse Nürnberg", "2D Körperanalyse"], bodyClass: "page-premium page-expert-article", pageType: "Article", pageName: "BIA, InBody und 2D-Körperanalyse im Vergleich", dateModified: "2026-08-11", socialImage: "/assets/images/dominik-coaching-bikeerg.webp", socialImageAlt: "Dominik Dörfl erklärt Ergebnisse einer Körperanalyse", extraStructuredData: [expertArticleSchema({ path, headline: "BIA, InBody und 2D-Körperanalyse: Was misst welches Verfahren?", description, image: "/assets/images/dominik-coaching-bikeerg.webp" }), faqSchema(path, guideFaq)], content });
+}
+
+/* Die Distanzen sind genormt: World Triathlon und die Deutsche Triathlon Union
+ * schreiben dieselben Strecken fest, Ironman und Challenge fahren sie unter
+ * eigenen Namen. Deshalb stehen sie hier als Tabelle und nicht als Fließtext —
+ * wer die Seite öffnet, sucht eine Zahl, keine Erzählung. */
+const triathlonDistanzen = Object.freeze([
+  {
+    id: "super-sprint",
+    name: "Super-Sprint",
+    auch: "Supersprint, Schnupperdistanz",
+    schwimmen: "0,4 km",
+    rad: "10 km",
+    laufen: "2,5 km",
+    gesamt: "12,9 km",
+    zielzeit: "35 – 60 Min.",
+    umfang: "2 – 4 Std./Woche",
+    fuer: "Der erste Wettkampf überhaupt. Kurz genug, dass ein Fehler nichts kostet.",
+    text:
+      "Die kürzeste verbreitete Form. Sie steht oft als Zusatzstart neben einem größeren Rennen und ist der ehrlichste Weg, einen Wechselbereich zum ersten Mal zu erleben. Die Strecken schwanken je nach Veranstalter stärker als bei den genormten Distanzen darüber."
+  },
+  {
+    id: "sprintdistanz",
+    name: "Sprintdistanz",
+    auch: "Sprint",
+    schwimmen: "0,75 km",
+    rad: "20 km",
+    laufen: "5 km",
+    gesamt: "25,75 km",
+    zielzeit: "1:10 – 1:45 Std.",
+    umfang: "3 – 5 Std./Woche",
+    fuer: "Der übliche Einstieg für alle, die schon Grundlagen in einer der drei Sportarten haben.",
+    text:
+      "Die Sprintdistanz ist die meistgestartete Distanz in Deutschland und der Standard für Vereins- und Ligarennen. Sie ist kurz genug für ein Wochenende ohne Vorbereitungsurlaub und lang genug, dass Renneinteilung und Wechsel tatsächlich zählen."
+  },
+  {
+    id: "olympische-distanz",
+    name: "Olympische Distanz",
+    auch: "Kurzdistanz, Standarddistanz",
+    schwimmen: "1,5 km",
+    rad: "40 km",
+    laufen: "10 km",
+    gesamt: "51,5 km",
+    zielzeit: "2:15 – 3:30 Std.",
+    umfang: "5 – 8 Std./Woche",
+    fuer: "Wer eine Sprintdistanz gefinisht hat und wissen will, wie sich Renntempo über Stunden anfühlt.",
+    text:
+      "Die Distanz der Olympischen Spiele und der Weltserie. Im Deutschen heißt sie auch Kurzdistanz — verwirrend, weil sie doppelt so lang ist wie der Sprint. Sie ist die Schwelle, ab der Ernährung im Rennen und ein geplanter Renntag wirklich Wirkung zeigen."
+  },
+  {
+    id: "mitteldistanz",
+    name: "Mitteldistanz",
+    auch: "Halbdistanz, Ironman 70.3, Half",
+    schwimmen: "1,9 km",
+    rad: "90 km",
+    laufen: "21,1 km",
+    gesamt: "113 km",
+    zielzeit: "5:00 – 7:30 Std.",
+    umfang: "8 – 12 Std./Woche",
+    fuer: "Ambitionierte Altersklassen-Starter mit mindestens einer Saison Wettkampferfahrung.",
+    text:
+      "„70.3“ steht für 70,3 Meilen — die Gesamtstrecke in der amerikanischen Schreibweise. Der Lauf ist ein Halbmarathon. Hier entscheidet zum ersten Mal die Vorbereitung über den Renntag: Wer Ernährung, Tempo und Material nicht vorher durchgespielt hat, merkt es spätestens auf den letzten zehn Kilometern."
+  },
+  {
+    id: "langdistanz",
+    name: "Langdistanz",
+    auch: "Ironman, Iron-Distanz, Full",
+    schwimmen: "3,8 km",
+    rad: "180 km",
+    laufen: "42,195 km",
+    gesamt: "226 km",
+    zielzeit: "10:00 – 15:00 Std.",
+    umfang: "12 – 18 Std./Woche",
+    fuer: "Wer über ein Jahr hinweg planbar trainieren kann und das im Alltag auch durchhält.",
+    text:
+      "Der Lauf ist ein vollständiger Marathon, nach 3,8 Kilometern Schwimmen und 180 Kilometern auf dem Rad. In der amerikanischen Schreibweise sind es 140,6 Meilen. Bei IRONMAN-Rennen liegt das Zielschluss-Limit üblicherweise bei 17 Stunden, mit eigenen Zwischenlimits nach Schwimmen und Rad."
+  }
+]);
+
+/* Die Rennen werden im echten Kalender nachgeschlagen, nicht hier
+ * aufgeschrieben. Findet sich ein Name nicht mehr, fällt der Eintrag weg,
+ * statt ein Datum zu behaupten, das es nicht mehr gibt. Jeder Treffer bringt
+ * Ort, Datum und die offizielle Quelle des Veranstalters mit. */
+function triathlonRennenNachDistanz(distanzen) {
+  const alle = [...dtuTriathlonEvents2026, ...internationalTriathlonEvents2026];
+
+  return distanzen
+    .map(({ titel, text, rennen }) => ({
+      titel,
+      text,
+      treffer: rennen
+        .map((suchbegriff) => alle.find((event) => event.name.includes(suchbegriff)))
+        .filter(Boolean)
+        .sort((a, b) => a.date.localeCompare(b.date))
+    }))
+    .filter((gruppe) => gruppe.treffer.length > 0);
+}
+
+/* Luftlinie zwischen zwei Punkten. Gebraucht für genau eine Aussage: wie nah
+ * die Challenge Roth an Nürnberg liegt. Die Koordinaten stehen im Termin —
+ * eine hingeschriebene Kilometerzahl wäre irgendwann still falsch. */
+function luftlinieKm(vonBreite, vonLaenge, nachBreite, nachLaenge) {
+  const bogen = (grad) => (grad * Math.PI) / 180;
+  const dBreite = bogen(nachBreite - vonBreite);
+  const dLaenge = bogen(nachLaenge - vonLaenge);
+  const a =
+    Math.sin(dBreite / 2) ** 2 +
+    Math.cos(bogen(vonBreite)) * Math.cos(bogen(nachBreite)) * Math.sin(dLaenge / 2) ** 2;
+  return Math.round(2 * 6371 * Math.asin(Math.sqrt(a)));
+}
+
+function triathlonDistanzenPage() {
+  const path = "/triathlon-distanzen/";
+  const geprueft = "12. September 2026";
+  const datum = "2026-09-12";
+  const tagFormat = new Intl.DateTimeFormat("de-DE", { day: "2-digit", month: "long", year: "numeric" });
+  const roth = dtuTriathlonEvents2026.find((event) => event.name.includes("DATEV Challenge Roth"));
+  const rothEntfernung = roth ? luftlinieKm(49.4521, 11.0767, roth.latitude, roth.longitude) : 25;
+
+  const startorte = triathlonRennenNachDistanz([
+    {
+      titel: "Langdistanz in Deutschland",
+      text: `Die großen deutschen Langdistanzen. Die DATEV Challenge Roth startet ${rothEntfernung} Kilometer Luftlinie von Nürnberg entfernt — für Athleten aus der Region der Heimwettkampf.`,
+      rennen: [
+        "DATEV Challenge Roth",
+        "Mainova IRONMAN European Championship Frankfurt",
+        "IRONMAN Hamburg European Championship",
+        "OstseeMan Triathlon Glücksburg"
+      ]
+    },
+    {
+      titel: "Mitteldistanz in Deutschland",
+      text: "Die 70.3-Rennen verteilen sich über das Jahr und über die Republik — vom Kraichgau bis nach Sachsen.",
+      rennen: ["IRONMAN 70.3 Kraichgau", "IRONMAN 70.3 Duisburg", "IRONMAN 70.3 Leipzig"]
+    },
+    {
+      titel: "Olympische Distanz und Sprint in Deutschland",
+      text: "Die 5150-Serie fährt die olympische Distanz, die Weltserie in Hamburg startet Sprint und olympisch — dort gehen Profis und Altersklassen auf derselben Strecke.",
+      rennen: ["5150 Kraichgau", "IRONMAN 5150 Erkner", "SUZUKI World Triathlon Hamburg 2026", "Memmert Rothsee Triathlon"]
+    },
+    {
+      titel: "Langdistanz im europäischen Umfeld",
+      text: "Wer im Ausland starten will, findet die Langdistanz über die ganze Saison verteilt — von Lanzarote im Mai bis Barcelona im Oktober.",
+      rennen: [
+        "IRONMAN Lanzarote",
+        "IRONMAN Austria-Kärnten",
+        "IRONMAN France Nice",
+        "Challenge Almere-Amsterdam",
+        "IRONMAN Italy Emilia-Romagna",
+        "IRONMAN Calella-Barcelona"
+      ]
+    },
+    {
+      titel: "Mitteldistanz im europäischen Umfeld",
+      text: "Die Mitteldistanz ist die am dichtesten besetzte Distanz in Europa — besonders im Herbst am Mittelmeer.",
+      rennen: ["Challenge Kaiserwinkl-Walchsee", "IRONMAN 70.3 Zell am See-Kaprun", "IRONMAN 70.3 Luxembourg", "Challenge Peguera Mallorca", "Challenge Barcelona"]
+    }
+  ]);
+
+  const distanzZeilen = triathlonDistanzen
+    .map(
+      (distanz) => `
+        <tr>
+          <th scope="row">${distanz.name}<small>${distanz.auch}</small></th>
+          <td>${distanz.schwimmen}</td>
+          <td>${distanz.rad}</td>
+          <td>${distanz.laufen}</td>
+          <td><strong>${distanz.gesamt}</strong></td>
+        </tr>
+      `
+    )
+    .join("");
+
+  const aufwandZeilen = triathlonDistanzen
+    .map(
+      (distanz) => `
+        <tr>
+          <th scope="row">${distanz.name}</th>
+          <td>${distanz.zielzeit}</td>
+          <td>${distanz.umfang}</td>
+          <td>${distanz.fuer}</td>
+        </tr>
+      `
+    )
+    .join("");
+
+  const distanzAbschnitte = triathlonDistanzen
+    .map(
+      (distanz) => `
+        <li id="${distanz.id}">
+          <h3>${distanz.name} — ${distanz.schwimmen} Schwimmen, ${distanz.rad} Rad, ${distanz.laufen} Laufen</h3>
+          <p>${distanz.text}</p>
+          <p class="tri-distanz__kennzahlen">
+            <span><b>Gesamt</b> ${distanz.gesamt}</span>
+            <span><b>Typische Zielzeit</b> ${distanz.zielzeit}</span>
+            <span><b>Trainingsumfang</b> ${distanz.umfang}</span>
+          </p>
+        </li>
+      `
+    )
+    .join("");
+
+  const startortBloecke = startorte
+    .map(
+      (gruppe) => `
+        <section class="tri-startorte__gruppe">
+          <h3>${gruppe.titel}</h3>
+          <p>${gruppe.text}</p>
+          <ul class="tri-startorte__liste">
+            ${gruppe.treffer
+              .map(
+                (event) => `
+                  <li>
+                    <a href="${event.url}" target="_blank" rel="noopener noreferrer">${event.name}</a>
+                    <small>${tagFormat.format(new Date(`${event.date}T12:00:00Z`))} · ${event.city}${event.country === "DE" ? "" : `, ${event.countryName}`}</small>
+                  </li>
+                `
+              )
+              .join("")}
+          </ul>
+        </section>
+      `
+    )
+    .join("");
+
+  const triathlonFaq = [
+    {
+      question: "Welche Triathlon-Distanzen gibt es?",
+      answer:
+        "Fünf Distanzen sind verbreitet: Super-Sprint (0,4 km Schwimmen, 10 km Rad, 2,5 km Laufen), Sprintdistanz (0,75 / 20 / 5), Olympische Distanz (1,5 / 40 / 10), Mitteldistanz (1,9 / 90 / 21,1) und Langdistanz (3,8 / 180 / 42,195). Dazu kommen Sonderformen wie Volksdistanz, Cross-Triathlon und Ultra-Distanzen, deren Strecken der Veranstalter festlegt."
+    },
+    {
+      question: "Wie lang ist die olympische Distanz beim Triathlon?",
+      answer:
+        "Die olympische Distanz umfasst 1,5 Kilometer Schwimmen, 40 Kilometer Rad und 10 Kilometer Laufen — zusammen 51,5 Kilometer. Sie wird im Deutschen auch Kurzdistanz genannt, obwohl sie doppelt so lang ist wie die Sprintdistanz."
+    },
+    {
+      question: "Wie lang ist ein Ironman?",
+      answer:
+        "Ein Ironman ist eine Langdistanz: 3,8 Kilometer Schwimmen, 180 Kilometer Rad und ein vollständiger Marathon über 42,195 Kilometer — zusammen rund 226 Kilometer. In der amerikanischen Schreibweise sind das 140,6 Meilen. Das Zielschluss-Limit liegt bei IRONMAN-Rennen üblicherweise bei 17 Stunden."
+    },
+    {
+      question: "Was ist der Unterschied zwischen Mitteldistanz und Ironman 70.3?",
+      answer:
+        "Inhaltlich keiner. Mitteldistanz ist die deutsche Bezeichnung für 1,9 Kilometer Schwimmen, 90 Kilometer Rad und 21,1 Kilometer Laufen. „Ironman 70.3“ ist der Markenname derselben Strecke bei der Rennserie IRONMAN; die Zahl steht für 70,3 Meilen Gesamtstrecke. Andere Veranstalter nennen sie Halbdistanz oder Half."
+    },
+    {
+      question: "Mit welcher Distanz sollte ich als Anfänger starten?",
+      answer:
+        "Mit der Sprintdistanz, wenn du in einer der drei Sportarten schon Grundlagen hast — 0,75 Kilometer Schwimmen, 20 Kilometer Rad, 5 Kilometer Laufen sind mit drei bis fünf Trainingsstunden pro Woche erreichbar. Wer noch nie in einem Wechselbereich stand, findet im Super-Sprint oder auf einer Volksdistanz den kleineren ersten Schritt."
+    },
+    {
+      question: "Wie lange dauert ein Sprinttriathlon?",
+      answer:
+        "Altersklassen-Starter brauchen für die Sprintdistanz typischerweise zwischen 1:10 und 1:45 Stunden. Die Spanne hängt stark von der Radstrecke ab: ein flacher Kurs und ein Rennrad machen mehrere Minuten Unterschied gegenüber welligem Profil."
+    },
+    {
+      question: "Was ist die Volksdistanz beim Triathlon?",
+      answer:
+        "Die Volksdistanz — oft auch Jedermann-Distanz genannt — ist nicht genormt. Der Veranstalter legt die Strecken fest, üblich sind etwa 0,3 bis 0,5 Kilometer Schwimmen, 10 bis 20 Kilometer Rad und 2,5 bis 5 Kilometer Laufen. Verbindlich ist immer die Ausschreibung des jeweiligen Rennens."
+    },
+    {
+      question: "Wie viel muss ich für eine Mitteldistanz trainieren?",
+      answer:
+        "Acht bis zwölf Stunden pro Woche über mehrere Monate sind eine realistische Größenordnung, verteilt auf alle drei Sportarten plus Kraft- und Stabilisationsarbeit. Entscheidend ist weniger die einzelne Woche als die Zahl der Wochen, die du ohne Unterbrechung durchhältst."
+    }
+  ];
+
+  const dek =
+    "Sprint, olympisch, Mittel- und Langdistanz: alle Strecken mit exakten Kilometern, typischen Zielzeiten, realistischem Trainingsaufwand — und den Rennen, auf denen du sie 2026 starten kannst.";
+
+  const content = `
+    <article class="expert-article" data-color-scheme="light">
+      <header class="expert-article__header" data-color-scheme="dark">
+        <div class="section-shell section-shell--wide expert-article__hero-grid">
+          <div>
+            <p class="eyebrow">Triathlon · Distanzen erklärt</p>
+            <h1>Welche Triathlon-Distanzen gibt es?</h1>
+            <p class="expert-article__dek">${dek}</p>
+            <div class="expert-article__meta">
+              <span>Von Dominik Dörfl</span>
+              <span>Veröffentlicht und geprüft am ${geprueft}</span>
+              <span>9 Min. Lesezeit</span>
+            </div>
+          </div>
+          <figure class="expert-article__hero-media">
+            <img src="/assets/images/dominik-ironman-run-nuernberg.webp" width="1200" height="1800" alt="Dominik Dörfl beim Laufen eines Triathlons in Nürnberg"${imageLoadingAttributes({ eager: true })}>
+          </figure>
+        </div>
+      </header>
+
+      <div class="section-shell section-shell--wide expert-article__layout" data-color-scheme="light">
+        <div class="expert-article__body">
+          <section class="answer-box" aria-labelledby="tri-kurzantwort">
+            <p class="eyebrow">Kurzantwort</p>
+            <h2 id="tri-kurzantwort">Fünf Distanzen sind genormt — vom Super-Sprint über 12,9 Kilometer bis zur Langdistanz über 226 Kilometer.</h2>
+            <p>
+              Super-Sprint (0,4 / 10 / 2,5 km), Sprintdistanz (0,75 / 20 / 5 km), Olympische Distanz (1,5 / 40 / 10 km),
+              Mitteldistanz (1,9 / 90 / 21,1 km) und Langdistanz (3,8 / 180 / 42,195 km). Die Reihenfolge nennt immer
+              Schwimmen, Rad, Laufen. „Ironman“ und „70.3“ sind Markennamen der Renn­serie IRONMAN für Lang- und
+              Mitteldistanz, keine eigenen Strecken.
+            </p>
+          </section>
+
+          <h2 id="tabelle">Alle Triathlon-Distanzen in einer Tabelle</h2>
+          <p class="tri-tabelle__quelle">Genormte Strecken nach World Triathlon und Deutscher Triathlon Union. Die Reihenfolge nennt immer Schwimmen, Rad, Laufen.</p>
+          <div class="expert-table-wrap">
+            <table class="expert-table tri-tabelle">
+              <thead>
+                <tr><th scope="col">Distanz</th><th scope="col">Schwimmen</th><th scope="col">Rad</th><th scope="col">Laufen</th><th scope="col">Gesamt</th></tr>
+              </thead>
+              <tbody>${distanzZeilen}</tbody>
+            </table>
+          </div>
+
+          <h2 id="im-detail">Jede Distanz im Detail</h2>
+          <ol class="expert-checklist tri-distanzen">${distanzAbschnitte}</ol>
+
+          <h2 id="aufwand">Zielzeit, Trainingsaufwand und für wen die Distanz passt</h2>
+          <p>
+            Die Zeiten sind Orientierung aus dem Altersklassenfeld, keine Norm: Streckenprofil, Wetter und Wasserlage
+            verschieben sie um Minuten bis Stunden. Der Trainingsumfang beschreibt eine gut vorbereitete Woche in der
+            Hauptphase, nicht den Jahresdurchschnitt.
+          </p>
+          <div class="expert-table-wrap">
+            <table class="expert-table tri-tabelle">
+              <thead>
+                <tr><th scope="col">Distanz</th><th scope="col">Typische Zielzeit</th><th scope="col">Trainingsumfang</th><th scope="col">Passend für</th></tr>
+              </thead>
+              <tbody>${aufwandZeilen}</tbody>
+            </table>
+          </div>
+
+          <h2 id="startorte">Wo du welche Distanz startest</h2>
+          <p>
+            Die folgenden Rennen stammen aus dem
+            <a href="/triathlon-kalender-2026/">Triathlon Kalender 2026</a> dieser Website, der den Kalender der
+            Deutschen Triathlon Union mit den europäischen Serien zusammenführt. Datum und Ort stehen so, wie der
+            Veranstalter sie ausschreibt.
+          </p>
+          <div class="tri-startorte">${startortBloecke}</div>
+
+          <h2 id="sonderformen">Sonderformen, die nicht in die Tabelle passen</h2>
+          <ul class="tri-sonderformen">
+            <li><b>Volksdistanz / Jedermann.</b> Nicht genormt, vom Veranstalter festgelegt. Der freundlichste Einstieg, oft mit kürzerem Schwimmen im Becken statt im See.</li>
+            <li><b>Cross-Triathlon.</b> Schwimmen, Mountainbike, Traillauf. Die Strecken richten sich nach dem Gelände, nicht nach einer Norm — Technik zählt hier mehr als Tempo.</li>
+            <li><b>Indoor-Triathlon.</b> Winterformat in der Halle: Becken, Ergometer, Laufband. Bewertet wird häufig die zurückgelegte Strecke in einer festen Zeit statt umgekehrt.</li>
+            <li><b>Ultra-Distanzen.</b> Doppel-, Dreifach- und Zehnfach-Langdistanz. Die Doppel-Langdistanz entspricht der zweifachen Ironman-Strecke; Ausschreibung und Limits legt der Veranstalter fest.</li>
+            <li><b>Staffel und Mixed Relay.</b> Drei Athleten teilen sich die Disziplinen, oder vier Athleten absolvieren nacheinander je einen kurzen kompletten Triathlon. Das olympische Mixed-Relay-Format arbeitet mit deutlich verkürzten Teilstrecken.</li>
+          </ul>
+
+          <h2 id="einordnung">Einordnung von Dominik Dörfl</h2>
+          <blockquote class="expert-quote">
+            „Die Distanz entscheidet nicht darüber, ob jemand ankommt — die Zahl der Wochen entscheidet, die er
+            ohne Abbruch trainieren konnte. Ich habe mehr Leute an einer Mitteldistanz scheitern sehen, weil vier
+            Wochen fehlten, als an fehlendem Talent.“
+          </blockquote>
+          <p>
+            Dominik Dörfl ist Ironman-70.3-Finisher sowie Marathon- und Halbmarathon-Finisher und hat 270 Kilometer
+            Rad in 24 Stunden zurückgelegt. Die Einordnung auf dieser Seite stammt aus eigener Wettkampferfahrung
+            und aus der Begleitung von Athletinnen und Athleten;
+            die Streckenangaben stammen aus den Regelwerken der Verbände.
+          </p>
+
+          <section class="source-panel">
+            <h2>Quellen und weiterführende Originalseiten</h2>
+            <ol>
+              <li><a href="https://www.triathlon.org/" target="_blank" rel="noopener noreferrer">World Triathlon: internationaler Dachverband und Wettkampfregeln</a></li>
+              <li><a href="https://www.triathlondeutschland.de/" target="_blank" rel="noopener noreferrer">Deutsche Triathlon Union: Sportordnung und Veranstaltungskalender</a></li>
+              <li><a href="https://www.ironman.com/races" target="_blank" rel="noopener noreferrer">IRONMAN: Rennkalender mit Lang- und Mitteldistanzen</a></li>
+              <li><a href="https://www.challenge-family.com/challenge-family/race/europe/" target="_blank" rel="noopener noreferrer">Challenge Family: europäische Rennserie</a></li>
+              <li><a href="/triathlon-kalender-2026/">Camp Dörfl: Triathlon Kalender 2026 mit allen Terminen</a></li>
+            </ol>
+          </section>
+
+          ${expertAuthorBlock({ reviewed: geprueft })}
+
+          <section><h2>Häufige Fragen zu den Triathlon-Distanzen</h2>${faq(triathlonFaq)}</section>
+        </div>
+
+        <aside class="expert-article__rail">
+          <span>Passender nächster Schritt</span>
+          <h2>Vorbereitung mit Struktur</h2>
+          <p>Schwimmen, Rad, Lauf und Kraft werden dann stark, wenn sie als ein System zusammenarbeiten — abgestimmt auf die Distanz und auf deinen Alltag.</p>
+          <a class="button button--primary" href="/personal-trainer-nuernberg/"><span>Personal Training ansehen</span><span aria-hidden="true">&rarr;</span></a>
+        </aside>
+      </div>
+    </article>
+  `;
+
+  const description =
+    "Alle Triathlon-Distanzen mit exakten Strecken: Sprint, olympisch, Mittel- und Langdistanz. Mit Zielzeiten, Trainingsaufwand und Rennen 2026.";
+
+  return layout({
+    path,
+    title: "Triathlon Distanzen: von Sprint bis Ironman erklärt",
+    description,
+    keywords: [
+      "Triathlon Distanzen",
+      "olympische Distanz Triathlon",
+      "Sprintdistanz Triathlon",
+      "Mitteldistanz Triathlon",
+      "Ironman Distanz",
+      "Triathlon 70.3 Distanz",
+      "Triathlon Distanzen Übersicht"
+    ],
+    bodyClass: "page-premium page-expert-article page-triathlon-distanzen",
+    pageType: "Article",
+    pageName: "Triathlon Distanzen",
+    dateModified: datum,
+    socialImage: "/assets/images/premium-training-hero-ironman-social.jpg",
+    socialImageAlt: "Dominik Dörfl im Triathlon-Wettkampf",
+    extraStructuredData: [
+      expertArticleSchema({
+        path,
+        headline: "Welche Triathlon-Distanzen gibt es?",
+        description,
+        image: "/assets/images/dominik-ironman-run-nuernberg.webp",
+        datePublished: datum,
+        dateModified: datum
+      }),
+      faqSchema(path, triathlonFaq)
+    ],
+    content
+  });
 }
 
 function editorialGuidelinesPage() {
@@ -3895,9 +4342,9 @@ function ueberDominikPage() {
         <div data-reveal>
           <p class="eyebrow">Zitierfähiges Kurzprofil</p>
           <h2>Dominik Dörfl ist Personal Trainer, Bodybuilding- und Performance-Coach aus Nürnberg.</h2>
-          <p>Er ist Gründer von Camp Dörfl, Deutscher Meister im Bodybuilding und Powerlifting, IFBB Pro und Ironman-70.3-Finisher. In seiner Arbeit verbindet er individuelles Training, Wettkampfvorbereitung, Körperanalyse, Sporternährung und alltagstaugliche Leistungssteuerung.</p>
-          <p>Als Coach begleitet er ambitionierte Privatkunden sowie Athletinnen und Athleten. Darüber hinaus entwickelt er Firmenfitness-Formate, moderiert Sport- und Business-Veranstaltungen und veröffentlicht den Podcast „Erfolg bewusst steuern“.</p>
-          <p class="expert-profile-grid__note">Diese Kurzbiografie darf mit Verlinkung auf diese Seite für redaktionelle Vorstellungen verwendet werden.</p>
+          <p>Er ist Gründer von Camp Dörfl, Deutscher Meister im Bodybuilding und Powerlifting, IFBB Pro und Ironman-70.3-Finisher. In seiner Arbeit verbindet er <a href="/personal-trainer-nuernberg/">individuelles Training</a>, <a href="/bodybuilding-coaching-wettkampfvorbereitung/">Wettkampfvorbereitung</a>, <a href="/koerperanalyse-nuernberg/">Körperanalyse</a>, Sporternährung und alltagstaugliche Leistungssteuerung.</p>
+          <p>Als Coach begleitet er ambitionierte Privatkunden sowie Athletinnen und Athleten. Darüber hinaus entwickelt er <a href="/firmenfitness/">Firmenfitness-Formate</a>, <a href="/moderator-nuernberg/">moderiert Sport- und Business-Veranstaltungen</a> und veröffentlicht den Podcast „Erfolg bewusst steuern“.</p>
+          <p class="expert-profile-grid__note">Diese Kurzbiografie darf mit Verlinkung auf diese Seite für redaktionelle Vorstellungen verwendet werden. Logo, Pressefotos und das Kurzprofil zum Herunterladen liegen unter <a href="/presse-medien/">Presse &amp; Medien</a>.</p>
         </div>
         <aside data-reveal>
           <span>Fachgebiete</span>
@@ -3942,7 +4389,7 @@ function ueberDominikPage() {
     </section>
 
     <section class="section"><div class="section-shell section-shell--wide">
-      ${sectionHeader({ eyebrow: "Fachbeiträge", title: "Wissen mit Autor, Prüfdatum und Quellen.", text: "Dominiks aktuelle Leitfäden beantworten konkrete Fragen zu Trainerwahl, Contest Prep und Körperanalyse." })}
+      ${sectionHeader({ eyebrow: "Fachbeiträge", title: "Wissen mit Autor, Prüfdatum und Quellen.", text: "Dominiks aktuelle Leitfäden beantworten konkrete Fragen zu Trainerwahl, Contest Prep und Körperanalyse. Alle Beiträge stehen gesammelt im <a href=\"/expertenwissen/\">Expertenwissen</a>." })}
       <div class="expert-card-grid">
         <a class="expert-card" href="/personal-trainer-auswaehlen-nuernberg/"><span>Personal Training</span><h3>Guten Personal Trainer erkennen</h3><b>Leitfaden lesen →</b></a>
         <a class="expert-card" href="/bodybuilding-wettkampfvorbereitung-dauer/"><span>Bodybuilding</span><h3>Dauer einer Contest Prep</h3><b>Leitfaden lesen →</b></a>
@@ -3954,7 +4401,7 @@ function ueberDominikPage() {
       eyebrow: "Über Dominik",
       title: "Willst du mit Dominik arbeiten?",
       text:
-        "Ob Premium Personal Training, Executive Performance oder die Camp Dörfl App – der sinnvollste erste Schritt ist eine klare Anfrage.",
+        "Ob Premium Personal Training, <a href=\"/executive-performance/\">Executive Performance</a> oder die Camp Dörfl App – der sinnvollste erste Schritt ist eine klare Anfrage.",
       primary: { label: "Beratung anfragen", href: contactHref("premium-training") },
       secondary: { label: "Camp Dörfl App ansehen", href: "/app/" }
     })}
@@ -4527,7 +4974,7 @@ function partnerTransparencyPage() {
             <ul class="legal-list">
               <li>Auf der Partner-Seite werden aktuell unter anderem XXL Nutrition und AEKE vorgestellt.</li>
               <li>Bei AEKE wird derzeit ein direkter Partnerlink mit Referral-Parameter genutzt.</li>
-              <li>Bei XXL Nutrition wird derzeit unter anderem der Code <code>Dominik</code> genannt.</li>
+              <li>Bei XXL Nutrition wird derzeit unter anderem der Code <code>Dominik</code> genannt; die Bedingungen stehen auf der Seite <a href="/xxl-nutrition-rabattcode/">XXL Nutrition Rabattcode</a>.</li>
               <li>Die Partner-Seite und dazugehörige Buttons werden technisch mit <code>rel="sponsored"</code> gekennzeichnet.</li>
             </ul>
           </article>
@@ -4807,7 +5254,7 @@ function partnerPage() {
           </a>
         </div>
         <p class="premium-sponsor-stage__note" data-reveal>
-          Du suchst den <a href="/xxl-nutrition-rabattcode/">XXL Nutrition Rabattcode</a>? Er steht mit Anleitung auf einer eigenen Seite.
+          Du suchst den <a href="/xxl-nutrition-rabattcode/">Rabattcode für XXL Nutrition</a>? Er steht mit Anleitung und Bedingungen auf einer eigenen Seite.
         </p>
         <div class="basis-partner-stage" data-reveal>
           <div class="basis-partner-stage__intro">
@@ -4890,7 +5337,7 @@ function partnerPage() {
       text:
         "Kooperationen funktionieren dann am besten, wenn Produkt, Haltung und Zielgruppe wirklich zusammenpassen.",
       primary: { label: "Kooperation anfragen", href: contactHref("kooperation") },
-      secondary: { label: "Events ansehen", href: "/moderator-nuernberg/" }
+      secondary: { label: "Dominik Dörfl als Moderator", href: "/moderator-nuernberg/" }
     })}
   `;
 
@@ -5712,6 +6159,10 @@ function koerperanalyseNuernbergPage() {
       <img class="ff-hero__img" src="/assets/images/firmenfitness-hero-wide.webp" width="1774" height="887" srcset="/assets/images/firmenfitness-hero-wide-960.webp 960w, /assets/images/firmenfitness-hero-wide.webp 1774w" sizes="100vw" alt="Dominik Dörfl bei einer Körperanalyse und persönlichen Auswertung in Nürnberg"${imageLoadingAttributes({ eager: true })}>
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__inner">
+        <div class="ff-hero__notice" role="status">
+          <strong>Aktuell leider keine Körperanalyse möglich.</strong>
+          <p>Unser Messgerät ist gerade in Reparatur. Wir kümmern uns darum, so schnell wie möglich wieder einsatzfähig zu sein, und melden uns. Danke für dein Verständnis.</p>
+        </div>
         <p class="ff-hero__eyebrow" data-reveal>2D-Körperanalyse · InBody · BIA-Messung</p>
         <h1 class="ff-hero__title" data-reveal>Körperanalyse <br><span>in Nürnberg.</span></h1>
         <p class="ff-hero__lead" data-reveal>
@@ -6310,6 +6761,452 @@ function personalTrainingAb40NuernbergPage() {
   });
 }
 
+function hba1cProgrammPage() {
+  const path = "/diabetes-coach-nuernberg/";
+  const preis = { vorOrt: "1.290", online: "690", auffrischung: "249" };
+
+  const recognition = [
+    {
+      title: "Der Wert beim Hausarzt",
+      text:
+        "Dein HbA1c liegt im Bereich 5,7 bis 6,4 Prozent oder knapp darüber. Noch keine große Sache, hast du gehört – aber eine Richtung, die dir nicht gefällt."
+    },
+    {
+      title: "Seit Kurzem Metformin",
+      text:
+        "Die Tablette ist eingestellt, der Wert soll sich stabilisieren. Und du fragst dich, was du selbst dazu beitragen kannst, statt nur abzuwarten."
+    },
+    {
+      title: "Bauch, Müdigkeit, Heißhunger",
+      text:
+        "Die Mitte wird breiter, nach dem Mittagessen sackt die Energie ab, abends meldet sich der Hunger auf Süßes. Das hat oft mit dem Blutzucker zu tun."
+    }
+  ];
+
+  const levers = [
+    {
+      title: "Muskeln sind dein größter Zuckerspeicher",
+      text:
+        "Ein großer Teil des Zuckers aus dem Essen wird in der Muskulatur aufgenommen. Wer Muskeln aufbaut und nutzt, schafft Platz – deshalb steht Krafttraining im Mittelpunkt, nicht nur Spazierengehen."
+    },
+    {
+      title: "Bewegung öffnet die Tür auch ohne viel Insulin",
+      text:
+        "Arbeitende Muskeln holen sich Zucker aus dem Blut, auch wenn Insulin gerade schlechter wirkt. Regelmäßige Ausdauer und kurze Bewegung nach dem Essen verstärken diesen Effekt."
+    },
+    {
+      title: "Weniger Kohlenhydrate entlasten",
+      text:
+        "Nicht verbieten, sondern reduzieren und klug verteilen: Eiweiß und Gemüse zuerst, Kohlenhydrate gezielt dort, wo du sie brauchst. So bleiben die Blutzuckerspitzen kleiner."
+    },
+    {
+      title: "Schlaf und Stress zählen mit",
+      text:
+        "Kurze Nächte und Dauerstress verschlechtern die Insulinwirkung messbar. Deshalb gehören sie in den Plan und nicht in eine Fußnote."
+    }
+  ];
+
+  const programSteps = [
+    {
+      step: "01",
+      title: "Erstgespräch und deine Werte",
+      text:
+        "Wir sprechen über Laborbefund, Medikamente, Alltag und Ziel. Du bringst deinen aktuellen HbA1c mit und klärst mit deinem Arzt, dass Training für dich passt."
+    },
+    {
+      step: "02",
+      title: "Dein Plan für Training und Ernährung",
+      text:
+        "Kraft- und Ausdauertraining in deinem Tempo, dazu eine Ernährung mit weniger Kohlenhydraten – gebaut aus dem, was du ohnehin gern isst."
+    },
+    {
+      step: "03",
+      title: "Zwölf Wochen gemeinsam trainieren",
+      text:
+        "Vor Ort in Nürnberg einmal pro Woche mit mir persönlich. Online mit Video-Feedback zur Technik und einem festen wöchentlichen Check-in."
+    },
+    {
+      step: "04",
+      title: "Messen, verstehen, anpassen",
+      text:
+        "Blutzucker, Taillenumfang, Gewicht und Kraftwerte landen in der Camp Dörfl App. Jede Woche schauen wir drauf und passen an, was nicht trägt."
+    },
+    {
+      step: "05",
+      title: `Nach zwölf Wochen: der Blick auf den <span class="hba1c-term">HbA1c</span>`,
+      text:
+        "Du lässt den Wert bei deinem Arzt kontrollieren. Wir legen Anfang und Ende nebeneinander und planen, wie du das Erreichte hältst."
+    }
+  ];
+
+  const roles = [
+    {
+      title: "Was ich als Diabetes Coach mit dir mache",
+      text:
+        "Training planen und begleiten, Ernährung alltagstauglich umstellen, Werte dokumentieren, dranbleiben, wenn der Alltag dazwischenkommt."
+    },
+    {
+      title: "Was bei deinem Arzt bleibt",
+      text:
+        "Diagnose, Laborwerte, Medikamente und jede Entscheidung, ob und wann sich an deiner Therapie etwas ändert. Daran wird hier nichts vorbei geplant."
+    }
+  ];
+
+  const afterwards = [
+    {
+      title: "Dranbleiben",
+      text:
+        "Mit der Camp Dörfl App für 9,99 € im Monat eigenständig weiter oder mit Online Coaching ab 120 € im Monat weiter eng begleitet."
+    },
+    {
+      title: `Auffrischung alle sechs Monate · ${preis.auffrischung} €`,
+      text:
+        "Passend zur nächsten Kontrolle beim Arzt: neue Werte einordnen, Taille und Kraft vergleichen, Plan anpassen und vier Wochen enger geführt wieder Schwung aufnehmen."
+    },
+    {
+      title: "Warum das gut angelegt ist",
+      text:
+        "Dein Körper braucht diese Auffrischung immer wieder – wie jedes System, das zuverlässig laufen soll. Jede Stunde, die du in dich investierst, zahlt auf die nächsten Jahre ein."
+    }
+  ];
+
+  const rightFor = [
+    {
+      title: "Passt, wenn …",
+      text:
+        "… dein HbA1c erhöht ist, sich Typ-2-Diabetes anbahnt oder du am Anfang mit Metformin stehst – und du zwölf Wochen lang wirklich etwas verändern willst. Sporterfahrung brauchst du nicht."
+    },
+    {
+      title: "Passt nicht, wenn …",
+      text:
+        "… du ohne deinen Arzt Medikamente reduzieren möchtest oder eine schnelle Diät suchst. Bei Typ-1-Diabetes ist dieses Programm nicht der richtige Rahmen."
+    }
+  ];
+
+  const offerFaq = [
+    {
+      question: "Was macht ein Diabetes Coach?",
+      answer:
+        "Ein Diabetes Coach hilft dir, im Alltag umzusetzen, was bei Prädiabetes und Typ-2-Diabetes den Unterschied macht: regelmäßiges Kraft- und Ausdauertraining, eine Ernährung mit weniger Kohlenhydraten, genug Schlaf und das Dranbleiben über Monate. Er stellt keine Diagnose und verändert keine Medikamente – das bleibt bei deinem Arzt. Bei Camp Dörfl ist Dominik Dörfl dein Coach: Personal Trainer, zweifacher Deutscher Meister und der Coach hinter Günter Preis’ Weg."
+    },
+    {
+      question: "Gibt es den Diabetes Coach in Nürnberg auch online?",
+      answer:
+        "Ja. Vor Ort trainierst du in Nürnberg – für Menschen aus Nürnberg, Fürth, Erlangen und der Metropolregion. Online läuft das Coaching deutschlandweit über die Camp Dörfl App mit wöchentlichem Check-in und Video-Feedback zur Technik."
+    },
+    {
+      question: "Für wen ist das Programm gedacht?",
+      answer:
+        "Für Menschen mit erhöhtem Langzeitblutzucker: HbA1c im Bereich des Prädiabetes zwischen 5,7 und 6,4 Prozent, ein beginnender Typ-2-Diabetes oder eine frische Einstellung auf Metformin. Entscheidend ist der Wille, zwölf Wochen konsequent mitzuarbeiten."
+    },
+    {
+      question: "Ich nehme Metformin. Kann ich trotzdem mitmachen?",
+      answer:
+        "Ja – gerade dann. Voraussetzung ist, dass dein Arzt Bescheid weiß und Training für dich freigibt. An deinen Medikamenten ändert sich im Programm nichts; das entscheidet ausschließlich dein Arzt anhand deiner Werte. Nimmst du Insulin oder Medikamente, die Unterzuckerungen auslösen können, stimmen wir uns besonders eng mit ihm ab."
+    },
+    {
+      question: "Sinkt mein HbA1c dadurch?",
+      answer:
+        "Studien zeigen, dass Krafttraining, Ausdauer und eine Ernährung mit weniger Kohlenhydraten die Insulinsensitivität verbessern und den HbA1c senken können. Wie stark das bei dir wirkt, hängt von Ausgangslage und Umsetzung ab. Deshalb wird hier kein Wert versprochen, sondern vorher und nachher beim Arzt gemessen."
+    },
+    {
+      question: "Muss ich auf Kohlenhydrate komplett verzichten?",
+      answer:
+        "Nein. Kohlenhydrate werden reduziert und sinnvoll über den Tag verteilt – nicht verboten. Der Plan setzt an dem an, was du ohnehin isst. Was du nicht durchhältst, steht nicht im Plan."
+    },
+    {
+      question: "Ich habe seit Jahren keinen Sport gemacht. Ist das ein Problem?",
+      answer:
+        "Nein. Der Einstieg richtet sich nach deiner Belastbarkeit. Wer lange pausiert hat, beginnt mit wenig Umfang und sauberer Technik – genau dort passiert am Anfang am meisten."
+    },
+    {
+      question: "Wie läuft die Online-Variante ab?",
+      answer:
+        "Du bekommst deinen Plan in der Camp Dörfl App, trainierst zu Hause oder im Studio und schickst Videos zur Technik. Einmal pro Woche gibt es einen festen Check-in mit Rückmeldung und Anpassung. Deine Werte trägst du in der App ein."
+    },
+    {
+      question: "Brauche ich einen Glukosesensor?",
+      answer:
+        "Nein. Ein normales Blutzuckermessgerät reicht. Wer einen Sensor nutzt, sieht die Reaktion auf Essen und Training allerdings besonders deutlich – das kann motivieren, ist aber freiwillig."
+    },
+    {
+      question: "Was kostet das Programm?",
+      answer:
+        `Zwölf Wochen vor Ort in Nürnberg mit wöchentlichem Personal Training kosten ${preis.vorOrt} €, die Online-Variante ${preis.online} €. Danach kannst du mit der App oder dem Online Coaching weitermachen; die Auffrischung alle sechs Monate kostet ${preis.auffrischung} €.`
+    },
+    {
+      question: "Wie melde ich mich an?",
+      answer:
+        "Über das Kontaktformular, per Telefon oder WhatsApp. Im Erstgespräch klären wir, ob das Programm zu dir passt und welche Variante sinnvoll ist."
+    }
+  ];
+
+  const offerCard = ({ label, amount, rate, includes, note }) => `
+    <div class="offer40-price__offer">
+      <span class="offer40-price__tag">${label}</span>
+      <!-- data-counted: Der Zähler in main.js liest „1.290“ als 1,290 und zählt mit Komma hoch. -->
+      <p class="offer40-price__amount" data-counted="true">${amount} €</p>
+      <p class="offer40-price__rate">${rate}</p>
+      <ul class="offer40-price__includes">
+        ${includes.map((item) => `<li>${item}</li>`).join("")}
+      </ul>
+      <a class="button button--primary offer40-price__cta" href="${contactHref("hba1c-programm")}"><span>Erstgespräch anfragen</span><span aria-hidden="true">&rarr;</span></a>
+      <p class="offer40-price__note">${note}</p>
+    </div>
+  `;
+
+  const content = `
+    <section class="ff-hero ff-hero--photo ff-hero--text-only offer40-hero">
+      <img class="ff-hero__img" src="/assets/images/dominik-coaching-bikeerg.webp" width="1800" height="1199" srcset="/assets/images/dominik-coaching-bikeerg-768.webp 768w, /assets/images/dominik-coaching-bikeerg.webp 1200w" sizes="100vw" alt="Begleitetes Ausdauertraining bei Camp Dörfl in Nürnberg"${imageLoadingAttributes({ eager: true })}>
+      <div class="ff-hero__scrim" aria-hidden="true"></div>
+      <div class="section-shell ff-hero__inner">
+        <h1 class="ff-hero__eyebrow" data-reveal>Diabetes Coach in Nürnberg &amp; online</h1>
+        <p class="ff-hero__title" data-reveal><span class="hba1c-term">HbA1c</span> erhöht? <br><span>Jetzt gegensteuern.</span></p>
+        <p class="ff-hero__lead" data-reveal>
+          Dein Arzt sagt, der Langzeitblutzucker geht in die falsche Richtung. Vielleicht nimmst du schon Metformin. Das ist kein Urteil – das ist dein Startsignal.
+        </p>
+        <p class="ff-hero__support" data-reveal>
+          Zwölf Wochen gezieltes Training, eine Ernährung mit weniger Kohlenhydraten und eine Begleitung, die dranbleibt, wenn der Alltag dazwischenkommt. Damit dein Körper wieder besser auf Insulin reagiert. Deine Therapie bleibt bei deinem Arzt.
+        </p>
+        <div class="ff-hero__actions" data-reveal>
+          <a class="button button--primary" href="${contactHref("hba1c-programm")}"><span>Erstgespräch anfragen</span><span aria-hidden="true">&rarr;</span></a>
+          <a class="button button--secondary-light" href="#programm"><span>Programm ansehen</span><span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <dl class="ff-hero__facts" data-reveal aria-label="Das Programm in Zahlen">
+          <div><dt>12</dt><dd>Wochen begleitet</dd></div>
+          <div><dt>2</dt><dd>Wege: vor Ort oder online</dd></div>
+          <div><dt>1</dt><dd>Plan für deinen Alltag</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="section-shell">
+        ${sectionHeader({
+          title: "Erkennst du dich wieder?",
+          text:
+            "Die meisten merken lange nichts. Dann steht ein Wert im Befund, und plötzlich ist das Thema da. Genau hier lohnt es sich anzusetzen – so früh wie möglich.",
+          align: "center"
+        })}
+        ${featureGrid(recognition, "feature-grid--coaching-flow")}
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section-shell editorial-stage">
+        <div class="editorial-stage__copy" data-reveal>
+          ${sectionHeader({
+            title: "Du bist nicht schuld. Aber du bist auch nicht machtlos.",
+            text:
+              "Ein erhöhter HbA1c heißt meist: Die Zellen reagieren schlechter auf Insulin. Diese Insulinsensitivität lässt sich trainieren – mit vier Stellschrauben, die du selbst in der Hand hast."
+          })}
+          ${summaryRows(levers)}
+          <p class="offer40-disclaimer">Allgemeine Einordnung, keine medizinische Beratung. Diagnose und Therapie gehören in ärztliche Hände. <a href="https://www.diabinfo.de/leben/typ-2-diabetes/grundlagen/krankheitsbild-und-symptome.html" target="_blank" rel="noopener noreferrer">Fachinformationen zu Typ-2-Diabetes <span aria-hidden="true">&nearr;</span></a></p>
+        </div>
+        <div class="editorial-stage__media" data-reveal>
+          <img src="/assets/images/dominik-personal-coaching-client.webp" width="1200" height="1800" srcset="/assets/images/dominik-personal-coaching-client-480.webp 480w, /assets/images/dominik-personal-coaching-client-768.webp 768w, /assets/images/dominik-personal-coaching-client.webp 1200w" sizes="(max-width: 900px) 100vw, 46vw" alt="Dominik Dörfl korrigiert eine Übungsausführung im Personal Training"${imageLoadingAttributes()}>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-shell editorial-stage editorial-stage--reverse">
+        <div class="editorial-stage__copy" data-reveal>
+          ${sectionHeader({
+            title: "Günter hat es vorgemacht.",
+            text:
+              "Typ-2-Diabetes, viele Medikamente, Sorgen um die Nierenwerte. Statt über die Bühne zu reden, haben wir zuerst seine Gesundheit stabilisiert: mehr Ausdauer, weniger Kohlenhydrate, Blutzucker immer im Blick, die Medikation ärztlich begleitet."
+          })}
+          <p>Heute kommt Günter nach eigener Auskunft ohne blutzuckersenkende Medikamente aus, seine Werte liegen im Referenzbereich – und mit 63 wurde er Vizeweltmeister im Bodybuilding.</p>
+          <p class="offer40-disclaimer">Günters Verlauf ist persönlich und lässt sich nicht auf jeden übertragen. Er zeigt, was möglich ist, wenn man konsequent dranbleibt.</p>
+          <p class="expert-policy-link"><a href="/erfolge-im-team/guenter-preis/">Günters ganze Geschichte lesen →</a></p>
+        </div>
+        <div class="editorial-stage__media" data-reveal>
+          <img src="/assets/images/guenter-preis-stage-2026.webp" width="1067" height="1600" alt="Günter Preis mit 63 Jahren in Wettkampfform auf der Bühne"${imageLoadingAttributes()}>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted" id="programm">
+      <div class="section-shell">
+        ${sectionHeader({
+          title: "Fünf Schritte über zwölf Wochen.",
+          text: "Am Anfang dein Wert beim Arzt, am Ende wieder. Dazwischen die Arbeit – und du machst sie nicht allein."
+        })}
+        <ol class="offer40-timeline" aria-label="Ablauf des Programms in fünf Schritten">
+          ${programSteps
+            .map(
+              (item, index) => `
+                <li class="offer40-timeline__item" data-reveal style="--offer40-delay: ${index * 90}ms">
+                  <span class="offer40-timeline__marker" aria-hidden="true">${item.step}</span>
+                  <div class="offer40-timeline__body">
+                    <h3>${item.title}</h3>
+                    <p>${item.text}</p>
+                  </div>
+                </li>
+              `
+            )
+            .join("")}
+        </ol>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="section-shell">
+        ${sectionHeader({
+          title: "Was ein Diabetes Coach macht – und was nicht.",
+          text: "Als Diabetes Coach begleite ich dich bei Training, Ernährung und Alltag – persönlich in Nürnberg für Nürnberg, Fürth und Erlangen oder online in ganz Deutschland. Ich bin Personal Trainer und Coach, kein Arzt und kein Diabetesberater DDG. Training und Medizin arbeiten deshalb nebeneinander, nicht gegeneinander.",
+          align: "center"
+        })}
+        ${featureGrid(roles, "feature-grid--coaching-flow")}
+      </div>
+    </section>
+
+    <section class="section section--muted" id="preis">
+      <div class="section-shell">
+        ${sectionHeader({
+          title: "Zwei Wege. Dieselbe Sorgfalt.",
+          text: "Persönlich in Nürnberg oder ortsunabhängig online – Plan, App und Begleitung sind in beiden enthalten.",
+          align: "center"
+        })}
+        <div class="offer40-price" data-reveal>
+          ${offerCard({
+            label: "Vor Ort in Nürnberg",
+            amount: preis.vorOrt,
+            rate: "für 12 Wochen · rund 430 € pro Monat",
+            includes: [
+              "Erstgespräch mit Blick auf Befund und Alltag",
+              "Trainings- und Ernährungsplan mit weniger Kohlenhydraten",
+              "12 × Personal Training, einmal pro Woche",
+              "Camp Dörfl App mit Blutzucker, Taille und Kraftwerten",
+              "Direkte Erreichbarkeit über die gesamten zwölf Wochen"
+            ],
+            note: "Für Nürnberg, Fürth, Erlangen und die Metropolregion."
+          })}
+          ${offerCard({
+            label: "Online",
+            amount: preis.online,
+            rate: "für 12 Wochen · rund 230 € pro Monat",
+            includes: [
+              "Erstgespräch per Video",
+              "Trainings- und Ernährungsplan mit weniger Kohlenhydraten",
+              "Wöchentlicher Check-in mit Anpassung",
+              "Video-Feedback zu deiner Technik",
+              "Camp Dörfl App mit Blutzucker, Taille und Kraftwerten"
+            ],
+            note: "Deutschlandweit. Keine Vertragsbindung, keine automatische Verlängerung."
+          })}
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-shell">
+        ${sectionHeader({
+          title: "Nach zwölf Wochen hört es nicht auf.",
+          text: "Der Körper vergisst schneller, als uns lieb ist. Deshalb gibt es einen klaren Weg, das Erreichte zu halten.",
+          align: "center"
+        })}
+        ${featureGrid(afterwards, "feature-grid--coaching-flow")}
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section-shell editorial-stage">
+        <div class="editorial-stage__copy" data-reveal>
+          ${sectionHeader({
+            title: "Für wen das Programm gedacht ist."
+          })}
+          ${summaryRows(rightFor)}
+          <p class="expert-policy-link"><a href="/personal-training-kosten-nuernberg/">Alle Preise für Personal Training ansehen →</a></p>
+        </div>
+        <div class="editorial-stage__media" data-reveal>
+          <img src="/assets/images/guenter-preis-training-front.webp" width="975" height="1300" alt="Günter Preis beim Formcheck im Fitnessstudio"${imageLoadingAttributes()}>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-shell">
+        ${sectionHeader({
+          title: "Was du vorher wissen willst."
+        })}
+        ${faq(offerFaq)}
+      </div>
+    </section>
+
+    ${ctaSection({
+      eyebrow: "Erstgespräch",
+      title: "Jede Woche, die du in dich investierst, ist gut angelegt.",
+      text:
+        "Schreib kurz, wo deine Werte gerade stehen und was dich beschäftigt. Du bekommst eine persönliche, ehrliche Einschätzung – auch wenn das Programm gerade nicht das Richtige ist.",
+      primary: { label: "Erstgespräch anfragen", href: contactHref("hba1c-programm") },
+      secondary: { label: "Günters Geschichte lesen", href: "/erfolge-im-team/guenter-preis/" }
+    })}
+  `;
+
+  return layout({
+    path,
+    title: "Diabetes Coach Nürnberg & online | Camp Dörfl",
+    pageName: "Diabetes Coach Nürnberg",
+    description:
+      "Diabetes Coach in Nürnberg und online: 12 Wochen Training und Ernährung bei erhöhtem HbA1c, Prädiabetes oder Metformin – abgestimmt mit deinem Arzt.",
+    keywords: [
+      "Diabetes Coach",
+      "Diabetes Coach Nürnberg",
+      "Diabetes Coaching online",
+      "HbA1c senken Training",
+      "Prädiabetes Programm",
+      "Insulinsensitivität verbessern",
+      "Typ 2 Diabetes Sport Nürnberg",
+      "Metformin Ernährung Training",
+      "Blutzucker senken Krafttraining",
+      "Personal Trainer Diabetes Nürnberg"
+    ],
+    bodyClass: "page-premium page-offer-40 page-hba1c",
+    socialImage: "/assets/images/guenter-preis-coach-stage.jpg",
+    socialImageAlt: "Dominik Dörfl und Günter Preis nach einer Meisterschaft",
+    extraStructuredData: [
+      {
+        "@type": "Service",
+        "@id": `${site.url}${path}#service`,
+        name: "Diabetes Coach Nürnberg – 12-Wochen-Programm bei erhöhtem HbA1c",
+        alternateName: ["Diabetes Coaching Nürnberg", "Diabetes Coach online"],
+        serviceType: "Diabetes Coaching: Training und Ernährung bei Prädiabetes und beginnendem Typ-2-Diabetes",
+        description:
+          "Begleitetes 12-Wochen-Programm mit Kraft- und Ausdauertraining, kohlenhydratreduzierter Ernährung und Werte-Dokumentation in der Camp Dörfl App – ergänzend zur ärztlichen Behandlung.",
+        provider: { "@id": `${site.url}/#business` },
+        areaServed: [
+          { "@type": "City", name: "Nürnberg" },
+          { "@type": "City", name: "Fürth" },
+          { "@type": "City", name: "Erlangen" },
+          { "@type": "Country", name: "Deutschland" }
+        ],
+        offers: [
+          {
+            "@type": "Offer",
+            name: "Vor Ort in Nürnberg",
+            price: preis.vorOrt.replace(".", ""),
+            priceCurrency: "EUR",
+            availability: "https://schema.org/InStock",
+            url: `${site.url}${path}`
+          },
+          {
+            "@type": "Offer",
+            name: "Online",
+            price: preis.online,
+            priceCurrency: "EUR",
+            availability: "https://schema.org/InStock",
+            url: `${site.url}${path}`
+          }
+        ]
+      },
+      faqSchema(path, offerFaq)
+    ],
+    content
+  });
+}
+
 function keynoteSpeakerNuernbergPage() {
   const keynoteValue = [
     {
@@ -6868,7 +7765,8 @@ function bodybuildingCoachingPage() {
     { question: "Funktioniert die Wettkampfvorbereitung komplett online?", answer: "Ja. Das Online Coaching ist deutschlandweit und international möglich. Fortschrittsbilder, Trainingsdaten, Körperwerte, Ernährungsumsetzung und regelmäßige Check-ins bilden die Grundlage für laufende Anpassungen." },
     { question: "Wo findet das Bodybuilding Coaching vor Ort statt?", answer: "Die persönliche Betreuung findet in Nürnberg statt. Formchecks, Training, Posing und Körperanalyse können vor Ort mit der digitalen Begleitung verbunden werden." },
     { question: "Wie früh sollte eine Wettkampfvorbereitung beginnen?", answer: "Das hängt von Ausgangsform, Muskelmasse, Klasse, Wettkampferfahrung und Show-Termin ab. Eine gute Vorbereitung beginnt dann, wenn das Ziel mit vertretbarem Tempo und genügend Reserven erreichbar ist." },
-    { question: "Ist das Coaching nur für Profi-Athleten?", answer: "Nein. Entscheidend sind Ernsthaftigkeit, Verlässlichkeit und die Bereitschaft, Feedback umzusetzen. Dominik begleitet ambitionierte Newcomer ebenso wie erfahrene Athleten." }
+    { question: "Ist das Coaching nur für Profi-Athleten?", answer: "Nein. Entscheidend sind Ernsthaftigkeit, Verlässlichkeit und die Bereitschaft, Feedback umzusetzen. Dominik begleitet ambitionierte Newcomer ebenso wie erfahrene Athleten." },
+    { question: "Welche Rolle spielen Supplements in der Vorbereitung?", answer: "Eine ergänzende. Zuerst stehen Trainingsreiz, Ernährung, Schlaf und Regeneration; erst danach ist ein Produkt sinnvoll, und auch dann individuell. Camp Dörfl ist Nutrition Partner von XXL Nutrition — mit dem Partner-Code DOMINIK gibt es dort 10 % auf die Bestellung.", answerHtml: "Eine ergänzende. Zuerst stehen Trainingsreiz, Ernährung, Schlaf und Regeneration; erst danach ist ein Produkt sinnvoll, und auch dann individuell. Camp Dörfl ist Nutrition Partner von XXL Nutrition — mit dem <a href=\"/xxl-nutrition-rabattcode/\">Partner-Code DOMINIK</a> gibt es dort 10 % auf die Bestellung." }
   ];
 
   const content = `
@@ -7008,7 +7906,7 @@ function xxlAngebotsBand() {
           <div class="xxl-band__intro" data-reveal>
             <p class="eyebrow">Nutrition Partner &middot; Wochenangebot</p>
             <h2 id="xxl-band-title">XXL Nutrition<br><span>diese Woche.</span></h2>
-            <p class="xxl-band__lead">${produkte.length} Artikel sind gerade reduziert. Mit dem Partner-Code gehen an der Kasse noch einmal ${rabattProzent}&nbsp;% herunter — die Preise unten stehen bereits mit Code.</p>
+            <p class="xxl-band__lead">${produkte.length} Artikel sind gerade reduziert. Mit dem <a href="/xxl-nutrition-rabattcode/">XXL Nutrition Rabattcode</a> gehen an der Kasse noch einmal ${rabattProzent}&nbsp;% herunter — die Preise unten stehen bereits mit Code.</p>
           </div>
           <div class="code-card xxl-band__code" data-reveal>
             <p class="code-card__label">Dein Code &middot; ${rabattProzent}&nbsp;% zusätzlich</p>
@@ -7263,7 +8161,7 @@ function bodybuildingCalendarPage() {
         <div class="bbcal-section-heading bbcal-section-heading--international" data-reveal>
           <p class="eyebrow">Profi & international</p>
           <h2>IFBB Pro League, NPC Worldwide und IFBB International.</h2>
-          <p>Die wichtigsten kommenden internationalen Termine, pro Veranstaltung einmal aufgeführt. Divisionen, Regionals und kurzfristige Änderungen stehen vollständig in den jeweils verlinkten offiziellen Live-Kalendern.</p>
+          <p>Die wichtigsten kommenden internationalen Termine, pro Veranstaltung einmal aufgeführt. Divisionen, Regionals und kurzfristige Änderungen stehen vollständig in den jeweils verlinkten offiziellen Live-Kalendern. Wer die Vorjahre nachschlagen möchte: Es gibt eigene Übersichten aller <a href="/mr-olympia-sieger/">Mr.-Olympia-Sieger</a> und aller <a href="/arnold-classic-sieger/">Arnold-Classic-Sieger</a>.</p>
         </div>
         <div class="bbcal-federations bbcal-federations--international">
           ${internationalCalendarSections}
@@ -7625,6 +8523,29 @@ function boxingCompetitionCard(event) {
   `;
 }
 
+/* Querverweis zwischen den Terminkalendern.
+ *
+ * Wer einen Kalender liest, sucht Termine — und oft gleich den nächsten
+ * daneben. Genannt werden deshalb nur Kalender mit überschneidender
+ * Zielgruppe, nicht alle sechs: Ein Boxkalender hilft niemandem weiter, der
+ * nach Golfturnieren sucht. Die Ortssuche steht dabei, weil auf jeden Termin
+ * die Frage folgt, wo man dafür trainiert.
+ *
+ * Ohne diese Zeile hatten fünf der Kalenderseiten keinen einzigen Verweis aus
+ * einem Fließtext — sie hingen allein an der Navigation. */
+function weitereKalender(verweise) {
+  return `
+    <section class="section section--tight kalender-verwandt" data-color-scheme="dark">
+      <div class="section-shell">
+        <p class="kalender-verwandt__zeile" data-reveal>
+          <span class="kalender-verwandt__auszeichnung">Weiter im Sportjahr</span>
+          ${verweise.map(({ href, label }) => `<a href="${href}">${label}</a>`).join("")}
+        </p>
+      </div>
+    </section>
+  `;
+}
+
 function boxingCalendarPage() {
   const allEntries = boxingCalendarSources.flatMap((source) =>
     source.events.map((event) => ({ ...event, source }))
@@ -7857,6 +8778,8 @@ function boxingCalendarPage() {
         ${faq(boxingCalendarFaq)}
       </div>
     </section>
+
+    ${weitereKalender([{ href: "/mma-wettkaempfe-2026/", label: "MMA Wettkämpfe 2026" }, { href: "/sport-spot-finden/", label: "Boxgyms in deiner Nähe finden" }])}
 
     ${ctaSection({
       eyebrow: "Performance für den Ring",
@@ -8357,6 +9280,8 @@ function mmaCalendarPage() {
       </div>
     </section>
 
+    ${weitereKalender([{ href: "/boxen-wettkaempfe-2026/", label: "Boxen Wettkämpfe 2026" }, { href: "/sport-spot-finden/", label: "MMA- und Kampfsportgyms in deiner Nähe" }])}
+
     ${ctaSection({
       eyebrow: "Performance für den Käfig",
       title: "Der Termin steht. Die Form entsteht davor.",
@@ -8425,6 +9350,13 @@ function calendarDateLabel(event) {
 }
 
 const triathlonCalendarFaq = [
+  {
+    question: "Welche Distanz hat welches Rennen?",
+    answer:
+      "Die Distanz steht in der Ausschreibung des Veranstalters; viele Rennen bieten mehrere parallel an. Was Sprint, olympische Distanz, Mitteldistanz und Langdistanz genau bedeuten, steht mit allen Kilometern auf der Seite zu den Triathlon-Distanzen.",
+    answerHtml:
+      "Die Distanz steht in der Ausschreibung des Veranstalters; viele Rennen bieten mehrere parallel an. Was Sprint, olympische Distanz, Mitteldistanz und Langdistanz genau bedeuten, steht mit allen Kilometern auf der Seite zu den <a href=\"/triathlon-distanzen/\">Triathlon-Distanzen</a>."
+  },
   {
     question: "Wie funktioniert die Suche nach Postleitzahl und Radius?",
     answer:
@@ -8600,6 +9532,7 @@ function triathlonCalendarPage() {
           <div class="bbcal-intro__copy">
             <p>Land auswählen genügt. Für eine echte Umgebungssuche zusätzlich Postleitzahl und Radius eingeben – der Kalender zeigt danach nur passende Treffer.</p>
             <p><strong>Ohne Filter</strong> bleibt der vollständige Kalender mit Deutschland, Österreich, Schweiz, Spanien, Italien, Luxemburg, Belgien, Niederlande und Frankreich sichtbar.</p>
+            <p>Noch unsicher, welche Strecke zu dir passt? Die <a href="/triathlon-distanzen/">Triathlon-Distanzen</a> stehen mit exakten Kilometern, Zielzeiten und Trainingsaufwand auf einer eigenen Seite.</p>
           </div>
         </div>
 
@@ -8666,6 +9599,8 @@ function triathlonCalendarPage() {
       ${sectionHeader({ eyebrow: "Fragen zum Rennkalender", title: "Schneller zum passenden Start.", text: "Was die Suche kann – und was du vor der Anmeldung direkt beim Veranstalter prüfen solltest." })}
       ${faq(triathlonCalendarFaq)}
     </div></section>
+
+    ${weitereKalender([{ href: "/laufkalender-2026/", label: "Laufkalender 2026" }, { href: "/sport-spot-finden/", label: "Schwimmbäder und Trainingsorte in deiner Nähe" }])}
 
     ${ctaSection({
       eyebrow: "Triathlon Coaching",
@@ -8925,6 +9860,8 @@ function runningCalendarPage() {
       ${faq(runningCalendarFaq)}
     </div></section>
 
+    ${weitereKalender([{ href: "/triathlon-kalender-2026/", label: "Triathlon Kalender 2026" }, { href: "/triathlon-distanzen/", label: "Triathlon-Distanzen erklärt" }, { href: "/sport-spot-finden/", label: "Laufstrecken und Sportstätten in deiner Nähe" }])}
+
     ${ctaSection({
       eyebrow: "Ausdauer & Performance",
       title: "Das Ziel steht. Jetzt braucht die Vorbereitung Struktur.",
@@ -9112,6 +10049,8 @@ function golfCalendarPage() {
       ${faq(golfCalendarFaq)}
     </div></section>
 
+    ${weitereKalender([{ href: "/sport-spot-finden/", label: "Golfplätze und Trainingsorte in deiner Nähe" }])}
+
     <section class="section golfcal-performance-cta">
       <div class="section-shell section-shell--wide golfcal-performance-cta__inner">
         <figure data-reveal><img src="/assets/images/golfturniere-creators-cup.webp" width="1350" height="1800" alt="Dominik Dörfl beim Creators Golf Cup auf dem Grün"${imageLoadingAttributes()}></figure>
@@ -9282,6 +10221,15 @@ function sportSpotFinderPage() {
         <ol><li><span>01</span><strong>Ort festlegen</strong><p>PLZ oder Stadt und gewünschten Umkreis eingeben.</p></li><li><span>02</span><strong>Sportart wählen</strong><p>Eine von 20 großen Kategorien auswählen.</p></li><li><span>03</span><strong>Spot entdecken</strong><p>Ergebnisse auf Karte und in der übersichtlichen Liste vergleichen.</p></li></ol>
       </div>
     </section>
+    ${weitereKalender([
+      { href: "/bodybuilding-wettkaempfe-2026/", label: "Bodybuilding Wettkämpfe 2026" },
+      { href: "/boxen-wettkaempfe-2026/", label: "Boxen 2026" },
+      { href: "/mma-wettkaempfe-2026/", label: "MMA 2026" },
+      { href: "/triathlon-kalender-2026/", label: "Triathlon 2026" },
+      { href: "/laufkalender-2026/", label: "Laufkalender 2026" },
+      { href: "/golfturniere-2026/", label: "Golfturniere 2026" }
+    ])}
+
     <script id="sportspot-config" type="application/json">${sportSpotConfig}</script>
   `;
 
@@ -9341,6 +10289,7 @@ function pressMediaPage() {
         <a href="/ueber-dominik/" data-reveal><span>01 · Person</span><h3>Über Dominik Dörfl</h3><p>Werdegang, sportliche Stationen und Arbeitsweise.</p><b>Profil öffnen →</b></a>
         <a href="/erfolge-im-team/" data-reveal><span>02 · Nachweise</span><h3>Erfolge im Team</h3><p>Dokumentierte Resultate aus Coaching und Leistungssport.</p><b>Erfolge öffnen →</b></a>
         <a href="/personal-trainer-nuernberg/" data-reveal><span>03 · Angebot</span><h3>Personal Trainer Nürnberg</h3><p>Leistungsumfang, Zielgruppen und regionale Betreuung.</p><b>Leistungsseite öffnen →</b></a>
+        <a href="/moderator-nuernberg/" data-reveal><span>04 · Bühne</span><h3>Moderator in Nürnberg</h3><p>Moderation für Sport-, Business- und Bühnenformate.</p><b>Moderationsseite öffnen →</b></a>
       </div>
     </div></section>
 
@@ -9386,6 +10335,26 @@ function xxlNutritionRabattcodePage() {
   const rabatt = "10 %";
   const shopUrl = "https://www.xxlnutrition.com/";
 
+  // Der Stand ist eine Zusage: Er sagt, wann die Angaben zuletzt geprüft
+  // wurden. Antwortbox, Jahreszahl im Titel und dateModified lesen ihn aus
+  // dieser einen Zeile — so kann keine der drei Angaben den anderen davonlaufen.
+  // Wer die Seite prüft, setzt das Datum neu; wer es nicht tut, lässt es stehen.
+  const stand = "2026-09-10";
+  const standMonat = new Date(stand).toLocaleDateString("de-DE", { month: "long", year: "numeric" });
+  const standJahr = stand.slice(0, 4);
+
+  // Wo der Code als Name auftritt — Titel, Überschrift, Fließtext — steht er in
+  // Versalien. Kopiert und bei XXL eingetippt wird immer der Wert aus `code`:
+  // Die Karte zeigt ihn ohnehin in Versalien, gibt aber die echte Schreibweise
+  // an die Zwischenablage weiter.
+  const codeGross = code.toUpperCase();
+
+  const antwortFakten = [
+    { label: "Aktueller XXL Nutrition Rabattcode", wert: `<span data-code-value>${code}</span>`, istCode: true },
+    { label: "Rabatt", wert: rabatt },
+    { label: "Stand", wert: standMonat }
+  ];
+
   const einloeseSchritte = [
     {
       step: "01",
@@ -9394,13 +10363,13 @@ function xxlNutritionRabattcodePage() {
     },
     {
       step: "02",
-      title: `Code ${code} eintragen`,
-      text: "Im Warenkorb oder an der Kasse gibt es ein Feld für Gutschein- oder Rabattcodes. Dort den Code eintragen und bestätigen."
+      title: `Code ${codeGross} eintragen`,
+      text: "Im Warenkorb beziehungsweise an der Kasse gibt es ein Feld für Gutschein- oder Rabattcodes. Dort den Code eintragen und bestätigen — nicht ins Suchfeld."
     },
     {
       step: "03",
-      title: "Abzug prüfen",
-      text: "Vor dem Abschicken der Bestellung kurz kontrollieren, ob der Abzug in der Summe steht. Erst dann bestellen."
+      title: "Abzug in der Summe prüfen",
+      text: `Vor dem Abschicken kontrollieren, ob die ${rabatt} in der Summe stehen. Der Betrag im Warenkorb ist der verbindliche — erst dann bestellen.`
     }
   ];
 
@@ -9429,21 +10398,33 @@ function xxlNutritionRabattcodePage() {
 
   const rabattFaq = [
     {
-      question: "Wie lautet der XXL Nutrition Rabattcode?",
-      answer: `Der Code lautet ${code} und bringt ${rabatt} Rabatt. Er wird bei XXL Nutrition im Warenkorb beziehungsweise an der Kasse in das Feld für Gutschein- und Rabattcodes eingetragen.`
+      question: "Wie lautet der aktuelle XXL Nutrition Rabattcode?",
+      answer: `Der aktuelle XXL Nutrition Rabattcode lautet ${codeGross} und bringt ${rabatt} Rabatt. Stand: ${standMonat}. Eingetragen wird er bei XXL Nutrition im Warenkorb beziehungsweise an der Kasse im Feld für Gutschein- und Rabattcodes.`
     },
     {
-      question: "Wie löse ich den Rabattcode ein?",
-      answer: `Zuerst die Produkte in den Warenkorb legen, dann den Code ${code} im Gutscheinfeld eintragen und bestätigen. Vor dem Abschicken der Bestellung sollte der Abzug in der Summe sichtbar sein.`
+      question: `Wie viel Rabatt gibt ${codeGross}?`,
+      answer: `${codeGross} zieht ${rabatt} von deiner Bestellung bei XXL Nutrition ab. Der Abzug erscheint im Warenkorb, sobald der Code bestätigt ist. Verbindlich ist der Betrag, der dort steht — nicht die Angabe auf dieser Seite.`
+    },
+    {
+      question: "Wo gebe ich den XXL Nutrition Code ein?",
+      answer: `Im Warenkorb beziehungsweise im Kassenbereich von xxlnutrition.com gibt es ein Feld für Gutschein- oder Rabattcodes. Dort ${codeGross} eintragen und bestätigen. Das Suchfeld ist es nicht — dort passiert nichts.`
+    },
+    {
+      question: "Funktioniert der Code auch bei Angeboten?",
+      answer: `Das Wochenangebot-Band auf campdoerfl.de weist die Angebotspreise bereits abzüglich der ${rabatt} aus, rechnet also auf den schon reduzierten Preis. Ob sich der Code mit einer bestimmten Aktion verbinden lässt, legt XXL Nutrition fest und kann es jederzeit ändern. Maßgeblich ist immer die Summe im Warenkorb.`
+    },
+    {
+      question: "Gibt es einen XXL Nutrition Influencer Code?",
+      answer: `Ja — ${codeGross} ist genau dieser Code. Er stammt aus der Partnerschaft zwischen Camp Dörfl und XXL Nutrition und ist derselbe Code, der sonst als Influencer- oder Creator-Code gesucht wird. Er kostet nichts, ist an keine Bedingung von Camp Dörfl geknüpft und bringt ${rabatt}.`
     },
     {
       question: "Kostet mich der Code etwas?",
-      answer: `Nein. Der Code ist kostenlos, an keine Bedingung von unserer Seite geknüpft und zieht ${rabatt} von deiner Bestellung ab. Camp Dörfl ist Nutrition Partner von XXL Nutrition; über den Link kann eine Vergütung entstehen, für dich ändert sich am Preis dadurch nichts.`
+      answer: `Nein. Der Code ist kostenlos, verlangt keine Anmeldung und hat von unserer Seite keinen Mindestbestellwert. Camp Dörfl ist Nutrition Partner von XXL Nutrition; über den Link kann eine Vergütung entstehen, für dich ändert sich am Preis dadurch nichts.`
     },
     {
       question: "Für welche Produkte gilt der Code?",
       answer:
-        "Umfang, Mindestbestellwert und mögliche Ausnahmen legt XXL Nutrition selbst fest und kann sie jederzeit ändern. Verbindlich ist immer das, was im Warenkorb angezeigt wird."
+        "Umfang, Mindestbestellwert und mögliche Ausnahmen legt XXL Nutrition selbst fest und kann sie jederzeit ändern. Ob der Code für deinen Warenkorb gilt, zeigt der Warenkorb — dort steht der Abzug oder eben nicht."
     },
     {
       question: "Was tun, wenn der Code nicht funktioniert?",
@@ -9457,30 +10438,60 @@ function xxlNutritionRabattcodePage() {
     }
   ];
 
+  // Die Marke bekommt einen eigenen Knoten in den strukturierten Daten. Dann
+  // ist für eine Maschine eindeutig, über welches Unternehmen die Seite spricht
+  // — statt über eine Zeichenkette, die zufällig oft vorkommt.
+  const xxlNutritionEntitaet = {
+    "@type": "Organization",
+    "@id": `${site.url}${encodePath(path)}#xxl-nutrition`,
+    name: "XXL Nutrition",
+    url: shopUrl,
+    description: "Anbieter von Sporternährung und Nahrungsergänzung; Nutrition Partner von Camp Dörfl."
+  };
+
   const content = `
     <section class="ff-hero ff-hero--split ff-hero--partner">
       <div class="ff-hero__scrim" aria-hidden="true"></div>
       <div class="section-shell ff-hero__shell">
         <div class="ff-hero__inner">
+          ${breadcrumbTrail([
+            { label: "Home", href: "/" },
+            { label: "Partner", href: "/partner/" },
+            { label: "XXL Nutrition Rabattcode" }
+          ])}
           <p class="ff-hero__eyebrow" data-reveal>XXL Nutrition · Partner-Code · ${rabatt}</p>
-          <h1 class="ff-hero__title" data-reveal>XXL Nutrition<br><span>Rabattcode.</span></h1>
-          <p class="ff-hero__lead" data-reveal>
-            ${rabatt} auf deine Bestellung bei XXL Nutrition mit dem Code von Dominik Dörfl — hier steht er, darunter steht, wie du ihn einlöst.
-          </p>
-          <div class="code-card" data-reveal>
-            <p class="code-card__label">Dein Rabattcode · ${rabatt}</p>
-            <p class="code-card__value"><span data-code-value>${code}</span></p>
+          <h1 class="ff-hero__title" data-reveal>XXL Nutrition Rabattcode: <span>${rabatt} mit ${codeGross} sparen</span></h1>
+
+          <div class="code-card code-card--answer" data-reveal>
+            <dl class="answer-facts">
+              ${antwortFakten
+                .map(
+                  (fakt) => `
+                    <div>
+                      <dt>${fakt.label}</dt>
+                      <dd${fakt.istCode ? ' class="answer-facts__code"' : ""}>${fakt.wert}</dd>
+                    </div>
+                  `
+                )
+                .join("")}
+            </dl>
             <div class="code-card__actions">
-              <button class="button button--primary code-card__copy" type="button" data-copy-code="${code}">
-                <span>Code kopieren</span><span aria-hidden="true">⧉</span>
-              </button>
-              <a class="button button--secondary-light" href="${shopUrl}" target="_blank" rel="sponsored noopener noreferrer">
+              <a class="button button--primary" href="${shopUrl}" target="_blank" rel="sponsored noopener noreferrer">
                 <span>Zum Shop</span><span aria-hidden="true">↗</span>
               </a>
+              <button class="button button--secondary-light code-card__copy" type="button" data-copy-code="${code}">
+                <span>Code kopieren</span><span aria-hidden="true">⧉</span>
+              </button>
             </div>
             <p class="code-card__hint" role="status" data-copy-feedback></p>
             ${advertisingNote("ad-note ad-note--hero", "Werbung: Partnerlink zu XXL Nutrition")}
           </div>
+
+          <p class="ff-hero__lead" data-reveal>
+            Der aktuelle XXL Nutrition Rabattcode lautet ${codeGross} und bringt ${rabatt} auf deine Bestellung.
+            Camp Dörfl ist Nutrition Partner von XXL Nutrition — der Code kostet nichts und ist an keine
+            Bedingung von unserer Seite geknüpft. Darunter steht, wie du ihn einlöst und wofür er gilt.
+          </p>
         </div>
         <div class="ff-hero__showcase ff-hero__showcase--partner" data-reveal>
           <figure class="partner-hero__visual partner-hero__visual--portrait">
@@ -9496,7 +10507,7 @@ function xxlNutritionRabattcodePage() {
           eyebrow: "In drei Schritten",
           title: "So löst du den Code ein.",
           text:
-            "Der Ablauf dauert keine Minute. Wichtig ist nur die Reihenfolge: erst der Warenkorb, dann der Code.",
+            "Der Ablauf dauert keine Minute. Wichtig ist nur die Reihenfolge: erst der Warenkorb, dann der Code, dann der Blick auf die Summe.",
           align: "center"
         }).replace("<h2", '<h2 id="einloesen-title"')}
         ${stepGrid(einloeseSchritte)}
@@ -9516,14 +10527,40 @@ function xxlNutritionRabattcodePage() {
       </div>
     </section>
 
-    <section class="section" aria-labelledby="warum-title">
+    <section class="section" aria-labelledby="geltung-title">
+      <div class="section-shell">
+        ${sectionHeader({
+          eyebrow: "Geltung und Grenzen",
+          title: "Wofür der Code gilt — und wofür nicht.",
+          text:
+            "Was hier steht, ist der Stand, den wir kennen. Die Konditionen setzt XXL Nutrition, nicht Camp Dörfl — deshalb steht unten, woran du dich verlässlich halten kannst.",
+          align: "center"
+        }).replace("<h2", '<h2 id="geltung-title"')}
+        <div class="summary-rows summary-rows--compact">
+          <article class="summary-row" data-reveal>
+            <h3>Wo der Rabatt greift</h3>
+            <p>Der Code wird auf die laufende Bestellung angerechnet, sobald er im Gutscheinfeld bestätigt ist. Was tatsächlich abgezogen wird, steht in der Summe im Warenkorb — dieser Betrag gilt, nicht die Angabe auf dieser Seite.</p>
+          </article>
+          <article class="summary-row" data-reveal>
+            <h3>Mögliche Ausnahmen</h3>
+            <p>Umfang, Mindestbestellwert und Ausnahmen legt XXL Nutrition fest und kann sie jederzeit ändern. Von Camp Dörfl aus gibt es keine Bedingung: kein Mindestwert, keine Anmeldung, keine Laufzeit. Ob der Code für deinen Warenkorb gilt, entscheidet der Warenkorb.</p>
+          </article>
+          <article class="summary-row" data-reveal>
+            <h3>Zusammen mit Aktionen</h3>
+            <p>Die Angebotspreise im <a href="/bodybuilding-wettkaempfe-2026/">Wochenangebot von XXL Nutrition</a> auf dieser Website stehen bereits abzüglich der ${rabatt}, rechnen also auf den schon reduzierten Preis. Ob sich der Code mit einer bestimmten Aktion verbinden lässt, entscheidet XXL Nutrition.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--muted" aria-labelledby="warum-title">
       <div class="section-shell editorial-stage">
         <div class="editorial-stage__copy" data-reveal>
           ${sectionHeader({
             eyebrow: "Hintergrund",
             title: "Warum es diesen Code gibt.",
             text:
-              "Camp Dörfl ist Nutrition Partner von XXL Nutrition. Aus dieser Zusammenarbeit stammt der Code — er ist kein anonymer Gutschein aus einem Portal, sondern an eine bestehende Partnerschaft geknüpft."
+              "Camp Dörfl ist Nutrition Partner von XXL Nutrition. Aus dieser Zusammenarbeit stammt der Code — er ist kein anonymer Gutschein aus einem Portal, sondern an eine bestehende Partnerschaft geknüpft. Die Zusammenarbeit läuft seit mehreren Jahren; die Produkte werden im eigenen Training und in der Betreuung eingesetzt."
           }).replace("<h2", '<h2 id="warum-title"')}
           <div class="summary-rows summary-rows--compact">
             <article class="summary-row">
@@ -9547,7 +10584,7 @@ function xxlNutritionRabattcodePage() {
       </div>
     </section>
 
-    <section class="section section--muted" aria-labelledby="rabatt-faq-title">
+    <section class="section" aria-labelledby="rabatt-faq-title">
       <div class="section-shell">
         ${sectionHeader({
           eyebrow: "FAQ",
@@ -9570,20 +10607,23 @@ function xxlNutritionRabattcodePage() {
 
   return layout({
     path,
-    title: `XXL Nutrition Rabattcode: ${rabatt} mit Code ${code}`,
-    description: `XXL Nutrition Rabattcode von Dominik Dörfl: ${rabatt} mit dem Code ${code}. Anleitung in drei Schritten, Antworten zu Gültigkeit und Bedingungen.`,
+    title: `XXL Nutrition Rabattcode ${standJahr}: ${codeGross} – ${rabatt} Rabatt`,
+    description: `Der XXL Nutrition Rabattcode lautet ${codeGross} und bringt ${rabatt} Rabatt. Stand: ${standMonat}. So löst du ihn ein, dafür gilt er, das sind die Ausnahmen.`,
     keywords: [
       "XXL Nutrition Rabattcode",
+      `XXL Nutrition Rabattcode ${standJahr}`,
       "XXL Nutrition Gutscheincode",
-      "XXL Nutrition Code",
+      "XXL Nutrition Code Dominik",
+      "XXL Nutrition Influencer Code",
       "XXL Nutrition Rabatt",
       "XXL Nutrition Gutschein einlösen"
     ],
     bodyClass: "page-premium page-partner page-discount-code",
     pageName: "XXL Nutrition Rabattcode",
-    dateModified: "2026-08-19",
+    dateModified: stand,
     socialImage: "/assets/images/dominik-athlete-nutrition-social.jpg",
     socialImageAlt: "Dominik Dörfl als Nutrition Partner von XXL Nutrition",
+    mentions: [xxlNutritionEntitaet],
     extraStructuredData: [faqSchema(path, rabattFaq)],
     content
   });
@@ -9596,15 +10636,44 @@ function shopEuro(value) {
   return `${value.toFixed(2).replace(".", ",")} €`;
 }
 
+// Kleinste und größte Größe einer Artikelgruppe. Nicht jeder Artikel führt
+// jede Größe — die Zeile sagt, was in der Gruppe überhaupt zu haben ist, so
+// wie die Preisspanne daneben. Welche Größen es je Artikel gibt, steht im
+// Auswahlfeld der Karte.
+function groessenSpanne(produkte) {
+  const reihen = produkte.map((produkt) => produkt.sizes || shopSizes);
+  const laengste = reihen.reduce((a, b) => (b.length > a.length ? b : a), reihen[0]);
+  return `${laengste[0]}–${laengste[laengste.length - 1]}`;
+}
+
+// Ausgeschriebene Zahlen für die Aufzählung im Einstieg. Bis zwanzig, damit in
+// einem Satz nicht „acht Shirts“ neben „14 Teile“ steht; darüber die Ziffer.
+function zahlwort(anzahl) {
+  const woerter = [
+    "null", "ein", "zwei", "drei", "vier", "fünf", "sechs", "sieben", "acht", "neun",
+    "zehn", "elf", "zwölf", "dreizehn", "vierzehn", "fünfzehn", "sechzehn", "siebzehn",
+    "achtzehn", "neunzehn", "zwanzig"
+  ];
+  return woerter[anzahl] ?? String(anzahl);
+}
+
+function grossAmAnfang(text) {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
 function shopPage() {
   const path = "/shop/";
-  const shirt = shopProducts.find((product) => product.category === "Shirt");
+  const shirt = shopProducts.find((product) => product.name === "Camp Dörfl Basic Shirt");
+  const oversized = shopProducts.find((product) => product.name === "Camp Dörfl Oversized Shirt");
   const jacke = shopProducts.find((product) => product.category === "Jacke");
   const shirts = shopProducts.filter((product) => product.category === "Shirt");
   const jacken = shopProducts.filter((product) => product.category === "Jacke");
-  const bag = shopProducts.find((product) => product.id === "bag");
-  const weitere = shopProducts.filter(
-    (product) => ["Sweatshirt", "Jacke", "Sonstiges"].includes(product.category) && product.id !== bag?.id
+  const sweatshirts = shopProducts.filter((product) => product.category === "Sweatshirt");
+  // Wie viele Schnitte hinter den Shirts stecken — Summer, Basic, Oversized.
+  const shirtSchnitte = new Set(shirts.map((product) => product.name)).size;
+  const kleidung = [...shirts, ...sweatshirts, ...jacken];
+  const weitere = shopProducts.filter((product) =>
+    ["Sweatshirt", "Jacke", "Sonstiges"].includes(product.category)
   );
   const sweatshirt = shopProducts.find((product) => product.category === "Sweatshirt");
   // Der Einstieg zeigt nur, was man anziehen kann — Buddy hat sein eigenes Motiv.
@@ -9642,12 +10711,19 @@ function shopPage() {
     },
     {
       question: "Welche Größen gibt es?",
-      answer: `Shirts und Jacken gibt es von ${shopSizes[0]} bis ${shopSizes[shopSizes.length - 1]}. Wenn du zwischen zwei Größen liegst, schreib es in das Nachrichtenfeld — dann klären wir das vor der Produktion.`
+      answer: `Grundsätzlich von ${shopSizes[0]} bis ${shopSizes[shopSizes.length - 1]}. Das Basic Shirt gibt es zusätzlich in 3XL, 4XL und 5XL, den Oversized-Schnitt bis 3XL. Welche Größen ein Artikel führt, steht in seinem Auswahlfeld. Wenn du zwischen zwei Größen liegst, schreib es in das Nachrichtenfeld — dann klären wir das vor der Produktion.`
     },
     {
       question: "Wann kommt meine Bestellung an?",
       answer:
         "Produziert wird, sobald die Vorbestellungen zusammen sind. Den konkreten Termin nenne ich dir in der Bestätigung, damit du nicht auf ein Datum wartest, das ich vorher nicht kenne."
+    },
+    {
+      question: "Gibt es hier auch Supplements?",
+      answer:
+        "Nein, im Shop liegt die Kollektion — Shirts, Jacken und Gutscheine. Sporternährung läuft über den Nutrition Partner: Mit dem Partner-Code von Dominik gibt es 10 % bei XXL Nutrition.",
+      answerHtml:
+        "Nein, im Shop liegt die Kollektion — Shirts, Jacken und Gutscheine. Sporternährung läuft über den Nutrition Partner: Mit dem Partner-Code von Dominik gibt es <a href=\"/xxl-nutrition-rabattcode/\">10 % bei XXL Nutrition</a>."
     },
     {
       question: "Für was gibt es Gutscheine?",
@@ -9781,7 +10857,7 @@ function shopPage() {
               <span class="shop-field__label">Größe</span>
               <select data-shop-size aria-label="Größe für ${product.name} ${product.variant}">
                 <option value="">Größe wählen</option>
-                ${shopSizes.map((size) => `<option value="${size}">${size}</option>`).join("")}
+                ${(product.sizes || shopSizes).map((size) => `<option value="${size}">${size}</option>`).join("")}
               </select>
             </label>
           `}
@@ -9834,16 +10910,16 @@ function shopPage() {
           title: "Der Camp Dörfl #Member Shop",
           headingLevel: 1,
           text:
-            "Elf Teile zum Anziehen, Bär und Beutel dazu, sechs Gutscheine für Training, Analyse und Coaching. Alles landet in derselben Vorbestellung.",
+            `${grossAmAnfang(zahlwort(kleidung.length))} Teile zum Anziehen, Bär und Beutel dazu, ${zahlwort(shopVouchers.length)} Gutscheine für Training, Analyse und Coaching. Alles landet in derselben Vorbestellung.`,
           align: "center"
-        }).replace("<h2", '<h2 id="kollektion-title"')}
+        }).replace("<h1", '<h1 id="kollektion-title"')}
 
         <div class="shop-layout">
           <div class="shop-catalog">
             <div class="shop-group">
               <div class="shop-group__head">
                 <h3 class="shop-group__title">Shirts</h3>
-                <p class="shop-group__meta">${shopEuro(Math.min(...shirts.map((product) => product.price)))} – ${shopEuro(Math.max(...shirts.map((product) => product.price)))} · ${shopSizes[0]}–${shopSizes[shopSizes.length - 1]}</p>
+                <p class="shop-group__meta">${shopEuro(Math.min(...shirts.map((product) => product.price)))} – ${shopEuro(Math.max(...shirts.map((product) => product.price)))} · ${groessenSpanne(shirts)}</p>
               </div>
               <div class="shop-grid">
                 ${shirts.map((product, index) => produktKarte(product, index === 0)).join("")}
@@ -9867,11 +10943,7 @@ function shopPage() {
               </div>
 
               <div class="shop-voucher-stage">
-                <div class="shop-voucher-stage__oben">
-                  <div class="shop-voucher-stage__artikel">
-                    ${bag ? produktKarte(bag) : ""}
-                  </div>
-                  <div class="shop-voucher-stage__sides">
+                <div class="shop-voucher-stage__sides">
                   <figure class="voucher-preview">
                     <div class="voucher-card voucher-card--front">
                       <p class="voucher-card__title">Gutschein</p>
@@ -9896,8 +10968,7 @@ function shopPage() {
                       <p class="voucher-card__brand">Camp Dörfl</p>
                     </div>
                     <figcaption>Rückseite</figcaption>
-                    </figure>
-                  </div>
+                  </figure>
                 </div>
                 <div class="shop-voucher-stage__copy">
                   <p>
@@ -9987,7 +11058,8 @@ function shopPage() {
           <p class="shop-hero__eyebrow">Camp Dörfl Kollektion</p>
           <h2 class="shop-hero__title">Für Member<br><span>und zum Verschenken</span></h2>
           <p class="shop-hero__lead">
-            Acht Shirts, ein Sweatshirt, zwei Jacken, ein Bär, ein Beutel, ein Emblem: Camp Dörfl #MEMBER und darunter
+            <span>${grossAmAnfang(zahlwort(shirts.length))} Shirts in ${zahlwort(shirtSchnitte)} Schnitten, ${zahlwort(sweatshirts.length)} Sweatshirts, ${zahlwort(jacken.length)} Jacken, ein Bär, ein Beutel — ${zahlwort(kleidung.length)} Teile zum Anziehen, Größen ${groessenSpanne(kleidung)}.</span>
+            Auf allen dasselbe Emblem: Camp Dörfl #MEMBER und darunter
             <em>NO TIME TO BE LAZY</em>. Dazu Gutscheine für Training, Körperanalyse und
             Online Coaching. Ausgesucht wird hier — gekauft wird nicht. Du stellst deine
             Auswahl zusammen und schickst sie mir als Vorbestellung.
@@ -10155,11 +11227,12 @@ function shopPage() {
   return layout({
     path,
     title: "Camp Dörfl Shop — Kollektion vorbestellen",
-    description: `Die Camp Dörfl #MEMBER Kollektion: Shirts für ${shopEuro(shirt.price)}, Jacken für ${shopEuro(jacke.price)}, Versand ${shopEuro(shopShipping.price)}. Auswählen und unverbindlich per E-Mail vorbestellen.`,
+    description: `Camp Dörfl #MEMBER Kollektion: Basic Shirt ${shopEuro(shirt.price)}, Oversized Shirt ${shopEuro(oversized.price)}, Jacke ${shopEuro(jacke.price)}, Versand ${shopEuro(shopShipping.price)}. Unverbindlich vorbestellen.`,
     keywords: [
       "Camp Dörfl Shop",
       "Camp Dörfl Kollektion",
-      "Camp Dörfl Shirt",
+      "Camp Dörfl Basic Shirt",
+      "Camp Dörfl Oversized Shirt",
       "Camp Dörfl Jacke",
       "Fitness Bekleidung Nürnberg",
       "Camp Dörfl Member Kollektion"
@@ -10506,7 +11579,7 @@ function olympiaSiegerPage() {
           step: "04",
           title: "Seit 2018: offener denn je",
           text:
-            "Sieben verschiedene Namen in acht Jahren in der offenen Klasse. Parallel wächst das Feld: Classic Physique und Wellness ziehen ein neues Publikum an."
+            "Sieben verschiedene Namen in neun Jahren in der offenen Klasse. Parallel wächst das Feld: Classic Physique und Wellness ziehen ein neues Publikum an."
         }
       ]
     },
@@ -10514,7 +11587,7 @@ function olympiaSiegerPage() {
       {
         question: "Wer ist der aktuelle Mr. Olympia?",
         answer:
-          "Derek Lunsford gewann den Titel in der offenen Klasse 2025 zurück, nachdem er 2023 bereits gewonnen und 2024 gegen Samson Dauda verloren hatte. Der nächste Mr. Olympia wird im Herbst 2026 ausgetragen."
+          "Nick Walker gewann 2026 in Las Vegas zum ersten Mal die offene Klasse, vor Samson Dauda und Titelverteidiger Derek Lunsford. Der nächste Mr. Olympia folgt im Herbst 2027."
       },
       {
         question: "Wer hat die meisten Mr.-Olympia-Titel gewonnen?",
@@ -10538,7 +11611,7 @@ function olympiaSiegerPage() {
       {
         question: "Wann findet der Mr. Olympia statt?",
         answer:
-          "Traditionell im Herbst, meist im September oder Oktober, seit Jahren überwiegend in Las Vegas. Die Ausgabe 2026 ist für Ende September angesetzt."
+          "Traditionell im Herbst, meist im September oder Oktober, seit Jahren überwiegend in Las Vegas. Die Ausgabe 2026 lief vom 24. bis 27. September."
       }
     ],
     nachbarseite: { href: "/arnold-classic-sieger/", label: "Auch alle Arnold-Classic-Sieger im Überblick" }
@@ -10666,8 +11739,9 @@ export const pages = [
   { route: "/moderator-nuernberg/", render: eventsPage, lastModified: "2026-08-21" },
   { route: "/keynote-speaker-nuernberg/", render: keynoteSpeakerNuernbergPage, lastModified: "2026-08-23" },
   { route: "/fit-werden/", render: personalTrainingAb40NuernbergPage, lastModified: "2026-08-16" },
+  { route: "/diabetes-coach-nuernberg/", render: hba1cProgrammPage, lastModified: "2026-09-16" },
   { route: "/partner/", render: partnerPage },
-  { route: "/xxl-nutrition-rabattcode/", render: xxlNutritionRabattcodePage, lastModified: "2026-08-23" },
+  { route: "/xxl-nutrition-rabattcode/", render: xxlNutritionRabattcodePage, lastModified: "2026-09-10" },
   { route: "/bodybuilding-coaching-wettkampfvorbereitung/", render: bodybuildingCoachingPage, lastModified: "2026-08-11" },
   { route: "/bodybuilding-wettkaempfe-2026/", render: bodybuildingCalendarPage, lastModified: "2026-08-21" },
   { route: "/bodybuilding-klassen-gewichtslimits/", render: bodybuildingClassesPage, lastModified: "2026-08-22" },
@@ -10676,6 +11750,7 @@ export const pages = [
   { route: "/boxen-wettkaempfe-2026/", render: boxingCalendarPage },
   { route: "/mma-wettkaempfe-2026/", render: mmaCalendarPage, lastModified: "2026-08-20" },
   { route: "/triathlon-kalender-2026/", render: triathlonCalendarPage, lastModified: "2026-08-23" },
+  { route: "/triathlon-distanzen/", render: triathlonDistanzenPage, lastModified: "2026-09-12" },
   { route: "/laufkalender-2026/", render: runningCalendarPage, lastModified: "2026-08-23" },
   { route: "/golfturniere-2026/", render: golfCalendarPage, lastModified: "2026-08-23" },
   { route: "/sport-spot-finden/", render: sportSpotFinderPage },

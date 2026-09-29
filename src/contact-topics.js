@@ -10,6 +10,11 @@ export const contactTopics = Object.freeze([
     aliases: Object.freeze(["premium-personal-training", "personal-training", "personal-coaching"])
   }),
   Object.freeze({
+    key: "hba1c-programm",
+    label: "12-Wochen-Programm HbA1c & Blutzucker",
+    aliases: Object.freeze(["hba1c", "blutzucker", "praediabetes", "stoffwechsel", "insulinsensitivitaet"])
+  }),
+  Object.freeze({
     key: "koerperanalyse",
     label: "Körperanalyse & InBody",
     aliases: Object.freeze(["körperanalyse", "inbody", "bia-messung", "koerperanalyse-nuernberg"])

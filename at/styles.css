@@ -1,0 +1,2742 @@
+/* ==========================================================================
+   CAMP DÖRFL — ONLINE COACHING ÖSTERREICH
+   Eigenständiges Stylesheet. Es teilt sich mit campdoerfl.de nur die
+   Schriftdateien; keine Klasse, keine Variable und keine Regel wird von dort
+   übernommen oder dorthin zurückgespielt.
+   ========================================================================== */
+
+/* --- Schriften ----------------------------------------------------------- */
+@font-face {
+  font-family: "Inter";
+  src: url("/assets/fonts/inter-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("/assets/fonts/inter-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("/assets/fonts/inter-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("/assets/fonts/inter-800.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Roboto Condensed";
+  src: url("/assets/fonts/roboto-condensed-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Roboto Condensed";
+  src: url("/assets/fonts/roboto-condensed-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --- Grundwerte ---------------------------------------------------------- */
+:root {
+  /* Dunkel */
+  --nacht: #08090a;
+  --nacht-2: #0e1112;
+  --nacht-3: #15181a;
+  --linie-dunkel: rgba(247, 245, 239, 0.14);
+  --linie-dunkel-zart: rgba(247, 245, 239, 0.08);
+
+  /* Hell — warmes Off-White, kein klinisches Weiß */
+  --papier: #f3f0e9;
+  --papier-2: #eae5da;
+  --linie-hell: rgba(13, 15, 16, 0.14);
+  --linie-hell-zart: rgba(13, 15, 16, 0.08);
+
+  /* Text */
+  --tinte: #0d0f10;
+  --tinte-2: #3a3e40;
+  --weiss: #f7f5ef;
+  --weiss-gedimmt: #b9b7af;
+
+  /* Gold aus dem Original-Logo (#d5b544). Auf hellem Grund braucht Text eine
+     tiefere Fassung: #d5b544 auf #f3f0e9 kommt nur auf 1,9:1, und selbst
+     #8a6a16 blieb mit 4,44:1 knapp unter der Grenze für kleine Schrift.
+     #806213 liegt bei 5,0:1 — geprüft in at/pruefen.mjs. */
+  --gold: #d5b544;
+  --gold-tief: #806213;
+
+  /* Typografie */
+  --schrift: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --schrift-eng: "Roboto Condensed", "Inter", system-ui, sans-serif;
+  --anzeige-1: clamp(2.9rem, 7.8vw, 7rem);
+  --anzeige-2: clamp(2.5rem, 6.4vw, 5.75rem);
+  --anzeige-3: clamp(1.85rem, 3.2vw, 2.9rem);
+  --text: clamp(1.0625rem, 0.3vw + 1rem, 1.1875rem);
+  --text-gross: clamp(1.15rem, 0.65vw + 1rem, 1.45rem);
+  --label: 0.75rem;
+
+  /* Raster */
+  --breite: 1360px;
+  --rand: clamp(20px, 4.4vw, 64px);
+  --kopf-hoehe: 74px;
+
+  /* Bewegung */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--kopf-hoehe) + 12px);
+  background: var(--nacht);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--nacht);
+  color: var(--weiss);
+  font-family: var(--schrift);
+  font-size: var(--text);
+  line-height: 1.6;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+body.ist-gesperrt {
+  overflow: hidden;
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--nacht);
+}
+
+h1,
+h2,
+h3,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* --- Bausteine ----------------------------------------------------------- */
+.schacht {
+  width: min(100% - (var(--rand) * 2), var(--breite));
+  margin-inline: auto;
+}
+
+.springen {
+  position: absolute;
+  top: 10px;
+  left: var(--rand);
+  z-index: 90;
+  padding: 10px 16px;
+  background: var(--gold);
+  color: var(--nacht);
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: var(--label);
+  transform: translateY(-200%);
+  transition: transform 200ms var(--ease);
+}
+
+.springen:focus {
+  transform: translateY(0);
+}
+
+/* Kleine Auszeichnung über Überschriften: reine Typografie mit Haarlinie —
+   ausdrücklich kein Chip, keine Pille, kein gerahmtes Label. */
+.marke-zeile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  font-size: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+}
+
+.marke-zeile::before {
+  content: "";
+  width: clamp(28px, 4vw, 56px);
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+  flex: none;
+}
+
+.hell .marke-zeile {
+  color: var(--gold-tief);
+}
+
+.anzeige {
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 0.98;
+  letter-spacing: -0.032em;
+  text-wrap: balance;
+}
+
+.anzeige--1 {
+  font-size: var(--anzeige-1);
+  letter-spacing: -0.038em;
+  line-height: 0.9;
+}
+
+.anzeige--2 {
+  font-size: var(--anzeige-2);
+  letter-spacing: -0.026em;
+}
+
+.anzeige--3 {
+  font-size: var(--anzeige-3);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+/* Auszeichnungszeile und Überschrift gehören zusammen — ein Abstand für die
+   ganze Seite statt einer Angabe je Abschnitt. */
+.marke-zeile + .anzeige {
+  /* Umlaut-Versalien ragen 0,22 em über die Versalhöhe hinaus. Der Abstand ist
+     deshalb großzügiger, als er ohne Ä, Ö, Ü nötig wäre. */
+  margin-top: clamp(26px, 3.4vh, 40px);
+}
+
+.gold {
+  color: var(--gold);
+}
+
+.hell .gold {
+  color: var(--gold-tief);
+}
+
+.lauftext {
+  font-size: var(--text-gross);
+  line-height: 1.5;
+  color: var(--weiss-gedimmt);
+  max-width: 26em;
+}
+
+.hell .lauftext {
+  color: var(--tinte-2);
+}
+
+/* --- Knöpfe -------------------------------------------------------------- */
+.knopf {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 30px;
+  border-radius: 2px;
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  transition: background 260ms var(--ease), color 260ms var(--ease), border-color 260ms var(--ease);
+  min-height: 56px;
+}
+
+.knopf__pfeil {
+  display: inline-block;
+  transition: transform 320ms var(--ease);
+}
+
+.knopf:hover .knopf__pfeil,
+.knopf:focus-visible .knopf__pfeil {
+  transform: translateX(5px);
+}
+
+.knopf--gold {
+  background: var(--gold);
+  color: var(--nacht);
+}
+
+.knopf--gold:hover {
+  background: #e6cb63;
+}
+
+.knopf--linie {
+  border: 1px solid var(--linie-dunkel);
+  color: var(--weiss);
+  background: transparent;
+}
+
+.knopf--linie:hover {
+  border-color: var(--weiss);
+}
+
+.hell .knopf--linie {
+  border-color: var(--linie-hell);
+  color: var(--tinte);
+}
+
+.hell .knopf--linie:hover {
+  border-color: var(--tinte);
+}
+
+/* Textlink im Editorial-Stil: Unterstrich wächst, keine Box. */
+.textlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  font-size: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  padding-bottom: 6px;
+  border-bottom: 1px solid currentColor;
+  color: var(--gold);
+  transition: gap 260ms var(--ease);
+}
+
+.textlink:hover {
+  gap: 16px;
+}
+
+.hell .textlink {
+  color: var(--gold-tief);
+}
+
+/* --- Kopf ---------------------------------------------------------------- */
+.kopf {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 60;
+  height: var(--kopf-hoehe);
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background 320ms var(--ease), border-color 320ms var(--ease), backdrop-filter 320ms var(--ease);
+}
+
+.kopf.ist-gescrollt {
+  background: rgba(8, 9, 10, 0.78);
+  border-bottom-color: var(--linie-dunkel-zart);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  backdrop-filter: blur(16px) saturate(1.1);
+}
+
+.kopf__schacht {
+  width: min(100% - (var(--rand) * 2), var(--breite));
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.kopf__marke {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.kopf__marke img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.kopf__wortmarke {
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  line-height: 1.15;
+}
+
+.kopf__wortmarke span {
+  display: block;
+  color: var(--weiss-gedimmt);
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  font-size: 0.6875rem;
+}
+
+.kopf__nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 2.1vw, 34px);
+}
+
+.kopf__nav a {
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  font-size: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--weiss);
+  opacity: 0.72;
+  transition: opacity 200ms var(--ease);
+}
+
+.kopf__nav a:hover,
+.kopf__nav a.ist-aktiv {
+  opacity: 1;
+}
+
+.kopf__rechts {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.kopf__land {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  color: var(--weiss-gedimmt);
+  padding-left: 18px;
+  border-left: 1px solid var(--linie-dunkel);
+}
+
+.flagge {
+  width: 22px;
+  height: auto;
+  flex: none;
+  border-radius: 2px;
+}
+
+.schublade__meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.kopf .knopf {
+  padding: 13px 22px;
+  min-height: 44px;
+  font-size: 0.8125rem;
+}
+
+.kopf__burger {
+  display: none;
+  width: 46px;
+  height: 46px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 6px;
+  margin-right: -10px;
+}
+
+.kopf__burger span {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: var(--weiss);
+  transition: transform 300ms var(--ease), opacity 200ms var(--ease);
+}
+
+.ist-offen .kopf__burger span:nth-child(1) {
+  transform: translateY(3.75px) rotate(45deg);
+}
+
+.ist-offen .kopf__burger span:nth-child(2) {
+  opacity: 0;
+}
+
+.ist-offen .kopf__burger span:nth-child(3) {
+  transform: translateY(-3.75px) rotate(-45deg);
+}
+
+/* --- Schublade (mobil) --------------------------------------------------- */
+.schublade {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  background: var(--nacht);
+  padding: calc(var(--kopf-hoehe) + 40px) var(--rand) 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transform: translateY(-100%);
+  visibility: hidden;
+  transition: transform 460ms var(--ease), visibility 460ms;
+}
+
+.schublade.ist-offen {
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.schublade__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.schublade__nav a {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  font-size: clamp(1.75rem, 8vw, 2.5rem);
+  line-height: 1.2;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--linie-dunkel-zart);
+}
+
+.schublade__fuss {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.schublade__fuss .knopf {
+  justify-content: center;
+}
+
+.schublade__meta {
+  font-family: var(--schrift-eng);
+  font-size: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--weiss-gedimmt);
+}
+
+/* --- Held ---------------------------------------------------------------- */
+.held {
+  position: relative;
+  height: 210svh;
+}
+
+.held__buehne {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 620px;
+  overflow: clip;
+  display: flex;
+  align-items: flex-end;
+}
+
+.held__bild {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.held__bild picture,
+.held__bild img {
+  width: 100%;
+  height: 100%;
+}
+
+.held__bild img {
+  object-fit: cover;
+  /* Auf breiten Schirmen wird das Hochformat oben beschnitten. 8 % halten den
+     Kopf im Bild, statt ihn an der Kopfzeile abzuschneiden. */
+  object-position: 62% 8%;
+  /* Cinematischer Look ohne Eingriff am Motiv: nur Tonwert und Sättigung. */
+  filter: contrast(1.07) saturate(0.94) brightness(0.92);
+  transform: scale(var(--bild-zoom, 1));
+  transform-origin: 60% 40%;
+  will-change: transform;
+}
+
+/* Zwei Schleier: einer für die Textkante links, einer für die Tiefe unten.
+   Dazu eine sehr dezente Vignette. */
+.held__schleier {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(100deg, rgba(8, 9, 10, 0.94) 0%, rgba(8, 9, 10, 0.8) 34%, rgba(8, 9, 10, 0.46) 58%, rgba(8, 9, 10, 0.22) 76%, rgba(8, 9, 10, 0.5) 100%),
+    linear-gradient(180deg, rgba(8, 9, 10, 0.72) 0%, rgba(8, 9, 10, 0) 26%, rgba(8, 9, 10, 0.24) 58%, rgba(8, 9, 10, 0.9) 100%);
+}
+
+.held__vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: radial-gradient(120% 90% at 55% 42%, rgba(8, 9, 10, 0) 42%, rgba(8, 9, 10, 0.55) 100%);
+  opacity: calc(0.55 + 0.45 * var(--fortschritt, 0));
+}
+
+.held__dunkeln {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: var(--nacht);
+  opacity: calc(0.42 * var(--fortschritt, 0));
+}
+
+.held__inhalt {
+  position: relative;
+  z-index: 4;
+  width: min(100% - (var(--rand) * 2), var(--breite));
+  margin-inline: auto;
+  padding-bottom: clamp(48px, 9vh, 104px);
+  padding-top: calc(var(--kopf-hoehe) + 24px);
+  transform: translate3d(0, calc(var(--fortschritt, 0) * -56px), 0);
+  opacity: calc(1 - 0.85 * var(--fortschritt, 0));
+  will-change: transform, opacity;
+}
+
+.held__raster {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 40px;
+}
+
+.held__text {
+  max-width: min(100%, 60rem);
+}
+
+.held h1 {
+  font-size: var(--anzeige-1);
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  margin: 0;
+}
+
+/* Die Auszeichnungszeile steht in der H1 — so nennt die Überschrift Angebot
+   und Land, ohne dass versteckter Text nötig wäre. Sie braucht deshalb ihre
+   eigenen Schriftwerte zurück. */
+.held h1 .marke-zeile {
+  font-size: var(--label);
+  line-height: 1;
+  letter-spacing: 0.2em;
+  margin-bottom: clamp(18px, 2.6vh, 30px);
+  max-width: none;
+}
+
+/* Vertikale Maske: Die Zeile schiebt sich hinter der Kante hervor.
+   Keine Buchstabenanimation, keine Schreibmaschine. */
+.maske {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+
+.maske > span {
+  display: block;
+  transform: translateY(105%);
+}
+
+.held__unterzeile {
+  margin-top: clamp(20px, 3vh, 32px);
+  font-size: var(--text-gross);
+  color: var(--weiss);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  max-width: 28em;
+}
+
+.held__aktionen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+  margin-top: clamp(26px, 4vh, 44px);
+}
+
+.held__runter {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  font-size: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--weiss);
+  opacity: 0.78;
+  transition: opacity 200ms var(--ease);
+}
+
+.held__runter:hover {
+  opacity: 1;
+}
+
+/* Schmale Leiste rechts: Österreich als Sachinformation, nicht als Flagge. */
+.held__leiste {
+  display: grid;
+  gap: 10px;
+  justify-items: end;
+  text-align: right;
+  padding-right: 2px;
+  border-right: 1px solid var(--linie-dunkel);
+  padding-right: 20px;
+}
+
+.held__leiste strong {
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  color: var(--gold);
+}
+
+.held__leiste span {
+  font-family: var(--schrift-eng);
+  font-size: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--weiss-gedimmt);
+}
+
+/* Auftritt beim Laden: gestaffelt, gedämpft, ohne Hüpfen. */
+.hat-js [data-auftritt] .maske > span,
+.hat-js [data-auftritt] .held__unterzeile,
+.hat-js [data-auftritt] .held__aktionen,
+.hat-js [data-auftritt] .marke-zeile,
+.hat-js [data-auftritt] .held__leiste {
+  opacity: 0;
+}
+
+.hat-js [data-auftritt] .marke-zeile,
+.hat-js [data-auftritt] .held__unterzeile,
+.hat-js [data-auftritt] .held__aktionen,
+.hat-js [data-auftritt] .held__leiste {
+  transform: translateY(16px);
+}
+
+/* Die Auftritts-Regeln tragen .hat-js genauso wie die Versteck-Regeln —
+   sonst gewinnt das Verstecken über die höhere Spezifität und der Held
+   bleibt leer. */
+.hat-js .ist-aufgetreten .maske > span {
+  opacity: 1;
+  transform: translateY(0);
+  transition: transform 1000ms var(--ease), opacity 700ms var(--ease);
+}
+
+.hat-js .ist-aufgetreten .marke-zeile,
+.hat-js .ist-aufgetreten .held__unterzeile,
+.hat-js .ist-aufgetreten .held__aktionen,
+.hat-js .ist-aufgetreten .held__leiste {
+  opacity: 1;
+  transform: translateY(0);
+  transition: transform 900ms var(--ease), opacity 700ms var(--ease);
+}
+
+.hat-js .ist-aufgetreten .marke-zeile {
+  transition-delay: 60ms;
+}
+.hat-js .ist-aufgetreten .maske:nth-of-type(1) > span {
+  transition-delay: 200ms;
+}
+.hat-js .ist-aufgetreten .maske:nth-of-type(2) > span {
+  transition-delay: 320ms;
+}
+.hat-js .ist-aufgetreten .held__unterzeile {
+  transition-delay: 520ms;
+}
+.hat-js .ist-aufgetreten .held__aktionen {
+  transition-delay: 660ms;
+}
+.hat-js .ist-aufgetreten .held__leiste {
+  transition-delay: 760ms;
+}
+
+/* --- Flächen ------------------------------------------------------------- */
+.flaeche {
+  position: relative;
+  padding-block: clamp(88px, 13vh, 176px);
+}
+
+.hell {
+  background: var(--papier);
+  color: var(--tinte);
+}
+
+.hell h2,
+.hell h3 {
+  color: var(--tinte);
+}
+
+.dunkel {
+  background: var(--nacht);
+  color: var(--weiss);
+}
+
+.dunkel--gehoben {
+  background: var(--nacht-2);
+}
+
+/* --- Das System ---------------------------------------------------------- */
+.system__kopf {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(32px, 6vw, 96px);
+  align-items: end;
+}
+
+.system__liste {
+  margin-top: clamp(64px, 9vh, 120px);
+  border-top: 1px solid var(--linie-hell);
+}
+
+.system__punkt {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(16px, 3vw, 48px);
+  align-items: baseline;
+  padding: clamp(24px, 3.4vh, 40px) 0;
+  border-bottom: 1px solid var(--linie-hell);
+}
+
+.system__nummer {
+  font-family: var(--schrift-eng);
+  font-weight: 400;
+  font-size: clamp(2rem, 3.4vw, 3.25rem);
+  line-height: 0.8;
+  color: var(--tinte);
+  opacity: 0.22;
+  letter-spacing: -0.02em;
+}
+
+.system__titel {
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: clamp(1.35rem, 2.3vw, 2rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.system__text {
+  color: var(--tinte-2);
+  font-size: var(--text-gross);
+  line-height: 1.4;
+}
+
+/* --- Drei Säulen --------------------------------------------------------- */
+.saeulen__kopf {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 80px);
+  align-items: end;
+}
+
+.saeulen__reihe {
+  margin-top: clamp(48px, 7vh, 88px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 1.4vw, 22px);
+}
+
+.saeule {
+  position: relative;
+  display: block;
+  overflow: clip;
+  background: var(--nacht-3);
+}
+
+.saeule__bild {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: clip;
+}
+
+/* Ohne diese Zeile bleibt <picture> auf seiner Eigengröße stehen und
+   object-fit am <img> läuft ins Leere — das Bild füllt seine Fläche nicht. */
+.saeule__bild picture,
+.band__bild picture,
+.abschluss__bild picture,
+.fuerwen__feld picture,
+.dominik__bild picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.dominik__bild picture {
+  height: auto;
+}
+
+.saeule__bild img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Oben ansetzen, nicht mittig: Beschnitten wird unten, wo die Beschriftung
+     ohnehin darüberliegt — sonst verliert das Hochformat den Kopf. */
+  object-position: 50% 12%;
+  filter: contrast(1.05) saturate(0.92) brightness(0.86);
+  transition: transform 1100ms var(--ease);
+}
+
+.saeule__bild::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(8, 9, 10, 0.15) 0%, rgba(8, 9, 10, 0.05) 40%, rgba(8, 9, 10, 0.88) 100%);
+}
+
+@media (hover: hover) {
+  .saeule:hover .saeule__bild img {
+    transform: scale(1.02);
+  }
+}
+
+.saeule__inhalt {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 2;
+  padding: clamp(20px, 2.4vw, 34px);
+}
+
+.saeule__inhalt h3 {
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: clamp(1.5rem, 2.6vw, 2.35rem);
+  letter-spacing: -0.028em;
+  line-height: 0.95;
+}
+
+.saeule__zeilen {
+  margin-top: 14px;
+  display: grid;
+  gap: 2px;
+  color: var(--weiss-gedimmt);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+/* --- App -----------------------------------------------------------------
+   Fünf Ansichten statt drei. Sie stehen in einer eigenen, breiteren Reihe
+   unter der Überschrift — im Textraster nebeneinander wären sie zu klein. */
+.app__kopf {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 80px);
+  align-items: end;
+}
+
+.app__reihe {
+  width: min(100% - (var(--rand) * 2), 1560px);
+  margin: clamp(52px, 7vh, 92px) auto clamp(44px, 6vh, 72px);
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(12px, 1.4vw, 24px);
+  align-items: start;
+}
+
+/* Sanfter Bogen: die Mitte steht am höchsten. Kein Kippen, kein Schatten-
+   theater — nur eine Reihe, die nicht wie eine Tabelle liest. */
+.app__geraet:nth-child(1) .app__rahmen,
+.app__geraet:nth-child(5) .app__rahmen {
+  transform: translateY(3%);
+}
+
+.app__geraet:nth-child(3) .app__rahmen {
+  transform: translateY(-3.5%);
+}
+
+.app__rahmen {
+  border-radius: 20px;
+  overflow: clip;
+  background: var(--nacht);
+  padding: 5px;
+  box-shadow: 0 26px 60px -34px rgba(13, 15, 16, 0.5);
+}
+
+.app__rahmen img {
+  border-radius: 16px;
+  width: 100%;
+}
+
+.app__geraet figcaption {
+  margin-top: 16px;
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  font-size: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--gold-tief);
+  text-align: center;
+}
+
+/* Die Leistungen als Zeile mit Trennlinien — kein Kachelraster. */
+.app__leistungen {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  border-top: 1px solid var(--linie-hell);
+  border-bottom: 1px solid var(--linie-hell);
+}
+
+.app__leistungen li {
+  padding: clamp(18px, 2.4vh, 26px) clamp(12px, 1.6vw, 24px);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.015em;
+  font-size: clamp(0.95rem, 1.1vw, 1.15rem);
+  line-height: 1.15;
+}
+
+.app__leistungen li + li {
+  border-left: 1px solid var(--linie-hell);
+}
+
+.app__leistungen li:first-child {
+  padding-left: 0;
+}
+
+.app__abschluss {
+  margin-top: 26px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px 32px;
+}
+
+.app__schluss {
+  color: var(--tinte-2);
+  font-size: var(--text-gross);
+}
+
+/* --- Über Dominik -------------------------------------------------------- */
+.dominik__raster {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: clamp(34px, 5.5vw, 88px);
+  align-items: center;
+}
+
+.dominik__bild {
+  position: relative;
+}
+
+.dominik__bild img {
+  width: 100%;
+  filter: contrast(1.06) saturate(0.9) brightness(0.88);
+}
+
+.dominik__sub {
+  margin-top: 22px;
+  font-size: var(--text-gross);
+  font-weight: 500;
+  color: var(--weiss);
+  max-width: 24em;
+}
+
+.dominik__text {
+  margin-top: 18px;
+  color: var(--weiss-gedimmt);
+  max-width: 30em;
+}
+
+.dominik__daten {
+  margin-top: clamp(34px, 5vh, 54px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--linie-dunkel);
+}
+
+.dominik__daten > div {
+  padding: clamp(18px, 2.6vh, 26px) 0;
+  border-bottom: 1px solid var(--linie-dunkel);
+}
+
+.dominik__daten > div:nth-child(odd) {
+  padding-right: 24px;
+  border-right: 1px solid var(--linie-dunkel);
+}
+
+.dominik__daten > div:nth-child(even) {
+  padding-left: clamp(18px, 2.4vw, 32px);
+}
+
+.dominik__daten dt {
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: clamp(1.4rem, 2.4vw, 2.05rem);
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  color: var(--gold);
+}
+
+.dominik__daten dd {
+  margin-top: 8px;
+  font-family: var(--schrift-eng);
+  font-size: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--weiss);
+}
+
+.dominik__daten dd span {
+  display: block;
+  margin-top: 5px;
+  letter-spacing: 0.1em;
+  color: var(--weiss-gedimmt);
+  text-transform: none;
+  font-family: var(--schrift);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+/* --- Rad-Band ------------------------------------------------------------
+   Das Foto ist hochformatig. In einem breiten Vollbild-Streifen fällt genau
+   das weg, worum es geht: das Zeitfahrrad. Deshalb steht es hier als große
+   Fläche neben dem Text statt hinter ihm. */
+.band {
+  position: relative;
+  background: var(--nacht);
+  padding-block: clamp(80px, 12vh, 152px);
+  overflow: clip;
+}
+
+.band__schacht {
+  width: min(100% - (var(--rand) * 2), var(--breite));
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.88fr);
+  gap: clamp(32px, 5vw, 88px);
+  align-items: center;
+}
+
+.band__rahmen {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: clip;
+  margin-right: calc(-1 * var(--rand));
+}
+
+.band__rahmen picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.band__rahmen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 42%;
+  filter: contrast(1.06) saturate(0.93) brightness(0.9);
+  transform: translate3d(0, var(--parallax, 0px), 0) scale(1.05);
+  will-change: transform;
+}
+
+.band__rahmen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(8, 9, 10, 0.24) 0%, rgba(8, 9, 10, 0) 34%, rgba(8, 9, 10, 0.42) 100%);
+}
+
+.band__text .anzeige--2 {
+  font-size: clamp(2.2rem, 4.7vw, 4.35rem);
+}
+
+.band__zeile {
+  margin-top: 22px;
+  color: var(--weiss-gedimmt);
+  max-width: 26em;
+  font-size: var(--text-gross);
+}
+
+/* --- Ablauf --------------------------------------------------------------
+   Vier Spalten unter einer Schiene, getrennt durch Haarlinien. Die Ziffer
+   steht zunächst als Umriss und füllt sich, sobald der Schritt erreicht ist —
+   das ist der ganze Effekt, mehr braucht der Abschnitt nicht. */
+.ablauf__kopf {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 80px);
+  align-items: end;
+}
+
+.ablauf__strecke {
+  position: relative;
+  margin-top: clamp(64px, 9vh, 118px);
+}
+
+.ablauf__schiene {
+  position: relative;
+  height: 2px;
+  background: var(--linie-hell);
+  overflow: hidden;
+}
+
+.ablauf__fuellung {
+  position: absolute;
+  inset: 0;
+  background: var(--gold-tief);
+  transform: scaleX(var(--fuellung, 0));
+  transform-origin: left center;
+  transition: transform 140ms linear;
+}
+
+.ablauf__schritte {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.ablauf__schritt {
+  position: relative;
+  padding: clamp(30px, 4vh, 48px) clamp(16px, 2.2vw, 40px) 0;
+}
+
+.ablauf__schritt:first-child {
+  padding-left: 0;
+}
+
+.ablauf__schritt + .ablauf__schritt {
+  border-left: 1px solid var(--linie-hell);
+}
+
+.ablauf__marke {
+  position: absolute;
+  top: -6px;
+  left: clamp(16px, 2.2vw, 40px);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--papier);
+  border: 2px solid var(--linie-hell);
+  transition: background 500ms var(--ease), border-color 500ms var(--ease), transform 500ms var(--ease);
+}
+
+.ablauf__schritt:first-child .ablauf__marke {
+  left: 0;
+}
+
+.ablauf__schritt.ist-erreicht .ablauf__marke {
+  background: var(--gold-tief);
+  border-color: var(--gold-tief);
+  transform: scale(1.25);
+}
+
+/* Ziffer als Umriss. -webkit-text-stroke ist überall dort da, wo diese Seite
+   läuft; wo nicht, bleibt eine gefüllte Ziffer in Zeilenfarbe — auch gut. */
+.ablauf__ziffer {
+  display: block;
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  font-size: clamp(3.25rem, 6vw, 5.75rem);
+  line-height: 0.8;
+  letter-spacing: -0.02em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(13, 15, 16, 0.28);
+  transition: color 600ms var(--ease), -webkit-text-stroke-color 600ms var(--ease);
+}
+
+.ablauf__schritt.ist-erreicht .ablauf__ziffer {
+  color: var(--gold-tief);
+  -webkit-text-stroke-color: var(--gold-tief);
+}
+
+.ablauf__schritt h3 {
+  margin-top: clamp(18px, 2.4vh, 26px);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: clamp(1.15rem, 1.7vw, 1.6rem);
+  letter-spacing: -0.024em;
+  line-height: 1.02;
+}
+
+.ablauf__schritt p {
+  margin-top: 12px;
+  color: var(--tinte-2);
+  font-size: 1rem;
+  line-height: 1.45;
+  max-width: 18em;
+  padding-bottom: clamp(8px, 1.5vh, 16px);
+}
+
+/* --- Stimmen ------------------------------------------------------------- */
+.stimmen__raster {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(34px, 5.5vw, 88px);
+  align-items: start;
+}
+
+.stimmen__wertung {
+  border-top: 1px solid var(--linie-dunkel);
+  padding-top: 26px;
+}
+
+.stimmen__quelle-zeile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  font-size: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--weiss);
+}
+
+.google-zeichen {
+  width: 26px;
+  height: 26px;
+  flex: none;
+}
+
+.stimme figcaption {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.stimmen__schnitt {
+  font-weight: 800;
+  font-size: clamp(3.2rem, 6vw, 5rem);
+  line-height: 0.86;
+  letter-spacing: -0.045em;
+  color: var(--gold);
+}
+
+.stimmen__schnitt span {
+  font-size: 0.36em;
+  letter-spacing: 0;
+  color: var(--weiss-gedimmt);
+  font-weight: 500;
+}
+
+.stimmen__sterne {
+  margin-top: 14px;
+  color: var(--gold);
+  letter-spacing: 0.32em;
+  font-size: 1rem;
+}
+
+.stimmen__quelle {
+  margin-top: 16px;
+  color: var(--weiss-gedimmt);
+  font-size: 1rem;
+  max-width: 22em;
+}
+
+.stimmen__wertung .textlink {
+  margin-top: 24px;
+}
+
+.stimmen .anzeige--2 {
+  margin-bottom: clamp(28px, 4vh, 44px);
+}
+
+.stimme {
+  min-height: clamp(220px, 30vh, 300px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.stimme blockquote {
+  font-weight: 500;
+  font-size: clamp(1.5rem, 3.1vw, 2.6rem);
+  line-height: 1.16;
+  letter-spacing: -0.025em;
+  color: var(--weiss);
+  max-width: 15em;
+  transition: opacity 340ms var(--ease), transform 340ms var(--ease);
+}
+
+.stimme.ist-wechselnd blockquote,
+.stimme.ist-wechselnd figcaption {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.stimme figcaption {
+  margin-top: clamp(22px, 3vh, 34px);
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  font-size: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--weiss);
+  transition: opacity 340ms var(--ease), transform 340ms var(--ease);
+}
+
+.stimme figcaption span {
+  color: var(--weiss-gedimmt);
+  font-weight: 400;
+}
+
+.stimmen__steuerung {
+  margin-top: clamp(28px, 4vh, 44px);
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  border-top: 1px solid var(--linie-dunkel);
+  padding-top: 22px;
+}
+
+.stimmen__knopf {
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--linie-dunkel);
+  border-radius: 2px;
+  color: var(--weiss);
+  transition: border-color 240ms var(--ease), background 240ms var(--ease);
+}
+
+.stimmen__knopf:hover {
+  border-color: var(--weiss);
+  background: rgba(247, 245, 239, 0.06);
+}
+
+.stimmen__zaehler {
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  font-size: var(--label);
+  letter-spacing: 0.2em;
+  color: var(--weiss-gedimmt);
+}
+
+/* --- Erfolge im Team ------------------------------------------------------
+   Große Zahlen in einer Zeile mit Trennlinien, darunter ein Porträt als
+   redaktionelle Doppelseite. Keine Karten, keine Sterne, kein Konfetti. */
+.erfolge__kopf {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 80px);
+  align-items: end;
+}
+
+.erfolge__zahlen {
+  margin-top: clamp(44px, 6.5vh, 76px);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--linie-dunkel);
+  border-bottom: 1px solid var(--linie-dunkel);
+}
+
+.erfolge__zahlen > div {
+  padding: clamp(22px, 3.2vh, 34px) clamp(16px, 2.4vw, 40px);
+}
+
+.erfolge__zahlen > div:first-child {
+  padding-left: 0;
+}
+
+.erfolge__zahlen > div + div {
+  border-left: 1px solid var(--linie-dunkel);
+}
+
+.erfolge__zahlen dt {
+  font-weight: 800;
+  font-size: clamp(2.5rem, 5.2vw, 4.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  color: var(--gold);
+}
+
+.erfolge__zahlen dd {
+  margin-top: 12px;
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  font-size: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--weiss);
+}
+
+.erfolge__fuss {
+  margin-top: 18px;
+  font-size: 0.875rem;
+  color: var(--weiss-gedimmt);
+  max-width: 46em;
+}
+
+.erfolge__quelle {
+  color: var(--weiss);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+
+/* --- Porträt einer betreuten Person -------------------------------------- */
+.portraet {
+  margin-top: clamp(56px, 8vh, 104px);
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: center;
+}
+
+.portraet__bild {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: clip;
+}
+
+.portraet__bild picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.portraet__bild img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 12%;
+  filter: contrast(1.04) saturate(0.94) brightness(0.92);
+}
+
+.portraet__name {
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  font-size: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+}
+
+.portraet__text h3 {
+  margin-top: 14px;
+}
+
+.portraet__lauf {
+  margin-top: 20px;
+  color: var(--weiss-gedimmt);
+  max-width: 34em;
+}
+
+.portraet__daten {
+  margin-top: clamp(26px, 3.6vh, 38px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--linie-dunkel);
+  border-bottom: 1px solid var(--linie-dunkel);
+}
+
+.portraet__daten > div {
+  padding: clamp(16px, 2.2vh, 22px) clamp(12px, 1.6vw, 22px);
+}
+
+.portraet__daten > div:first-child {
+  padding-left: 0;
+}
+
+.portraet__daten > div + div {
+  border-left: 1px solid var(--linie-dunkel);
+}
+
+.portraet__daten dt {
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: clamp(0.95rem, 1.3vw, 1.2rem);
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+  color: var(--weiss);
+}
+
+.portraet__daten dd {
+  margin-top: 7px;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  color: var(--weiss-gedimmt);
+}
+
+.portraet .textlink {
+  margin-top: clamp(24px, 3.4vh, 32px);
+}
+
+.portraet__hinweis {
+  margin-top: 22px;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--weiss-gedimmt);
+  opacity: 0.82;
+  max-width: 44em;
+}
+
+/* --- Vorher-Nachher ------------------------------------------------------
+   Dieselbe Anordnung wie auf der Schweizer Seite, aber für dunklen Grund:
+   Linien, Text und Gold sind die dunklen Token. */
+.wandel__raster {
+  margin-top: clamp(56px, 8vh, 100px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(28px, 4vw, 64px) clamp(20px, 3vw, 44px);
+}
+
+.wandel__bild {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: clip;
+  background: var(--nacht-3);
+}
+
+.wandel__bild picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.wandel__bild img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Querformat in Querformat: Es wird nichts oben weggeschnitten — wichtig,
+     weil bei diesen Aufnahmen der Bildausschnitt über die Erkennbarkeit
+     entscheidet. */
+  object-position: 50% 50%;
+}
+
+.wandel__fall figcaption {
+  margin-top: clamp(18px, 2.4vh, 24px);
+  padding-top: clamp(16px, 2vh, 20px);
+  border-top: 1px solid var(--linie-dunkel);
+}
+
+.wandel__detail {
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  font-size: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+}
+
+.wandel__fall h3 {
+  margin-top: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: clamp(1.15rem, 1.7vw, 1.55rem);
+  letter-spacing: -0.024em;
+  line-height: 1.02;
+}
+
+.wandel__text {
+  margin-top: 12px;
+  color: var(--weiss-gedimmt);
+  font-size: 1rem;
+  line-height: 1.5;
+  max-width: 30em;
+}
+
+.wandel__fuss {
+  margin-top: clamp(30px, 4vh, 44px);
+  padding-top: 20px;
+  border-top: 1px solid var(--linie-dunkel-zart);
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--weiss-gedimmt);
+  max-width: 52em;
+}
+
+/* --- Für wen ------------------------------------------------------------- */
+.fuerwen__reihe {
+  margin-top: clamp(48px, 7vh, 88px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 1.4vw, 22px);
+}
+
+.fuerwen__feld {
+  position: relative;
+  overflow: clip;
+}
+
+.fuerwen__feld picture {
+  aspect-ratio: 4 / 5;
+}
+
+.fuerwen__feld img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 12%;
+  filter: contrast(1.05) saturate(0.9) brightness(0.82);
+  transition: transform 1100ms var(--ease);
+}
+
+@media (hover: hover) {
+  .fuerwen__feld:hover img {
+    transform: scale(1.02);
+  }
+}
+
+.fuerwen__feld figcaption {
+  position: absolute;
+  inset: auto 0 0;
+  padding: clamp(20px, 2.4vw, 34px);
+  background: linear-gradient(180deg, rgba(8, 9, 10, 0) 0%, rgba(8, 9, 10, 0.82) 62%);
+}
+
+.fuerwen__feld h3 {
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: clamp(1.3rem, 2.2vw, 1.95rem);
+  letter-spacing: -0.026em;
+  line-height: 0.98;
+}
+
+.fuerwen__feld p {
+  margin-top: 12px;
+  color: var(--weiss-gedimmt);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+/* --- Österreich-Leiste --------------------------------------------------- */
+.oesterreich {
+  border-top: 1px solid var(--linie-dunkel);
+  border-bottom: 1px solid var(--linie-dunkel);
+  padding-block: clamp(28px, 4.4vh, 46px);
+  background: var(--nacht);
+}
+
+.oesterreich__schacht {
+  width: min(100% - (var(--rand) * 2), var(--breite));
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  gap: clamp(20px, 4vw, 52px);
+  flex-wrap: wrap;
+}
+
+.oesterreich__umriss {
+  width: clamp(84px, 11vw, 132px);
+  height: auto;
+  flex: none;
+  color: var(--gold);
+  opacity: 0.62;
+}
+
+.oesterreich__titel {
+  display: block;
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  color: var(--weiss);
+}
+
+.oesterreich__staedte {
+  margin-top: 10px;
+  font-family: var(--schrift-eng);
+  font-size: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--weiss-gedimmt);
+}
+
+.oesterreich__hinweis {
+  margin-left: auto;
+  font-size: 0.875rem;
+  color: var(--weiss-gedimmt);
+  max-width: 26em;
+}
+
+/* --- FAQ ----------------------------------------------------------------- */
+.faq__raster {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(28px, 5vw, 80px);
+  align-items: start;
+}
+
+.faq__liste {
+  border-top: 1px solid var(--linie-hell);
+}
+
+.faq__liste details {
+  border-bottom: 1px solid var(--linie-hell);
+}
+
+.faq__liste summary {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  padding: clamp(20px, 2.8vh, 28px) 0;
+  cursor: pointer;
+  list-style: none;
+  font-weight: 700;
+  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+}
+
+.faq__liste summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq__zeichen {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  position: relative;
+  translate: 0 -1px;
+}
+
+.faq__zeichen::before,
+.faq__zeichen::after {
+  content: "";
+  position: absolute;
+  background: var(--gold-tief);
+  transition: transform 320ms var(--ease), opacity 320ms var(--ease);
+}
+
+.faq__zeichen::before {
+  inset: 7px 0 auto;
+  height: 1.5px;
+}
+
+.faq__zeichen::after {
+  inset: 0 6.75px;
+  width: 1.5px;
+}
+
+details[open] .faq__zeichen::after {
+  transform: scaleY(0);
+  opacity: 0;
+}
+
+.faq__liste p {
+  padding: 0 0 clamp(22px, 3vh, 30px);
+  color: var(--tinte-2);
+  max-width: 36em;
+}
+
+/* --- Angebot ------------------------------------------------------------- */
+.angebot__kopf {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 80px);
+  align-items: end;
+}
+
+.angebot__raster {
+  margin-top: clamp(48px, 7vh, 88px);
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(40px, 6vw, 104px);
+  align-items: start;
+}
+
+.angebot__zwischen {
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  font-size: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+
+.angebot__lauf {
+  margin-top: 24px;
+  color: var(--weiss-gedimmt);
+  max-width: 26em;
+  font-size: var(--text-gross);
+}
+
+.angebot__leistungen {
+  margin-top: 18px;
+  border-top: 1px solid var(--linie-dunkel);
+}
+
+.angebot__leistungen li {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: clamp(14px, 2vh, 19px) 0;
+  border-bottom: 1px solid var(--linie-dunkel);
+  font-weight: 500;
+  font-size: clamp(1.0625rem, 1.3vw, 1.25rem);
+}
+
+.angebot__leistungen li::before {
+  content: "";
+  flex: none;
+  width: 16px;
+  height: 1px;
+  background: var(--gold);
+  translate: 0 -5px;
+}
+
+/* Ein Angebot, drei Laufzeiten — bewusst als Zeile mit Trennlinien und nicht
+   als drei Preiskarten. Es ist dasselbe Coaching, nur unterschiedlich lang. */
+.preise {
+  margin-top: clamp(44px, 6.5vh, 76px);
+}
+
+.preise__titel {
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  font-size: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+
+.preise__reihe {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--linie-dunkel);
+  border-bottom: 1px solid var(--linie-dunkel);
+}
+
+.preise__eintrag {
+  padding: clamp(22px, 3.2vh, 34px) clamp(16px, 2.4vw, 40px);
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.preise__eintrag:first-child {
+  padding-left: 0;
+}
+
+.preise__eintrag + .preise__eintrag {
+  border-left: 1px solid var(--linie-dunkel);
+}
+
+.preise__dauer {
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--weiss-gedimmt);
+}
+
+.preise__preis {
+  font-weight: 800;
+  font-size: clamp(2.5rem, 5.4vw, 4.75rem);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  color: var(--weiss);
+}
+
+.preise__eintrag--anker .preise__preis {
+  color: var(--gold);
+}
+
+.preise__monat {
+  font-size: 0.9375rem;
+  color: var(--weiss-gedimmt);
+}
+
+.preise__fuss {
+  margin-top: 16px;
+  font-size: 0.875rem;
+  color: var(--weiss-gedimmt);
+  max-width: 32em;
+}
+
+.angebot__notiz {
+  margin-top: 26px;
+  font-size: 0.9375rem;
+  color: var(--weiss-gedimmt);
+}
+
+/* --- Formular ------------------------------------------------------------ */
+.formular {
+  background: var(--nacht-2);
+  border: 1px solid var(--linie-dunkel-zart);
+  padding: clamp(24px, 3.4vw, 44px);
+}
+
+.formular h3 {
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: clamp(1.15rem, 1.7vw, 1.5rem);
+  letter-spacing: -0.02em;
+}
+
+.formular__hinweis {
+  margin-top: 10px;
+  color: var(--weiss-gedimmt);
+  font-size: 0.9375rem;
+}
+
+.formular__felder {
+  margin-top: 26px;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.feld {
+  display: grid;
+  gap: 8px;
+}
+
+.feld--breit {
+  grid-column: 1 / -1;
+}
+
+.feld > span {
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  font-size: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--weiss-gedimmt);
+}
+
+.feld input,
+.feld select,
+.feld textarea {
+  width: 100%;
+  font: inherit;
+  font-size: 1.0625rem;
+  color: var(--weiss);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--linie-dunkel);
+  border-radius: 0;
+  padding: 12px 0;
+  transition: border-color 240ms var(--ease);
+  min-height: 48px;
+}
+
+.feld select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--weiss-gedimmt) 50%),
+    linear-gradient(135deg, var(--weiss-gedimmt) 50%, transparent 50%);
+  background-position: calc(100% - 12px) calc(50% + 1px), calc(100% - 6px) calc(50% + 1px);
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 28px;
+}
+
+.feld select option {
+  background: var(--nacht-2);
+  color: var(--weiss);
+}
+
+.feld textarea {
+  min-height: 116px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.feld input:focus,
+.feld select:focus,
+.feld textarea:focus {
+  outline: none;
+  border-bottom-color: var(--gold);
+}
+
+.feld input:focus-visible,
+.feld select:focus-visible,
+.feld textarea:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+
+.einwilligung {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 0.9375rem;
+  color: var(--weiss-gedimmt);
+  line-height: 1.5;
+}
+
+.einwilligung input {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  accent-color: var(--gold);
+}
+
+.einwilligung a {
+  color: var(--weiss);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.formular__falle {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.formular .knopf {
+  margin-top: 26px;
+  width: 100%;
+  justify-content: center;
+}
+
+.formular__meldung {
+  margin-top: 18px;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  min-height: 1.4em;
+}
+
+.formular__meldung[data-zustand="gut"] {
+  color: var(--gold);
+}
+
+.formular__meldung[data-zustand="fehler"] {
+  color: #ef8f7a;
+}
+
+/* --- Abschluss ----------------------------------------------------------- */
+.abschluss {
+  position: relative;
+  min-height: clamp(560px, 92svh, 900px);
+  display: flex;
+  align-items: center;
+  overflow: clip;
+}
+
+.abschluss__bild {
+  position: absolute;
+  inset: 0;
+}
+
+.abschluss__bild img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 42%;
+  filter: contrast(1.06) saturate(0.9) brightness(0.78);
+  transform: translate3d(0, var(--parallax, 0px), 0) scale(1.08);
+  will-change: transform;
+}
+
+.abschluss__bild::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(8, 9, 10, 0.75) 0%, rgba(8, 9, 10, 0.35) 40%, rgba(8, 9, 10, 0.9) 100%),
+    radial-gradient(110% 80% at 50% 50%, rgba(8, 9, 10, 0) 40%, rgba(8, 9, 10, 0.6) 100%);
+}
+
+.abschluss__inhalt {
+  position: relative;
+  z-index: 2;
+  width: min(100% - (var(--rand) * 2), var(--breite));
+  margin-inline: auto;
+  text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: clamp(20px, 3vh, 32px);
+  padding-block: clamp(72px, 10vh, 120px);
+}
+
+.abschluss__logo {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+}
+
+.abschluss__inhalt .oesterreich__umriss {
+  width: clamp(72px, 8vw, 104px);
+  opacity: 0.35;
+  margin-top: 6px;
+}
+
+.abschluss__zeilen {
+  color: var(--weiss-gedimmt);
+  font-size: var(--text-gross);
+  line-height: 1.45;
+  max-width: 20em;
+}
+
+/* --- Fuß ----------------------------------------------------------------- */
+.fuss {
+  background: var(--nacht);
+  border-top: 1px solid var(--linie-dunkel);
+  padding-block: clamp(48px, 7vh, 76px);
+}
+
+.fuss__raster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px clamp(28px, 5vw, 72px);
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.fuss__marke {
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.fuss__marke span {
+  display: block;
+  font-family: var(--schrift-eng);
+  font-weight: 400;
+  font-size: var(--label);
+  letter-spacing: 0.24em;
+  color: var(--weiss-gedimmt);
+  margin-top: 8px;
+}
+
+.fuss__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 28px;
+  font-family: var(--schrift-eng);
+  font-weight: 700;
+  font-size: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.fuss__links a {
+  color: var(--weiss-gedimmt);
+  transition: color 200ms var(--ease);
+}
+
+.fuss__links a:hover {
+  color: var(--weiss);
+}
+
+.fuss__unten {
+  margin-top: clamp(34px, 5vh, 54px);
+  padding-top: 22px;
+  border-top: 1px solid var(--linie-dunkel-zart);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 26px;
+  justify-content: space-between;
+  font-size: 0.8125rem;
+  color: var(--weiss-gedimmt);
+}
+
+/* --- Auftauchen beim Scrollen ------------------------------------------- */
+.hat-js [data-auftauchen] {
+  opacity: 0;
+  transform: translateY(22px);
+}
+
+.hat-js [data-auftauchen].ist-sichtbar {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 800ms var(--ease), transform 900ms var(--ease);
+}
+
+.hat-js [data-auftauchen][data-verzug="1"].ist-sichtbar {
+  transition-delay: 90ms;
+}
+.hat-js [data-auftauchen][data-verzug="2"].ist-sichtbar {
+  transition-delay: 180ms;
+}
+.hat-js [data-auftauchen][data-verzug="3"].ist-sichtbar {
+  transition-delay: 270ms;
+}
+
+/* ==========================================================================
+   Breiten
+   ========================================================================== */
+
+@media (max-width: 1200px) {
+  .system__punkt {
+    grid-template-columns: 4.5rem minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .app__leistungen li {
+    font-size: 1rem;
+  }
+}
+
+/* Unter 1100 px stehen fünf Ansichten nicht mehr nebeneinander, ohne winzig
+   zu werden. Statt eine zu verstecken, wird die Reihe zum Streifen, den man
+   schiebt — die fünfte lugt herein und zeigt, dass es weitergeht. */
+@media (max-width: 1100px) {
+  .app__reihe {
+    width: 100%;
+    margin-inline: 0;
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: min(46vw, 260px);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--rand);
+    padding-inline: var(--rand);
+    padding-bottom: 6px;
+    scrollbar-width: none;
+  }
+
+  .app__reihe::-webkit-scrollbar {
+    display: none;
+  }
+
+  .app__geraet {
+    scroll-snap-align: start;
+  }
+
+  .app__geraet:nth-child(1) .app__rahmen,
+  .app__geraet:nth-child(3) .app__rahmen,
+  .app__geraet:nth-child(5) .app__rahmen {
+    transform: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --kopf-hoehe: 66px;
+  }
+
+  .kopf__nav,
+  .kopf__land {
+    display: none;
+  }
+
+  .kopf__burger {
+    display: flex;
+  }
+
+  .kopf .knopf {
+    padding: 12px 18px;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+  }
+
+  .held__raster {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .held__leiste {
+    justify-items: start;
+    text-align: left;
+    border-right: 0;
+    padding-right: 0;
+    border-left: 1px solid var(--linie-dunkel);
+    padding-left: 18px;
+  }
+
+  .system__kopf,
+  .app__kopf,
+  .ablauf__kopf,
+  .saeulen__kopf,
+  .faq__raster,
+  .dominik__raster,
+  .stimmen__raster,
+  .angebot__kopf,
+  .angebot__raster,
+  .erfolge__kopf,
+  .portraet {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .portraet__bild {
+    max-width: 520px;
+  }
+
+  .app__leistungen {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app__leistungen li {
+    border-top: 1px solid var(--linie-hell);
+  }
+
+  .app__leistungen li:nth-child(-n + 2) {
+    border-top: 0;
+  }
+
+  .app__leistungen li:nth-child(odd) {
+    padding-left: 0;
+  }
+
+  .app__leistungen li:nth-child(even) {
+    border-left: 1px solid var(--linie-hell);
+  }
+
+  .app__leistungen li:last-child {
+    grid-column: 1 / -1;
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .dominik__bild {
+    max-width: 480px;
+  }
+
+  .band__schacht {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Auch hier kein Querformat erzwingen — sonst fehlt oben der Kopf und unten
+     das Rad, also genau das, wofür das Bild dasteht. */
+  .band__rahmen {
+    margin-right: 0;
+    aspect-ratio: 4 / 5;
+    max-width: 560px;
+  }
+
+  /* Die Schiene kippt in die Senkrechte und läuft links neben den Schritten. */
+  .ablauf__strecke {
+    display: grid;
+    grid-template-columns: 2px minmax(0, 1fr);
+    gap: clamp(24px, 5vw, 40px);
+  }
+
+  .ablauf__schiene {
+    height: auto;
+    width: 2px;
+  }
+
+  .ablauf__fuellung {
+    transform: scaleY(var(--fuellung, 0));
+    transform-origin: top center;
+  }
+
+  .ablauf__schritte {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ablauf__schritt,
+  .ablauf__schritt:first-child {
+    padding: 0 0 clamp(34px, 5vh, 52px);
+  }
+
+  .ablauf__schritt:last-child {
+    padding-bottom: 0;
+  }
+
+  .ablauf__schritt + .ablauf__schritt {
+    border-left: 0;
+  }
+
+  .ablauf__marke,
+  .ablauf__schritt:first-child .ablauf__marke {
+    top: 10px;
+    left: calc(-1 * (clamp(24px, 5vw, 40px) + 6px));
+  }
+
+  .ablauf__schritt p {
+    max-width: 30em;
+  }
+}
+
+@media (max-width: 860px) {
+  .saeulen__reihe,
+  .fuerwen__reihe {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  /* Nicht ins Querformat zwingen: Die Vorlagen sind hochformatig (0,67–0,75).
+     In einem 4:3-Rahmen schnitt der Ausschnitt die Köpfe ab. */
+  .saeule__bild {
+    aspect-ratio: 4 / 5;
+  }
+
+  .fuerwen__feld picture {
+    aspect-ratio: 4 / 5;
+  }
+
+  /* Untereinander als Preisliste: Laufzeit und Monatswert links, der Betrag
+     rechts an einer Kante — nebeneinander wären die Zahlen zu klein. */
+  /* Vier große Zahlen nebeneinander werden auf schmalen Schirmen unleserlich. */
+  .erfolge__zahlen {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .wandel__raster {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .erfolge__zahlen > div:nth-child(odd) {
+    padding-left: 0;
+  }
+
+  .erfolge__zahlen > div:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--linie-dunkel);
+  }
+
+  .erfolge__zahlen > div:nth-child(odd) + div {
+    border-left: 1px solid var(--linie-dunkel);
+  }
+
+  .erfolge__zahlen > div:nth-child(even) + div {
+    border-left: 0;
+  }
+
+  .portraet__daten {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .portraet__daten > div {
+    padding-inline: 0;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .portraet__daten > div + div {
+    border-left: 0;
+    border-top: 1px solid var(--linie-dunkel);
+  }
+
+  .portraet__daten dd {
+    margin-top: 0;
+    text-align: right;
+  }
+
+  .preise__reihe {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .preise__eintrag {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "dauer preis"
+      "monat preis";
+    column-gap: 18px;
+    row-gap: 4px;
+    align-items: center;
+    padding-inline: 0;
+  }
+
+  .preise__eintrag + .preise__eintrag {
+    border-left: 0;
+    border-top: 1px solid var(--linie-dunkel);
+  }
+
+  .preise__dauer {
+    grid-area: dauer;
+    align-self: end;
+  }
+
+  .preise__monat {
+    grid-area: monat;
+    align-self: start;
+  }
+
+  .preise__preis {
+    grid-area: preis;
+    font-size: clamp(2.1rem, 9vw, 2.9rem);
+  }
+
+  .formular__felder {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dominik__daten {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dominik__daten > div:nth-child(odd) {
+    padding-right: 0;
+    border-right: 0;
+  }
+
+  .dominik__daten > div:nth-child(even) {
+    padding-left: 0;
+  }
+
+  .oesterreich__hinweis {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 620px) {
+  .kopf__wortmarke {
+    display: none;
+  }
+
+  .kopf__marke img {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --anzeige-1: clamp(2.75rem, 12.5vw, 4rem);
+    --anzeige-2: clamp(2rem, 9vw, 3.4rem);
+    --anzeige-3: clamp(1.5rem, 6.2vw, 2.1rem);
+  }
+
+  .held {
+    height: 185svh;
+  }
+
+  .held__bild img {
+    object-position: 64% 22%;
+  }
+
+  .held__text {
+    max-width: none;
+  }
+
+    .held__aktionen {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .held__aktionen .knopf {
+    justify-content: center;
+  }
+
+  .held__runter {
+    justify-content: center;
+    padding-top: 4px;
+  }
+
+  .system__punkt {
+    grid-template-columns: 3.25rem minmax(0, 1fr);
+    row-gap: 8px;
+  }
+
+  .system__text {
+    grid-column: 2;
+    font-size: var(--text);
+  }
+
+  .stimme blockquote {
+    max-width: none;
+  }
+}
+
+/* --- Ruhiger Modus ------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .held {
+    height: auto;
+  }
+
+  .held__buehne {
+    position: relative;
+    height: auto;
+    min-height: 100svh;
+  }
+
+  .held__bild img,
+  .band__bild img,
+  .abschluss__bild img {
+    transform: none !important;
+  }
+
+  .held__inhalt {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .held__dunkeln {
+    opacity: 0 !important;
+  }
+
+  .hat-js [data-auftritt] .maske > span,
+  .hat-js [data-auftritt] .held__unterzeile,
+  .hat-js [data-auftritt] .held__aktionen,
+  .hat-js [data-auftritt] .marke-zeile,
+  .hat-js [data-auftritt] .held__leiste,
+  .hat-js [data-auftauchen] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .saeule__bild img,
+  .fuerwen__feld img {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .knopf,
+  .stimmen__knopf {
+    border: 1px solid CanvasText;
+  }
+}

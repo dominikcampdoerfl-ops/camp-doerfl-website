@@ -16,7 +16,21 @@
     "cf:deploy": "npm run build && npx wrangler deploy",
     "cf:deploy:dry-run": "npm run build && npx wrangler deploy --dry-run",
     "kontrast": "node scripts/kontrast-pruefen.mjs",
-    "i18n": "node scripts/i18n-luecken.mjs"
+    "i18n": "node scripts/i18n-luecken.mjs",
+    "at:build": "node at/build.mjs",
+    "at:dev": "node at/dev.mjs",
+    "at:preview": "node at/server.mjs",
+    "at:test": "node at/build.mjs && node at/pruefen.mjs",
+    "at:live": "node at/live-pruefen.mjs",
+    "at:deploy": "npm run at:build && npx wrangler deploy -c wrangler.at.toml",
+    "at:deploy:dry-run": "npm run at:build && npx wrangler deploy -c wrangler.at.toml --dry-run",
+    "ch:build": "node ch/build.mjs",
+    "ch:dev": "node ch/dev.mjs",
+    "ch:preview": "node ch/server.mjs",
+    "ch:test": "node ch/build.mjs && node ch/pruefen.mjs",
+    "ch:live": "node ch/live-pruefen.mjs",
+    "ch:deploy": "npm run ch:build && npx wrangler deploy -c wrangler.ch.toml",
+    "ch:deploy:dry-run": "npm run ch:build && npx wrangler deploy -c wrangler.ch.toml --dry-run"
   },
   "devDependencies": {
     "puppeteer-core": "^25.8.0",
